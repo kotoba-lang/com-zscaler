@@ -1,0 +1,23 @@
+;; talent — kotoba EAVT schema
+;; ADR-2606072600
+;; Cohort-first registry, PII Tier 3. Identifying fields hold signal:v1: ciphertext ONLY (G3);
+;; profiles are hard-retracted on forget (G4 — NO :_alive/soft-delete attribute); cohort nodes
+;; carry COUNT + skill aggregates, never a member list (G2). No RW/SQL (G5).
+
+[;; ── :profile/* — self-sovereign, hard-deletable ──
+ {:db/ident :profile/subject-hash :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity :db/doc "hash of subject DID; self path"}
+ {:db/ident :profile/isco        :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "ISCO-08 cohort key"}
+ {:db/ident :profile/country     :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :profile/skill       :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc "non-identifying, cohort-aggregatable"}
+ {:db/ident :profile/seniority   :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :profile/enc-pii     :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc "signal:v1: ciphertext ONLY (G3) — fullName/email/phone/address/dob/govId"}
+ {:db/ident :profile/registered-by :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "MUST equal subject (G1); member-signed (G6)"}
+ ;; NOTE: there is deliberately NO :profile/alive or :profile/deleted-at attribute — forget is a
+ ;; hard retract of every datom for the subject-hash (G4), not a flag flip.
+
+ ;; ── :cohort/* — k-anonymous aggregate ──
+ {:db/ident :cohort/did    :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :cohort/isco   :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :cohort/country :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :cohort/count  :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/doc "published only when ≥ k (G2)"}
+ {:db/ident :cohort/top-skill :db/valueType :db.type/string :db/cardinality :db.cardinality/many}]

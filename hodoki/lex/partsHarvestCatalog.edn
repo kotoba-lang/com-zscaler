@@ -1,0 +1,4 @@
+[{:db/id -1
+  :parts-harvest-catalog/lexicon 1
+  :parts-harvest-catalog/id "com.etzhayyim.hodoki.partsHarvestCatalog"
+  :parts-harvest-catalog/defs "{:main {:type \"record\", :key \"tid\", :record {:type \"object\", :required [\"tid\" \"vin\" \"partDid\" \"ipfsCid\" \"partName\" \"conditionGrade\" \"bilingualDescription\" \"timestamp\"], :properties {:tid {:type \"string\", :description \"Transaction ID\"}, :vin {:type \"string\", :description \"Vehicle Identification Number\"}, :partDid {:type \"string\", :description \"DID for harvested part (G12)\"}, :ipfsCid {:type \"string\", :description \"IPFS CID of catalog entry (G12)\"}, :partName {:type \"string\", :description \"Part name\"}, :conditionGrade {:type \"string\", :description \"a|b|c|d grade\"}, :bilingualDescription {:type \"string\", :description \"JP+EN description (G4)\"}, :timestamp {:type \"string\", :description \"ISO-8601 harvest time\"}}}}}"}]

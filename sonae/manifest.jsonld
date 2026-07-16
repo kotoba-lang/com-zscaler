@@ -1,0 +1,220 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://etzhayyim.com/ns/actor-manifest"
+  ],
+  "@type": "ActorManifest",
+  "id": "did:web:sonae.etzhayyim.com",
+  "name": "sonae",
+  "integrates": ["chigiri", "hagukumi", "hikari", "kawaraban", "kazaori", "mitsuho", "mizuho", "tatekata", "toritate", "watatsuna"],
+  "displayName": "備え — Civilian Pre-Disaster Foresight + Preparedness + Early-Warning",
+  "displayNameJa": "備え",
+  "displayNameEn": "Sonae",
+  "description": "Non-profit religious-corp civilian PRE-disaster substrate: prevention / mitigation / preparedness / early warning. The 'before' half of the disaster cycle; response (during) is kazaori (ADR-2605263200) and sonae MUST NOT do response (N3, clean phase boundary). Hazard watch from OPEN government feeds (USGS / PHIVOLCS / JMA / GDACS / Copernicus EMS / WMO GTS) → community risk assessment → official-warning RELAY (relay-only, authoritativeSource cited) → preparedness planning + stockpile pre-positioning → drills → imminence signal handoff to kazaori. NOT military (G5+N1; force separate per ADR-2605192315). NO false authority (G8 — MUST NOT originate official seismic/tsunami warnings; relayOnly const true). NO unilateral disaster declaration (G10 — only kazaori Council Lv6+ >=4/7 may declare). NO commercial disaster-prediction software (G4: One Concern / FloodFlash / Jupiter Intelligence / RMS / Tomorrow.io enterprise / Everbridge / OnSolve / AlertMedia PROHIBITED per Charter Rider §2(e)+§2(c)). NO surveillance (G6: open feeds + opt-in self-report only; no individual tracking / no person-profiling). Murakumo-only inference (G7). Community-scale only (G3; NOT national early-warning replacement). Sendai Framework + Sphere reference (G9). 6 cells / 6 Lexicons / 12 gates / 12 non-goals.",
+  "descriptionJa": "非営利 religious-corp の市民『発災前』substrate:予防 / 減災 / 備え / 早期警戒。災害サイクルの『前』半分。発災中の対応は kazaori (ADR-2605263200) が担い、sonae は対応をしない(N3 フェーズ境界)。OPEN な政府ハザードフィード(USGS / PHIVOLCS / JMA / GDACS / Copernicus / WMO)からの監視 → コミュニティ・リスク評価 → 公式警報の中継(relay-only・authoritativeSource 必須)→ 備蓄事前配置を含む備え計画 → 訓練 → 切迫シグナルを kazaori へ引き継ぎ。軍事ではない(G5+N1)。偽の権威なし(G8 — 公式地震/津波警報を発出しない; relayOnly const true)。単独で災害宣言しない(G10 — kazaori Council Lv6+ ≥4/7 のみ)。商業災害予測ソフト禁止(G4: One Concern / FloodFlash / Jupiter Intelligence / RMS / Tomorrow.io / Everbridge / OnSolve PROHIBITED)。監視なし(G6: open feed + オプトイン自己申告のみ; 個人追跡なし)。Murakumo-only 推論(G7)。コミュニティ規模のみ(G3; 国家早期警戒の代替ではない)。Sendai Framework + Sphere 参照(G9)。",
+  "adr": {
+    "master": "etzhayyim:adr:2606091200",
+    "parent": "etzhayyim:adr:2605192100",
+    "downstreamResponse": "etzhayyim:adr:2605263200",
+    "r0": "etzhayyim:adr:2606091200",
+    "r1": "reserved",
+    "r2": "reserved",
+    "r3": "reserved"
+  },
+  "tier": "Tier-B",
+  "parentActor": null,
+  "form": "任意団体 internal civilian pre-disaster substrate (NOT 一般社団 / NPO / 公益財団 / 宗教法人 法人格 — Preamble §0.4 Lv7+ unanimity lock)",
+  "civilianOnlyInvariant": "G5+N1 — sonae is civilian pre-disaster preparedness only; force authorization separate per ADR-2605192315; sonae MUST NOT invoke or coordinate armed force actions",
+  "phaseBoundaryInvariant": "N3 — sonae is the BEFORE half (prevention/mitigation/preparedness/early-warning); response (during) is kazaori (ADR-2605263200); sonae MUST NOT perform response actions; handoff via disasterImminenceSignal only",
+  "falseAuthorityInvariant": "G8 — sonae MUST NOT originate official seismic/tsunami/typhoon warnings; earlyWarningRelay is relayOnly const true with mandatory authoritativeSource citation (PHIVOLCS / JMA / USGS / PTWC / national met services)",
+  "standardsReferenceNotMembership": [
+    "Sendai Framework for Disaster Risk Reduction 2015-2030 (G9; reference for the 4 priorities)",
+    "Sphere Standards (G9; shelter/water/food/health/protection minimums for preparedness planning)",
+    "UN OCHA",
+    "WMO + IOC Tsunami Warning System (authoritative-source registry for relay)",
+    "GDACS (Global Disaster Alert and Coordination System; open feed)"
+  ],
+  "openHazardFeedsOnly": [
+    "USGS Earthquake Hazards Program (open API)",
+    "PHIVOLCS (Philippine Institute of Volcanology and Seismology)",
+    "JMA (Japan Meteorological Agency)",
+    "GDACS",
+    "Copernicus Emergency Management Service",
+    "WMO Global Telecommunication System"
+  ],
+  "crossActor": {
+    "kazaori": "Downstream handoff (response actor). sonae feeds preparednessPlan + emits disasterImminenceSignal; kazaori owns Council declaration + all response. sonae drillAttestation satisfies kazaori R1 drill activation gate.",
+    "mizuho": "Pre-positioning water-stockpile targets sized from siteRiskProfile",
+    "mitsuho": "Pre-positioning food-reserve targets sized from siteRiskProfile",
+    "tatekata": "Building-stock exposure + safe-site pre-designation",
+    "hagukumi": "Vulnerable-population OPT-IN pre-registry (children + elderly + chronic-care)",
+    "hikari": "Grid/lifeline resilience input",
+    "watatsuna": "Submarine-cable / comms-continuity resilience input",
+    "kawaraban": "Warning-relay channel (member notification + actor-to-actor wire)",
+    "toritate": "Preparedness Public Fund disbursement + transparent accounting",
+    "chigiri": "Declaration-handoff procedural attestation"
+  },
+  "constitutionalDiscipline": {
+    "civilianOnly": "G5+N1 — no armed enforcement; force separate per ADR-2605192315",
+    "noFalseAuthority": "G8 — MUST NOT originate official warnings; relayOnly const true + authoritativeSource required",
+    "noUnilateralDeclaration": "G10 — only kazaori Council Lv6+ >=4/7 may declare emergency state; sonae signals/recommends",
+    "noCommercialDisasterPredictionSoftware": "G4 — One Concern / FloodFlash / Jupiter Intelligence / RMS / Tomorrow.io enterprise / Everbridge / OnSolve / AlertMedia PROHIBITED per Charter Rider §2(e)+§2(c); OPEN gov feeds only",
+    "noSurveillance": "G6 — open geophysical/met feeds + opt-in self-reporting only; NO individual tracking / NO person-profiling / NO household risk-scoring",
+    "murakumoOnlyInference": "G7 — commercial disaster-AI PROHIBITED",
+    "communityScaleOnly": "G3 — religious-corp community sites + adjacent partner sites; NOT national early-warning replacement",
+    "sendaiSphereReference": "G9 — Sendai Framework + Sphere Standards open-publication; sonaeReadinessReview audits",
+    "noPayrollForResponders": "G12 — vocation-flow L5 stewards (cross-actor chigiri + toritate enforcement)"
+  },
+  "scope": {
+    "phase": "R0 scaffold",
+    "scopeBoundary": "Civilian pre-disaster foresight + preparedness + early-warning RELAY for religious-corp community sites + adjacent partner sites",
+    "exclusions": [
+      "disaster response (that is kazaori; clean phase boundary N3)",
+      "originating official/authoritative warnings (relay-only G8)",
+      "unilateral emergency declaration (kazaori Council path only G10)",
+      "military operations / armed enforcement (force separate ADR-2605192315)",
+      "war-zone humanitarian aid",
+      "commercial catastrophe / insurance risk modeling for profit",
+      "state early-warning-system replacement (parallel substrate; PHIVOLCS/JMA authoritative)",
+      "surveillance-based monitoring / individual risk-scoring (open feeds + opt-in only)",
+      "commercial disaster-prediction software integration",
+      "closed-source models / control systems",
+      "state-licensed entity status",
+      "single-jurisdiction-dependence (community-scale jurisdiction-agnostic)"
+    ]
+  },
+  "cells": [
+    {
+      "name": "hazard_watch",
+      "module": "kotodama.cells.sonae_hazard_watch",
+      "murakumoNode": "naphtali",
+      "phase": "continuous",
+      "io": "OPEN hazard feeds (USGS/PHIVOLCS/JMA/GDACS/Copernicus) → hazardSignalRecord; Murakumo correlation; open-data-only"
+    },
+    {
+      "name": "risk_assessment",
+      "module": "kotodama.cells.sonae_risk_assessment",
+      "murakumoNode": "naphtali",
+      "phase": "standing (updated on site-data change)",
+      "io": "per-site exposure + vulnerability fusion → siteRiskProfile",
+      "crossActorPair": "tatekata + hagukumi + mizuho + hikari"
+    },
+    {
+      "name": "early_warning_relay",
+      "module": "kotodama.cells.sonae_early_warning_relay",
+      "murakumoNode": "naphtali",
+      "phase": "event",
+      "io": "official agency warning → opt-in member relay → earlyWarningRelay; relayOnly const true; authoritativeSource required",
+      "crossActorPair": "kawaraban"
+    },
+    {
+      "name": "preparedness_plan",
+      "module": "kotodama.cells.sonae_preparedness_plan",
+      "murakumoNode": "naphtali",
+      "phase": "periodic",
+      "io": "stockpile + safe-site + route + opt-in registry targets → preparednessPlan",
+      "crossActorPair": "mizuho + mitsuho + tatekata + hagukumi"
+    },
+    {
+      "name": "drill_attestation",
+      "module": "kotodama.cells.sonae_drill_attestation",
+      "murakumoNode": "naphtali",
+      "phase": "event",
+      "io": "tabletop / field drill record (opt-in participants) → drillAttestation; satisfies kazaori R1 drill gate"
+    },
+    {
+      "name": "handoff_trigger",
+      "module": "kotodama.cells.sonae_handoff_trigger",
+      "murakumoNode": "naphtali",
+      "phase": "event",
+      "io": "hazard crosses materialization threshold → disasterImminenceSignal → kazaori.emergency_declaration (RECOMMEND only; Council declares)",
+      "crossActorPair": "kazaori"
+    }
+  ],
+  "lexiconNamespaces": [
+    "com.etzhayyim.sonae.hazardSignalRecord",
+    "com.etzhayyim.sonae.siteRiskProfile",
+    "com.etzhayyim.sonae.earlyWarningRelay",
+    "com.etzhayyim.sonae.preparednessPlan",
+    "com.etzhayyim.sonae.drillAttestation",
+    "com.etzhayyim.sonae.sonaeReadinessReview"
+  ],
+  "constitutionalGates": {
+    "description": "12 immutable gates per ADR-2606091200. Council Lv6+ supermajority + new ADR to amend.",
+    "gates": {
+      "G1": "Charter Rider §2(a)-(h) scan on every preparedness document",
+      "G2": "kotoba-datomic attestation lineage on every record",
+      "G3": "Community-scale only (NOT national early-warning replacement)",
+      "G4": "NO commercial disaster-prediction/early-warning software (One Concern / FloodFlash / Jupiter Intelligence / RMS / Tomorrow.io enterprise / Everbridge / OnSolve / AlertMedia PROHIBITED); OPEN gov hazard feeds only",
+      "G5": "NO armed enforcement (civilian only; force authorization separate per ADR-2605192315)",
+      "G6": "NO surveillance-based monitoring (open geophysical/met feeds + opt-in self-report only; NO individual tracking / NO person-profiling)",
+      "G7": "Murakumo-only inference (commercial disaster-AI PROHIBITED)",
+      "G8": "NO false authority (MUST NOT originate official warnings; relayOnly const true + authoritativeSource required)",
+      "G9": "Sendai Framework + Sphere Standards reference (open-publication; sonaeReadinessReview audit)",
+      "G10": "NO unilateral disaster declaration (only kazaori Council Lv6+ >=4/7 may declare; sonae signals/recommends)",
+      "G11": "NOT a state-licensed early-warning entity",
+      "G12": "NO payroll for stewards (vocation-flow L5 stewards)"
+    }
+  },
+  "nonGoals": {
+    "description": "12 explicitly excluded scopes",
+    "goals": {
+      "N1": "NOT military operations / NOT armed enforcement",
+      "N2": "NOT war-zone humanitarian aid",
+      "N3": "NOT disaster response (clean phase boundary to kazaori)",
+      "N4": "NOT commercial catastrophe / insurance risk modeling",
+      "N5": "NOT state early-warning-system replacement (PHIVOLCS/JMA authoritative)",
+      "N6": "NOT surveillance / NOT individual risk-scoring",
+      "N7": "NOT commercial disaster-prediction software integrator",
+      "N8": "NOT armed enforcement",
+      "N9": "NOT closed-source",
+      "N10": "NOT state-licensed entity",
+      "N11": "NOT single-jurisdiction-dependent",
+      "N12": "NOT issuing authoritative public alerts (relay-only)"
+    }
+  },
+  "roadmap": [
+    {
+      "phase": "R0",
+      "date": "2026-06-09",
+      "scope": "Scaffold only. 6 cells path-reserved. 6 Lexicons schema skeleton.",
+      "murakumoFleet": "No deployment",
+      "gate": "ADR-2606091200 (PROPOSED)"
+    },
+    {
+      "phase": "R1",
+      "date": "post-Council + open-feed baseline + Sendai self-assessment + >=1 community drill",
+      "scope": "2 core cells (hazard_watch + risk_assessment)",
+      "murakumoFleet": "naphtali (single node)",
+      "gate": "Future ADR + Council Lv6+ >=3 + emergency-management-experienced advisory"
+    },
+    {
+      "phase": "R2",
+      "date": "post-R1 + 30-day public objection + 3 community-site Council attestations",
+      "scope": "+3 cells (early_warning_relay relay-only + preparedness_plan + drill_attestation)",
+      "murakumoFleet": "naphtali + dan (2 nodes)",
+      "gate": "Council Lv6+ >=4 + 30-day public + 3 site attestations"
+    },
+    {
+      "phase": "R3",
+      "date": "post-R2 + Council Lv7+ unanimity + >=1 live hazard-to-handoff cycle",
+      "scope": "+1 cell (handoff_trigger) + sonaeReadinessReview cycle established",
+      "murakumoFleet": "naphtali + dan + levi (3 nodes)",
+      "gate": "Council Lv7+ unanimity + completed hazard-to-handoff cycle"
+    }
+  ],
+  "references": {
+    "adr": {
+      "master": "/90-docs/adr/2606091200-sonae-pre-disaster-foresight-tier-b-actor-r0.md",
+      "downstreamResponse": "/90-docs/adr/2605263200-kazaori-disaster-response-tier-b-actor-r0.md",
+      "missionCharter": "/90-docs/adr/2605192100-etzhayyim-mission-charter.md",
+      "charterRider": "/90-docs/adr/2605192200-etzhayyim-ip-free-release-charter-rider.md",
+      "transparentForce": "/90-docs/adr/2605192315-etzhayyim-transparent-force-authorization.md",
+      "murakumoOnly": "/90-docs/adr/2605215000-etzhayyim-inference-murakumo-only-no-runpod.md",
+      "crossActorMizuho": "/90-docs/adr/2605263100-mizuho-water-sanitation-tier-b-actor-r0.md",
+      "crossActorMitsuho": "/90-docs/adr/2605261015-mitsuho-food-agriculture-tier-b-actor-r0.md",
+      "crossActorHagukumi": "/90-docs/adr/2605261030-hagukumi-care-tier-b-actor-r0.md",
+      "crossActorHikari": "/90-docs/adr/2605261100-hikari-energy-tier-b-actor-r0.md"
+    }
+  }
+}

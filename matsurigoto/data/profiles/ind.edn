@@ -1,0 +1,17 @@
+;; Country profile — IND India (principal B). ADR-2606062300. sourcing :representative.
+;; India's Aadhaar (UIDAI) is the lineage of MOSIP, and DBT the lineage of OpenG2P — the open
+;; specs the standard's credential-issue + benefit-disburse modules draw on. Population-scale.
+{:country-profile/iso3 "IND" :country-profile/name "भारत / India"
+ :country-profile/operated-by ":adopting-government"
+ :country-profile/authority-mode ":supplied-to-state"
+ :country-profile/sourcing ":representative"
+ :country-profile/notes "Aadhaar = MOSIP lineage; DBT = OpenG2P lineage. No universal residence registry (Aadhaar is identity, not residence)."
+ :country-profile/bindings
+ [{:bind/service "id.national.issue"           :bind/agency "UIDAI"                             :bind/legal-basis "Aadhaar Act 2016"             :bind/national-spec "Aadhaar (MOSIP lineage)" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:uidai"}
+  {:bind/service "tax.income.file"             :bind/agency "Income Tax Department"            :bind/legal-basis "Income-tax Act 1961"          :bind/national-spec "e-Filing portal" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:incometax"}
+  {:bind/service "tax.vat.file"                :bind/agency "GST Network (GSTN)"               :bind/legal-basis "Central Goods and Services Tax Act 2017" :bind/national-spec "GST portal" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:gstn"}
+  {:bind/service "corp.incorporation.register" :bind/agency "Ministry of Corporate Affairs (MCA)" :bind/legal-basis "Companies Act 2013"        :bind/national-spec "MCA21 / SPICe+" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:mca"}
+  {:bind/service "passport.issue"              :bind/agency "Ministry of External Affairs (CPV)" :bind/legal-basis "Passports Act 1967"        :bind/national-spec "Passport Seva / ICAO Doc 9303" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:mea:passport"}
+  {:bind/service "benefit.child.claim"         :bind/agency "Direct Benefit Transfer (DBT)"     :bind/legal-basis "various welfare schemes"      :bind/national-spec "DBT / OpenG2P lineage + Aadhaar Payment Bridge" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:dbt"}
+  {:bind/service "civil.birth.register"        :bind/agency "Registrar of Births & Deaths (Office of RGI)" :bind/legal-basis "Registration of Births and Deaths Act 1969" :bind/national-spec "CRS portal (dc.crsorgi.gov.in)" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:rgi:crs"}
+  {:bind/service "civil.death.register"        :bind/agency "Registrar of Births & Deaths (Office of RGI)" :bind/legal-basis "Registration of Births and Deaths Act 1969" :bind/national-spec "CRS portal" :bind/atlas-did "did:web:etzhayyim.com:gov:ind:rgi:crs"}]}

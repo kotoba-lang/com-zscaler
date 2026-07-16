@@ -1,0 +1,123 @@
+{
+  "methodPackId": "v1-jp-seed",
+  "methodPackVersion": "1.0.0-draft",
+  "adr": "2605301600",
+  "jurisdiction": "jpn",
+  "status": "draft-pending-council-attestation",
+  "councilAttestation": [],
+  "basis": "Open, versioned detector heuristics for danjo discrepancyObservation categories over the JP open-government corpus (ADR-2605263900: 国会会議録 / 予算書 / 政府調達 / e-Stat). Each method conforms to com.etzhayyim.danjo.methodNote. CONSTITUTIONAL: every method is NON-adjudicating (G4) — it describes a FACTUAL cross-reference pattern only, never a finding of wrongdoing; knownFalsePositiveModes are mandatory and document why a hit is NOT, by itself, evidence of a crime / 不正. Method = open (G6); the public audits the detector, not only its output.",
+  "notes": [
+    "DRAFT / 雛形. Every threshold here is a placeholder planning figure pending (a) Council Lv6+ ≥3 attestation and (b) calibration against real pinned gov.dataset.* records. Do NOT treat as authoritative until status flips to 'attested' and councilAttestation lists ≥3 Lv6+ DIDs.",
+    "A method hit produces a danjo.discrepancyObservation (nonAdjudicatingNotice=true, ≥2 sourceRecordCids, this methodNoteCid). It is a fact about public records, NOT a verdict. Legal characterization, if ever sought, routes to external counsel via chigiri + Public Fund (G4).",
+    "Named-party publication of any hit is gated separately (G10: source already names the party + severity-gated + Council-reviewed + 1 SBT = 1 vote). These methods do not authorize naming.",
+    "Severity is review/routing weight ONLY, never a wrongdoing score (G4). `elevated` merely gates the named-party review path."
+  ],
+  "methods": [
+    {
+      "methodId": "single-bidder-streak",
+      "version": "1.0.0-draft",
+      "title": "Consecutive single-bid awards from one authority to one awardee",
+      "appliesToCategory": "single-bidder-streak",
+      "definition": "For each (contractingAuthority, awardeeLei) pair, count consecutive procurementRecord awards within a rolling window where the notice recorded exactly one bidder (single-bid / sole-source). Emit when the consecutive count over the window meets the threshold. This is a FACT about the public procurement record; single-bid procurement is lawful and routine in many contexts — see knownFalsePositiveModes.",
+      "inputs": ["com.etzhayyim.gov.dataset.procurementRecord", "com.etzhayyim.corp.leiReference"],
+      "thresholdParams": "{\"minConsecutive\":5,\"windowMonths\":24,\"requireSingleBidFlag\":true}",
+      "knownFalsePositiveModes": [
+        "Genuinely specialized / sole-source-justified requirement (proprietary spare parts, single accredited supplier, national-security exemption) — single-bidder by lawful necessity, not by steering.",
+        "Small or thin supplier market for the category — few eligible bidders exist.",
+        "Source records mis-coded single-bid where multiple bids were actually received (upstream data-quality, not a real streak).",
+        "Framework / call-off agreements that legitimately re-award to a pre-qualified vendor."
+      ]
+    },
+    {
+      "methodId": "awardee-officer-ubo-link",
+      "version": "1.0.0-draft",
+      "title": "Awardee entity shares a control / officer edge with the contracting authority's named officials",
+      "appliesToCategory": "awardee-officer-ubo-link",
+      "definition": "Resolve procurementRecord.awardeeLei to a corp entity, traverse corp.ownershipEdge (UBO / officer / parent-subsidiary), and emit when the awardee entity shares a control or officer edge with an individual publicly recorded (in the source data) as connected to the contracting authority. The link is asserted ONLY from public registry data (GLEIF L2 / OpenCorporates open-data); confidence MUST be 'exact-id-match' or 'registry-asserted' for an elevated observation (a 'name-normalized-candidate' fuzzy match alone may not ground elevated severity — see crossReferenceLink.confidence).",
+      "inputs": ["com.etzhayyim.gov.dataset.procurementRecord", "com.etzhayyim.corp.leiReference", "com.etzhayyim.corp.ownershipEdge"],
+      "thresholdParams": "{\"maxHops\":2,\"minConfidence\":\"registry-asserted\"}",
+      "knownFalsePositiveModes": [
+        "Homonym / common-name collision between distinct individuals (the dominant FP; mitigated by minConfidence + ≥2 source CIDs).",
+        "Stale registry data showing a control edge that was already divested before the award.",
+        "A declared, recused, and lawfully-managed conflict of interest (the link is real but was handled per the jurisdiction's rules) — the fact of the link is NOT the fact of impropriety.",
+        "Legitimate small-jurisdiction overlap where the eligible-supplier and official pools genuinely intersect."
+      ]
+    },
+    {
+      "methodId": "statement-vs-outlay-divergence",
+      "version": "1.0.0-draft",
+      "title": "Diet floor statement references a program figure that diverges from the published outlay",
+      "appliesToCategory": "statement-vs-outlay-divergence",
+      "definition": "Link a parliamentRecord member-statement that cites a named program + figure to the corresponding budgetRecord outlay for that program/period, and emit when the cited figure diverges from the published outlay beyond the tolerance. FACTUAL divergence between two public records; many divergences are explainable (see FP modes).",
+      "inputs": ["com.etzhayyim.gov.dataset.parliamentRecord", "com.etzhayyim.gov.dataset.budgetRecord"],
+      "thresholdParams": "{\"relativeTolerance\":0.15,\"requireSameProgramId\":true,\"requireSameFiscalPeriod\":true}",
+      "knownFalsePositiveModes": [
+        "Statement quotes a forecast / appropriation figure while the matched record is a realized outlay (different stage of the budget cycle).",
+        "Rounding, unit, or currency-base mismatch in either source (e.g. 億円 vs 千円).",
+        "Program-ID resolution error: the statement and the outlay are actually about different line items.",
+        "Statement is rhetorical / aspirational and does not assert the exact accounting figure."
+      ]
+    },
+    {
+      "methodId": "outlay-without-appropriation-trace",
+      "version": "1.0.0-draft",
+      "title": "Published outlay lacks a traceable appropriation record in the corpus",
+      "appliesToCategory": "outlay-without-appropriation-trace",
+      "definition": "For each budgetRecord outlay, attempt to resolve a referencing appropriation record (same program, prior or same period). Emit when no appropriation trace is found within the corpus. This is frequently a CORPUS-COVERAGE gap, not a substantive one — see FP modes; severity defaults low.",
+      "inputs": ["com.etzhayyim.gov.dataset.budgetRecord"],
+      "thresholdParams": "{\"lookbackPeriods\":2,\"requireProgramMatch\":true}",
+      "knownFalsePositiveModes": [
+        "The appropriation exists but was not yet ingested / pinned (passive-only corpus is necessarily incomplete; this is the dominant FP).",
+        "Cross-fiscal-year carryover or supplementary-budget mechanics that the simple program-match does not follow.",
+        "Reclassification between programs across periods.",
+        "Appropriation recorded under a parent aggregate the matcher did not expand."
+      ]
+    },
+    {
+      "methodId": "award-amount-anomaly-vs-baseline",
+      "version": "1.0.0-draft",
+      "title": "Award amount is a statistical outlier versus the category baseline",
+      "appliesToCategory": "award-amount-anomaly-vs-baseline",
+      "definition": "Build a per-category award-amount distribution from procurementRecord (optionally normalized by an e-Stat statisticsObservation denominator), and emit when an award is an outlier beyond the threshold. FACTUAL outlier flag; outliers are expected and usually benign.",
+      "inputs": ["com.etzhayyim.gov.dataset.procurementRecord", "com.etzhayyim.gov.dataset.statisticsObservation"],
+      "thresholdParams": "{\"method\":\"robust-zscore-mad\",\"zThreshold\":3.5,\"minSampleSize\":30}",
+      "knownFalsePositiveModes": [
+        "Genuinely large but legitimate project (infrastructure, large-scale IT) that dwarfs the category median.",
+        "Heterogeneous category mixing incomparable contract types — the baseline is not meaningful.",
+        "Small sample size making the robust z-score unstable (mitigated by minSampleSize).",
+        "Currency / unit normalization error inflating the apparent amount."
+      ]
+    },
+    {
+      "methodId": "modification-inflation",
+      "version": "1.0.0-draft",
+      "title": "Cumulative post-award modifications inflate the contract beyond a threshold of the original award",
+      "appliesToCategory": "modification-inflation",
+      "definition": "For each award, sum subsequent procurementRecord modification records and emit when the cumulative modification ratio exceeds the threshold of the original award amount. FACTUAL ratio over public records; scope growth is often legitimate.",
+      "inputs": ["com.etzhayyim.gov.dataset.procurementRecord"],
+      "thresholdParams": "{\"cumulativeRatioThreshold\":0.50,\"windowMonths\":36}",
+      "knownFalsePositiveModes": [
+        "Legitimate scope expansion or indexation/escalation clauses agreed in the original contract.",
+        "Emergency / disaster-driven scope changes permitted under the jurisdiction's rules.",
+        "Modifications mis-linked to the wrong base award (resolution error).",
+        "Inflation / FX adjustment recorded as a modification."
+      ]
+    },
+    {
+      "methodId": "cannabis-policy-legislative-trace",
+      "version": "1.0.0-draft",
+      "title": "Factual legislative trace of cannabis-policy reform (大麻取締法 → 大麻草の栽培の規制に関する法律)",
+      "appliesToCategory": "legislative-trace",
+      "definition": "A read-only INDEX (not a discrepancyObservation): cross-reference 国会会議録 (parliamentRecord) statements that mention 大麻 / 大麻取締法 / 大麻草の栽培の規制に関する法律 / 大麻由来医薬品 / 使用罪 into a FACTUAL, source-cited timeline of who said what and which provision changed (大麻取締法 renamed/restructured to 大麻草の栽培の規制に関する法律 by 令和5年法律第84号; cannabis-derived medicine made prescribable; THC-content-basis regulation; new 使用罪). This is the 大麻政策 scope of the danjo_diet_statement_index cell — it produces datoms only, NO observation, NO finding, NO position, NO endorsement. nonAdjudicatingNotice=true; ≥2 sourceRecordCids; severity is routing weight only, never a wrongdoing or policy-correctness score. Takes NO 推進/反対 stance on 解禁論 (G4; companion to nusa 幣 heritage actor's G3 and moushibumi neutral public-comment support, ADR-2606039800).",
+      "inputs": ["com.etzhayyim.gov.dataset.parliamentRecord"],
+      "thresholdParams": "{\"keywords\":[\"大麻\",\"大麻取締法\",\"大麻草の栽培の規制に関する法律\",\"大麻由来医薬品\",\"使用罪\"],\"emitsObservation\":false,\"primarySourceCiteRequired\":true}",
+      "knownFalsePositiveModes": [
+        "A statement mentions 大麻 in an unrelated context (place names 大麻町, historical/ritual hemp 麻) — keyword match is not topical relevance.",
+        "OCR / transcription drift in older 会議録 produces spurious or missing matches.",
+        "A statute reference cites a superseded provision number after the 令和5年 restructure (link resolves to the wrong article).",
+        "A speaker's quoted position is theirs alone; the index records that it was SAID, not that it is correct, prevailing, or endorsed — danjo asserts no policy verdict (G4).",
+        "Legal characterization of any change is out of danjo's scope and routes to chigiri + counsel; legislative figures here are :representative until primary-source-verified against e-Gov 法令 / 官報."
+      ]
+    }
+  ]
+}

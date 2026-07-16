@@ -1,0 +1,21 @@
+{:lexicon 1
+ :id "com.etzhayyim.noroshi.packagingJob"
+ :defs
+ {:main
+  {:type "record"
+   :key "pkgId"
+   :record
+   {:type "object"
+    :required ["pkgId" "robotId" "op" "use" "laserClass" "interlock" "couplingLossDb" "memberSig" "serverHeldKey" "dryRun"]
+    :properties
+    {:pkgId {:type "string"}
+     :robotId {:type "string" :description "the packaging robot (fibre-aligner / wire-bonder / inspector)"}
+     :op {:type "string" :enum ["active-align" "wire-bond" "inspect"] :description "photonic assembly operation"}
+     :use {:type "string" :enum ["alignment" "soldering" "inspection"] :description "G3/N1 — civilian fab use only; weaponisation/directed-energy is unrepresentable"}
+     :laserClass {:type "string" :enum ["1" "2" "3R" "3B" "4"] :description "IEC 60825 class of the alignment/process laser"}
+     :interlock {:type "boolean" :description "G5 — physical enclosure interlock present (required for any hazardous class)"}
+     :attestationRef {:type "string" :description "G5 — operator safety attestation ref (required for any hazardous class)"}
+     :couplingLossDb {:type "number" :description "achieved fibre↔grating insertion loss after active alignment"}
+     :memberSig {:type "string" :description "G7 — member/operator Ed25519 signature; required to actuate"}
+     :serverHeldKey {:type "boolean" :const false :description "G7 — the platform never holds the robot's key (ADR-2605231525)"}
+     :dryRun {:type "boolean" :const true :description "G8 — R0 is plan/replay only; live actuation Council Lv6+ (Lv7+ Class-3B/4) gated"}}}}}}

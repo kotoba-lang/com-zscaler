@@ -1,0 +1,38 @@
+(ns kotoba-actors.asobi-test
+  (:require [clojure.test :refer [deftest is testing]]
+            [kotoba-actors.asobi :as asobi]
+            [kotoba-actors.datomic :as d]))
+
+;; Exact counts discovered from the seed (35 nodes / 32 edges):
+;;   works 9, practices 9, venues 7, events 6, enclosures 4  -> 35 nodes
+;;   edges (縁, :en/from+:en/to, no id) = 32
+
+(deftest node-counts
+  (let [db (asobi/db)]
+    (testing "each node type has its exact seed count"
+      (is (= 9 (asobi/count-works db)))
+      (is (= 9 (asobi/count-practices db)))
+      (is (= 7 (asobi/count-venues db)))
+      (is (= 6 (asobi/count-events db)))
+      (is (= 4 (asobi/count-enclosures db))))))
+
+(deftest edge-count
+  (testing "total 縁 edges (load-rows + filter; not in db)"
+    (is (= 32 (asobi/count-edges)))))
+
+(deftest closure-invariant
+  (testing "no edge endpoint dangles outside the known node-id set"
+    (is (= #{} (asobi/dangling-edges)))))
+
+;; Engine-only sanity: a direct 2-clause join in the kotoba-datomic datalog.
+;; Public-domain works that are also in the :music medium -> exactly Beethoven-9
+;; and the IMSLP scores (2 results). Shared ?e joins the two triple-patterns.
+(deftest engine-q-join
+  (testing "d/q joins two clauses on a shared logic var"
+    (let [db (d/db-from-seed
+              "/Users/junkawasaki/github/com-junkawasaki/orgs/etzhayyim/root/20-actors/asobi/data/seed-asobi-graph.kotoba.edn")]
+      (is (= #{["play.work.beethoven-9"] ["play.work.imslp-scores"]}
+             (d/q '{:find [?e]
+                    :where [[?e :work/access :public-domain]
+                            [?e :work/medium :music]]}
+                  db))))))

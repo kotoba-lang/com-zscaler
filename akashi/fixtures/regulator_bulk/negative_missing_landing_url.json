@@ -1,0 +1,20 @@
+{
+  "fixtureId": "akashi-regulator-bulk-negative-missing-landing-url",
+  "capturedAt": "2026-06-02T00:00:00Z",
+  "source": {
+    "id": "regulator-ad-repositories",
+    "platform": "multi-platform",
+    "sourceUrl": "https://example.test/public-ad-disclosure-bulk-negative.json",
+    "jurisdiction": "EU"
+  },
+  "records": [
+    {
+      "sourceRecordId": "reg-2026-negative-0001",
+      "sourceUrl": "https://example.test/public-ad-disclosure/ads/reg-2026-negative-0001",
+      "advertiser": {
+        "displayName": "Malformed Public Disclosure Sponsor"
+      },
+      "creativeText": "This fixture is malformed because landingUrl is missing."
+    }
+  ]
+}

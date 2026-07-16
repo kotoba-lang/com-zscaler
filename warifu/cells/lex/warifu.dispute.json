@@ -1,0 +1,40 @@
+{
+  "lexicon": 1,
+  "id": "warifu.dispute",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Open a chargeback dispute over a settlement. A record, not an auto-reversal: resolution routes through chigiri 契; loss is mutualised by wakai 和会. Evidence is encrypted-CID-only.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["settlementId", "reasonCode", "openedByDid", "amountUsdc"],
+          "properties": {
+            "settlementId": { "type": "string" },
+            "reasonCode": { "type": "string", "enum": ["fraud", "not-received", "not-as-described", "duplicate", "other"] },
+            "openedByDid": { "type": "string", "format": "did" },
+            "amountUsdc": { "type": "integer", "minimum": 1 },
+            "evidenceCids": { "type": "array", "items": { "type": "string", "description": "encrypted blob CID (com.etzhayyim.encrypted.*) — no plaintext" } }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["opened"],
+          "properties": {
+            "opened": { "type": "boolean" },
+            "disputeId": { "type": "string" },
+            "status": { "type": "string", "enum": ["open", "evidence", "chigiri", "resolved", "absorbed"] }
+          }
+        }
+      },
+      "errors": [
+        { "name": "SettlementNotFound" },
+        { "name": "InvalidReasonCode" }
+      ]
+    }
+  }
+}

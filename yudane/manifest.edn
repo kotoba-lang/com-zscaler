@@ -1,0 +1,69 @@
+;; 委 yudane — actor manifest (clj-native, kotoba-Datom-native)
+;; Human Intention Energy Engine — Energy Order Protocol suite (submits to 澪 mio).
+;; The 意味変換 leg. OBSERVATION + TRANSLATION ONLY — content-free, consent-bound.
+{:actor/id        "yudane"
+ :actor/glyph     "委"
+ :actor/tier      :tier-b
+ :actor/integrates ["hikari" "ibuki" "mio" "okibi" "tawami" "toi"]
+ :actor/domain    "yudane.etzhayyim.com"
+ :actor/kind      :consent-bound-translator
+ :actor/purpose   "Human Intention Energy Engine — the 意味変換 (meaning-translation) leg of the Energy Order Protocol suite, and the most charter-sensitive actor. Consented, AGGREGATE member intention ('today WFH', 'this load can wait', 'heatwave tomorrow') is translated into controllable energy variables (an aggregate flex offer) → 撓 tawami / 澪 mio. Privacy is STRUCTURAL: an offer crosses the membrane only if CONSENTED — a member-signed, scoped, expiring, REVOCABLE capability (ibuki revocable-leash, ADR-2606111400) that is present, unexpired, reciprocal, and over a cohort ≥ the k-anonymity floor — and the engine is CONTENT-FREE (only an intention CLASS + an aggregate cohort signal are ever read; there is no per-person field, by construction). The surveillance degeneration series (五人組→隣組→Stasi→social-credit) is structurally unrepresentable: no denunciation, no per-person score, k-anonymity floor, symmetric/reciprocal visibility (Rider §2(c), ADR-2606082400; mimamori pattern, ADR-2606112300). OBSERVATION + TRANSLATION ONLY — yudane never controls; hikari actuates under Council gate. Intention leg of mio (verification backbone); feeds tawami (flexibility)."
+ :actor/status    :r0
+ :actor/adr       "2606211200"
+ :actor/related   ["2606211200" "2606111400" "2606082400" "2606112300" "2606071500" "2605262130" "2605312345"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "consent-bound" :gate/rule "An offer crosses only with a member-signed capability that is present + unexpired (ibuki revocable-leash). No capability ⇒ nothing read (:refused-no-capability); expired ⇒ :refused-expired. Test-enforced."}
+  {:gate/id "G2" :gate/name "content-free-k-anonymous" :gate/rule "Only an intention CLASS + an AGGREGATE cohort signal are read/emitted; NO per-person field exists (by construction). A cohort below the k-anonymity floor is refused (:refused-below-k-anon). The degeneration series (no :yudane.person/* / :score / :denunciation / :surveil) is unrepresentable. Test-enforced."}
+  {:gate/id "G3" :gate/name "reciprocal-transparent" :gate/rule "The exchange must be reciprocal + logged (Rider §2(c) symmetry; moyai credit); non-reciprocal ⇒ refused. Consent is revocable."}
+  {:gate/id "G4" :gate/name "translation-only" :gate/rule "yudane translates intention → energy variable; it NEVER controls. No :yudane/dispatch attribute exists; hikari actuates under Council gate."}
+  {:gate/id "G5" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms on an append-only content-addressed commit-DAG; every derived datom :yudane/derived + :yudane/sourcing."}
+  {:gate/id "G6" :gate/name "murakumo-only-narration" :gate/rule "Any narration via the Murakumo no-VKE mesh, DEFAULT-PREFERRED (Rider v3.3 §2(i))"}
+  {:gate/id "G7" :gate/name "no-server-key" :gate/rule "Platform holds no key; the capability is member-signed in the member's own runtime; yudane is the bearer, never a held key. Live intention ingest is consent/operator-gated."}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "NOT a per-person profiler — content-free aggregate only (k-anonymous)"}
+  {:n/id "N2" :n/rule "NOT a social-credit / scoring engine — no per-person score representable"}
+  {:n/id "N3" :n/rule "NOT a denunciation / bossware channel — the degeneration series is unrepresentable"}
+  {:n/id "N4" :n/rule "NOT an actuator — yudane translates; hikari actuates under Council gate"}]
+
+ :actor/methods
+ [{:method/id "yudane_edn" :method/file "methods/yudane_edn.cljc" :method/role "seed loader + classify (offers)"}
+  {:method/id "analyze"    :method/file "methods/analyze.cljc"    :method/role "consent verdicts → content-free datoms → coverage → report (+ bb CLI)"}
+  {:method/id "kotoba"     :method/file "methods/kotoba.cljc"     :method/role "content-addressed append-only INTENTION LEDGER (tx-cid/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun"    :method/file "methods/autorun.cljc"    :method/role "deterministic idempotent-by-content heartbeat — translate → append verdicts on change (+ bb CLI)"}
+  {:method/id "claim"    :method/file "methods/claim.cljc"    :method/role "R1 seam: each CONSENTED offer to a 澪 mio flow-improvement claim (content-free aggregate; refused offers emit nothing)"}]
+
+ :actor/lex
+ [{:lex/id "intentionOffer"}
+  {:lex/id "consentCapability"}]
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.yudane.edn"
+  :seed/sourcing :representative
+  :seed/classes [:presence-shift :defer-flexible :schedule-known :seasonal-prep]}
+
+ :actor/ledger
+ {:ledger/file "data/persisted/yudane.intention.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/idempotent-by-content true
+  :ledger/note "Generated content-free intention ledger of consent verdicts; tamper-evident (verify-chain); no-server-key; appends only on change. Content-free by construction — never a who-intends-what registry."}
+
+ :actor/suite
+ {:suite/name "Energy Order Protocol"
+  :suite/role :intention
+  :suite/backbone "mio"
+  :suite/siblings ["mio" "tawami" "okibi" "toi"]
+  :suite/note "yudane translates consented aggregate member intention into flex offers → 撓 tawami / 澪 mio; the most charter-sensitive leg, guarded by consent + k-anonymity + reciprocity; hikari actuates under Council gate."}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/yudane/run_tests.sh"
+  :suites ["methods/test_yudane_edn.cljc" "methods/test_analyze.cljc"
+           "methods/test_kotoba.cljc" "methods/test_autorun.cljc"]}}

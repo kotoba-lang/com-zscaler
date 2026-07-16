@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_seat_textile_recovery cell (L3c)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_seat_textile_recovery"
+  :cell/glyph "🪑"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G9" "G13"]
+  :cell/state-graph "{:nodes [{:id \"extract-seating\", :type \"llm-prompt\", :prompt \"Extract seat components: foam, fabric, springs, padding.\"} {:id \"sort-streams\", :type \"function\", :func \"sort_foam_textile\"} {:id \"handoff-makura\", :type \"function\", :func \"handoff_to_makura\"} {:id \"end\", :type \"return\"}], :entry \"extract-seating\", :edges [{:from \"extract-seating\", :to \"sort-streams\"} {:from \"sort-streams\", :to \"handoff-makura\"} {:from \"handoff-makura\", :to \"end\"}]}"
+  :cell/doc "L3c: Seat textile recovery — foam + fabric streams to makura (G13)."
+  :cell/kotoba "{:reads [:shred-output/vin :shred-output/cross-actor-handoffs], :writes [:shred-output/cross-actor-handoffs]}"}]

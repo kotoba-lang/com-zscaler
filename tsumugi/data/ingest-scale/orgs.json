@@ -1,0 +1,22 @@
+{
+  "_note": "OFFLINE fixture for ingest_scale.py — structural-public parent→child org relations (Wikidata P749-shaped). :representative, hermetic (no network). Real public facts; QIDs where well-known else omitted (a descriptive citation is used instead). Promotion into the committed seed is a separate human-reviewed PR.",
+  "orgs": [
+    {"child": "Google LLC", "parent": "Alphabet Inc.", "country": "United States", "childRef": "Q95"},
+    {"child": "Instagram", "parent": "Meta Platforms", "country": "United States", "childRef": "Q209330"},
+    {"child": "Audi", "parent": "Volkswagen AG", "country": "Germany", "childRef": "Q23317"},
+    {"child": "Daihatsu", "parent": "Toyota Motor", "country": "Japan", "childRef": "Q186578"},
+    {"child": "Arm Holdings", "parent": "SoftBank Group", "country": "United Kingdom"},
+    {"child": "DeepMind", "parent": "Alphabet Inc.", "country": "United Kingdom"},
+    {"child": "GEICO", "parent": "Berkshire Hathaway", "country": "United States"},
+    {"child": "Louis Vuitton", "parent": "LVMH", "country": "France"},
+    {"child": "Nespresso", "parent": "Nestlé", "country": "Switzerland"},
+    {"child": "Skoda Auto", "parent": "Volkswagen AG", "country": "Czech Republic"},
+    {"child": "YouTube", "parent": "Alphabet Inc.", "country": "United States", "childRef": "Q866"},
+    {"child": "WhatsApp", "parent": "Meta Platforms", "country": "United States", "childRef": "Q44"},
+    {"child": "Waymo", "parent": "Alphabet Inc.", "country": "United States", "childRef": "Q18912104"},
+    {"child": "Porsche", "parent": "Volkswagen AG", "country": "Germany", "childRef": "Q40993"},
+    {"child": "SEAT", "parent": "Volkswagen AG", "country": "Spain", "childRef": "Q46225"},
+    {"child": "GitHub", "parent": "Microsoft", "country": "United States", "childRef": "Q364"},
+    {"child": "LinkedIn", "parent": "Microsoft", "country": "United States", "childRef": "Q213660"}
+  ]
+}

@@ -1,0 +1,339 @@
+;; haraedo 祓戸 — kotoba EAVT schema
+;; ADR-2606010200
+;; Global bulky-waste disposal: facility + fleet + crew + collection-point
+;; registries (datalog) and the application + route operational records.
+
+[;; ---- jurisdiction (自治体) ----
+ {:db/ident :jurisdiction/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "stable jurisdiction key, e.g. jp.shibuya / us.nyc / de.berlin"}
+ {:db/ident :jurisdiction/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :jurisdiction/country
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-3166 alpha-2, e.g. JP US DE GB"}
+ {:db/ident :jurisdiction/admin-level
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":municipality :ward :county :region"}
+ {:db/ident :jurisdiction/bulky-fee-model
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":per-item :per-sticker :per-weight :flat :free"}
+ ;; R1 (ADR-2606010200 §R1) — per-jurisdiction fee parameters (minor units of currency)
+ {:db/ident :jurisdiction/currency
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-4217, e.g. JPY USD EUR GBP"}
+ {:db/ident :jurisdiction/fee-per-sticker
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "fee charged per collection sticker/item when model = :per-sticker"}
+ {:db/ident :jurisdiction/fee-per-kg
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "fee per kg when model = :per-weight"}
+ {:db/ident :jurisdiction/fee-flat
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "flat fee per pickup when model = :flat"}
+
+ ;; ---- facility (ゴミ処理場 / waste-processing facility) ----
+ {:db/ident :facility/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "stable facility key, e.g. jp.shibuya.fac.incinerator-01"}
+ {:db/ident :facility/jurisdiction
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref to :jurisdiction/id (may serve several)"}
+ {:db/ident :facility/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :facility/kind
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":incinerator :recycling-center :landfill :transfer-station :bulky-dismantle :compost :mrf"}
+ {:db/ident :facility/lat
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :facility/lon
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :facility/capacity-tonnes-day
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "rated daily intake capacity (tonnes) — hard constraint (G15)"}
+ {:db/ident :facility/load-tonnes-today
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "running intake booked for the day; planner must keep ≤ capacity"}
+ {:db/ident :facility/accepted-categories
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/many
+  :db/doc "item categories this facility accepts (ref :item-category/code values)"}
+ {:db/ident :facility/operating-hours
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "human/ISO operating window, e.g. Mon-Sat 08:00-17:00"}
+ {:db/ident :facility/gate-fee-per-tonne
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "tipping/gate fee per tonne, minor units of jurisdiction currency"}
+ {:db/ident :facility/sourcing
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":authoritative or :representative (R0 seed flag)"}
+ {:db/ident :facility/source-url
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "provenance URL of the authoritative dataset (R2, G8 non-fabrication)"}
+ {:db/ident :facility/source-dataset
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "source dataset id from the fetch_facilities SOURCES registry (R2)"}
+
+ ;; ---- item-category (粗大ゴミ品目区分) ----
+ {:db/ident :item-category/code
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc ":furniture :appliance-large :bedding :bicycle :garden :electronics :other"}
+ {:db/ident :item-category/label
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :item-category/hazardous
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "true → G3 hazardous-boundary: route to licensed handler, NOT bulky waste"}
+ {:db/ident :item-category/base-fee
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "default per-item fee, minor units; jurisdiction may override"}
+ {:db/ident :item-category/est-weight-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :item-category/requires-dismantle
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ---- collection-point (収集地点 / 集積所 / curbside) ----
+ {:db/ident :collection-point/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :collection-point/jurisdiction
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :collection-point/lat
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :collection-point/lon
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :collection-point/kind
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":curbside :depot :station :on-demand-address"}
+ {:db/ident :collection-point/service-area
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "cluster/zone key used by dispatch to group stops"}
+
+ ;; ---- vehicle (配車 / 車両) ----
+ {:db/ident :vehicle/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :vehicle/jurisdiction
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :vehicle/kind
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":packer :flatbed :crane-truck :mini-loader :ev-packer"}
+ {:db/ident :vehicle/capacity-kg
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "payload capacity — hard constraint (G15)"}
+ {:db/ident :vehicle/depot-lat
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :vehicle/depot-lon
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :vehicle/status
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":available :assigned :maintenance"}
+
+ ;; ---- crew (担当者 / personnel) ----
+ {:db/ident :crew/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :crew/jurisdiction
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :crew/member-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "DID-bound; labor-liberation participant, not gig contractor (G5)"}
+ {:db/ident :crew/role
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":driver :loader :dispatcher :operator"}
+ {:db/ident :crew/certifications
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/many
+  :db/doc ":hgv-license :crane :hazmat :first-aid"}
+ {:db/ident :crew/shift
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":early :day :late — checked against route date (G15)"}
+ {:db/ident :crew/labor-level
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc "Labor Liberation ladder level :l0 .. :l6 (ADR-2605261000)"}
+
+ ;; ---- application (粗大ゴミ申請) ----
+ {:db/ident :application/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :application/member-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "DID-bound; address/PII held in com.etzhayyim.encrypted.* (G6)"}
+ {:db/ident :application/jurisdiction
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :application/items
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/many
+  :db/doc "ref to :item-category/code values"}
+ {:db/ident :application/collection-point
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref to :collection-point/id"}
+ {:db/ident :application/scheduled-date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO date of collection slot"}
+ {:db/ident :application/fee
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "quoted fee, minor units; settled per G7 (non-fiat)"}
+ {:db/ident :application/payment-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC/warifu tx or XRPC receipt ref"}
+ {:db/ident :application/sticker-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "collection sticker/ticket id"}
+ {:db/ident :application/slot-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref to :slot/id booked at schedule time (R2, couples intake↔dispatch)"}
+ {:db/ident :application/consent-sig
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "DID-signed consent proof (G1)"}
+ {:db/ident :application/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":quoted :scheduled :stickered :assigned :collected :delivered :closed"}
+
+ ;; ---- route (収集ルート / dispatch plan) ----
+ {:db/ident :route/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :route/jurisdiction
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :route/date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :route/vehicle
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref to :vehicle/id"}
+ {:db/ident :route/crew
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "ref to :crew/id (driver + loaders)"}
+ {:db/ident :route/stops
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "ordered :collection-point/id list (ordering carried in :route/stop-order)"}
+ {:db/ident :route/stop-order
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "EDN/JSON vector of collection-point ids in visit order"}
+ {:db/ident :route/facility-destination
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref to :facility/id (capacity + accepted-category checked, G14/G15)"}
+ {:db/ident :route/distance-km
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :route/est-duration-min
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :route/load-kg
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "summed estimated load; must be ≤ vehicle capacity (G15)"}
+ {:db/ident :route/window
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc "served time window (R2 VRPTW): :am :pm :allday"}
+ {:db/ident :route/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":planned :dispatched :in-progress :complete"}
+
+ ;; ---- slot (R1) — capacity-honest collection calendar (時間枠) ----
+ {:db/ident :slot/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :slot/jurisdiction
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :slot/date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO date of the collection day"}
+ {:db/ident :slot/service-area
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "matches :collection-point/service-area"}
+ {:db/ident :slot/window
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":am :pm :allday"}
+ {:db/ident :slot/capacity
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "max applications this slot can hold — hard constraint (G15)"}
+ {:db/ident :slot/booked
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "applications already booked into this slot"}
+ ;; R2 — VRPTW time-window bounds (minutes from midnight)
+ {:db/ident :slot/window-start
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "earliest service minute (e.g. 480 = 08:00)"}
+ {:db/ident :slot/window-end
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "latest service minute (e.g. 720 = 12:00); ETA past this = window violation (G15)"}]

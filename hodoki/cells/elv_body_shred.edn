@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_body_shred cell (L4)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_body_shred"
+  :cell/glyph "⚙️"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G9" "G13"]
+  :cell/state-graph "{:nodes [{:id \"shred-hulk\", :type \"llm-prompt\", :prompt \"Execute shredding process with magnetic/eddy-current/density sorting.\"} {:id \"measure-mass\", :type \"function\", :func \"measure_shred_mass\"} {:id \"calc-recovery\", :type \"function\", :func \"calc_recovery_rate\"} {:id \"handoff-partners\", :type \"function\", :func \"arrange_handoffs\"} {:id \"end\", :type \"return\"}], :entry \"shred-hulk\", :edges [{:from \"shred-hulk\", :to \"measure-mass\"} {:from \"measure-mass\", :to \"calc-recovery\"} {:from \"calc-recovery\", :to \"handoff-partners\"} {:from \"handoff-partners\", :to \"end\"}]}"
+  :cell/doc "L4: Body shred — ferrous/non-ferrous/Cu/ASR sort (G13 ≥95% recovery)."
+  :cell/kotoba "{:reads [:shred-output/vin :shred-output/ferrous-mass-kg :shred-output/non-ferrous-mass-kg :shred-output/copper-mass-kg :shred-output/asr-mass-kg :shred-output/material-recovery-pct], :writes [:shred-output/record-id :shred-output/vin :shred-output/ferrous-mass-kg :shred-output/non-ferrous-mass-kg :shred-output/copper-mass-kg :shred-output/asr-mass-kg :shred-output/material-recovery-pct :shred-output/asr-landfill-pct :shred-output/cross-actor-handoffs]}"}]

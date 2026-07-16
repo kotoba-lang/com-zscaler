@@ -1,0 +1,23 @@
+;; sarutahiko 猿田彦 — powertrain-assembly cell (langgraph, WASM runtime)
+;; ADR-2605252500 · Gen-3 deepen
+{:cell/id "powertrain-assembly"
+ :cell/glyph "猿田彦"
+ :cell/kind :langgraph
+ :cell/runtime :wasm
+ :cell/entry "py/agent.py"
+ :cell/doc "L2 powertrain assembly (engine/transmission/axle). G7 fuel guard: R0/R1 B100+diesel-hybrid; R2+ LFP/H2/NH3/methanol-fuel-cell only."
+ :cell/state-graph
+ {:nodes [:intake :process :attest]
+  :entry :intake
+  :edges [[:intake :process] [:process :attest] [:attest :end]]}
+ :cell/llm
+ {:provider :murakumo
+  :endpoint "127.0.0.1:4000"
+  :model "gemma3:4b"
+  :charter-rider true}
+ :cell/gates ["G7" "G16" "G17"]
+ :cell/kotoba
+ {:reads [:vehicle-order/id :vehicle-order/buyer-did :vehicle-order/specs :vehicle-order/state]
+  :writes [:production-progress/id :production-progress/order :production-progress/stage
+           :production-progress/note :production-progress/timestamp
+           :attestation/id :attestation/order :attestation/type :attestation/cid :attestation/timestamp]}}

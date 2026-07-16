@@ -1,0 +1,8 @@
+;; schema.edn — Datomic/Datascript 互換スキーマ定義（自動生成 by edn-datomize.bb）
+;; :db/ident 属性定義のリスト。Datomic 固有キー(:db.install/_attribute 等)は使わない。
+;; 手編集禁止 — 再生成すると上書きされる。
+;; 注: kotoba/schema.edn（既に Datomic schema tx-data 形式の手書き EAVT スキーマ）
+;; とは別物 — こちらは edn-datomize.bb が変換した lex/*.edn 等のメタデータ
+;; 専用の付随スキーマ。manifest.edn は対象外（共有ツール互換パッチ待ち）。
+
+[#:db{:ident :lex.classification/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.classification/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.classification/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex.collection/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.collection/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.collection/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex.item/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.item/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.item/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

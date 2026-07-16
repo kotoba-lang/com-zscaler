@@ -1,0 +1,22 @@
+;; kaname 要 — tiny SYNTHETIC mirror Datom-log fixture (for the join test; ADR-2606172100 R1).
+;; Shape-identical to a real mirror's GENERATED kotoba Datom log ([e a v tx op]); used to test
+;; datoms->graph + lift deterministically WITHOUT depending on a sibling actor's output file.
+[
+["m.openai" :organism/kind :ai.org/lab 1 :add]
+["m.openai" :organism/label "OpenAI" 1 :add]
+["m.openai" :ai/open? false 1 :add]
+["m.nvidia" :organism/kind :ai.org/company 1 :add]
+["m.nvidia" :organism/label "NVIDIA" 1 :add]
+["m.chair" :organism/kind :ai.role/person 1 :add]
+["m.chair" :organism/label "Standards Chair (public office)" 1 :add]
+["en.m.nvidia.compute-deal.m.openai" :en/from "m.nvidia" 1 :add]
+["en.m.nvidia.compute-deal.m.openai" :en/to "m.openai" 1 :add]
+["en.m.nvidia.compute-deal.m.openai" :en/kind :compute-deal 1 :add]
+["en.m.nvidia.compute-deal.m.openai" :en/grasping-load 0.8 1 :add]
+["en.m.nvidia.partners.m.openai" :en/from "m.nvidia" 1 :add]
+["en.m.nvidia.partners.m.openai" :en/to "m.openai" 1 :add]
+["en.m.nvidia.partners.m.openai" :en/kind :partners 1 :add]
+["en.m.nvidia.partners.m.openai" :en/grasping-load 0.3 1 :add]
+;; a DERIVED datom (op :derived) — must be IGNORED by datoms->graph (ground only)
+["m.openai" :bond/opening-priority 1.6 1 :derived]
+]

@@ -1,0 +1,41 @@
+{
+  "methodSet": "akashi-v1-r0-seed",
+  "status": "reserved",
+  "adr": "etzhayyim:adr:2606022300",
+  "methods": [
+    {
+      "id": "source-policy/public-disclosure-r0",
+      "output": "com.etzhayyim.akashi.sourcePolicySnapshot",
+      "limits": [
+        "No logged-in scraping",
+        "No anti-bot bypass",
+        "Adapter disabled when source terms cannot be verified"
+      ]
+    },
+    {
+      "id": "snapshot-parser/source-record-r0",
+      "output": "com.etzhayyim.akashi.adDisclosureSnapshot",
+      "limits": [
+        "Preserve source-limited fields",
+        "Do not infer unavailable targeting or spend detail"
+      ]
+    },
+    {
+      "id": "cross-platform-link/factual-r0",
+      "output": "com.etzhayyim.akashi.adDisclosureLink",
+      "limits": [
+        "Links are factual and non-adjudicating",
+        "Same domain or creative hash is not proof of common control"
+      ]
+    },
+    {
+      "id": "malak-candidate/public-ioc-r0",
+      "output": "com.etzhayyim.akashi.malakEvidenceCandidate",
+      "limits": [
+        "Candidate evidence only",
+        "Requires review before malak import",
+        "Never asserts fraud, crime, or malware operation by itself"
+      ]
+    }
+  ]
+}

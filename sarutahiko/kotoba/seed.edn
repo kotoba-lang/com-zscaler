@@ -1,0 +1,111 @@
+;; sarutahiko 猿田彦 — kotoba seed data (representative, R0)
+;; ADR-2605252500  ·  :sourcing :representative (NOT authoritative)
+;; A small worked example: one vehicle order (Class-8 truck) flowing through
+;; various production stages, with attestations, quality check, and a computed
+;; settlement intent (USDC minor, 10% tithe).
+
+[;; ════════════ Vehicle Order ════════════
+ {:vehicle-order/id "vo.demo.0001"
+  :vehicle-order/buyer-did "did:web:member.example.etzhayyim.com"
+  :vehicle-order/specs "Class-8 heavy duty truck, 6x4, B100 biodiesel engine, white color, standard cab, 26-ton GVWR"
+  :vehicle-order/state :ready
+  :vehicle-order/settlement "settle.demo.0001"}
+
+ ;; ════════════ Production Progress ════════════
+ {:production-progress/id "pp.demo.0001.frame"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :frame-fabrication
+  :production-progress/timestamp "2026-06-02T08:00:00Z"
+  :production-progress/note "Frame fabricated, HSLA-780 steel used."}
+ {:production-progress/id "pp.demo.0001.powertrain"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :powertrain-assembly
+  :production-progress/timestamp "2026-06-02T10:00:00Z"
+  :production-progress/note "B100 biodiesel engine and 6x4 drivetrain assembled."}
+ {:production-progress/id "pp.demo.0001.cab"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :cab-body-forming
+  :production-progress/timestamp "2026-06-02T12:00:00Z"
+  :production-progress/note "Standard cab body formed and welded."}
+ {:production-progress/id "pp.demo.0001.marriage"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :final-marriage
+  :production-progress/timestamp "2026-06-02T14:00:00Z"
+  :production-progress/note "Cab, frame, and powertrain married. Robot witness quorum achieved."}
+ {:production-progress/id "pp.demo.0001.paint"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :paint-finishing
+  :production-progress/timestamp "2026-06-02T16:00:00Z"
+  :production-progress/note "White paint applied, VOC <100 g/L."}
+ {:production-progress/id "pp.demo.0001.electrical"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :electrical-integration
+  :production-progress/timestamp "2026-06-02T18:00:00Z"
+  :production-progress/note "Electrical systems integrated, open-source ECU firmware."}
+ {:production-progress/id "pp.demo.0001.roadtest"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :quality-road-test
+  :production-progress/timestamp "2026-06-02T20:00:00Z"
+  :production-progress/note "Road test completed, speed <= 90 km/h."}
+ {:production-progress/id "pp.demo.0001.emissions"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :emissions-audit
+  :production-progress/timestamp "2026-06-02T21:00:00Z"
+  :production-progress/note "Emissions audit passed Euro 7 equivalent."}
+ {:production-progress/id "pp.demo.0001.vinbinder"
+  :production-progress/order "vo.demo.0001"
+  :production-progress/stage :vin-attestation-binder
+  :production-progress/timestamp "2026-06-02T22:00:00Z"
+  :production-progress/note "VIN attested and bound to kotoba-datomic."}
+
+
+ ;; ════════════ Quality Inspection ════════════
+ {:quality/id "qc.demo.0001"
+  :quality/order "vo.demo.0001"
+  :quality/result :pass
+  :quality/defects []
+  :quality/inspector-did "did:web:inspector.example.etzhayyim.com"
+  :quality/timestamp "2026-06-02T20:30:00Z"}
+
+ ;; ════════════ Settlement Intent ════════════
+ {:settlement/id "settle.demo.0001"
+  :settlement/order "vo.demo.0001"
+  :settlement/gross-minor 8000000000  ; 80,000 USDC (example)
+  :settlement/tithe-minor 800000000   ; 10% tithe = 8,000 USDC
+  :settlement/factory-payout-minor 7200000000 ; Net = 72,000 USDC
+  :settlement/state :intent
+  :settlement/buyer-sig-ref ""}
+
+ ;; ════════════ SBT Eligibility ════════════
+ {:sbt/holder-did "did:web:member.example.etzhayyim.com"
+  :sbt/active true}
+
+ ;; ════════════ Attestations (example) ════════════
+ {:attestation/id "attest.demo.0001.frame"
+  :attestation/order "vo.demo.0001"
+  :attestation/type :frame-fabrication
+  :attestation/cid "bafybeifx7yeb55gn3f77q233z2b3jqv3m5jznm6z7q2f43x5f2"
+  :attestation/timestamp "2026-06-02T08:30:00Z"
+  :attestation/details "Frame fabrication log + photos."}
+ {:attestation/id "attest.demo.0001.powertrain"
+  :attestation/order "vo.demo.0001"
+  :attestation/type :powertrain-assembly
+  :attestation/cid "bafybeifx7yeb55gn3f77q233z2b3jqv3m5jznm6z7q2f43x5f3"
+  :attestation/timestamp "2026-06-02T10:30:00Z"
+  :attestation/details "Powertrain assembly log, fuel type verified."}
+
+ ;; ════════════ Final Vehicle Record ════════════
+ {:vehicle/vin "TRUCKVIN0000000001"
+  :vehicle/order "vo.demo.0001"
+  :vehicle/did "did:web:etzhayyim.com:sarutahiko:vehicle:TRUCKVIN0000000001"
+  :vehicle/attestations ["attest.demo.0001.frame" "attest.demo.0001.powertrain"]
+  :vehicle/emissions-audit "pp.demo.0001.emissions" ; refers to a production-progress stage, which might contain the actual audit record
+  :vehicle/final-review "silenreview.demo.0001"} ; Placeholder, assuming another entity for final review
+
+ ;; ════════════ Silen Vehicle Review (Placeholder) ════════════
+ {:silen-vehicle-review/id "silenreview.demo.0001"
+  :silen-vehicle-review/vehicle "TRUCKVIN0000000001"
+  :silen-vehicle-review/council-approval :pending
+  :silen-vehicle-review/timestamp "2026-06-02T23:00:00Z"
+  :silen-vehicle-review/note "Council 5-of-7 Safe review pending."}
+]

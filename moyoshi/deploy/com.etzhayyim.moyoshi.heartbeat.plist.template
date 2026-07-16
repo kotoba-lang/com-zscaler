@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- moyoshi 催し — production convening heartbeat LaunchAgent (ADR-2606272100 R3; deploy 実運用).
+     Generated from this template by install.clj (@REPO@ → the repo root). Runs the heartbeat
+     hourly at :39 (matching the cell-runner cron registration), against the LOCAL kotoba engine. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.etzhayyim.moyoshi.heartbeat</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>@BB@</string>
+    <string>@REPO@/20-actors/moyoshi/deploy/run-heartbeat.clj</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>MOYOSHI_REPO</key>
+    <string>@REPO@</string>
+    <key>MOYOSHI_BB</key>
+    <string>@BB@</string>
+  </dict>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Minute</key>
+    <integer>39</integer>
+  </dict>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>StandardOutPath</key>
+  <string>@HOME@/Library/Logs/moyoshi-heartbeat.log</string>
+  <key>StandardErrorPath</key>
+  <string>@HOME@/Library/Logs/moyoshi-heartbeat.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

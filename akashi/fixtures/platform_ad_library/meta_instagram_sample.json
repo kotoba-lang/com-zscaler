@@ -1,0 +1,55 @@
+{
+  "fixtureId": "akashi-platform-ad-library-meta-instagram-r1",
+  "capturedAt": "2026-07-10T00:00:00Z",
+  "source": {
+    "id": "meta-ad-library",
+    "platform": "meta",
+    "sourceFamily": "social-ad-library",
+    "sourceUrl": "https://www.facebook.com/ads/library/",
+    "jurisdiction": "US",
+    "accessMode": "manual-review-only"
+  },
+  "records": [
+    {
+      "sourceRecordId": "meta-ig-2026-0001",
+      "sourceUrl": "https://www.facebook.com/ads/library/?id=meta-ig-2026-0001",
+      "advertiser": {
+        "displayName": "Example Public Interest Project",
+        "platformAdvertiserId": "page-12345",
+        "pageUrl": "https://www.facebook.com/example-public-interest",
+        "websiteDomain": "example.org",
+        "jurisdiction": "US",
+        "verifiedStatus": "source-verified"
+      },
+      "creativeText": "Source-disclosed public-interest campaign creative.",
+      "media": {
+        "cid": "cid:akashi:media:meta-ig-2026-0001",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "language": "en",
+      "disclosedCategory": "public-interest",
+      "sourceIssuePoliticalFlag": "source-not-disclosed",
+      "landingUrl": "https://example.org/public-interest",
+      "startedAt": "2026-07-01T00:00:00Z",
+      "endedAt": "2026-07-07T00:00:00Z",
+      "status": "inactive",
+      "spendRange": {
+        "lower": 100,
+        "upper": 499,
+        "currency": "USD",
+        "sourceLabel": "$100-$499"
+      },
+      "impressionRange": {
+        "lower": 10000,
+        "upper": 49999,
+        "sourceLabel": "10K-49K"
+      },
+      "regionSummary": ["US", "CA"],
+      "targetingSummary": {
+        "sourceLimited": true,
+        "age": "18+",
+        "regions": ["US", "CA"]
+      }
+    }
+  ]
+}

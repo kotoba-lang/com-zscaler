@@ -1,0 +1,1 @@
+[{:db/id -1, :kotoba.app/name "tanemaki", :kotoba.app/version "0.1.0", :kotoba.app/components "[{:name \"tanemaki\", :src \"methods/mesh.clj\", :scale 1, :triggers [{:type :kse, :topic \"etzhayyim/actor/tanemaki\"}], :requires #{:cap/kqe}}]", :kotoba.app/placement "{:spread :zone, :require {:tier \"edge\"}}"}]

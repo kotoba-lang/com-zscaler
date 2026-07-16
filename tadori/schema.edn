@@ -1,0 +1,9 @@
+;; 20-actors/tadori/schema.edn — Datomic/Datascript-compatible attribute
+;; definitions for the wrapped tx-data .edn files in this actor dir
+;; (Phase 4 fan-out, edn-datomize, actor:tadori). :db/ident attribute list.
+;; No Datomic-specific keys (:db.install/_attribute etc). Do not hand-edit —
+;; regenerate via the wrap-map transform if more files are added later.
+;; NOTE: this is separate from kotoba/schema.edn, which is tadori's OWN
+;; production Datomic schema for threat-intel domain data (unrelated).
+
+[#:db{:ident :tadori.malak-contract/as-of, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/case-id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/chain, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/external-sources, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/findings, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/labels, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/onion, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/report-id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :tadori.malak-contract/seeds, :valueType :db.type/string, :cardinality :db.cardinality/many} #:db{:ident :tadori.malak-contract/txs, :valueType :db.type/string, :cardinality :db.cardinality/one}]

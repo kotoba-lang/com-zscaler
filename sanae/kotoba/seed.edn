@@ -1,0 +1,31 @@
+;; sanae (早苗) :representative seed (R0). No live field exists. (G8)
+[;; demo parcel
+ {:parcel/id "did:web:sanae.etzhayyim.com/parcel/demo-0001"
+  :parcel/soil-carbon 24000     ;; soil organic carbon ×1000 (g/kg)
+  :parcel/area-ha 0.8}
+
+ ;; field state
+ {:field/bed-state :prepared
+  :field/moisture 310           ;; ×1000
+  :seed/varietal "rice-koshihikari-openbank"
+  :seed/bank-source "national-gene-bank-jp"}
+
+ ;; herbicide-free weeding (G9)
+ {:weeding/method :mechanical
+  :weeding/herbicide-free true}
+
+ ;; honest yield (G8)
+ {:harvest/yield-kg 4200
+  :soil/carbon-delta 150        ;; net positive ×1000 → regenerative
+  :soil/net-regenerative true}
+
+ ;; fleet
+ {:robot/id "saotome"  :robot/role "transplant + precision-seeding arm"}
+ {:robot/id "kusanagi" :robot/role "autonomous weeding crawler (mechanical + laser, no herbicide)"}
+ {:robot/id "hasa"     :robot/role "harvest + in-field threshing"}
+ {:robot/id "kakashi"  :robot/role "survey + spot-treat drone"}
+ {:robot/id "tanishi"  :robot/role "soil-microbiome + moisture probe"}
+
+ ;; displacement cohort (ADR-2606032130) — the field-labour role this deployment frees
+ {:displacement/cohort-id "sanae-A01-6111-jp-2026"
+  :displacement/isco "6111"}]

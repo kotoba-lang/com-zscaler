@@ -1,0 +1,19 @@
+;; com.etzhayyim.kuniumi.commissioningRecord — lexicon
+;; ADR-2605201400 · commissioning output
+{:lexicon 1
+ :id "com.etzhayyim.kuniumi.commissioningRecord"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["commissioningId" "constructionRecordId" "checklistResult" "state"]
+    :properties
+    {:commissioningId     {:type "string" :description "unique commissioning record ID"}
+     :constructionRecordId {:type "string" :description "ref to :constructionRecord"}
+     :checklistResult     {:type "string" :description "safety PLC + motion bounds + sensor calibration attestation"}
+     :robotWitnessSigs    {:type "string" :description ">=2 robot-DID signatures (G8)"}
+     :operatorAttestation {:type "string" :description "operator DID signature (if applicable)"}
+     :state               {:type "string" :description ":in-progress | :passed | :failed"}
+     :timestamp           {:type "string" :description "ISO-8601 completion time"}}}}}}

@@ -1,0 +1,11 @@
+;; watari-shaped movement-situation roll-up (DERIVED, :representative) — bridge INPUT.
+;; A snapshot of public AIS-derived chokepoint vessel-transit counts; non-chokepoint
+;; records (lanes/craft) are present and MUST be ignored by the bridge.
+[
+ {:movement/chokepoint ":malacca" :movement/chokepoint-transit 3 :movement/derived true}
+ {:movement/chokepoint ":suez-red-sea" :movement/chokepoint-transit 1 :movement/derived true}
+ {:movement/chokepoint ":hormuz" :movement/chokepoint-transit 1 :movement/derived true}
+ {:movement/chokepoint ":luzon-strait" :movement/chokepoint-transit 2 :movement/derived true}
+ {:movement/lane "lane.malacca" :movement/lane-load 3 :movement/vessels 3 :movement/derived true}
+ {:movement/craft "craft.vessel.imo9692845" :movement/stale true :movement/derived true}
+]

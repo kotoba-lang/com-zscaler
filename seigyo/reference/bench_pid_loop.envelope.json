@@ -1,0 +1,44 @@
+{
+  "$comment": "seigyo.setpointEnvelope mirror for bench_pid_loop.st (ADR-2606111000 §3.4, ADR-2606111100 §1). The ST constants are authoritative at runtime; this record is the attestation-layer mirror. Changing any value = new program version = re-attestation.",
+  "programRef": "reference/bench_pid_loop.st",
+  "site": "BENCH-R1",
+  "controller": "openplc-bench-r1-01",
+  "envelopes": [
+    {
+      "tag": "sp_request",
+      "unit": "degC",
+      "min": 0.0,
+      "max": 250.0,
+      "maxRateOfChange": { "value": 5.0, "unit": "degC/min" },
+      "rationale": "igata die-preheat analog 220 degC + margin; furnace element rated 400 degC; hardwired thermal fuse (L1S) at 300 degC is the safety bound — this envelope is operational, not safety"
+    },
+    {
+      "tag": "pid_out",
+      "unit": "percent",
+      "min": 0.0,
+      "max": 80.0,
+      "maxRateOfChange": null,
+      "rationale": "2 kW element duty derate"
+    }
+  ],
+  "interlocksUpstream": [
+    {
+      "name": "estop-chain",
+      "type": "hardwired series E-stop, contactor upstream of SSR",
+      "softwareVisibility": "read-only mirror %IX0.0"
+    },
+    {
+      "name": "thermal-fuse-300C",
+      "type": "non-resettable thermal fuse in heater circuit",
+      "softwareVisibility": "read-only mirror %IX0.1"
+    }
+  ],
+  "clampCounterTag": "clamp_count",
+  "attestation": {
+    "programCid": null,
+    "stSourceCid": null,
+    "engineerDid": null,
+    "councilReviewCid": null,
+    "$comment": "null until R1 Council baseline (ADR-2606111100 §2)"
+  }
+}

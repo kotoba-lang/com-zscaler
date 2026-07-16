@@ -1,0 +1,38 @@
+{
+  "_note": "Wikidata-shaped influence fixture (OFFLINE). Each entity = a public historical figure/doc; influencedBy = Wikidata P737 'influenced by' targets, given as either an existing seed id (fig.*/doc.*/trad.*) or a label resolvable to a new node. Public, settled (deathYear required, N4). Dating + relations are documented (:representative). This is a SAMPLE, not a live pull.",
+  "source": "wikidata-P737-shaped",
+  "entities": [
+    {
+      "id": "Q38193",
+      "label": "Arthur Schopenhauer",
+      "birthYear": 1788, "deathYear": 1860,
+      "tradition": ["secular-philosophy"],
+      "era": "modern",
+      "influencedBy": ["fig.kant", "fig.plato", "doc.upanishads"]
+    },
+    {
+      "id": "Q6512",
+      "label": "Søren Kierkegaard",
+      "birthYear": 1813, "deathYear": 1855,
+      "tradition": ["christian", "secular-philosophy"],
+      "era": "modern",
+      "influencedBy": ["fig.hegel", "fig.socrates"]
+    },
+    {
+      "id": "Q9358",
+      "label": "Friedrich Nietzsche",
+      "birthYear": 1844, "deathYear": 1900,
+      "tradition": ["secular-philosophy"],
+      "era": "modern",
+      "influencedBy": ["Arthur Schopenhauer"]
+    },
+    {
+      "id": "Q-LIVING-EXAMPLE",
+      "label": "Living Person Example",
+      "birthYear": 1975,
+      "tradition": ["secular-philosophy"],
+      "era": "contemporary",
+      "influencedBy": ["fig.kant"]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+[{:db/id -1, :kotoba.seed/seed-ref "20-actors/nusa/data/seed-ritual-hemp.kotoba.edn", :kotoba.seed/schema-ref "20-actors/nusa/kotoba/schema.edn", :kotoba.seed/ontology-ref "00-contracts/schemas/ritual-hemp-ontology.kotoba.edn", :kotoba.seed/graph "ritual-hemp-v1", :kotoba.seed/note "G1: every :hemp/* record is :thc-class :fiber or :low-thc by construction."}]

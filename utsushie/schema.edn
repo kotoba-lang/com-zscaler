@@ -1,0 +1,4 @@
+;; 20-actors/utsushie/schema.edn — Datomic/Datascript 互換スキーマ定義（自動生成 by manifest/edn-datomize.cljs 相当ロジック）
+;; :db/ident 属性定義のリスト。手編集禁止。
+
+[#:db{:ident :video/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :video/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :video/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

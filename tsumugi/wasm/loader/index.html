@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tsumugi 紡ぎ — WASM actor (browser-local)</title>
+<!--
+  Browser loader PoC for the "one Worker, many WASM actors" model (ADR-2606014500).
+  The ONLY first-party server is etzhayyim.com (identity/did.json). This page:
+    1. resolves the actor DID document
+    2. reads the EtzhayyimWasmComponent service → ipfs://<cid>
+    3. fetches the WASM (IPFS gateway / local)
+    4. verifies content integrity (recompute CIDv1, compare to the DID doc CID)
+    5. instantiates + runs it LOCALLY in the browser — no per-actor server, no inference here
+  Self-contained: no external script/style/font, cookie-free (Charter Rider §2(c)).
+-->
+<style>
+:root{color-scheme:light dark}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.6 system-ui,-apple-system,"Hiragino Kaku Gothic ProN",sans-serif;max-width:46rem;padding:2rem 1.1rem;margin-inline:auto}
+h1{font-size:1.35rem;margin:0 0 .2rem}
+.sub{opacity:.7;margin:0 0 1.4rem;font-size:.9rem}
+button{font:inherit;padding:.5rem 1rem;border:1px solid currentColor;border-radius:.5rem;background:transparent;color:inherit;cursor:pointer}
+button:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin:.6rem 0}
+label{font-size:.85rem;opacity:.8}
+input{font:inherit;padding:.35rem .5rem;border:1px solid color-mix(in srgb,currentColor 35%,transparent);border-radius:.4rem;background:transparent;color:inherit;width:min(100%,30rem)}
+ol{padding-left:1.2rem;margin:1rem 0}
+li{margin:.15rem 0}
+.ok::marker{content:"✅ "}
+.err::marker{content:"❌ "}
+.pending::marker{content:"… "}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;background:color-mix(in srgb,currentColor 10%,transparent);padding:.05rem .3rem;border-radius:.3rem;word-break:break-all}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{text-align:left;padding:.3rem .5rem;border-bottom:1px solid color-mix(in srgb,currentColor 18%,transparent)}
+.bar{height:.55rem;background:currentColor;border-radius:1rem;opacity:.55}
+footer{margin-top:2rem;font-size:.82rem;opacity:.7}
+</style>
+</head>
+<body>
+<h1>紡ぎ tsumugi — WASM actor, browser-local</h1>
+<p class="sub">No per-actor server. <code>etzhayyim.com</code> serves only the DID; the actor itself is a content-addressed WASM component fetched from IPFS and executed here, in your browser. Per ADR-2606014500.</p>
+
+<div class="row">
+  <label>DID document <input id="didUrl" value="./tsumugi.did.json"></label>
+</div>
+<div class="row">
+  <label>WASM source <input id="wasmUrl" value="./tsumugi-core.wasm"></label>
+  <button id="run">Resolve → verify → run</button>
+</div>
+<p class="sub" id="hint">Live equivalents: DID <code>https://etzhayyim.com/actor/tsumugi/did.json</code> · WASM <code>https://etzhayyim.com/ipfs/&lt;cid&gt;</code> (trustless gateway).</p>
+
+<ol id="steps"></ol>
+<div id="result"></div>
+
+<footer>
+ADR-2606014500 (one-Worker WASM-actor model) · ADR-2606013800 (dynamic did.json) · ADR-2606011800 (tsumugi).
+Inference stays Murakumo-only / ameno frozen-edge — this PoC is pure compute (edge-karma aggregation), no model.
+</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const steps = $("steps");
+function step(text, cls) {
+  const li = document.createElement("li");
+  li.className = cls || "pending";
+  li.innerHTML = text;
+  steps.appendChild(li);
+  return li;
+}
+function setOk(li, text) { li.className = "ok"; if (text) li.innerHTML = text; }
+function setErr(li, text) { li.className = "err"; if (text) li.innerHTML = text; }
+
+// base32 lower (RFC4648, no pad) + CIDv1 raw/sha2-256 — same as verify.mjs / `ipfs add --cid-version=1`.
+function base32(bytes) {
+  const A = "abcdefghijklmnopqrstuvwxyz234567";
+  let bits = 0, val = 0, out = "";
+  for (const b of bytes) { val = (val << 8) | b; bits += 8; while (bits >= 5) { out += A[(val >>> (bits - 5)) & 31]; bits -= 5; } }
+  if (bits > 0) out += A[(val << (5 - bits)) & 31];
+  return out;
+}
+async function cidV1Raw(buf) {
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", buf));
+  const cid = new Uint8Array(4 + digest.length);
+  cid.set([0x01, 0x55, 0x12, 0x20], 0); cid.set(digest, 4);
+  return "b" + base32(cid);
+}
+
+async function run() {
+  steps.innerHTML = ""; $("result").innerHTML = ""; $("run").disabled = true;
+  try {
+    // 1) resolve DID
+    let li = step("Resolving DID document…");
+    const did = await (await fetch($("didUrl").value)).json();
+    setOk(li, `DID resolved: <code>${did.id}</code>`);
+
+    // 2) find WASM component service
+    li = step("Finding EtzhayyimWasmComponent service…");
+    const svc = (did.service || []).find((s) => s.type === "EtzhayyimWasmComponent");
+    if (!svc) throw new Error("no EtzhayyimWasmComponent service in DID doc");
+    const cid = svc.serviceEndpoint.replace(/^ipfs:\/\//, "");
+    setOk(li, `WASM component: <code>ipfs://${cid}</code>`);
+
+    // 3) fetch WASM bytes
+    li = step("Fetching WASM bytes…");
+    const buf = await (await fetch($("wasmUrl").value)).arrayBuffer();
+    setOk(li, `Fetched ${buf.byteLength.toLocaleString()} bytes`);
+
+    // 4) content-integrity: recompute CID, compare
+    li = step("Verifying content integrity (recompute CID)…");
+    const got = await cidV1Raw(buf);
+    if (got !== cid) { setErr(li, `CID mismatch — doc <code>${cid}</code> ≠ bytes <code>${got}</code>`); throw new Error("integrity"); }
+    setOk(li, `Integrity OK — recomputed CID == DID doc CID (TLS+CID trust, no server key)`);
+
+    // 5) instantiate + run locally
+    li = step("Instantiating + running locally…");
+    const { instance } = await WebAssembly.instantiate(buf, {});
+    const { compute, result_ptr, memory } = instance.exports;
+    const len = compute();
+    const out = JSON.parse(new TextDecoder().decode(new Uint8Array(memory.buffer, result_ptr(), len)));
+    setOk(li, `Executed in-browser — actor <code>${out.actor}</code>, ${out.nodes} nodes / ${out.edges} 縁`);
+
+    render(out);
+  } catch (e) {
+    step(`Error: ${e.message}`, "err");
+  } finally {
+    $("run").disabled = false;
+  }
+}
+
+function render(out) {
+  const max = Math.max(...out.top.map((t) => t.karma));
+  const rows = out.top.map((t) =>
+    `<tr><td>${t.rank}</td><td><b>${t.label}</b></td><td>${t.karma.toFixed(3)}</td>` +
+    `<td style="width:45%"><div class="bar" style="width:${(t.karma / max * 100).toFixed(0)}%"></div></td></tr>`
+  ).join("");
+  $("result").innerHTML =
+    `<h3 style="margin:1.2rem 0 .2rem">Top 取-concentration (edge-primary incident karma)</h3>` +
+    `<p class="sub">aggregate-only, no per-soul score (G2/N1) · sourcing: ${out.sourcing}</p>` +
+    `<table><thead><tr><th>#</th><th>entity</th><th>karma</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+$("run").addEventListener("click", run);
+run();
+</script>
+</body>
+</html>

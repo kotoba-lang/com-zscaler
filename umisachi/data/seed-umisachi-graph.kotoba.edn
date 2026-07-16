@@ -1,0 +1,129 @@
+;; umisachi 海幸 — seafood / marine-bounty KG mirror seed (ADR-2606074200).
+;; PUBLIC, :representative / :authoritative marine-provisioning graph.
+;;
+;; G1 — NOURISHMENT / RESTORATION map, NEVER a catch-target list. NO stock coordinates,
+;;       NO fishing-ground GPS, NO "where the fish are" (coordinate-shaped keys are refused
+;;       at load). Regions are coarse FAO major-area NAMES only.
+;; G2 — edge-primary (N1). 取 (extraction/depletion) lives ONLY on edges (:en/load); a stock's
+;;       depletion = Σ incident inbound :depletes/:encloses, computed on read. No stored score.
+;; G3 — non-adjudicating (N3). :stock/status, :market/access are DISCLOSED facts
+;;       (FAO/RAM/ICES/IUCN/CCAMLR/ICCAT/MSC), never umisachi verdicts.
+;; G4 — factory-fishing / IUU / bottom-trawl are UNREPRESENTABLE as a :fishery method. They
+;;       may appear ONLY as a :pressure node (the disclosed harm borne), routed to restoration.
+;;
+;; node kinds: :stock :fishery :logistics :market :pressure
+;; edge kinds (provisioning): :provisions :nourishes :stewards :restores :cultivates
+;;            (depletion):     :depletes :encloses :gates
+[
+ ;; ── stocks (DISCLOSED status; region = coarse FAO area NAME, never coordinates) ──
+ {:organism/id :stock.skipjack-wcpo  :organism/kind :stock :organism/label "Pacific skipjack tuna (WCPO)"
+  :organism/sourcing :authoritative :stock/species "Katsuwonus pelamis"
+  :stock/status :sustainable :stock/region "FAO-71 Western-Central Pacific"}
+ {:organism/id :stock.bluefin-pacific :organism/kind :stock :organism/label "Pacific bluefin tuna"
+  :organism/sourcing :authoritative :stock/species "Thunnus orientalis"
+  :stock/status :recovering :stock/region "FAO-61/77 Pacific"}
+ {:organism/id :stock.sardine-japan :organism/kind :stock :organism/label "Japanese sardine (maiwashi)"
+  :organism/sourcing :authoritative :stock/species "Sardinops melanostictus"
+  :stock/status :fully-fished :stock/region "FAO-61 Northwest Pacific"}
+ {:organism/id :stock.pollock-bering :organism/kind :stock :organism/label "Alaska pollock (Bering Sea)"
+  :organism/sourcing :authoritative :stock/species "Gadus chalcogrammus"
+  :stock/status :sustainable :stock/region "FAO-67 Northeast Pacific"}
+ {:organism/id :stock.cod-northsea :organism/kind :stock :organism/label "Atlantic cod (North Sea)"
+  :organism/sourcing :authoritative :stock/species "Gadus morhua"
+  :stock/status :recovering :stock/region "FAO-27 Northeast Atlantic"}
+ {:organism/id :stock.eel-japanese :organism/kind :stock :organism/label "Japanese eel (unagi, IUCN EN)"
+  :organism/sourcing :authoritative :stock/species "Anguilla japonica"
+  :stock/status :depleted :stock/region "FAO-61 Northwest Pacific"}
+ {:organism/id :stock.krill-antarctic :organism/kind :stock :organism/label "Antarctic krill (CCAMLR)"
+  :organism/sourcing :authoritative :stock/species "Euphausia superba"
+  :stock/status :fully-fished :stock/region "FAO-48 Antarctic Atlantic"}
+ {:organism/id :stock.sanma-pacific :organism/kind :stock :organism/label "Pacific saury (sanma, NPFC)"
+  :organism/sourcing :authoritative :stock/species "Cololabis saira"
+  :stock/status :overfished :stock/region "FAO-61 Northwest Pacific"}
+ {:organism/id :stock.kombu-hokkaido :organism/kind :stock :organism/label "Hokkaido kelp (kombu)"
+  :organism/sourcing :representative :stock/species "Saccharina japonica"
+  :stock/status :sustainable :stock/region "FAO-61 Northwest Pacific"}
+ {:organism/id :stock.oyster-hiroshima :organism/kind :stock :organism/label "Pacific oyster (cultured)"
+  :organism/sourcing :representative :stock/species "Magallana gigas"
+  :stock/status :sustainable :stock/region "FAO-61 Northwest Pacific"}
+
+ ;; ── fisheries / aquaculture (SUSTAINABLE methods ONLY — G4) ──
+ {:organism/id :fishery.poleline-skipjack :organism/kind :fishery :organism/label "Pole-and-line skipjack"
+  :organism/sourcing :representative :fishery/method :pole-line :fishery/scale :artisanal}
+ {:organism/id :fishery.setnet-coastal :organism/kind :fishery :organism/label "Coastal set-net (定置網)"
+  :organism/sourcing :representative :fishery/method :set-net :fishery/scale :community}
+ {:organism/id :fishery.kombu-farm :organism/kind :fishery :organism/label "Kombu seaweed farm"
+  :organism/sourcing :representative :fishery/method :seaweed-culture :fishery/scale :community}
+ {:organism/id :fishery.oyster-raft :organism/kind :fishery :organism/label "Oyster raft culture"
+  :organism/sourcing :representative :fishery/method :shellfish-culture :fishery/scale :community}
+ {:organism/id :fishery.imta-site :organism/kind :fishery :organism/label "Integrated multi-trophic aquaculture"
+  :organism/sourcing :representative :fishery/method :imta :fishery/scale :community}
+ {:organism/id :fishery.ras-landbased :organism/kind :fishery :organism/label "Land-based recirculating aquaculture"
+  :organism/sourcing :representative :fishery/method :recirculating-aquaculture :fishery/scale :industrial}
+
+ ;; ── logistics (cold-chain / port / processing / distribution / market-hall) ──
+ {:organism/id :logi.coldchain-reefer :organism/kind :logistics :organism/label "Reefer cold-chain corridor"
+  :organism/sourcing :representative :logistics/kind :cold-chain}
+ {:organism/id :logi.toyosu-market :organism/kind :logistics :organism/label "Toyosu wholesale market"
+  :organism/sourcing :authoritative :logistics/kind :market-hall}
+ {:organism/id :logi.regional-port :organism/kind :logistics :organism/label "Regional fishing port"
+  :organism/sourcing :representative :logistics/kind :port}
+ {:organism/id :logi.processing-plant :organism/kind :logistics :organism/label "Coastal processing plant"
+  :organism/sourcing :representative :logistics/kind :processing}
+
+ ;; ── markets / consumption (access category = DISCLOSED, provisioning-equity weight) ──
+ {:organism/id :market.local-commons :organism/kind :market :organism/label "Local commons market"
+  :organism/sourcing :representative :market/kind :local :market/access :commons}
+ {:organism/id :market.domestic-regulated :organism/kind :market :organism/label "Domestic regulated market"
+  :organism/sourcing :representative :market/kind :domestic :market/access :regulated}
+ {:organism/id :market.export-sushi :organism/kind :market :organism/label "Export sushi-grade channel"
+  :organism/sourcing :representative :market/kind :export :market/access :proprietary}
+
+ ;; ── pressures (DISCLOSED harms — the 取 borne, routed to RESTORATION; never an endorsed method) ──
+ {:organism/id :pressure.industrial-overfishing :organism/kind :pressure :organism/label "Industrial overfishing"
+  :organism/sourcing :representative :pressure/kind :overfishing
+  :pressure/links "tsumugi:org.corp.distant-water-fleet"}
+ {:organism/id :pressure.iuu-fishing :organism/kind :pressure :organism/label "IUU fishing (FAO-recognized)"
+  :organism/sourcing :authoritative :pressure/kind :iuu}
+ {:organism/id :pressure.bottom-trawl :organism/kind :pressure :organism/label "Bottom-trawl habitat damage"
+  :organism/sourcing :representative :pressure/kind :habitat-loss}
+ {:organism/id :pressure.ocean-warming :organism/kind :pressure :organism/label "Ocean warming (IPCC)"
+  :organism/sourcing :authoritative :pressure/kind :warming}
+ {:organism/id :pressure.acidification :organism/kind :pressure :organism/label "Ocean acidification (IPCC)"
+  :organism/sourcing :authoritative :pressure/kind :acidification}
+ {:organism/id :pressure.bycatch :organism/kind :pressure :organism/label "Non-target bycatch"
+  :organism/sourcing :representative :pressure/kind :bycatch}
+ {:organism/id :pressure.distribution-monopoly :organism/kind :pressure :organism/label "Distribution monopoly"
+  :organism/sourcing :representative :pressure/kind :monopoly
+  :pressure/links "kabuto:org.corp.seafood-distributor"}
+ {:organism/id :pressure.factory-fishing :organism/kind :pressure :organism/label "Factory-fishing (disclosed harm)"
+  :organism/sourcing :representative :pressure/kind :factory-fishing}
+
+ ;; ── 縁 : provisioning / stewardship (routed to NOURISHMENT) ──
+ {:en/from :fishery.poleline-skipjack :en/to :logi.coldchain-reefer :en/kind :provisions :en/load 0.7 :en/sourcing :representative}
+ {:en/from :fishery.poleline-skipjack :en/to :market.local-commons    :en/kind :nourishes  :en/load 0.5 :en/sourcing :representative}
+ {:en/from :fishery.setnet-coastal    :en/to :market.local-commons    :en/kind :nourishes  :en/load 0.8 :en/sourcing :representative}
+ {:en/from :fishery.kombu-farm        :en/to :stock.kombu-hokkaido    :en/kind :cultivates :en/load 0.9 :en/sourcing :representative}
+ {:en/from :fishery.kombu-farm        :en/to :stock.kombu-hokkaido    :en/kind :stewards   :en/load 0.6 :en/sourcing :representative}
+ {:en/from :fishery.oyster-raft       :en/to :stock.oyster-hiroshima  :en/kind :cultivates :en/load 0.9 :en/sourcing :representative}
+ {:en/from :fishery.imta-site         :en/to :stock.oyster-hiroshima  :en/kind :restores   :en/load 0.4 :en/sourcing :representative}
+ {:en/from :fishery.ras-landbased     :en/to :market.domestic-regulated :en/kind :provisions :en/load 0.6 :en/sourcing :representative}
+ {:en/from :logi.coldchain-reefer     :en/to :market.export-sushi     :en/kind :provisions :en/load 0.8 :en/sourcing :representative}
+ {:en/from :logi.regional-port        :en/to :logi.toyosu-market      :en/kind :provisions :en/load 0.7 :en/sourcing :representative}
+ {:en/from :logi.toyosu-market        :en/to :market.domestic-regulated :en/kind :provisions :en/load 0.7 :en/sourcing :representative}
+ {:en/from :logi.processing-plant     :en/to :market.local-commons    :en/kind :provisions :en/load 0.5 :en/sourcing :representative}
+
+ ;; ── 縁 : depletion / enclosure (the 取 borne — routed to RESTORATION) ──
+ {:en/from :pressure.industrial-overfishing :en/to :stock.sanma-pacific   :en/kind :depletes :en/load 0.9 :en/sourcing :representative}
+ {:en/from :pressure.industrial-overfishing :en/to :stock.sardine-japan   :en/kind :depletes :en/load 0.6 :en/sourcing :representative}
+ {:en/from :pressure.industrial-overfishing :en/to :stock.krill-antarctic :en/kind :depletes :en/load 0.4 :en/sourcing :representative}
+ {:en/from :pressure.iuu-fishing            :en/to :stock.bluefin-pacific :en/kind :depletes :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from :pressure.factory-fishing        :en/to :stock.pollock-bering  :en/kind :depletes :en/load 0.5 :en/sourcing :representative}
+ {:en/from :pressure.bottom-trawl           :en/to :stock.cod-northsea    :en/kind :depletes :en/load 0.7 :en/sourcing :representative}
+ {:en/from :pressure.bycatch                :en/to :stock.eel-japanese    :en/kind :depletes :en/load 0.5 :en/sourcing :representative}
+ {:en/from :pressure.ocean-warming          :en/to :stock.sanma-pacific   :en/kind :depletes :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from :pressure.acidification          :en/to :stock.oyster-hiroshima :en/kind :depletes :en/load 0.4 :en/sourcing :authoritative}
+ {:en/from :pressure.distribution-monopoly  :en/to :market.export-sushi   :en/kind :encloses :en/load 0.8 :en/sourcing :representative}
+ {:en/from :pressure.distribution-monopoly  :en/to :market.local-commons  :en/kind :gates    :en/load 0.5 :en/sourcing :representative}
+ {:en/from :pressure.factory-fishing        :en/to :market.export-sushi   :en/kind :encloses :en/load 0.4 :en/sourcing :representative}
+]

@@ -1,0 +1,1 @@
+(ns fuchi.methods.init)

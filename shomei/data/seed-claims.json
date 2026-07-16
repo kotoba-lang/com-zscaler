@@ -1,0 +1,41 @@
+{
+  "note": "REPRESENTATIVE dry-run seed (ADR-2606072100). NO real PII. The ReferenceVerifier (HMAC-over-nonce) SIMULATES proof-of-control so the bind→verify→aggregate membrane runs hermetically; in production the subject's wallet/authenticator/IdP signs and kotoba-auth verifies. gov-* possessions are present to exercise the Council gate (they raise GatedError at R0).",
+  "baseTs": 1781000000,
+  "members": [
+    {
+      "subjectDid": "did:web:etzhayyim.com:actor:demo-aaron",
+      "salt": "demo-salt-aaron",
+      "possessions": [
+        {"factorKind": "webauthn", "proofKind": "webauthn-assertion", "identifier": "passkey-cred-aaron-1", "secret": "ref-aaron-device"},
+        {"factorKind": "wallet-evm", "proofKind": "eip191", "identifier": "0xAaR0n00000000000000000000000000000000abcd", "handle": "0xAaR0n…abcd", "secret": "ref-aaron-evm"},
+        {"factorKind": "sns-github", "proofKind": "oauth-sub", "identifier": "github:1000001", "handle": "@demo-aaron", "secret": "ref-aaron-gh"},
+        {"factorKind": "etz-base-membership", "proofKind": "base-l2-event", "identifier": "base:join:demo-aaron", "secret": "ref-aaron-base"}
+      ]
+    },
+    {
+      "subjectDid": "did:web:etzhayyim.com:actor:demo-miriam",
+      "salt": "demo-salt-miriam",
+      "possessions": [
+        {"factorKind": "wallet-btc", "proofKind": "bip322", "identifier": "bc1qmiriam00000000000000000000000000000xyz", "handle": "bc1q…xyz", "secret": "ref-miriam-btc"},
+        {"factorKind": "wallet-evm", "proofKind": "eip191", "identifier": "0xM1r1am0000000000000000000000000000001234", "handle": "0xM1r1am…1234", "secret": "ref-miriam-evm"}
+      ]
+    },
+    {
+      "subjectDid": "did:web:etzhayyim.com:actor:demo-noah",
+      "salt": "demo-salt-noah",
+      "possessions": [
+        {"factorKind": "sns-x", "proofKind": "oauth-sub", "identifier": "x:2000002", "handle": "@demo-noah", "secret": "ref-noah-x"}
+      ]
+    },
+    {
+      "subjectDid": "did:web:etzhayyim.com:actor:demo-esther",
+      "salt": "demo-salt-esther",
+      "possessions": [
+        {"factorKind": "webauthn", "proofKind": "webauthn-assertion", "identifier": "passkey-cred-esther-1", "secret": "ref-esther-device"},
+        {"factorKind": "etz-adherent-sbt", "proofKind": "erc5192-sbt", "identifier": "adherent:sbt:esther", "secret": "ref-esther-sbt"},
+        {"factorKind": "etz-at-oath", "proofKind": "at-record-sig", "identifier": "at://demo-esther/oath/1", "secret": "ref-esther-oath"},
+        {"factorKind": "gov-mynumber", "proofKind": "nfc-jpki", "identifier": "MYNUMBER-DO-NOT-STORE", "encryptedPayloadCid": "bafkreigovesther000000000000000000000000000000000", "secret": "ref-esther-gov"}
+      ]
+    }
+  ]
+}

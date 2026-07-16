@@ -1,0 +1,224 @@
+;; uchiwake 内訳 — seed graph of the world's TRADE ITEMS (products) decomposed to their
+;; bill of materials: PRODUCT → PART → raw MATERIAL, + PROCESS / LOGISTICS / DESIGN refs.
+;; ADR-2606081800 · vocabulary: product-bom-ontology.kotoba.edn (00-contracts/schemas/)
+;;
+;; SCOPE: a bounded illustrative slice of the world's GTIN-identified trade items as a kotoba
+;;   EAVT knowledge graph — the PRODUCT (GTIN, brand, brand-owner→kabuto org.corp.*, GS1 prefix,
+;;   GPC/UNSPSC/HS classification), its PARTS, its raw MATERIALS, the PROCESS steps that make it,
+;;   the LOGISTICS legs that move it, the DESIGN/standard refs that specify it, and the OWNERSHIP
+;;   edges that roll a brand-owning subsidiary up to its ULTIMATE parent (子会社, GLEIF RR). The
+;;   lens is SUPPLY-CHAIN RESILIENCE + corporate-power TRANSPARENCY — where a product's material
+;;   inputs / processing / transport concentrate onto a single source or jurisdiction, routed to
+;;   redundancy + accountability. NOT a target-list, NOT a clone/counterfeit recipe (G2).
+;;
+;; SOURCING (G5): every node/edge carries :*/sourcing. GTINs marked :authoritative are REAL,
+;;   publicly-documented identifiers (GS1 / product labels). BOM decompositions are
+;;   :representative — inferred from public teardowns / ingredient labels / supplier disclosure,
+;;   NOT an exhaustive authoritative bill of materials. Quantities & mass fractions are bounded
+;;   public estimates, NEVER a confidential recipe or contract figure. Absence of a product =
+;;   "not yet ingested", NOT "does not exist". Full GS1 GDSN / Open Product Data / GLEIF-RR
+;;   universe ingest (hundreds of millions of GTINs) is G7 Council + operator gated.
+
+[;; ═══════════════════════════════ MATERIALS (raw / refined inputs) ═══════════════════════════════
+ {:material/id "mat.aluminum"      :material/name "Aluminium"            :material/kind :metal        :material/hs-code "7601" :material/unspsc "11101501" :material/sourcing :representative}
+ {:material/id "mat.lithium"       :material/name "Lithium"              :material/kind :metal        :material/hs-code "2805" :material/unspsc "11101701" :material/sourcing :representative}
+ {:material/id "mat.cobalt"        :material/name "Cobalt"               :material/kind :metal        :material/hs-code "8105" :material/unspsc "11101601" :material/sourcing :representative}
+ {:material/id "mat.nickel"        :material/name "Nickel"               :material/kind :metal        :material/hs-code "7502" :material/sourcing :representative}
+ {:material/id "mat.copper"        :material/name "Copper"               :material/kind :metal        :material/hs-code "7403" :material/unspsc "11101516" :material/sourcing :representative}
+ {:material/id "mat.gold"          :material/name "Gold"                 :material/kind :metal        :material/hs-code "7108" :material/sourcing :representative}
+ {:material/id "mat.graphite"      :material/name "Graphite"             :material/kind :mineral      :material/hs-code "2504" :material/sourcing :representative}
+ {:material/id "mat.silicon"       :material/name "Silicon (polysilicon)" :material/kind :mineral     :material/hs-code "2804" :material/sourcing :representative}
+ {:material/id "mat.rare-earth"    :material/name "Rare-earth elements (NdFeB)" :material/kind :mineral :material/hs-code "2846" :material/sourcing :representative}
+ {:material/id "mat.glass"         :material/name "Aluminosilicate glass" :material/kind :glass       :material/hs-code "7007" :material/sourcing :representative}
+ {:material/id "mat.cotton-fibre"  :material/name "Cotton fibre"         :material/kind :agricultural :material/hs-code "5201" :material/unspsc "11151600" :material/sourcing :representative}
+ {:material/id "mat.polyester"     :material/name "Polyester fibre"      :material/kind :polymer      :material/hs-code "5503" :material/sourcing :representative}
+ {:material/id "mat.sugar"         :material/name "Sugar (sucrose)"      :material/kind :agricultural :material/hs-code "1701" :material/sourcing :representative}
+ {:material/id "mat.cocoa"         :material/name "Cocoa"               :material/kind :agricultural :material/hs-code "1801" :material/sourcing :representative}
+ {:material/id "mat.hazelnut"      :material/name "Hazelnut"             :material/kind :agricultural :material/hs-code "0802" :material/sourcing :representative}
+ {:material/id "mat.palm-oil"      :material/name "Palm oil"             :material/kind :agricultural :material/hs-code "1511" :material/sourcing :representative}
+ {:material/id "mat.water"         :material/name "Water"                :material/kind :chemical     :material/sourcing :representative}
+ {:material/id "mat.co2"           :material/name "Carbon dioxide (food grade)" :material/kind :chemical :material/hs-code "2811" :material/sourcing :representative}
+ {:material/id "mat.paracetamol-api" :material/name "Paracetamol (acetaminophen) API" :material/kind :chemical :material/hs-code "2924" :material/sourcing :representative}
+ {:material/id "mat.milk-powder"   :material/name "Skim milk powder"     :material/kind :agricultural :material/hs-code "0402" :material/sourcing :representative}
+ {:material/id "mat.steel"         :material/name "Steel"                :material/kind :metal        :material/hs-code "7208" :material/unspsc "11101704" :material/sourcing :representative}
+ {:material/id "mat.pet"           :material/name "PET (polyethylene terephthalate)" :material/kind :polymer :material/hs-code "3907" :material/sourcing :representative}
+ {:material/id "mat.neodymium"     :material/name "Neodymium (NdFeB magnet)" :material/kind :mineral   :material/hs-code "2846" :material/sourcing :representative}
+
+ ;; ═══════════════════════════════ PARTS (sub-assemblies / components) ═══════════════════════════
+ {:part/id "part.soc"              :part/name "System-on-Chip (application processor)" :part/kind :component :part/unspsc "32101604" :part/sourcing :representative}
+ {:part/id "part.dram"             :part/name "DRAM (LPDDR)"             :part/kind :component   :part/unspsc "32101602" :part/sourcing :representative}
+ {:part/id "part.nand"            :part/name "NAND flash storage"       :part/kind :component   :part/unspsc "32101602" :part/sourcing :representative}
+ {:part/id "part.display-oled"     :part/name "OLED display module"      :part/kind :sub-assembly :part/unspsc "32121509" :part/sourcing :representative}
+ {:part/id "part.image-sensor"     :part/name "CMOS image sensor"        :part/kind :component   :part/unspsc "32101626" :part/sourcing :representative}
+ {:part/id "part.li-ion-cell"      :part/name "Lithium-ion cell"         :part/kind :component   :part/unspsc "26111701" :part/sourcing :representative}
+ {:part/id "part.bms"              :part/name "Battery management system" :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.al-can"           :part/name "Aluminium beverage can"   :part/kind :packaging   :part/unspsc "24121801" :part/sourcing :representative}
+ {:part/id "part.woven-fabric"     :part/name "Woven cotton fabric"      :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.tablet-excipient" :part/name "Tablet excipient blend"   :part/kind :ingredient  :part/sourcing :representative}
+
+ ;; ═══════════════════════════════ PRODUCTS (trade items, keyed on GTIN) ══════════════════════════
+ ;; Coca-Cola Classic 330ml can — GTIN-13 5449000000996 is a widely-documented public EAN-13.
+ {:product/id "gtin.05449000000996" :product/gtin "05449000000996" :product/gtin-format :gtin-13
+  :product/name "Coca-Cola Classic 330ml can" :product/brand "Coca-Cola" :product/brand-owner "org.corp.us.coca-cola"
+  :product/gs1-prefix "544" :product/gs1-prefix-country "BE" :product/sector :food-beverage
+  :product/unspsc "50202301" :product/hs-code "2202" :product/net-content 330.0 :product/net-content-unit "ml"
+  :product/sourcing :authoritative}
+ ;; Nutella 750g — GTIN-13 3017620422003 is a widely-documented public EAN-13 (Open Food Facts).
+ {:product/id "gtin.03017620422003" :product/gtin "03017620422003" :product/gtin-format :gtin-13
+  :product/name "Nutella 750g jar" :product/brand "Nutella" :product/brand-owner "org.corp.it.ferrero"
+  :product/gs1-prefix "301" :product/gs1-prefix-country "FR" :product/sector :food-beverage
+  :product/unspsc "50161900" :product/hs-code "1806" :product/net-content 750.0 :product/net-content-unit "g"
+  :product/sourcing :authoritative}
+ ;; Flagship smartphone — GTIN withheld (varies by SKU/region); identity & teardown :representative.
+ ;; brand-owner + assembler wired to REAL kabuto companies (Apple / Foxconn).
+ {:product/id "prod.smartphone-flagship" :product/name "Flagship smartphone (representative teardown)"
+  :product/brand "(representative)" :product/brand-owner "org.corp.us.apple"
+  :product/sector :electronics :product/unspsc "43191501" :product/hs-code "8517"
+  :product/sourcing :representative}
+ ;; EV traction battery pack — representative composition (NMC chemistry teardown); brand-owner BYD.
+ {:product/id "prod.ev-battery-pack" :product/name "EV traction battery pack (NMC, representative)"
+  :product/brand "(representative)" :product/brand-owner "org.corp.cn.byd"
+  :product/sector :automotive :product/unspsc "26111714" :product/hs-code "8507" :product/sourcing :representative}
+ ;; Cotton T-shirt — representative apparel chain (ties to hataori 機織); brand-owner Fast Retailing.
+ {:product/id "prod.cotton-tshirt" :product/name "Cotton T-shirt (representative)"
+  :product/brand "(representative)" :product/brand-owner "org.corp.jp.fast-retailing"
+  :product/sector :apparel :product/unspsc "53102516" :product/hs-code "6109" :product/sourcing :representative}
+ ;; KitKat 4-finger — Nestlé; GTIN 7613035044289 structurally valid (GS1 mod-10), product↔GTIN
+ ;; binding :representative pending GS1 GDSN authoritative lookup (R1).
+ {:product/id "gtin.07613035044289" :product/gtin "07613035044289" :product/gtin-format :gtin-13
+  :product/name "KitKat 4-finger" :product/brand "KitKat" :product/brand-owner "org.corp.ch.nestle"
+  :product/gs1-prefix "761" :product/gs1-prefix-country "CH" :product/sector :food-beverage
+  :product/unspsc "50161900" :product/hs-code "1806" :product/net-content 41.5 :product/net-content-unit "g"
+  :product/sourcing :representative}
+ ;; Paracetamol 500mg tablet — representative OTC pharma chain.
+ {:product/id "prod.paracetamol-500" :product/name "Paracetamol 500mg tablet (representative)"
+  :product/brand "(representative)" :product/sector :pharma :product/unspsc "51142003"
+  :product/hs-code "3004" :product/sourcing :representative}
+
+ ;; ═══════════════════════════════ BOM EDGES (parent CONTAINS child) ═══════════════════════════════
+ ;; Coca-Cola can → ingredients + packaging
+ {:bom.edge/id "bom.cola.water"   :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.water" :bom.edge/qty 89.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.1 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cola.sugar"   :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.sugar" :bom.edge/qty 11.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.2 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cola.co2"     :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.co2"   :bom.edge/qty 0.5 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cola.can"     :bom.edge/parent "gtin.05449000000996" :bom.edge/child "part.al-can" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.alcan.al"     :bom.edge/parent "part.al-can"         :bom.edge/child "mat.aluminum" :bom.edge/qty 13.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.5 :bom.edge/sourcing :representative}
+ ;; Nutella → ingredients
+ {:bom.edge/id "bom.nut.sugar"    :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.sugar"   :bom.edge/qty 56.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/supplier "org.corp.us.adm" :bom.edge/criticality 0.2 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.nut.palm"     :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.palm-oil" :bom.edge/qty 31.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.nut.hazel"    :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.hazelnut" :bom.edge/qty 13.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.nut.cocoa"    :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.cocoa"    :bom.edge/qty 7.4 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ ;; Smartphone → parts (suppliers link to kabuto org.corp.*)
+ {:bom.edge/id "bom.phone.soc"    :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.soc"    :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.tw.tsmc"            :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.dram"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.dram"   :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.kr.sk-hynix"        :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.nand"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.nand"   :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.jp.kioxia"          :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.disp"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.display-oled" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.kr.samsung-electronics" :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.cam"    :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.image-sensor" :bom.edge/qty 3.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.jp.sony-semicon"   :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.batt"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.li-ion-cell"  :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.5 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.soc.si"       :bom.edge/parent "part.soc"      :bom.edge/child "mat.silicon" :bom.edge/qty 1.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.disp.glass"   :bom.edge/parent "part.display-oled" :bom.edge/child "mat.glass" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 2 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ ;; Li-ion cell → materials (shared by phone + EV pack)
+ {:bom.edge/id "bom.cell.li"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.lithium"  :bom.edge/qty 2.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.co"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.cobalt"   :bom.edge/qty 12.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/supplier "org.corp.ch.glencore" :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.ni"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.nickel"   :bom.edge/qty 20.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.gr"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.graphite" :bom.edge/qty 16.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.cu"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.copper"   :bom.edge/qty 8.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ ;; EV battery pack → cells + BMS
+ {:bom.edge/id "bom.ev.cells"     :bom.edge/parent "prod.ev-battery-pack" :bom.edge/child "part.li-ion-cell" :bom.edge/qty 4000.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.cn.catl" :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ ;; KitKat → ingredients (cocoa/sugar/palm-oil/milk-powder)
+ {:bom.edge/id "bom.kk.cocoa"     :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.cocoa"    :bom.edge/qty 18.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.kk.sugar"     :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.sugar"    :bom.edge/qty 47.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.2 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.kk.palm"      :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.palm-oil" :bom.edge/qty 12.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.kk.milk"      :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.milk-powder" :bom.edge/qty 15.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ev.bms"       :bom.edge/parent "prod.ev-battery-pack" :bom.edge/child "part.bms"          :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ ;; T-shirt → fabric → fibre
+ {:bom.edge/id "bom.tshirt.fab"   :bom.edge/parent "prod.cotton-tshirt" :bom.edge/child "part.woven-fabric" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.fab.cotton"   :bom.edge/parent "part.woven-fabric" :bom.edge/child "mat.cotton-fibre"  :bom.edge/qty 95.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.fab.poly"     :bom.edge/parent "part.woven-fabric" :bom.edge/child "mat.polyester"     :bom.edge/qty 5.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+ ;; Paracetamol tablet → API + excipient
+ {:bom.edge/id "bom.para.api"     :bom.edge/parent "prod.paracetamol-500" :bom.edge/child "mat.paracetamol-api" :bom.edge/qty 500.0 :bom.edge/qty-unit "mg" :bom.edge/tier 1 :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.para.exc"     :bom.edge/parent "prod.paracetamol-500" :bom.edge/child "part.tablet-excipient" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+
+ ;; ═══════════════════════════════ PROCESS STEPS (transformation) ══════════════════════════════════
+ {:process.step/id "proc.poly-refine" :process.step/name "Polysilicon refining" :process.step/kind :refining :process.step/of "mat.silicon" :process.step/country "CN" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.wafer-fab"   :process.step/name "Wafer fabrication" :process.step/kind :fabrication :process.step/of "part.soc" :process.step/operator "org.corp.tw.tsmc" :process.step/country "TW" :process.step/seq 2 :process.step/sourcing :representative}
+ {:process.step/id "proc.phone-asm"   :process.step/name "Final phone assembly" :process.step/kind :assembly :process.step/of "prod.smartphone-flagship" :process.step/operator "org.corp.tw.foxconn" :process.step/country "CN" :process.step/seq 3 :process.step/sourcing :representative}
+ {:process.step/id "proc.cotton-gin"  :process.step/name "Ginning" :process.step/kind :extraction :process.step/of "mat.cotton-fibre" :process.step/country "IN" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.spin-weave"  :process.step/name "Spinning + weaving" :process.step/kind :fabrication :process.step/of "part.woven-fabric" :process.step/country "BD" :process.step/seq 2 :process.step/sourcing :representative}
+ {:process.step/id "proc.cmt"         :process.step/name "Cut-make-trim" :process.step/kind :assembly :process.step/of "prod.cotton-tshirt" :process.step/country "VN" :process.step/seq 3 :process.step/sourcing :representative}
+ {:process.step/id "proc.api-synth"   :process.step/name "API synthesis" :process.step/kind :refining :process.step/of "mat.paracetamol-api" :process.step/country "CN" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.tablet-form" :process.step/name "Tablet formulation + compression" :process.step/kind :fabrication :process.step/of "prod.paracetamol-500" :process.step/country "IN" :process.step/seq 2 :process.step/sourcing :representative}
+
+ ;; ═══════════════════════════════ LOGISTICS LEGS (transport) ══════════════════════════════════════
+ {:logistics.leg/id "leg.soc.tw-cn"   :logistics.leg/of "part.soc"  :logistics.leg/origin-country "TW" :logistics.leg/dest-country "CN" :logistics.leg/mode :air  :logistics.leg/seq 1 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.phone.cn-ww" :logistics.leg/of "prod.smartphone-flagship" :logistics.leg/origin-country "CN" :logistics.leg/dest-country "US" :logistics.leg/mode :air :logistics.leg/seq 2 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.fab.bd-vn"   :logistics.leg/of "part.woven-fabric" :logistics.leg/origin-country "BD" :logistics.leg/dest-country "VN" :logistics.leg/mode :sea :logistics.leg/carrier "org.corp.dk.maersk" :logistics.leg/seq 1 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.tshirt.vn-eu" :logistics.leg/of "prod.cotton-tshirt" :logistics.leg/origin-country "VN" :logistics.leg/dest-country "DE" :logistics.leg/mode :sea :logistics.leg/carrier "org.corp.dk.maersk" :logistics.leg/seq 2 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.api.cn-in"   :logistics.leg/of "mat.paracetamol-api" :logistics.leg/origin-country "CN" :logistics.leg/dest-country "IN" :logistics.leg/mode :sea :logistics.leg/seq 1 :logistics.leg/sourcing :representative}
+
+ ;; ═══════════════════════════════ DESIGN / STANDARD REFS ══════════════════════════════════════════
+ {:design.ref/id "dr.cell.iec62133" :design.ref/of "part.li-ion-cell" :design.ref/standard "IEC 62133-2" :design.ref/kind :safety-standard :design.ref/body "IEC" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.phone.usb"     :design.ref/of "prod.smartphone-flagship" :design.ref/standard "USB Type-C r2.1" :design.ref/kind :interface-spec :design.ref/body "USB-IF" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.tshirt.iso105" :design.ref/of "prod.cotton-tshirt" :design.ref/standard "ISO 105-C06" :design.ref/kind :material-spec :design.ref/body "ISO" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.para.usp"      :design.ref/of "prod.paracetamol-500" :design.ref/standard "USP Acetaminophen monograph" :design.ref/kind :regulatory :design.ref/body "USP" :design.ref/sourcing :representative}
+
+ ;; ═══════════════════════════════ OWNERSHIP EDGES (子会社, GLEIF Level-2 RR) ══════════════════════
+ ;; A brand-owning / supplying SUBSIDIARY rolls up to its ULTIMATE parent so concentration is
+ ;; computed at the true beneficial-owner level. :is-ultimately-consolidated-by mirrors GLEIF RR.
+ {:company.ownership/id "own.sony-semicon" :company.ownership/child "org.corp.jp.sony-semicon" :company.ownership/parent "org.corp.jp.sony" :company.ownership/relationship :is-ultimately-consolidated-by :company.ownership/sourcing :representative}
+ {:company.ownership/id "own.cocacola-na"  :company.ownership/child "org.corp.us.coca-cola-na"  :company.ownership/parent "org.corp.us.coca-cola" :company.ownership/relationship :is-directly-consolidated-by :company.ownership/sourcing :representative}
+ {:company.ownership/id "own.ferrero"      :company.ownership/child "org.corp.it.ferrero" :company.ownership/parent "org.corp.lu.ferrero-intl" :company.ownership/relationship :is-ultimately-consolidated-by :company.ownership/sourcing :representative}
+
+ ;; ═══════════════ ITER4 WORKLIST COVERAGE — products wired to high-centrality kabuto suppliers ═══
+ ;; Closes the top of crosscheck.py's reverse-coverage ingest worklist (NVIDIA/Ericsson/Boeing/
+ ;; ARM/SMIC/Denso/Magna/Glencore/ADM/LG-Energy). All :representative public teardown/disclosure.
+
+ ;; new materials
+ {:material/id "mat.composite"    :material/name "Carbon-fibre composite (CFRP)" :material/kind :composite :material/hs-code "6815" :material/sourcing :representative}
+ {:material/id "mat.titanium"     :material/name "Titanium"             :material/kind :metal        :material/hs-code "8108" :material/sourcing :representative}
+ {:material/id "mat.tin"          :material/name "Tin (solder)"         :material/kind :metal        :material/hs-code "8001" :material/sourcing :representative}
+
+ ;; new parts
+ {:part/id "part.gpu-die"         :part/name "GPU/AI-accelerator die"   :part/kind :component   :part/unspsc "32101604" :part/sourcing :representative}
+ {:part/id "part.hbm"            :part/name "High-bandwidth memory (HBM) stack" :part/kind :component :part/unspsc "32101602" :part/sourcing :representative}
+ {:part/id "part.cpu-core-ip"     :part/name "CPU core IP block (licensed)" :part/kind :component :part/sourcing :representative}
+ {:part/id "part.rf-soc"          :part/name "RF transceiver SoC"       :part/kind :component   :part/unspsc "32101604" :part/sourcing :representative}
+ {:part/id "part.jet-engine"      :part/name "Turbofan jet engine"      :part/kind :sub-assembly :part/unspsc "25172504" :part/sourcing :representative}
+ {:part/id "part.avionics"        :part/name "Avionics suite"           :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.auto-ecu"        :part/name "Automotive ECU + thermal module" :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.driveline"       :part/name "EV driveline / e-axle"    :part/kind :sub-assembly :part/sourcing :representative}
+
+ ;; new products
+ {:product/id "prod.ai-gpu-module" :product/name "AI GPU server module (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.us.nvidia" :product/sector :electronics :product/unspsc "43201401" :product/hs-code "8473" :product/sourcing :representative}
+ {:product/id "prod.5g-radio"      :product/name "5G radio unit (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.se.ericsson" :product/sector :electronics :product/unspsc "43222609" :product/hs-code "8517" :product/sourcing :representative}
+ {:product/id "prod.aircraft-narrowbody" :product/name "Narrowbody commercial aircraft (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.us.boeing" :product/sector :industrials :product/unspsc "25111500" :product/hs-code "8802" :product/sourcing :representative}
+ {:product/id "prod.ev-vehicle"    :product/name "Battery-electric vehicle (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.cn.byd" :product/sector :automotive :product/unspsc "25101503" :product/hs-code "8703" :product/sourcing :representative}
+
+ ;; AI GPU module BOM — TSMC die, SK hynix HBM, ARM core IP
+ {:bom.edge/id "bom.gpu.die"      :bom.edge/parent "prod.ai-gpu-module" :bom.edge/child "part.gpu-die" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.tw.tsmc" :bom.edge/criticality 0.95 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.gpu.hbm"      :bom.edge/parent "prod.ai-gpu-module" :bom.edge/child "part.hbm"     :bom.edge/qty 8.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.kr.sk-hynix" :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.gpu.ip"       :bom.edge/parent "part.gpu-die"       :bom.edge/child "part.cpu-core-ip" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 2 :bom.edge/supplier "org.corp.gb.arm" :bom.edge/criticality 0.85 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.gpu.si"       :bom.edge/parent "part.gpu-die"       :bom.edge/child "mat.silicon"  :bom.edge/qty 2.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+
+ ;; 5G radio BOM — SMIC RF SoC, rare-earth filters
+ {:bom.edge/id "bom.5g.soc"       :bom.edge/parent "prod.5g-radio"      :bom.edge/child "part.rf-soc"  :bom.edge/qty 4.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.cn.smic" :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.5g.re"        :bom.edge/parent "part.rf-soc"        :bom.edge/child "mat.rare-earth" :bom.edge/qty 1.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+
+ ;; Aircraft BOM — engines, composite fuselage, avionics
+ {:bom.edge/id "bom.ac.engine"    :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "part.jet-engine" :bom.edge/qty 2.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ac.fuse"      :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "mat.composite" :bom.edge/qty 35.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.5 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ac.ti"        :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "mat.titanium" :bom.edge/qty 14.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ac.avi"       :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "part.avionics" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+
+ ;; EV vehicle BOM — CATL pack, Denso ECU, Magna driveline
+ {:bom.edge/id "bom.evv.pack"     :bom.edge/parent "prod.ev-vehicle"    :bom.edge/child "prod.ev-battery-pack" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.cn.catl" :bom.edge/criticality 0.85 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.evv.ecu"      :bom.edge/parent "prod.ev-vehicle"    :bom.edge/child "part.auto-ecu" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.jp.denso" :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.evv.drv"      :bom.edge/parent "prod.ev-vehicle"    :bom.edge/child "part.driveline" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.ca.magna" :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+
+ ;; DESIGN activity steps (設計) — operator = the design house (kind :design)
+ {:process.step/id "proc.gpu-design" :process.step/name "GPU architecture + physical design (EDA)" :process.step/kind :design :process.step/of "part.gpu-die" :process.step/operator "org.corp.us.nvidia" :process.step/country "US" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.ac-design"  :process.step/name "Airframe design + certification" :process.step/kind :design :process.step/of "prod.aircraft-narrowbody" :process.step/operator "org.corp.us.boeing" :process.step/country "US" :process.step/seq 1 :process.step/sourcing :representative}
+
+ ;; design/standard refs for new products
+ {:design.ref/id "dr.gpu.pcie"    :design.ref/of "prod.ai-gpu-module" :design.ref/standard "PCIe 5.0" :design.ref/kind :interface-spec :design.ref/body "PCI-SIG" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.5g.3gpp"     :design.ref/of "prod.5g-radio" :design.ref/standard "3GPP 5G NR Rel-16" :design.ref/kind :interface-spec :design.ref/body "3GPP" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.ac.do178"    :design.ref/of "prod.aircraft-narrowbody" :design.ref/standard "DO-178C" :design.ref/kind :safety-standard :design.ref/body "RTCA" :design.ref/sourcing :representative}]

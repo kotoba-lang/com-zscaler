@@ -1,0 +1,87 @@
+;; seed-designation-graph.kotoba.edn — 高札 (kosatsu) :representative competing-claim seed (ADR-2606072000)
+;;
+;; HONESTY (G10): every record is :representative — ILLUSTRATIVE asserting authorities, subjects,
+;; and designation events with rounded/synthetic ids, NOT a live authoritative capture of any
+;; real sanctions list. Subject labels are deliberately GENERIC placeholders ("designated entity
+;; α/β/γ", "vessel V-1") — the seed exercises the divergence engine WITHOUT mirroring any real
+;; person/org. Live full-universe ingest (OFAC SDN / EU consolidated / UN SC / UK OFSI / JP-MOF /
+;; Interpol public notices) is G8-gated (Council Lv6+ + operator + member signature).
+;;
+;; The seed is shaped to exercise the analyzer's POLITICAL-STANCE core:
+;;   - subj-alpha   : CONTESTED — listed by us + eu + un, NOT by jp/cn (jurisdictions disagree)
+;;   - subj-beta    : DELISTED  — was listed by us (posted 2022) then us delisted it (2024 event);
+;;                     eu still lists it → divergence + an as-of timeline
+;;   - subj-gamma   : UNANIMOUS — listed by us + eu + un + gb (all tracked asserters agree)
+;;   - subj-delta   : SINGLE-ASSERTER — only ru lists it (a counter-designation; stance-relative)
+;;   - vessel V-1   : a non-person subject (export-control / shadow-fleet pattern), listed by us+gb
+
+{:graph {:name "kosatsu-designations-v1" :visibility :public}
+
+ ;; ── authorities: PUBLIC asserting bodies (G1, never etzhayyim) ───────────────
+ :authorities
+ [{:authority/id "us-ofac" :authority/kind :state-treasury
+   :authority/label "US Treasury OFAC" :authority/jurisdiction "us"
+   :authority/stance "US foreign-policy & national-security sanctions authority (IEEPA / EO programs)"
+   :authority/sourcing :representative :authority/sources ["https://ofac.treasury.gov/" "https://sanctionslist.ofac.treas.gov/"]}
+  {:authority/id "eu-council" :authority/kind :supranational
+   :authority/label "EU Council (consolidated list)" :authority/jurisdiction "eu"
+   :authority/stance "EU Common Foreign and Security Policy restrictive measures (Council regulations)"
+   :authority/sourcing :representative :authority/sources ["https://www.sanctionsmap.eu/" "https://eur-lex.europa.eu/"]}
+  {:authority/id "un-sc" :authority/kind :international-body
+   :authority/label "UN Security Council Consolidated List" :authority/jurisdiction "un"
+   :authority/stance "UN Security Council Chapter VII sanctions committees (e.g. 1267/1989/2253)"
+   :authority/sourcing :representative :authority/sources ["https://www.un.org/securitycouncil/content/un-sc-consolidated-list" "https://main.un.org/securitycouncil/"]}
+  {:authority/id "gb-ofsi" :authority/kind :financial-regulator
+   :authority/label "UK OFSI consolidated list" :authority/jurisdiction "gb"
+   :authority/stance "UK financial-sanctions regime (SAMLA 2018) administered by OFSI"
+   :authority/sourcing :representative :authority/sources ["https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" "https://www.gov.uk/government/organisations/office-of-financial-sanctions-implementation"]}
+  {:authority/id "jp-mof" :authority/kind :state-treasury
+   :authority/label "Japan MOF / METI 経済制裁" :authority/jurisdiction "jp"
+   :authority/stance "Japan 外為法 (Foreign Exchange and Foreign Trade Act) asset-freeze designations"
+   :authority/sourcing :representative :authority/sources ["https://www.mof.go.jp/policy/international_policy/gaitame_kawase/gaitame/economic_sanctions/" "https://www.meti.go.jp/"]}
+  {:authority/id "ru-mfa" :authority/kind :state-foreign-ministry
+   :authority/label "Russia MFA counter-restrictions (stop-list)" :authority/jurisdiction "ru"
+   :authority/stance "Russian Federation counter-restrictive measures / entry stop-list"
+   :authority/sourcing :representative :authority/sources ["https://www.mid.ru/en/" "https://www.mid.ru/"]}
+  {:authority/id "cn-mofcom" :authority/kind :state-treasury
+   :authority/label "China MOFCOM unreliable-entity / counter-sanctions" :authority/jurisdiction "cn"
+   :authority/stance "PRC Unreliable Entity List + Anti-Foreign-Sanctions Law counter-measures"
+   :authority/sourcing :representative :authority/sources ["https://english.mofcom.gov.cn/" "https://www.mofcom.gov.cn/"]}]
+
+ ;; ── subjects: whoever a PUBLIC authority NAMED (G5, generic representative labels) ──
+ :subjects
+ [{:subject/id "subj-alpha" :subject/kind :designated-entity :subject/label "Designated entity α (representative)" :subject/jurisdiction "(rep)"
+   :subject/sourcing :representative}
+  {:subject/id "subj-beta"  :subject/kind :designated-org    :subject/label "Designated org β (representative)" :subject/jurisdiction "(rep)"
+   :subject/sourcing :representative}
+  {:subject/id "subj-gamma" :subject/kind :designated-entity :subject/label "Designated entity γ (representative)" :subject/jurisdiction "(rep)"
+   :subject/sourcing :representative}
+  {:subject/id "subj-delta" :subject/kind :designated-person :subject/label "Designated person δ (representative, as-published)" :subject/jurisdiction "(rep)"
+   :subject/sourcing :representative}
+  {:subject/id "subj-vessel-1" :subject/kind :designated-vessel :subject/label "Vessel V-1 (representative, export-control)" :subject/jurisdiction "(rep flag)"
+   :subject/sourcing :representative}]
+
+ ;; ── designations: append-only EVENTS, asserter → subject (G2/G3/G4) ──────────
+ :designations
+ [;; subj-alpha — CONTESTED: us + eu + un list it; jp + cn do NOT (divergence)
+  {:designation/id "d-alpha-us" :designation/asserter "us-ofac" :designation/subject "subj-alpha" :designation/measure :financial-sanction :designation/program "EO 14024 (representative)" :designation/status :listed :designation/posted-at 20230301 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://ofac.treasury.gov/" "https://sanctionslist.ofac.treas.gov/"]}
+  {:designation/id "d-alpha-eu" :designation/asserter "eu-council" :designation/subject "subj-alpha" :designation/measure :asset-freeze :designation/program "Council Reg (representative)" :designation/status :listed :designation/posted-at 20230315 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.sanctionsmap.eu/" "https://eur-lex.europa.eu/"]}
+  {:designation/id "d-alpha-un" :designation/asserter "un-sc" :designation/subject "subj-alpha" :designation/measure :list-inclusion :designation/program "UNSC committee (representative)" :designation/status :listed :designation/posted-at 20230401 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.un.org/securitycouncil/content/un-sc-consolidated-list" "https://main.un.org/securitycouncil/"]}
+
+  ;; subj-beta — DELISTED timeline: us lists (2022) then us DELISTS (2024 event); eu still lists
+  {:designation/id "d-beta-us-list" :designation/asserter "us-ofac" :designation/subject "subj-beta" :designation/measure :financial-sanction :designation/program "EO 13662 (representative)" :designation/status :listed :designation/posted-at 20220601 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://ofac.treasury.gov/" "https://sanctionslist.ofac.treas.gov/"]}
+  {:designation/id "d-beta-us-delist" :designation/asserter "us-ofac" :designation/subject "subj-beta" :designation/measure :financial-sanction :designation/program "EO 13662 (representative)" :designation/status :delisted :designation/posted-at 20220601 :designation/lifted-at 20240115 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://ofac.treasury.gov/recent-actions" "https://sanctionslist.ofac.treas.gov/"]}
+  {:designation/id "d-beta-eu" :designation/asserter "eu-council" :designation/subject "subj-beta" :designation/measure :asset-freeze :designation/program "Council Reg (representative)" :designation/status :listed :designation/posted-at 20220701 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.sanctionsmap.eu/" "https://eur-lex.europa.eu/"]}
+
+  ;; subj-gamma — UNANIMOUS: us + eu + un + gb all list it
+  {:designation/id "d-gamma-us" :designation/asserter "us-ofac" :designation/subject "subj-gamma" :designation/measure :list-inclusion :designation/program "UN 1267-aligned (representative)" :designation/status :listed :designation/posted-at 20210901 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://ofac.treasury.gov/" "https://sanctionslist.ofac.treas.gov/"]}
+  {:designation/id "d-gamma-eu" :designation/asserter "eu-council" :designation/subject "subj-gamma" :designation/measure :list-inclusion :designation/program "UN 1267-aligned (representative)" :designation/status :listed :designation/posted-at 20210905 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.sanctionsmap.eu/" "https://eur-lex.europa.eu/"]}
+  {:designation/id "d-gamma-un" :designation/asserter "un-sc" :designation/subject "subj-gamma" :designation/measure :list-inclusion :designation/program "UNSC 1267 (representative)" :designation/status :listed :designation/posted-at 20210801 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.un.org/securitycouncil/content/un-sc-consolidated-list" "https://main.un.org/securitycouncil/"]}
+  {:designation/id "d-gamma-gb" :designation/asserter "gb-ofsi" :designation/subject "subj-gamma" :designation/measure :asset-freeze :designation/program "UK reg (representative)" :designation/status :listed :designation/posted-at 20210910 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" "https://www.gov.uk/government/organisations/office-of-financial-sanctions-implementation"]}
+
+  ;; subj-delta — SINGLE-ASSERTER counter-designation: only ru lists it (stance-relative)
+  {:designation/id "d-delta-ru" :designation/asserter "ru-mfa" :designation/subject "subj-delta" :designation/measure :travel-restriction :designation/program "MFA stop-list (representative)" :designation/status :listed :designation/posted-at 20230610 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.mid.ru/en/" "https://www.mid.ru/"]}
+
+  ;; vessel V-1 — non-person subject, export-control pattern: us + gb list it
+  {:designation/id "d-vessel-us" :designation/asserter "us-ofac" :designation/subject "subj-vessel-1" :designation/measure :export-control :designation/program "shadow-fleet (representative)" :designation/status :listed :designation/posted-at 20240320 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://ofac.treasury.gov/" "https://sanctionslist.ofac.treas.gov/"]}
+  {:designation/id "d-vessel-gb" :designation/asserter "gb-ofsi" :designation/subject "subj-vessel-1" :designation/measure :transaction-ban :designation/program "UK maritime (representative)" :designation/status :listed :designation/posted-at 20240401 :designation/asserted-notice true :designation/sourcing :representative :designation/sources ["https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" "https://www.gov.uk/government/organisations/office-of-financial-sanctions-implementation"]}]}

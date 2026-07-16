@@ -1,0 +1,100 @@
+;; yamabiko 山彦 — kotoba seed data (representative, R0)
+;; ADR-2605252600 · :sourcing :representative (NOT authoritative; G20)
+;; A small worked example: 1 trainset (8-car Shinkansen-class, 320 km/h) flowing through
+;; 9 cells (carbody → bogie → interior → traction → final → dynamic-test → acoustic → homologation → council-review),
+;; with all gates G1..G22 satisfied, settlement intent computed (10% tithe).
+
+[;; ════════════ Trainset Registry ════════════
+ {:trainset/did "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :trainset/serial-number "demo-ts-0001"
+  :trainset/car-count 8
+  :trainset/max-speed-kmh 320
+  :sourcing :representative}
+
+ ;; ════════════ L1 Carbody Fabrication ════════════
+ {:carbody/id "cb.demo.0001"
+  :carbody/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :carbody/fsw-welds-count 120
+  :carbody/structural-test-pass true
+  :carbody/material "Al 6N01/A6005C (aviation-grade aluminum)"
+  :sourcing :representative}
+
+ ;; ════════════ L2 Bogie Assembly ════════════
+ {:bogie/id "bg.demo.0001"
+  :bogie/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :bogie/position "front"
+  :bogie/traction-motor-type :electric
+  :bogie/witness-quorum-ok true
+  :sourcing :representative}
+
+ ;; ════════════ L3 Interior + HVAC ════════════
+ {:interior/id "int.demo.0001"
+  :interior/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :interior/car-number 1
+  :interior/seating-count 80
+  :interior/hvac-functional-pass true
+  :interior/pis-versions "v3.2-2026"
+  :sourcing :representative}
+
+ ;; ════════════ L4 Traction Electrical ════════════
+ {:traction/id "tr.demo.0001"
+  :traction/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :traction/hv-system-type "25 kV AC / 1500 V DC hybrid"
+  :traction/atp-ato-firmware-sha "abc1234567def89fghijk"
+  :traction/firmware-license-verified true
+  :sourcing :representative}
+
+ ;; ════════════ L5a Final Assembly ════════════
+ {:assembly/id "asm.demo.0001"
+  :assembly/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :assembly/integration-pass true
+  :assembly/system-checks-pass true
+  :sourcing :representative}
+
+ ;; ════════════ L5b Dynamic Test ════════════
+ {:dynamic-test/id "dt.demo.0001"
+  :dynamic-test/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :dynamic-test/max-speed-achieved-kmh 320
+  :dynamic-test/braking-distance-m 850
+  :dynamic-test/power-draw-kw 8500
+  :dynamic-test/result :pass
+  :sourcing :representative}
+
+ ;; ════════════ Cross-cutting Acoustic + EMC ════════════
+ {:acoustic/id "ac.demo.0001"
+  :acoustic/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :acoustic/iso3095-dba 75
+  :acoustic/iec62236-pass true
+  :acoustic/kyoukusei-pass true
+  :sourcing :representative}
+
+ ;; ════════════ L5c Homologation ════════════
+ {:homologation/id "hom.demo.0001"
+  :homologation/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :homologation/trainset-did "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :homologation/all-gates-passed true
+  :homologation/eol-recyclability-pct 92
+  :homologation/result :approved
+  :sourcing :representative}
+
+ ;; ════════════ Council Review (Governance) ════════════
+ {:council-review/id "cr.demo.0001"
+  :council-review/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :council-review/member-sigs-count 5
+  :council-review/all-gates-checked true
+  :council-review/firmware-audit-passed true
+  :council-review/result :approved
+  :sourcing :representative}
+
+ ;; ════════════ Settlement Intent (USDC + Tithe) ════════════
+ {:settlement/id "settle.demo.0001"
+  :settlement/trainset "did:web:etzhayyim.com:yamabiko:trainset:demo-0001"
+  :settlement/gross-minor 5000000000
+  :settlement/tithe-minor 500000000
+  :settlement/manufacturer-payout-minor 4500000000
+  :settlement/state :intent
+  :sourcing :representative}
+
+ ;; ════════════ SBT Eligibility ════════════
+ {:sbt/holder-did "did:web:member.example.etzhayyim.com"
+  :sbt/active true}]

@@ -1,0 +1,2 @@
+{"USA.income" {:currency "USD" :source "IRS 2023 federal brackets, single filer (26 U.S.C.; :representative)"
+  :brackets [[0 0.10] [11000 0.12] [44725 0.22] [95375 0.24] [182100 0.32] [231250 0.35] [578125 0.37]]}}

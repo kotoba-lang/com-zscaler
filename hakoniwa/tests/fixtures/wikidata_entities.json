@@ -1,0 +1,611 @@
+{
+ "Q193563": {
+  "id": "Q193563",
+  "labels": {
+   "en": {
+    "language": "en",
+    "value": "Bibliothèque nationale de France"
+   },
+   "ja": {
+    "language": "ja",
+    "value": "フランス国立図書館"
+   }
+  },
+  "claims": {
+   "P31": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q22806"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q2085381"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q43229"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q2352616"
+       }
+      }
+     }
+    }
+   ],
+   "P749": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q384602"
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "Q37156": {
+  "id": "Q37156",
+  "labels": {
+   "en": {
+    "language": "en",
+    "value": "IBM"
+   }
+  },
+  "claims": {
+   "P31": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1058914"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q4830453"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q6881511"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q18388277"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q891723"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q23670565"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q161726"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q43229"
+       }
+      }
+     }
+    }
+   ],
+   "P361": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q180816"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q242345"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q773026"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q134661623"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1546793"
+       }
+      }
+     }
+    }
+   ],
+   "P127": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q217583"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q849363"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q2037125"
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "Q478214": {
+  "id": "Q478214",
+  "labels": {
+   "en": {
+    "language": "en",
+    "value": "Tesla"
+   },
+   "ja": {
+    "language": "ja",
+    "value": "テスラ"
+   }
+  },
+  "claims": {
+   "P31": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q167037"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q6881511"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q4830453"
+       }
+      }
+     }
+    }
+   ],
+   "P361": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1969854"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q242345"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q507306"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q773026"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1546793"
+       }
+      }
+     }
+    }
+   ],
+   "P127": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q317521"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1411292"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q4848455"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q3511946"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q317521"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1411292"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q3511946"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1196231"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q317521"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q4848455"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q104626435"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q505275"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q92759"
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "Q1067205": {
+  "id": "Q1067205",
+  "labels": {
+   "en": {
+    "language": "en",
+    "value": "Selena Gomez & the Scene: Live in Concert"
+   }
+  },
+  "claims": {
+   "P31": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1573906"
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "Q8513": {
+  "id": "Q8513",
+  "labels": {
+   "en": {
+    "language": "en",
+    "value": "database"
+   },
+   "ja": {
+    "language": "ja",
+    "value": "データベース"
+   }
+  },
+  "claims": {
+   "P361": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1630548"
+       }
+      }
+     }
+    }
+   ],
+   "P527": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q42848"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q2470517"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q632285"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1054115"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q278425"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q1147639"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q59138835"
+       }
+      }
+     }
+    },
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q176165"
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "Q11862829": {
+  "id": "Q11862829",
+  "labels": {
+   "en": {
+    "language": "en",
+    "value": "academic discipline"
+   },
+   "ja": {
+    "language": "ja",
+    "value": "学問領域"
+   }
+  },
+  "claims": {
+   "P31": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q110402867"
+       }
+      }
+     }
+    }
+   ]
+  }
+ },
+ "Q42": {
+  "id": "Q42",
+  "labels": {
+   "en": {
+    "language": "en",
+    "value": "Douglas Adams"
+   },
+   "ja": {
+    "language": "ja",
+    "value": "ダグラス・アダムズ"
+   }
+  },
+  "claims": {
+   "P31": [
+    {
+     "mainsnak": {
+      "datavalue": {
+       "value": {
+        "id": "Q5"
+       }
+      }
+     }
+    }
+   ]
+  }
+ }
+}

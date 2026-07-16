@@ -1,0 +1,18 @@
+{
+  "dbsnp": {"rsid": "rs334", "gene": {"symbol": "HBB"}},
+  "vcf": {"ref": "T", "alt": "A"},
+  "clinvar": {
+    "rcv": [
+      {"clinical_significance": "not provided",
+       "conditions": {"name": "HEMOGLOBIN S", "identifiers": {"medgen": "C3888302"}}},
+      {"clinical_significance": "Pathogenic",
+       "conditions": {"name": "Hb SS disease (SCD)",
+                      "identifiers": {"medgen": "C0002895", "mondo": "MONDO:0011382", "omim": "603903"}}},
+      {"clinical_significance": "protective",
+       "conditions": {"name": "Malaria, resistance to", "identifiers": {"medgen": "C2720293"}}}
+    ]
+  },
+  "gnomad_genome": {"af": {"af": 0.012, "af_afr": 0.05, "af_amr": 0.004, "af_eas": 0.0001,
+                           "af_nfe": 0.0003, "af_sas": 0.009,
+                           "af_afr_female": 0.049, "af_afr_male": 0.051}}
+}

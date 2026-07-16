@@ -1,0 +1,44 @@
+[
+  {
+    "code": "3017620422003",
+    "product_name": "Nutella",
+    "brands": "Ferrero",
+    "countries_tags": ["en:france"],
+    "ingredients": [
+      {"id": "en:sugar", "text": "Sugar", "percent_estimate": 56.0},
+      {"id": "en:palm-oil", "text": "Palm oil", "percent_estimate": 31.0},
+      {"id": "en:hazelnut", "text": "Hazelnuts", "percent_estimate": 13.0},
+      {"id": "en:fat-reduced-cocoa", "text": "Cocoa", "percent_estimate": 7.4},
+      {"id": "en:skimmed-milk-powder", "text": "Skimmed milk powder", "percent_estimate": 6.6}
+    ]
+  },
+  {
+    "code": "5449000000996",
+    "product_name": "Coca-Cola",
+    "brands": "Coca-Cola",
+    "countries_tags": ["en:belgium"],
+    "ingredients": [
+      {"id": "en:water", "text": "Carbonated water", "percent_estimate": 89.0},
+      {"id": "en:sugar", "text": "Sugar", "percent_estimate": 11.0},
+      {"id": "en:carbon-dioxide", "text": "Carbon dioxide", "percent_estimate": 0.5}
+    ]
+  },
+  {
+    "code": "7613035044289",
+    "product_name": "KitKat 4 Fingers",
+    "brands": "KitKat,Nestle",
+    "countries_tags": ["en:switzerland"],
+    "ingredients": [
+      {"id": "en:sugar", "text": "Sugar", "percent_estimate": 47.0},
+      {"id": "en:cocoa", "text": "Cocoa", "percent_estimate": 18.0},
+      {"id": "en:skimmed-milk-powder", "text": "Skimmed milk powder", "percent_estimate": 15.0},
+      {"id": "en:palm-oil", "text": "Palm oil", "percent_estimate": 12.0}
+    ]
+  },
+  {
+    "code": "5449000000997",
+    "product_name": "BAD-GTIN record (wrong check digit — must be skipped)",
+    "brands": "test",
+    "ingredients": [{"id": "en:water", "text": "Water"}]
+  }
+]

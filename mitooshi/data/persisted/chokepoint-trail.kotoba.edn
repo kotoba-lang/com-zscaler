@@ -1,0 +1,77 @@
+;; chokepoint-trail.kotoba.edn — APPEND-ONLY as-of intel trail.
+;; Bridged from watari 渡り (transit-load) + watatsuna 綿津綱 (cable-load).
+;; DERIVED public :representative observations — do NOT re-ingest as authoritative.
+;; 非終末論: snapshots only ACCUMULATE; no obs is ever overwritten. ADR-2606051800.
+;; observed-at span: [1, 2, 3, 4, 5, 6, 7]  |  series: 9  obs: 59
+;; Live kotoba-server ingest of this trail is G10-gated (Council Lv6+ + operator).
+
+[
+ {:series/id "s-gibraltar-cable" :series/kind :cable-load :series/unit "Tbps" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-hormuz-transit" :series/kind :transit-load :series/unit "vessels" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-luzon-strait-cable" :series/kind :cable-load :series/unit "Tbps" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-luzon-strait-transit" :series/kind :transit-load :series/unit "vessels" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-malacca-cable" :series/kind :cable-load :series/unit "Tbps" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-malacca-transit" :series/kind :transit-load :series/unit "vessels" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-south-china-sea-cable" :series/kind :cable-load :series/unit "Tbps" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-suez-red-sea-cable" :series/kind :cable-load :series/unit "Tbps" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:series/id "s-suez-red-sea-transit" :series/kind :transit-load :series/unit "vessels" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:obs/id "obs.s-gibraltar-cable.3" :obs/series "s-gibraltar-cable" :obs/observed-at 3 :obs/value 324.0 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-gibraltar-cable.4" :obs/series "s-gibraltar-cable" :obs/observed-at 4 :obs/value 324.0 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-gibraltar-cable.5" :obs/series "s-gibraltar-cable" :obs/observed-at 5 :obs/value 324.0 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-gibraltar-cable.6" :obs/series "s-gibraltar-cable" :obs/observed-at 6 :obs/value 324.0 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-gibraltar-cable.7" :obs/series "s-gibraltar-cable" :obs/observed-at 7 :obs/value 324.0 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-hormuz-transit.1" :obs/series "s-hormuz-transit" :obs/observed-at 1 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-hormuz-transit.2" :obs/series "s-hormuz-transit" :obs/observed-at 2 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-hormuz-transit.3" :obs/series "s-hormuz-transit" :obs/observed-at 3 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-hormuz-transit.4" :obs/series "s-hormuz-transit" :obs/observed-at 4 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-hormuz-transit.5" :obs/series "s-hormuz-transit" :obs/observed-at 5 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-hormuz-transit.6" :obs/series "s-hormuz-transit" :obs/observed-at 6 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-hormuz-transit.7" :obs/series "s-hormuz-transit" :obs/observed-at 7 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-luzon-strait-cable.1" :obs/series "s-luzon-strait-cable" :obs/observed-at 1 :obs/value 680.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-luzon-strait-cable.2" :obs/series "s-luzon-strait-cable" :obs/observed-at 2 :obs/value 680.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-luzon-strait-cable.3" :obs/series "s-luzon-strait-cable" :obs/observed-at 3 :obs/value 454.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-luzon-strait-cable.4" :obs/series "s-luzon-strait-cable" :obs/observed-at 4 :obs/value 454.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-luzon-strait-cable.5" :obs/series "s-luzon-strait-cable" :obs/observed-at 5 :obs/value 454.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-luzon-strait-cable.6" :obs/series "s-luzon-strait-cable" :obs/observed-at 6 :obs/value 454.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-luzon-strait-cable.7" :obs/series "s-luzon-strait-cable" :obs/observed-at 7 :obs/value 454.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-luzon-strait-transit.1" :obs/series "s-luzon-strait-transit" :obs/observed-at 1 :obs/value 2.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-luzon-strait-transit.2" :obs/series "s-luzon-strait-transit" :obs/observed-at 2 :obs/value 2.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-luzon-strait-transit.3" :obs/series "s-luzon-strait-transit" :obs/observed-at 3 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-luzon-strait-transit.4" :obs/series "s-luzon-strait-transit" :obs/observed-at 4 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-luzon-strait-transit.5" :obs/series "s-luzon-strait-transit" :obs/observed-at 5 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-luzon-strait-transit.6" :obs/series "s-luzon-strait-transit" :obs/observed-at 6 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-luzon-strait-transit.7" :obs/series "s-luzon-strait-transit" :obs/observed-at 7 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-malacca-cable.1" :obs/series "s-malacca-cable" :obs/observed-at 1 :obs/value 940.16 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-malacca-cable.2" :obs/series "s-malacca-cable" :obs/observed-at 2 :obs/value 940.16 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-malacca-cable.3" :obs/series "s-malacca-cable" :obs/observed-at 3 :obs/value 490.16 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-malacca-cable.4" :obs/series "s-malacca-cable" :obs/observed-at 4 :obs/value 490.16 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-malacca-cable.5" :obs/series "s-malacca-cable" :obs/observed-at 5 :obs/value 490.16 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-malacca-cable.6" :obs/series "s-malacca-cable" :obs/observed-at 6 :obs/value 490.16 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-malacca-cable.7" :obs/series "s-malacca-cable" :obs/observed-at 7 :obs/value 490.16 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-malacca-transit.1" :obs/series "s-malacca-transit" :obs/observed-at 1 :obs/value 3.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-malacca-transit.2" :obs/series "s-malacca-transit" :obs/observed-at 2 :obs/value 3.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-malacca-transit.3" :obs/series "s-malacca-transit" :obs/observed-at 3 :obs/value 3.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-malacca-transit.4" :obs/series "s-malacca-transit" :obs/observed-at 4 :obs/value 3.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-malacca-transit.5" :obs/series "s-malacca-transit" :obs/observed-at 5 :obs/value 3.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-malacca-transit.6" :obs/series "s-malacca-transit" :obs/observed-at 6 :obs/value 3.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-malacca-transit.7" :obs/series "s-malacca-transit" :obs/observed-at 7 :obs/value 3.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-south-china-sea-cable.3" :obs/series "s-south-china-sea-cable" :obs/observed-at 3 :obs/value 190.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-south-china-sea-cable.4" :obs/series "s-south-china-sea-cable" :obs/observed-at 4 :obs/value 190.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-south-china-sea-cable.5" :obs/series "s-south-china-sea-cable" :obs/observed-at 5 :obs/value 190.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-south-china-sea-cable.6" :obs/series "s-south-china-sea-cable" :obs/observed-at 6 :obs/value 190.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-south-china-sea-cable.7" :obs/series "s-south-china-sea-cable" :obs/observed-at 7 :obs/value 190.56 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-cable.1" :obs/series "s-suez-red-sea-cable" :obs/observed-at 1 :obs/value 349.6 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-cable.2" :obs/series "s-suez-red-sea-cable" :obs/observed-at 2 :obs/value 349.6 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-cable.3" :obs/series "s-suez-red-sea-cable" :obs/observed-at 3 :obs/value 249.6 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-cable.4" :obs/series "s-suez-red-sea-cable" :obs/observed-at 4 :obs/value 249.6 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-cable.5" :obs/series "s-suez-red-sea-cable" :obs/observed-at 5 :obs/value 249.6 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-cable.6" :obs/series "s-suez-red-sea-cable" :obs/observed-at 6 :obs/value 249.6 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-cable.7" :obs/series "s-suez-red-sea-cable" :obs/observed-at 7 :obs/value 249.6 :obs/source-actor "watatsuna"}
+ {:obs/id "obs.s-suez-red-sea-transit.1" :obs/series "s-suez-red-sea-transit" :obs/observed-at 1 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-suez-red-sea-transit.2" :obs/series "s-suez-red-sea-transit" :obs/observed-at 2 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-suez-red-sea-transit.3" :obs/series "s-suez-red-sea-transit" :obs/observed-at 3 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-suez-red-sea-transit.4" :obs/series "s-suez-red-sea-transit" :obs/observed-at 4 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-suez-red-sea-transit.5" :obs/series "s-suez-red-sea-transit" :obs/observed-at 5 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-suez-red-sea-transit.6" :obs/series "s-suez-red-sea-transit" :obs/observed-at 6 :obs/value 1.0 :obs/source-actor "watari"}
+ {:obs/id "obs.s-suez-red-sea-transit.7" :obs/series "s-suez-red-sea-transit" :obs/observed-at 7 :obs/value 1.0 :obs/source-actor "watari"}
+]

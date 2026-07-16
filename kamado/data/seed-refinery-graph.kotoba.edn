@@ -1,0 +1,75 @@
+;; kamado 竈 — seed refining graph (ADR-2606051500)
+;; vocabulary: 00-contracts/schemas/refining-ontology.kotoba.edn
+;;
+;; THREE FACES in one graph:
+;;   A. :refinery/* :unit/* :outage/*  — OBSERVED existing assets (incl. fossil ones;
+;;      observation is not operation). Supersedes legacy `oil-refining` Cypher actor.
+;;   B. :decommission/*  — §2(d) robotics wind-down/convert plans for existing fossil assets.
+;;   C. :synthesis/* :carbon/*  — closed-loop carbon refining designs (G1 feedstock).
+;;
+;; INVARIANT (G1): every :synthesis/feedstock-class is a member of :feedstock/class
+;;   allowed set; NO record carries :fossil-virgin-crude as a synthesis feedstock — the
+;;   data model cannot hold a fossil-fed refining design (see schema + feedstock_guard.cljc).
+;;
+;; SOURCING (G7): every node carries :*/sourcing. BOUNDED illustrative seed. Refinery
+;;   names/locations are matters of public record; throughput/status :representative.
+;;   Absence of an asset = "not yet ingested", NOT "does not exist". A refinery here is
+;;   an OBSERVED public asset operated by an org — NEVER a target (G4).
+
+[;; ───────────────────── A. observed assets (public; observation ≠ operation) ─────────────────────
+ {:refinery/id "rf.jp.negishi" :refinery/name "Negishi (根岸) refinery" :refinery/country "JP"
+  :refinery/operator "org.corp.eneos" :refinery/throughput-bpd 270000 :refinery/status :active
+  :refinery/feedstock-class :observed-fossil :refinery/transition-readiness :medium
+  :refinery/sourcing :representative}
+ {:refinery/id "rf.jp.chiba" :refinery/name "Chiba (千葉) refinery" :refinery/country "JP"
+  :refinery/operator "org.corp.idemitsu" :refinery/throughput-bpd 190000 :refinery/status :active
+  :refinery/feedstock-class :observed-fossil :refinery/transition-readiness :medium
+  :refinery/sourcing :representative}
+ {:refinery/id "rf.us.baytown" :refinery/name "Baytown refinery" :refinery/country "US"
+  :refinery/operator "org.corp.exxonmobil" :refinery/throughput-bpd 560000 :refinery/status :active
+  :refinery/feedstock-class :observed-fossil :refinery/transition-readiness :low
+  :refinery/sourcing :representative}
+ {:refinery/id "rf.de.leuna" :refinery/name "Leuna refinery" :refinery/country "DE"
+  :refinery/operator "org.corp.totalenergies" :refinery/throughput-bpd 240000 :refinery/status :active
+  :refinery/feedstock-class :observed-fossil :refinery/transition-readiness :high
+  :refinery/sourcing :representative}
+ {:refinery/id "rf.jp.muroran" :refinery/name "Muroran (室蘭) — idled, transition candidate" :refinery/country "JP"
+  :refinery/operator "org.corp.eneos" :refinery/throughput-bpd 0 :refinery/status :idled
+  :refinery/feedstock-class :observed-fossil :refinery/transition-readiness :high
+  :refinery/sourcing :representative}
+
+ {:unit/id "u.negishi.cdu1" :unit/refinery "rf.jp.negishi" :unit/kind :cdu :unit/status :active :unit/sourcing :representative}
+ {:unit/id "u.negishi.fcc1" :unit/refinery "rf.jp.negishi" :unit/kind :fcc :unit/status :active :unit/sourcing :representative}
+ {:unit/id "u.baytown.hyc1" :unit/refinery "rf.us.baytown" :unit/kind :hydrocracker :unit/status :active :unit/sourcing :representative}
+ {:unit/id "u.leuna.ref1" :unit/refinery "rf.de.leuna" :unit/kind :reformer :unit/status :active :unit/sourcing :representative}
+
+ {:outage/id "o.negishi.fcc1.2026q2" :outage/unit "u.negishi.fcc1" :outage/status :planned
+  :outage/as-of "2026-06-01" :outage/sourcing :representative}
+
+ ;; ───────────────────── B. §2(d) decommission / transition robotics (face B) ─────────────────────
+ {:decommission/id "dc.muroran.convert" :decommission/refinery "rf.jp.muroran"
+  :decommission/intervention :convert :decommission/robot-class :purge
+  :decommission/principal :operator :decommission/server-held-key false
+  :decommission/convert-to :synthesis-plant :decommission/outward-gated true
+  :decommission/sourcing :representative}
+ {:decommission/id "dc.leuna.solar" :decommission/refinery "rf.de.leuna"
+  :decommission/intervention :convert :decommission/robot-class :cut
+  :decommission/principal :operator :decommission/server-held-key false
+  :decommission/convert-to :hikari-solar :decommission/outward-gated true
+  :decommission/sourcing :representative}
+ {:decommission/id "dc.negishi.monitor" :decommission/refinery "rf.jp.negishi"
+  :decommission/intervention :monitor :decommission/robot-class :inspect
+  :decommission/principal :operator :decommission/server-held-key false
+  :decommission/convert-to :remediated-land :decommission/outward-gated true
+  :decommission/sourcing :representative}
+
+ ;; ───────────────────── C. closed-loop synthesis designs (face C; G1 feedstock) ─────────────────────
+ {:synthesis/id "syn.biogenic-diesel" :synthesis/feedstock-class :biogenic
+  :synthesis/energy :hikari-renewable :synthesis/product-fate :combusted-fuel
+  :synthesis/control :supervised-autonomy :synthesis/sourcing :representative}
+ {:synthesis/id "syn.efuel-jet" :synthesis/feedstock-class :captured-co2
+  :synthesis/energy :hikari-renewable :synthesis/product-fate :combusted-fuel
+  :synthesis/control :teleop :synthesis/sourcing :representative}
+ {:synthesis/id "syn.bio-polymer" :synthesis/feedstock-class :biogenic
+  :synthesis/energy :hikari-renewable :synthesis/product-fate :durable-material
+  :synthesis/control :supervised-autonomy :synthesis/sourcing :representative}]

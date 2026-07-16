@@ -1,0 +1,131 @@
+;; shiori 栞 — seed wellbecoming-detraction graph (structural factors + AGGREGATE cohorts only)
+;; ADR-2606082100 · vocabulary: wellbecoming-ontology (00-contracts/schemas/wellbecoming-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - shiori is a WELLBECOMING-RELIEF map at AGGREGATE / cohort scale, NEVER a per-person affect
+;;     / happiness / sentiment scoring or manipulation engine. NO individual records, NO per-person
+;;     mood/affect/happiness score, NO biometric appear here. Every :cohort node is a COLLECTIVE
+;;     (:cohort/scope :aggregate).
+;;   - DRIVERS are structural PATTERNS (work-culture, design-pattern, credit-market), NEVER named
+;;     orgs/persons (map-not-target). The lens is DETRACTION pressure vs RELIEF, routed to
+;;     RELIEF / 救い via a TRANSPARENT Wellbecoming intervention (ossekai, ADR-2605264000) — never
+;;     coercion, never a dark pattern (anti-addictive, §1.13). karma lives ONLY on edges
+;;     (:en/load; N1). Relief is routed to STRUCTURAL change first, not individual blame (§1.4).
+;;
+;; SOURCING: detractor-severity bands and cohort burden patterns reflect public wellbeing research
+;;   (OECD Better Life Index, WHO determinants-of-health, Gallup-style public wellbeing surveys,
+;;   ISSP). The SAMPLE is a bounded illustrative seed (:representative coverage), NOT exhaustive,
+;;   and :en/load values are representative severities, NOT individual data. Severity bands are
+;;   DISCLOSED, never shiori adjudications (N3). No fabricated coverage. Live ingest + live
+;;   intervention routing are G7/Council-gated.
+
+[;; ───────────────────────────── cohorts (COLLECTIVES — bearers) ─────────────
+ {:organism/id "wb.cohort.gig-workers"    :organism/kind :cohort :organism/label "Gig / platform workers"      :cohort/kind :gig-workers    :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.workers"        :organism/kind :cohort :organism/label "Salaried workers"            :cohort/kind :workers       :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.youth"          :organism/kind :cohort :organism/label "Adolescents / youth"         :cohort/kind :youth         :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.students"       :organism/kind :cohort :organism/label "Students"                    :cohort/kind :students      :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.isolated-aged"  :organism/kind :cohort :organism/label "Socially isolated elderly"   :cohort/kind :isolated-aged :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.unpaid-carers"  :organism/kind :cohort :organism/label "Unpaid family carers"        :cohort/kind :unpaid-carers :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.low-income"     :organism/kind :cohort :organism/label "Low-income households"       :cohort/kind :low-income    :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.chronically-ill" :organism/kind :cohort :organism/label "Chronically-ill adults"     :cohort/kind :chronically-ill :cohort/scope :aggregate :organism/sourcing :authoritative}
+ {:organism/id "wb.cohort.new-parents"    :organism/kind :cohort :organism/label "New parents"                 :cohort/kind :new-parents   :cohort/scope :aggregate :organism/sourcing :authoritative}
+
+ ;; ──────────────── detractors (structural wellbecoming-detractors; DISCLOSED severity) ───
+ {:organism/id "wb.detr.precarity"            :organism/kind :detractor :organism/label "Income/employment precarity" :detractor/kind :precarity            :detractor/severity :severe   :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.overwork"             :organism/kind :detractor :organism/label "Chronic overwork"            :detractor/kind :overwork             :detractor/severity :severe   :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.isolation"            :organism/kind :detractor :organism/label "Social isolation / loneliness" :detractor/kind :isolation         :detractor/severity :critical :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.addictive-design"     :organism/kind :detractor :organism/label "Addictive product design"    :detractor/kind :addictive-design     :detractor/severity :severe   :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.debt-burden"          :organism/kind :detractor :organism/label "Debt burden"                 :detractor/kind :debt-burden          :detractor/severity :severe   :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.housing-insecurity"   :organism/kind :detractor :organism/label "Housing insecurity"          :detractor/kind :housing-insecurity   :detractor/severity :critical :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.chronic-pain"         :organism/kind :detractor :organism/label "Untreated chronic pain"      :detractor/kind :chronic-pain         :detractor/severity :moderate :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.information-pollution" :organism/kind :detractor :organism/label "Information pollution / overload" :detractor/kind :information-pollution :detractor/severity :moderate :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.discrimination"       :organism/kind :detractor :organism/label "Discrimination / exclusion"  :detractor/kind :discrimination       :detractor/severity :severe   :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.care-deprivation"     :organism/kind :detractor :organism/label "Care deprivation"            :detractor/kind :care-deprivation     :detractor/severity :severe   :organism/sourcing :authoritative}
+ {:organism/id "wb.detr.meaning-deficit"      :organism/kind :detractor :organism/label "Meaning / purpose deficit"   :detractor/kind :meaning-deficit      :detractor/severity :moderate :organism/sourcing :representative}
+ {:organism/id "wb.detr.sleep-deprivation"    :organism/kind :detractor :organism/label "Chronic sleep deprivation"   :detractor/kind :sleep-deprivation    :detractor/severity :moderate :organism/sourcing :authoritative}
+
+ ;; ──────────────── drivers (structural SOURCES — PATTERNS, never named entities; G1) ───
+ {:organism/id "wb.drv.always-on-work-culture"     :organism/kind :driver :organism/label "Always-on work culture"            :driver/kind :always-on-work-culture     :organism/sourcing :representative}
+ {:organism/id "wb.drv.engagement-maximizing-design" :organism/kind :driver :organism/label "Engagement-maximising design"    :driver/kind :engagement-maximizing-design :organism/sourcing :representative}
+ {:organism/id "wb.drv.high-cost-credit"           :organism/kind :driver :organism/label "High-cost consumer credit"          :driver/kind :high-cost-credit           :organism/sourcing :representative}
+ {:organism/id "wb.drv.thin-safety-net"            :organism/kind :driver :organism/label "Thin social safety net"             :driver/kind :thin-safety-net            :organism/sourcing :representative}
+ {:organism/id "wb.drv.unaffordable-housing-market" :organism/kind :driver :organism/label "Unaffordable housing market"      :driver/kind :unaffordable-housing-market :organism/sourcing :representative}
+ {:organism/id "wb.drv.care-infrastructure-gap"    :organism/kind :driver :organism/label "Care-infrastructure gap"            :driver/kind :care-infrastructure-gap    :organism/sourcing :representative}
+ {:organism/id "wb.drv.algorithmic-feed"           :organism/kind :driver :organism/label "Algorithmic attention feed"         :driver/kind :algorithmic-feed           :organism/sourcing :representative}
+ {:organism/id "wb.drv.job-insecurity-norm"        :organism/kind :driver :organism/label "Normalised job insecurity"          :driver/kind :job-insecurity-norm        :organism/sourcing :representative}
+
+ ;; ──────────────── mitigators (relief / havens — the 守り) ───
+ {:organism/id "wb.mit.social-connection"   :organism/kind :mitigator :organism/label "Social connection"        :mitigator/kind :social-connection   :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.secure-housing"      :organism/kind :mitigator :organism/label "Secure affordable housing" :mitigator/kind :secure-housing     :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.meaningful-work"     :organism/kind :mitigator :organism/label "Meaningful work"          :mitigator/kind :meaningful-work     :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.rest-recovery"       :organism/kind :mitigator :organism/label "Rest & recovery"          :mitigator/kind :rest-recovery       :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.mutual-aid"          :organism/kind :mitigator :organism/label "Mutual aid (wakai)"       :mitigator/kind :mutual-aid          :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.treatment-access"    :organism/kind :mitigator :organism/label "Treatment access (iyashi)" :mitigator/kind :treatment-access  :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.financial-stability" :organism/kind :mitigator :organism/label "Financial stability"      :mitigator/kind :financial-stability :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.information-hygiene" :organism/kind :mitigator :organism/label "Information hygiene"       :mitigator/kind :information-hygiene  :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.care-support"        :organism/kind :mitigator :organism/label "Care support (hagukumi)"  :mitigator/kind :care-support        :organism/sourcing :authoritative}
+ {:organism/id "wb.mit.time-sovereignty"    :organism/kind :mitigator :organism/label "Time sovereignty"         :mitigator/kind :time-sovereignty    :organism/sourcing :authoritative}
+
+ ;; ════════════════════ 縁 (edges) — karma lives HERE (N1) ════════════════════
+ ;; ── :drives (structural driver → detractor) ──
+ {:en/from "wb.drv.always-on-work-culture"      :en/to "wb.detr.overwork"             :en/kind :drives :en/load 0.9  :en/sourcing :representative}
+ {:en/from "wb.drv.always-on-work-culture"      :en/to "wb.detr.sleep-deprivation"    :en/kind :drives :en/load 0.6  :en/sourcing :representative}
+ {:en/from "wb.drv.engagement-maximizing-design" :en/to "wb.detr.addictive-design"    :en/kind :drives :en/load 0.9  :en/sourcing :representative}
+ {:en/from "wb.drv.engagement-maximizing-design" :en/to "wb.detr.isolation"           :en/kind :drives :en/load 0.4  :en/sourcing :representative}
+ {:en/from "wb.drv.algorithmic-feed"            :en/to "wb.detr.information-pollution" :en/kind :drives :en/load 0.85 :en/sourcing :representative}
+ {:en/from "wb.drv.algorithmic-feed"            :en/to "wb.detr.isolation"            :en/kind :drives :en/load 0.5  :en/sourcing :representative}
+ {:en/from "wb.drv.high-cost-credit"            :en/to "wb.detr.debt-burden"          :en/kind :drives :en/load 0.9  :en/sourcing :representative}
+ {:en/from "wb.drv.thin-safety-net"             :en/to "wb.detr.precarity"            :en/kind :drives :en/load 0.8  :en/sourcing :representative}
+ {:en/from "wb.drv.thin-safety-net"             :en/to "wb.detr.care-deprivation"     :en/kind :drives :en/load 0.6  :en/sourcing :representative}
+ {:en/from "wb.drv.unaffordable-housing-market" :en/to "wb.detr.housing-insecurity"   :en/kind :drives :en/load 0.9  :en/sourcing :representative}
+ {:en/from "wb.drv.care-infrastructure-gap"     :en/to "wb.detr.care-deprivation"     :en/kind :drives :en/load 0.85 :en/sourcing :representative}
+ {:en/from "wb.drv.job-insecurity-norm"         :en/to "wb.detr.precarity"            :en/kind :drives :en/load 0.8  :en/sourcing :representative}
+
+ ;; ── :diminishes (detractor → cohort) ──
+ {:en/from "wb.detr.precarity"            :en/to "wb.cohort.gig-workers"     :en/kind :diminishes :en/load 0.9  :en/sourcing :authoritative}
+ {:en/from "wb.detr.precarity"            :en/to "wb.cohort.low-income"      :en/kind :diminishes :en/load 0.8  :en/sourcing :authoritative}
+ {:en/from "wb.detr.overwork"             :en/to "wb.cohort.workers"         :en/kind :diminishes :en/load 0.8  :en/sourcing :authoritative}
+ {:en/from "wb.detr.overwork"             :en/to "wb.cohort.gig-workers"     :en/kind :diminishes :en/load 0.7  :en/sourcing :authoritative}
+ {:en/from "wb.detr.isolation"           :en/to "wb.cohort.isolated-aged"   :en/kind :diminishes :en/load 0.95 :en/sourcing :authoritative}
+ {:en/from "wb.detr.isolation"           :en/to "wb.cohort.youth"           :en/kind :diminishes :en/load 0.6  :en/sourcing :authoritative}
+ {:en/from "wb.detr.addictive-design"     :en/to "wb.cohort.youth"          :en/kind :diminishes :en/load 0.8  :en/sourcing :authoritative}
+ {:en/from "wb.detr.addictive-design"     :en/to "wb.cohort.students"       :en/kind :diminishes :en/load 0.7  :en/sourcing :authoritative}
+ {:en/from "wb.detr.debt-burden"          :en/to "wb.cohort.low-income"     :en/kind :diminishes :en/load 0.8  :en/sourcing :authoritative}
+ {:en/from "wb.detr.debt-burden"          :en/to "wb.cohort.students"       :en/kind :diminishes :en/load 0.7  :en/sourcing :authoritative}
+ {:en/from "wb.detr.housing-insecurity"   :en/to "wb.cohort.low-income"     :en/kind :diminishes :en/load 0.85 :en/sourcing :authoritative}
+ {:en/from "wb.detr.housing-insecurity"   :en/to "wb.cohort.gig-workers"    :en/kind :diminishes :en/load 0.6  :en/sourcing :authoritative}
+ {:en/from "wb.detr.chronic-pain"         :en/to "wb.cohort.chronically-ill" :en/kind :diminishes :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "wb.detr.chronic-pain"         :en/to "wb.cohort.isolated-aged"  :en/kind :diminishes :en/load 0.5  :en/sourcing :authoritative}
+ {:en/from "wb.detr.information-pollution" :en/to "wb.cohort.youth"         :en/kind :diminishes :en/load 0.6  :en/sourcing :authoritative}
+ {:en/from "wb.detr.discrimination"       :en/to "wb.cohort.low-income"     :en/kind :diminishes :en/load 0.5  :en/sourcing :authoritative}
+ {:en/from "wb.detr.care-deprivation"     :en/to "wb.cohort.unpaid-carers"  :en/kind :diminishes :en/load 0.9  :en/sourcing :authoritative}
+ {:en/from "wb.detr.care-deprivation"     :en/to "wb.cohort.new-parents"    :en/kind :diminishes :en/load 0.8  :en/sourcing :authoritative}
+ {:en/from "wb.detr.meaning-deficit"      :en/to "wb.cohort.workers"        :en/kind :diminishes :en/load 0.5  :en/sourcing :representative}
+ {:en/from "wb.detr.sleep-deprivation"    :en/to "wb.cohort.new-parents"    :en/kind :diminishes :en/load 0.8  :en/sourcing :authoritative}
+ {:en/from "wb.detr.sleep-deprivation"    :en/to "wb.cohort.students"       :en/kind :diminishes :en/load 0.6  :en/sourcing :authoritative}
+
+ ;; ── :relieves (mitigator → cohort; the 守り buffer) ──
+ {:en/from "wb.mit.social-connection"   :en/to "wb.cohort.isolated-aged"   :en/kind :relieves :en/load 0.5  :en/sourcing :authoritative}
+ {:en/from "wb.mit.social-connection"   :en/to "wb.cohort.youth"           :en/kind :relieves :en/load 0.4  :en/sourcing :authoritative}
+ {:en/from "wb.mit.secure-housing"      :en/to "wb.cohort.low-income"      :en/kind :relieves :en/load 0.4  :en/sourcing :authoritative}
+ {:en/from "wb.mit.meaningful-work"     :en/to "wb.cohort.workers"         :en/kind :relieves :en/load 0.4  :en/sourcing :authoritative}
+ {:en/from "wb.mit.rest-recovery"       :en/to "wb.cohort.workers"         :en/kind :relieves :en/load 0.3  :en/sourcing :authoritative}
+ {:en/from "wb.mit.mutual-aid"          :en/to "wb.cohort.gig-workers"     :en/kind :relieves :en/load 0.3  :en/sourcing :authoritative}
+ {:en/from "wb.mit.treatment-access"    :en/to "wb.cohort.chronically-ill" :en/kind :relieves :en/load 0.5  :en/sourcing :authoritative}
+ {:en/from "wb.mit.financial-stability" :en/to "wb.cohort.low-income"      :en/kind :relieves :en/load 0.3  :en/sourcing :authoritative}
+ {:en/from "wb.mit.information-hygiene" :en/to "wb.cohort.youth"           :en/kind :relieves :en/load 0.3  :en/sourcing :authoritative}
+ {:en/from "wb.mit.care-support"        :en/to "wb.cohort.unpaid-carers"   :en/kind :relieves :en/load 0.4  :en/sourcing :authoritative}
+ {:en/from "wb.mit.care-support"        :en/to "wb.cohort.new-parents"     :en/kind :relieves :en/load 0.3  :en/sourcing :authoritative}
+ {:en/from "wb.mit.time-sovereignty"    :en/to "wb.cohort.gig-workers"     :en/kind :relieves :en/load 0.2  :en/sourcing :authoritative}
+
+ ;; ── :routes-to (detractor → mitigator; the INTERVENTION path, routed to ossekai) ──
+ {:en/from "wb.detr.isolation"          :en/to "wb.mit.social-connection"   :en/kind :routes-to :en/load 0.8  :en/sourcing :representative}
+ {:en/from "wb.detr.overwork"           :en/to "wb.mit.time-sovereignty"    :en/kind :routes-to :en/load 0.7  :en/sourcing :representative}
+ {:en/from "wb.detr.overwork"           :en/to "wb.mit.rest-recovery"       :en/kind :routes-to :en/load 0.6  :en/sourcing :representative}
+ {:en/from "wb.detr.addictive-design"   :en/to "wb.mit.information-hygiene" :en/kind :routes-to :en/load 0.7  :en/sourcing :representative}
+ {:en/from "wb.detr.debt-burden"        :en/to "wb.mit.financial-stability" :en/kind :routes-to :en/load 0.7  :en/sourcing :representative}
+ {:en/from "wb.detr.housing-insecurity" :en/to "wb.mit.secure-housing"      :en/kind :routes-to :en/load 0.8  :en/sourcing :representative}
+ {:en/from "wb.detr.chronic-pain"       :en/to "wb.mit.treatment-access"    :en/kind :routes-to :en/load 0.7  :en/sourcing :representative}
+ {:en/from "wb.detr.care-deprivation"   :en/to "wb.mit.care-support"        :en/kind :routes-to :en/load 0.8  :en/sourcing :representative}
+ {:en/from "wb.detr.precarity"          :en/to "wb.mit.mutual-aid"          :en/kind :routes-to :en/load 0.6  :en/sourcing :representative}
+ {:en/from "wb.detr.meaning-deficit"    :en/to "wb.mit.meaningful-work"     :en/kind :routes-to :en/load 0.6  :en/sourcing :representative}]

@@ -1,0 +1,200 @@
+;; himawari 向日葵 — kotoba EAVT schema (deploy / PDS write-path projection)
+;; ADR-2606021200
+;;
+;; Projects the seven com.etzhayyim.himawari.* lexicon records (manifest.jsonld
+;; :lexiconNamespaces) into kotoba Datom attributes. This is the canonical EAVT
+;; shape the PDS write path (com.etzhayyim.apps.kotobase.kg.ingest, gated by an operator
+;; session PoP per ADR-2606015000) materializes records into. All state is kotoba
+;; Datoms — no RW/SQL/Lance as canonical (substrate boundary; G6-equivalent).
+;;
+;; Lexicon record  ←→  Datom attribute namespace
+;;   polysiliconProvenanceAttestation  :himawari.provenance/*
+;;   waferBatchRecord                  :himawari.wafer/*
+;;   cellBatchRecord                   :himawari.cell/*
+;;   moduleAttestation                 :himawari.module/*
+;;   loadingRecord                     :himawari.loading/*
+;;   outboundManifest                  :himawari.outbound/*
+;;   silenHimawariReview               :himawari.review/*
+
+[;; ───────── :himawari.provenance/* — polysiliconProvenanceAttestation (G2) ─────────
+ {:db/ident :himawari.provenance/lot-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "feedstock polysilicon lot id; chain-of-custody root (G2 / G11)"}
+ {:db/ident :himawari.provenance/origin-country
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-3166 origin; NEVER XUAR / forced-labor region (G2, constitutional)"}
+ {:db/ident :himawari.provenance/supplier-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "supplier DID; per-lot §2(g) audit binds here (G2)"}
+ {:db/ident :himawari.provenance/grade
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":solar-grade only — :electronic-grade is the iwakura/fuigo track, N1"}
+ {:db/ident :himawari.provenance/audit-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "CID of the forced-labor-exclusion audit artifact (G2 §2(g) per-lot)"}
+ {:db/ident :himawari.provenance/chain-of-custody-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "CID anchoring the full polysilicon→module custody chain (G2 / G11)"}
+
+ ;; ───────── :himawari.wafer/* — waferBatchRecord ─────────
+ {:db/ident :himawari.wafer/batch-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :himawari.wafer/feedstock-lot
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :himawari.provenance/lot-id (chain of custody, G11)"}
+ {:db/ident :himawari.wafer/ingot-method
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":czochralski | :cast (mono | multi)"}
+ {:db/ident :himawari.wafer/kerf-recovered-bps
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "kerf-Si recovery fraction in basis points (G5 circularity)"}
+ {:db/ident :himawari.wafer/yield-bps
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "wafer yield (good/total) in basis points"}
+
+ ;; ───────── :himawari.cell/* — cellBatchRecord ─────────
+ {:db/ident :himawari.cell/batch-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :himawari.cell/wafer-batch
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :himawari.wafer/batch-id"}
+ {:db/ident :himawari.cell/process
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":perc | :topcon | :hjt — open process params (G1)"}
+ {:db/ident :himawari.cell/efficiency-bps
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "cell conversion efficiency in basis points (flash test)"}
+ {:db/ident :himawari.cell/bin
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc "flash-test power bin (G11 deterministic yield)"}
+
+ ;; ───────── :himawari.module/* — moduleAttestation (G11) ─────────
+ {:db/ident :himawari.module/serial
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "per-module serial; ↔ feedstock lot traceable (G11)"}
+ {:db/ident :himawari.module/cell-batch
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :himawari.cell/batch-id"}
+ {:db/ident :himawari.module/feedstock-lot
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :himawari.provenance/lot-id (serial→lot, G11)"}
+ {:db/ident :himawari.module/bom-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "CycloneDX SBOM CID (G8)"}
+ {:db/ident :himawari.module/flash-iv-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "content CID of the Mimi flash-IV curve (G11)"}
+ {:db/ident :himawari.module/el-image-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "content CID of the Mimi EL image (G11)"}
+ {:db/ident :himawari.module/rated-wp
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "nameplate rating (Wp)"}
+ {:db/ident :himawari.module/destination-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "install destination DID; internal hikari only (G12 SBT↔SBT carve-out)"}
+ {:db/ident :himawari.module/chain-digest
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "sha256 of lot→batch→serial chain (G11)"}
+ {:db/ident :himawari.module/signed-digest
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "per-module provenance signature digest; Ed25519 at R1 (G11)"}
+ {:db/ident :himawari.module/attesting-node
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Murakumo node that attested (manifest: module_assembly → asher)"}
+
+ ;; ───────── :himawari.loading/* — loadingRecord (F10 lineage) ─────────
+ {:db/ident :himawari.loading/cycle-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :himawari.loading/pallet-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :himawari.loading/module-serials
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "module serials on this pallet; each ↔ :himawari.module/serial (G11)"}
+ {:db/ident :himawari.loading/carrier-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "receiving carrier DID (sarutahiko F10 → kami-autodrive)"}
+ {:db/ident :himawari.loading/robot-class
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":f10-loader (sarutahiko ADR-2606013100 lineage)"}
+
+ ;; ───────── :himawari.outbound/* — outboundManifest (G13) ─────────
+ {:db/ident :himawari.outbound/manifest-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :himawari.outbound/loading
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :himawari.loading/cycle-id"}
+ {:db/ident :himawari.outbound/carrier-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "transport carrier DID (kami-autodrive / funadaiku); G13 own-module only"}
+ {:db/ident :himawari.outbound/autodrive-class
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":truck | :ship — kami-autodrive GNC class (ADR-2606010600)"}
+ {:db/ident :himawari.outbound/destination-site
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "hikari install site id; G13 own-module → hikari sites only"}
+ {:db/ident :himawari.outbound/route-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "CID of the planned route + encrypted telemetry head (G13)"}
+
+ ;; ───────── :himawari.review/* — silenHimawariReview (Council attestation) ─────────
+ {:db/ident :himawari.review/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :himawari.review/scope
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/many
+  :db/doc ":provenance | :chemistry | :circularity | :liberation-metric (review axes)"}
+ {:db/ident :himawari.review/council-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Council Lv6+ attestation ref (ChartersComplianceRegistry)"}
+ {:db/ident :himawari.review/verdict
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":pass | :conditional | :refused"}]

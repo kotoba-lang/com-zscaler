@@ -1,0 +1,13 @@
+{:lexicon 1
+ :id "com.etzhayyim.watatsumi.sectionAssemblyAttestation"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["tid" "ringCount" "penetrators"]
+    :properties
+    {:tid {:type "string" :description "Transaction ID"}
+     :ringCount {:type "string" :description "Number of assembled rings"}
+     :penetrators {:type "string" :description "Penetrator inventory (power/data/fluid only)"}}}}}}

@@ -1,0 +1,22 @@
+{
+  "_note": "kamado 竈 — SAMPLE legacy oil-refining graph export (ADR-2606051500 migration).",
+  "_provenance": "Shape mirrors the legacy `oil-refining` actor's Cypher node model (the MATCH (r:Refinery) / (u:RefineryUnit) / (o:RefineryOutage) queries in 20-actors/oil-refining/actor-manifest.jsonld). The legacy actor stored these in RisingWave/graph — prohibited by ADR-2605262130. This file is a :representative export used to verify the kotoba-EAVT bridge offline. A real RisingWave dump (apoc.export.json / cypher-shell) drops in here unchanged.",
+  "Refinery": [
+    {"refinery_code": "JP-NEGISHI", "country_code": "JP", "throughput_bpd": 270000, "status": "active", "operator_org": "org.corp.eneos"},
+    {"refinery_code": "JP-CHIBA", "country_code": "JP", "throughput_bpd": 190000, "status": "active", "operator_org": "org.corp.idemitsu"},
+    {"refinery_code": "US-BAYTOWN", "country_code": "US", "throughput_bpd": 560000, "status": "active", "operator_org": "org.corp.exxonmobil"},
+    {"refinery_code": "DE-LEUNA", "country_code": "DE", "throughput_bpd": 240000, "status": "active", "operator_org": "org.corp.totalenergies"},
+    {"refinery_code": "JP-MURORAN", "country_code": "JP", "throughput_bpd": 0, "status": "idled", "operator_org": "org.corp.eneos"}
+  ],
+  "RefineryUnit": [
+    {"refinery_code": "JP-NEGISHI", "unit_type": "cdu", "status": "active"},
+    {"refinery_code": "JP-NEGISHI", "unit_type": "fcc", "status": "active"},
+    {"refinery_code": "US-BAYTOWN", "unit_type": "hydrocracker", "status": "active"},
+    {"refinery_code": "DE-LEUNA", "unit_type": "reformer", "status": "active"},
+    {"refinery_code": "DE-LEUNA", "unit_type": "coker", "status": "idled"}
+  ],
+  "RefineryOutage": [
+    {"refinery_code": "JP-NEGISHI", "unit_type": "fcc", "status": "planned", "as_of": "2026-06-01"},
+    {"refinery_code": "US-BAYTOWN", "unit_type": "hydrocracker", "status": "active", "as_of": "2026-05-28"}
+  ]
+}

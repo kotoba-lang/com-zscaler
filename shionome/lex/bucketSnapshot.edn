@@ -1,0 +1,21 @@
+{:lexicon 1
+ :id "com.etzhayyim.shionome.bucketSnapshot"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "An observed AS-OF state of a public capital bucket — a FACTUAL metric (return / net-fund-flow / volume z-score / yield / spread / drawdown / outstanding-usd) from public market data. outstanding-usd = the observed total SIZE (stock) of the bucket in USD trillions (the money-pyramid layer). Append-only (G10): a new observation is a NEW record, never an overwrite. NON-advisory (G2): a metric, never a signal/rating/target."
+   :record
+   {:type "object"
+    :required ["snapId" "bucket" "metric" "value" "sources" "sourcing"]
+    :properties
+    {:snapId   {:type "string" :description "→ :snap/id"}
+     :bucket   {:type "string" :description "→ :bucket/id"}
+     :metric   {:type "string"
+                :enum ["return-pct" "net-fund-flow" "volume-z" "yield-pct" "spread-bps" "drawdown-pct" "outstanding-usd"]
+                :description "G2 — factual observed metrics only; no rating / signal / target. outstanding-usd = total stock size in USD trillions (money-pyramid layer)."}
+     :value    {:type "number" :description "finite observed value in the metric's natural unit."}
+     :asOf     {:type "integer" :description "G10 — observed-at; append-only."}
+     :sources  {:type "array" :items {:type "string"} :minLength 1
+                :description "G3 — ≥1 public-source URL/CID."}
+     :sourcing {:type "string" :enum ["representative" "authoritative"]}}}}}}

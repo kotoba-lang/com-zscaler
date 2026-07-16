@@ -1,0 +1,61 @@
+;; funadaiku 船大工 — shipyard plant (kotoba EAVT)
+;; ADR-2606013400 · giemon-factory pattern (ADR-2606010030): zones as Obstacle::Aabb,
+;;   routed MEP utilities, service nodes, fixtures — all kotoba-native.
+;;
+;; The yard builds the Nagi 凪 class by the modular grand-block method inherited from
+;;   watatsumi (綿津見). H2 handling areas are ATEX-zoned with N2 purge + gas detection.
+;;
+;; HONEST: R0 design-only. Layout/MEP are :representative; not a licensed yard plan.
+;;   No confined-space / hot-work / launch is executed (G11 SBT-gated personnel).
+
+[{:yard/id "funadaiku.yard" :yard/actor "actor:funadaiku" :yard/adr "2606013400"
+  :yard/method "modular grand-block / block-erection (watatsumi-inherited), surface-hull scale"
+  :yard/footprint-m [320.0 180.0] :yard/shared-with "tatekata pilot facility (R2)"
+  :yard/sourcing :representative}
+
+ ;; ── production zones (as Obstacle::Aabb for kami-engine sim) ──
+ {:facility/id "yard.panel-line" :facility/zone :L1 :facility/kind :panel-line
+  :facility/aabb {:min [10.0 10.0 0.0] :max [70.0 40.0 12.0]}
+  :facility/purpose "flat-panel cut + weld (one-side SAW), stiffener fit" :facility/robot "Ita-ori 板織"}
+ {:facility/id "yard.curved-block-shop" :facility/zone :L1 :facility/kind :block-shop
+  :facility/aabb {:min [10.0 45.0 0.0] :max [70.0 80.0 14.0]}
+  :facility/purpose "curved block forming (line/press heating), sub-assembly" :facility/robot "Ita-ori 板織"}
+ {:facility/id "yard.grand-block-area" :facility/zone :L2 :facility/kind :erection
+  :facility/aabb {:min [80.0 10.0 0.0] :max [180.0 90.0 30.0]}
+  :facility/purpose "grand-block join + pre-outfit" :facility/robot "Oshidashi 押出"}
+ {:facility/id "yard.building-dock" :facility/zone :L2 :facility/kind :building-dock
+  :facility/aabb {:min [190.0 10.0 -8.0] :max [300.0 90.0 4.0]}
+  :facility/purpose "hull erection on keel blocks; flood for float-out (L5b)"
+  :facility/dock-gate true :facility/robot "Oshidashi 押出"}
+ {:facility/id "yard.ndt-bay" :facility/zone :L3 :facility/kind :ndt
+  :facility/aabb {:min [80.0 95.0 0.0] :max [140.0 130.0 12.0]}
+  :facility/purpose "RT/UT/PT hull-seam NDT" :facility/robot "Tsutsuki 突き"}
+ {:facility/id "yard.powertrain-bay" :facility/zone :L4 :facility/kind :integration
+  :facility/aabb {:min [145.0 95.0 0.0] :max [220.0 140.0 16.0]}
+  :facility/purpose "wind-assist rig + solar + H2 fuel cell + LFP + e-pod integration"
+  :facility/atex-zoned true :facility/h2-safe true :facility/n2-purge true :facility/gas-detection true
+  :facility/robot "Otete-yard"}
+ {:facility/id "yard.paint-shed" :facility/zone :L5a :facility/kind :coating
+  :facility/aabb {:min [225.0 95.0 0.0] :max [300.0 140.0 30.0]}
+  :facility/purpose "blasting + low-VOC coating (G14 emissions-bounded)" :facility/robot "Nuri-de 塗手"}
+ {:facility/id "yard.outfitting-quay" :facility/zone :L5a :facility/kind :quay
+  :facility/aabb {:min [190.0 145.0 -8.0] :max [310.0 175.0 2.0]}
+  :facility/purpose "afloat outfitting + commissioning + dock trial (L5b)"}
+
+ ;; ── routed MEP utilities (color-coded; giemon-factory style) ──
+ {:utility/id "yard.power" :utility/kind :electrical :utility/color "#e8a02d"
+  :utility/source :hikari-microgrid :utility/note "yard powered by hikari renewable microgrid (no grid-fossil if avoidable)"}
+ {:utility/id "yard.compressed-air" :utility/kind :compressed-air :utility/color "#5bb0e8"}
+ {:utility/id "yard.cooling-water" :utility/kind :cooling-water :utility/color "#2d8ae8"}
+ {:utility/id "yard.h2" :utility/kind :hydrogen :utility/color "#9be82d"
+  :utility/atex true :utility/note "H2 supply to powertrain-bay; double-walled, leak-detected, N2-purgeable (G11)"}
+ {:utility/id "yard.n2-purge" :utility/kind :nitrogen-purge :utility/color "#cccccc"}
+ {:utility/id "yard.fire" :utility/kind :fire-suppression :utility/color "#e82d2d"
+  :utility/note "H2-rated detection + suppression in powertrain-bay + dock"}
+
+ ;; ── service nodes / fixtures ──
+ {:service/id "yard.h2-bunker-point" :service/kind :hydrogen-bunker :service/gate "Council + operator (G11/G12)"
+  :service/note "green-H2 only; chain-of-custody attestation required (G14)"}
+ {:service/id "yard.shore-power" :service/kind :shore-power :service/note "zero-emission at berth"}
+ {:fixture/id "yard.gantry-crane" :fixture/kind :goliath-gantry :fixture/capacity-t 600
+  :fixture/span-m 100.0 :fixture/note "grand-block lift onto building dock"}]

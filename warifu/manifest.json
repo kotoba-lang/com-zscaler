@@ -1,0 +1,43 @@
+{
+  "name": "warifu",
+  "kanji": "割符",
+  "gloss": "split tally — two matching halves authenticate a transaction",
+  "tier": "B",
+  "status": "R0",
+  "adr": "2605302000",
+  "layer": "20-actors",
+  "license": "Apache-2.0",
+  "charterRider": "v2.0",
+  "purpose": "Open-source, zero-merchant-fee card payment service (credit + debit), API/wire-compatible with the existing card ecosystem; settles on-chain via USDC on Base L2 + ERC-4337.",
+  "economics": {
+    "merchantFeeBps": 0,
+    "interchangeBps": 0,
+    "networkAssessmentBps": 0,
+    "creditInterestBps": 0,
+    "gasSponsorship": "etzhayyim-paymaster <- etzhayyim-public-fund",
+    "lossMutualisation": "wakai (ADR-2605263500)"
+  },
+  "settlement": {
+    "chain": "base",
+    "asset": "usdc",
+    "accountModel": "erc-4337-smart-account",
+    "finality": "T+0"
+  },
+  "purposeAllowlist": {
+    "phase1": ["internal-purchase", "internal-subscription", "internal-promo", "escrow-refund"],
+    "phase2Gated": ["purchase", "subscription"],
+    "gate": "Council Lv7+ unanimity (ADR-2605192115 amendment) + ADR-2605301036 vendor merchant-of-record"
+  },
+  "compat": {
+    "surfaceA": "stripe-shaped REST",
+    "surfaceB": "EMV + ISO 8583",
+    "surfaceC": "HCE + self TSP (network-tokenized)"
+  },
+  "pairs": [
+    { "actor": "wakai", "adr": "2605263500", "role": "credit underwriting + loss mutualisation" },
+    { "actor": "toritate", "adr": "2605262900", "role": "on-chain accounting + audit" },
+    { "actor": "chigiri", "adr": "2605262700", "role": "dispute legal procedure" }
+  ],
+  "ledger": { "engine": "kotoba", "entities": ["card", "auth_hold", "capture", "settlement", "credit_line", "dispute"] },
+  "cells": ["authorize", "settle"]
+}

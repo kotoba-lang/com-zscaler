@@ -1,0 +1,9 @@
+;; chokepoint-promotion-decision.kotoba.edn — calibration_gate decision per method.
+;; G12 skill>0 · G7 calibrated · G9 member-signed (no-server-key) · G1 no point.
+;; A REFUSAL gate: never auto-promotes. Live promotion G10-gated. ADR-2606051800.
+;; signed-by: did:web:etzhayyim.com:member:alice
+
+[
+ {:fc.promotion/method :climatology :fc.promotion/skill 0.3706 :fc.promotion/deviation 1.0508 :fc.promotion/phase :refused :fc.promotion/promoted false :fc.promotion/server-held-key false :fc.promotion/refusal "G7: calibration deviation 1.0508 > 0.4000; miscalibrated; promotion refused"}
+ {:fc.promotion/method :persistence :fc.promotion/skill 0.6467 :fc.promotion/deviation 0.3746 :fc.promotion/phase :cleared :fc.promotion/promoted true :fc.promotion/server-held-key false :fc.promotion/refusal ""}
+]

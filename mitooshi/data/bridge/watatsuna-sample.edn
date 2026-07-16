@@ -1,0 +1,9 @@
+;; watatsuna-shaped cable-criticality roll-up (DERIVED, :representative) — bridge INPUT.
+;; A snapshot of public cable-bulletin-derived chokepoint cable load (Tbps); station
+;; records are present and MUST be ignored by the bridge.
+[
+ {:resilience/chokepoint ":malacca" :resilience/chokepoint-load 940.16 :resilience/cable-count 9 :resilience/derived true}
+ {:resilience/chokepoint ":luzon-strait" :resilience/chokepoint-load 680.56 :resilience/cable-count 8 :resilience/derived true}
+ {:resilience/chokepoint ":suez-red-sea" :resilience/chokepoint-load 349.6 :resilience/cable-count 4 :resilience/derived true}
+ {:resilience/station "station.sg.changi" :resilience/station-degree 6 :resilience/derived true}
+]

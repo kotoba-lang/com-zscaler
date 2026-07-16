@@ -1,0 +1,66 @@
+{
+  "entities": [
+    {
+      "id": "entity:compute:megacorp_a",
+      "name": "MegaCorp AI Compute",
+      "domain": "compute",
+      "traits": {
+        "closed_source_models": true,
+        "proprietary_hardware_lockin": true,
+        "pricing_power_abuse": true
+      },
+      "beneficial_owners": [
+        "individual:tech_baron_x"
+      ],
+      "intel_findings": [
+        "Acquired 3 major open-source AI startups this quarter (M&A consolidation).",
+        "Changed licensing of core model infrastructure from open to proprietary closed-source.",
+        "Increased API pricing by 400% after achieving 70% market share."
+      ]
+    },
+    {
+      "id": "entity:biology:agri_monopoly_b",
+      "name": "GlobalSeeds Inc.",
+      "domain": "biology",
+      "traits": {
+        "f1_hybrid_lockin": true,
+        "gene_patents": true,
+        "lawsuits_against_farmers": true
+      },
+      "beneficial_owners": [
+        "individual:agri_baron_y",
+        "vc:fund_z"
+      ],
+      "intel_findings": [
+        "Sued 50+ independent farmers for accidental cross-pollination of patented traits.",
+        "Lobbied successfully to ban seed-saving practices in 3 new jurisdictions."
+      ]
+    },
+    {
+      "id": "entity:infrastructure:logistics_c",
+      "name": "Prime Delivery Network",
+      "domain": "logistics",
+      "traits": {
+        "warehouse_labor_exploitation": true,
+        "market_share_dominance": true,
+        "anti_union_tactics": true
+      },
+      "beneficial_owners": [
+        "individual:retail_baron_w"
+      ]
+    },
+    {
+      "id": "entity:compute:murakumo_friendly",
+      "name": "Open Source Compute Coop",
+      "domain": "compute",
+      "traits": {
+        "closed_source_models": false,
+        "proprietary_hardware_lockin": false,
+        "pricing_power_abuse": false
+      },
+      "beneficial_owners": [
+        "collective:community"
+      ]
+    }
+  ]
+}

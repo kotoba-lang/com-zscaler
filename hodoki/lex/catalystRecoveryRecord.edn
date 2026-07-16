@@ -1,0 +1,4 @@
+[{:db/id -1
+  :catalyst-recovery-record/lexicon 1
+  :catalyst-recovery-record/id "com.etzhayyim.hodoki.catalystRecoveryRecord"
+  :catalyst-recovery-record/defs "{:main {:type \"record\", :key \"tid\", :record {:type \"object\", :required [\"tid\" \"vin\" \"pgmYieldPct\" \"smelterReceiptCid\" \"timestamp\"], :properties {:tid {:type \"string\", :description \"Transaction ID\"}, :vin {:type \"string\", :description \"Vehicle Identification Number\"}, :pgmYieldPct {:type \"integer\", :description \"PGM (Pt/Pd/Rh) yield % (G14)\"}, :smelterReceiptCid {:type \"string\", :description \"IPFS CID of smelter receipt\"}, :timestamp {:type \"string\", :description \"ISO-8601 recovery time\"}}}}}"}]

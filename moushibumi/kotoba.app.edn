@@ -1,0 +1,1 @@
+[{:db/id -1, :kotoba.app/name "moushibumi", :kotoba.app/version "0.1.0", :kotoba.app/components "[{:name \"moushibumi\", :src \"methods/mesh.clj\", :scale 1, :triggers [{:type :http, :route \"/moushibumi\"}], :requires #{:cap/kqe}}]", :kotoba.app/placement "{:spread :zone, :require {:tier \"edge\"}}"}]

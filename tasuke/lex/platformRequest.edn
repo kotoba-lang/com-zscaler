@@ -1,0 +1,22 @@
+{:lexicon 1
+ :id "com.etzhayyim.tasuke.platformRequest"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A platform/bank-side request GENERATED for the victim to send: account freeze / takedown / disclosure to a platform abuse desk, or a 不正送金 組戻し・口座凍結依頼 to a bank under 振り込め詐欺救済法. Member-authored (G3), member-sent (G2, no 代理), free (G1)."
+   :record
+   {:type "object"
+    :required ["docId" "case" "kind" "authoredBy" "addressedTo" "needsMemberSignature" "supportCostJpy" "published"]
+    :properties
+    {:docId         {:type "string" :description "→ :doc/id"}
+     :case          {:type "string" :description "→ :doc/case"}
+     :kind          {:type "string" :enum ["platform-request" "bank-freeze-request"]}
+     :authoredBy    {:type "string" :const "member"
+                     :description "G3 — only 'member'. The victim is the requester; 助 drafts, never sends as an agent."}
+     :addressedTo   {:type "string" :description "宛先 (○○銀行 / プラットフォーム abuse desk)"}
+     :legalBasis    {:type "string" :description "根拠 (e.g. 振り込め詐欺救済法 / 各社利用規約 abuse 条項) — :representative (G10)"}
+     :body          {:type "string" :description "the generated request text"}
+     :needsMemberSignature {:type "boolean" :const true :description "G2/G7 — member signs/sends; only true."}
+     :supportCostJpy {:type "integer" :const 0 :description "G1 — free; only 0."}
+     :published     {:type "boolean" :const false :description "G9 — draft-only at R0; live send is gated. Only false."}}}}}}

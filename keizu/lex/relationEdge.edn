@@ -1,0 +1,25 @@
+{:lexicon 1
+ :id "com.etzhayyim.keizu.relationEdge"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "An OBSERVED tie between two PUBLIC roles/organs (committee co-membership, appointment, revolving-door, funding, statement, procurement award). Edge-primary (G4): the substance is on the edge, never a per-node score. FACTUAL only (G2): a verdict/crime/corruption is not an enum member. Sourced (G3): ≥2 public-source citations. An accountability MAP, never a target-list (G5)."
+   :record
+   {:type "object"
+    :required ["relId" "source" "target" "kind" "nonAdjudicatingNotice" "sources" "sourcing"]
+    :properties
+    {:relId   {:type "string" :description "→ :rel/id"}
+     :source  {:type "string" :description "→ :node/id (public role/organ)"}
+     :target  {:type "string" :description "→ :node/id (public role/organ)"}
+     :kind    {:type "string"
+               :enum ["committee-membership" "appointment" "advisory-role" "co-membership"
+                      "revolving-door" "funding-tie" "statement-attribution" "procurement-award"]
+               :description "G2 INVARIANT — factual tie kinds only. corruption / bribe / collusion / guilt are NOT enum members; a legal characterization is unrepresentable (danjo G4; routes to chigiri + external counsel)."}
+     :weight  {:type "number" :description "G4 — count / amount-share / tenure on the EDGE; not a per-node power score."}
+     :asOf    {:type "integer" :description "G10 — observed-at; append-only as-of, no final state (非終末論)."}
+     :nonAdjudicatingNotice {:type "boolean" :const true
+                             :description "G2 INVARIANT — only true. keizu records ties, it never adjudicates."}
+     :sources {:type "array" :items {:type "string"} :minLength 2
+               :description "G3 INVARIANT — ≥2 public-source URLs/CIDs. An unsourced tie is refused."}
+     :sourcing {:type "string" :enum ["representative" "authoritative"]}}}}}}

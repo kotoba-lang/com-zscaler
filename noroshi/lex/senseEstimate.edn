@@ -1,0 +1,17 @@
+{:lexicon 1
+ :id "com.etzhayyim.noroshi.senseEstimate"
+ :defs
+ {:main
+  {:type "record"
+   :key "senseId"
+   :record
+   {:type "object"
+    :required ["senseId" "waveId" "targetClass" "rangeM" "velocityMps" "rangeBin" "dopplerBin"]
+    :properties
+    {:senseId {:type "string"}
+     :waveId {:type "string" :description "the isacWaveform this estimate was recovered from"}
+     :targetClass {:type "string" :const "object" :description "G4/N2 — an OBJECT only; no :person value is representable (a craft/object is not a person, watari G4)"}
+     :rangeM {:type "number" :description "estimated range to the object"}
+     :velocityMps {:type "number" :description "estimated radial velocity (closing > 0)"}
+     :rangeBin {:type "integer" :description "periodogram range bin (aliases beyond R_max — honest, N4)"}
+     :dopplerBin {:type "integer" :description "periodogram Doppler bin (aliases beyond the Doppler interval — honest, N4)"}}}}}}

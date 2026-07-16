@@ -1,0 +1,293 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:credits.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Credits agent — the credit ledger for yoro.etzhayyim.com. You manage earn (HC tasks, Murakumo compute), purchase (30% platform fee), and spend (10% public fund allocation) credit flows. Anti-fraud: 60 spend/hour, 30 earn/hour, reject >50 credit earns, HC reputation gate (approval_rate<50%). Public fund destinations: common, education-family, health-access, climate-resilience.",
+  "description": "Yoro human participation credit system. Earn (compute/HC) → Purchase (30% fee) → Spend (10% public fund allocation). Anti-fraud rate limiting.",
+  "displayName": "Credits — Credit Ledger & Public Fund Routing",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "credits",
+  "nanoid": "credits-mcp",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (w:CreditWallet {userId: $input.userId}) RETURN w.balance AS balance, w.userId AS userId LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "balance"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.credits.getBalance",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (t:CreditTransaction {userId: $input.userId, type: 'earn'}) WHERE t.createdAt > datetime() - duration('PT1H') RETURN count(t) AS recentEarns LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "antifraud"
+        },
+        {
+          "args": {
+            "template": "MERGE (w:CreditWallet {userId: $input.userId}) SET w.balance = coalesce(w.balance, 0) + $input.amount CREATE (t:CreditTransaction {did: $did, userId: $input.userId, type: 'earn', amount: $input.amount, source: $input.source, repo: $did, collection: 'com.etzhayyim.apps.credits.transaction'})"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeEarn"
+        },
+        {
+          "args": {
+            "message": "You are Credits — Credit Ledger & Public Fund Routing. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeEarn.text"
+          },
+          "depends_on": [
+            "writeEarn"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.credits.earnCredits",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (w:CreditWallet {userId: $input.userId}) RETURN w.balance AS balance LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "wallet"
+        },
+        {
+          "args": {
+            "template": "MATCH (w:CreditWallet {userId: $input.userId}) SET w.balance = w.balance - $input.amount CREATE (t:CreditTransaction {did: $did, userId: $input.userId, type: 'spend', amount: $input.amount, action: $input.action, repo: $did, collection: 'com.etzhayyim.apps.credits.transaction'}) CREATE (a:PublicFundAllocation {did: $did, amount: $input.amount * 0.1, destinationId: $input.destinationId, repo: $did, collection: 'com.etzhayyim.apps.credits.allocation'})"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeSpend"
+        },
+        {
+          "args": {
+            "message": "You are Credits — Credit Ledger & Public Fund Routing. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeSpend.text"
+          },
+          "depends_on": [
+            "writeSpend"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.credits.spendCredits",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (t:CreditTransaction) WHERE t.createdAt > datetime() - duration('P1D') RETURN t.type AS type, sum(t.amount) AS total, count(t) AS txCount LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "dailyStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (a:PublicFundAllocation) WHERE a.createdAt > datetime() - duration('P1D') RETURN a.destinationId AS fund, sum(a.amount) AS allocated LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "fundStats"
+        },
+        {
+          "args": {
+            "message": "You are Credits — Credit Ledger & Public Fund Routing. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $fundStats.rows"
+          },
+          "depends_on": [
+            "fundStats"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 0 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "credits",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.credits.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "credits-mcp",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Credits — Credit Ledger & Public Fund Routing. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.credits.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "credit-ledger",
+      "anti-fraud",
+      "public-fund-routing",
+      "purchase-settlement"
+    ],
+    "description": "Credit ledger for yoro.etzhayyim.com. Earn from HC tasks and Murakumo compute. Purchase with 30% platform fee. Spend with 10% public fund allocation. Anti-fraud rate limiting.",
+    "displayName": "Credits — Credit Ledger & Public Fund Routing",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.credits.transaction",
+        "com.etzhayyim.apps.hc.task"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

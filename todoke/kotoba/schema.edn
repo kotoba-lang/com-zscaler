@@ -1,0 +1,26 @@
+;; todoke (届け) kotoba EAVT schema — last-mile autonomous delivery (R0)
+[{:db/ident :job/id              :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :job/payload-class   :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :job/weight-kg       :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :job/consent-ref     :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :job/armed           :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; const false (G14/N1)
+ {:db/ident :job/gig             :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; const false (G5/N4)
+ {:db/ident :route/record        :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :route/order         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one} ;; EDN-encoded id list
+ {:db/ident :route/length-m      :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :route/sae-level     :db/valueType :db.type/long    :db/cardinality :db.cardinality/one} ;; <= 4 (N2)
+ {:db/ident :route/envelope-ok   :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :run/telemetry       :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :run/safety-flag     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :run/energy-wh       :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :handoff/proof       :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :handoff/proof-kind  :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :handoff/on-device-only :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; const true (G8)
+ {:db/ident :handoff/server-signed  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; const false (G12)
+ {:db/ident :mission/record      :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :mission/cid         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :robot/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :robot/role          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ ;; displacement coupling (ADR-2606032130)
+ {:db/ident :displacement/cohort-id :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :displacement/isco      :db/valueType :db.type/string :db/cardinality :db.cardinality/one}]

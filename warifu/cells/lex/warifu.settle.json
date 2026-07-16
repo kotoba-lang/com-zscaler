@@ -1,0 +1,40 @@
+{
+  "lexicon": 1,
+  "id": "warifu.settle",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Capture an authorized hold and settle on-chain (USDC, Base L2, T+0). Merchant fee is always 0; gas sponsored by etzhayyim-paymaster.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["authId"],
+          "properties": {
+            "authId": { "type": "string" },
+            "amountUsdc": { "type": "integer", "description": "omit for full authorized amount", "minimum": 1 },
+            "idempotencyKey": { "type": "string" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["settled"],
+          "properties": {
+            "settled": { "type": "boolean" },
+            "settlementId": { "type": "string" },
+            "tx": { "type": "string", "description": "Base L2 settlement tx hash" },
+            "feeUsdc": { "type": "integer", "const": 0 },
+            "finality": { "type": "string", "const": "T+0" }
+          }
+        }
+      },
+      "errors": [
+        { "name": "HoldNotFound" },
+        { "name": "AlreadyCaptured" }
+      ]
+    }
+  }
+}

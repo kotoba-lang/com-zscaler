@@ -1,0 +1,16 @@
+;; noroshi (烽) :representative photonic-packaging robotics fleet (G10) — R0, no hardware (G8).
+;; Each robot displaces human fibre-alignment / photonic-assembly labour ⇒ every robot carries a
+;; Displacement-Dividend cohort ref (G2, ADR-2606032130). Force class is :fab-process-laser only;
+;; :weaponizable is unrepresentable (N1). Laser classes gated by the IEC 60825 interlock (G5).
+[{:probot/id "noroshi-aligner-01"  :probot/role :fibre-aligner :probot/force-class :fab-process-laser
+  :probot/laser-class "1"  :probot/edge-envelope true
+  :probot/dividend-cohort-ref "dividend:photonic-assembly-001" :probot/representative true}
+ {:probot/id "noroshi-aligner-02"  :probot/role :fibre-aligner :probot/force-class :fab-process-laser
+  :probot/laser-class "3R" :probot/edge-envelope true
+  :probot/dividend-cohort-ref "dividend:photonic-assembly-001" :probot/representative true}
+ {:probot/id "noroshi-bonder-01"   :probot/role :wire-bonder   :probot/force-class :fab-process-laser
+  :probot/laser-class "4"  :probot/edge-envelope true
+  :probot/dividend-cohort-ref "dividend:photonic-assembly-002" :probot/representative true}
+ {:probot/id "noroshi-inspector-01" :probot/role :inspector    :probot/force-class :fab-process-laser
+  :probot/laser-class "1"  :probot/edge-envelope true
+  :probot/dividend-cohort-ref "dividend:photonic-assembly-002" :probot/representative true}]

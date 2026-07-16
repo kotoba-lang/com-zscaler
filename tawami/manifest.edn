@@ -1,0 +1,69 @@
+;; 撓 tawami — actor manifest (clj-native, kotoba-Datom-native)
+;; Proof-of-Flexibility asset KG — Energy Order Protocol suite (submits to 澪 mio).
+;; OBSERVATION ONLY — maps flexibility; hikari actuates under Council gate.
+{:actor/id        "tawami"
+ :actor/glyph     "撓"
+ :actor/tier      :tier-b
+ :actor/integrates ["hikari" "mio" "okibi" "toi" "yudane"]
+ :actor/domain    "tawami.etzhayyim.com"
+ :actor/kind      :observation-watcher
+ :actor/purpose   "Proof-of-Flexibility asset KG — the flexibility leg of the Energy Order Protocol suite. The value here is not generation but the ABILITY TO BEND a future energy flow in time (shiftability): batteries / EV fleets / cold stores / datacenters / heat pumps / industrial processes that can move WHEN they draw energy. Computes flex-value (energy-capacity × availability × responsiveness × time-shift weight), tiers each asset (:fast-flex / :mid-flex / :slow-flex), and assigns its best-use 澪 mio flow-class. A used flexibility becomes a mio flow-improvement claim (R1). OBSERVATION ONLY — a flexibility map, NEVER a dispatch order (hikari actuates under Council gate) and NEVER a per-person load profile. Flexibility sibling of mio (verification backbone); reciprocity-rewarded via moyai (ADR-2606062101)."
+ :actor/status    :r0
+ :actor/adr       "2606211200"
+ :actor/related   ["2606211200" "2605261100" "2606062101" "2606071500" "2605262130" "2605312345"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "map-not-dispatch" :gate/rule "A flexibility MAP, never a dispatch/curtail ORDER. No :tawami/dispatch or :tawami/curtail-order attribute exists (test-enforced); hikari actuates under Council gate."}
+  {:gate/id "G2" :gate/name "aggregate-first-no-person" :gate/rule "Aggregate-first; no per-person load profile. No :tawami.person/* attribute exists (Rider §2(c) reciprocity)."}
+  {:gate/id "G3" :gate/name "no-trade-no-signal" :gate/rule "Flexibility is observed, never traded — no :tawami/trade / :tawami/signal (shionome pattern)."}
+  {:gate/id "G4" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms on an append-only content-addressed commit-DAG; every derived datom :tawami/derived + :tawami/sourcing."}
+  {:gate/id "G5" :gate/name "reciprocal-reward" :gate/rule "Flexibility provision is rewarded via non-monetary decaying moyai reciprocity credit (ADR-2606062101); cash≡0."}
+  {:gate/id "G6" :gate/name "murakumo-only-narration" :gate/rule "Any narration via the Murakumo no-VKE mesh, DEFAULT-PREFERRED (Rider v3.3 §2(i))"}
+  {:gate/id "G7" :gate/name "no-server-key" :gate/rule "Platform holds no key; live telemetry ingest is an operator step (R0 seed = :representative + folded :authoritative); claim submission to mio is member/operator-gated (R1)."}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "NOT an actuator — tawami maps; hikari dispatches under Council gate"}
+  {:n/id "N2" :n/rule "NOT a trading desk / no market signal"}
+  {:n/id "N3" :n/rule "NOT a per-person load profiler — aggregate-only"}
+  {:n/id "N4" :n/rule "NOT a forecaster (mitooshi owns distributions)"}]
+
+ :actor/methods
+ [{:method/id "tawami_edn" :method/file "methods/tawami_edn.cljc" :method/role "seed loader + classify (assets)"}
+  {:method/id "analyze"    :method/file "methods/analyze.cljc"    :method/role "flex-value → tier → best-use → datoms → coverage → report (+ bb CLI)"}
+  {:method/id "kotoba"     :method/file "methods/kotoba.cljc"     :method/role "content-addressed append-only FLEXIBILITY LEDGER (tx-cid/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun"    :method/file "methods/autorun.cljc"    :method/role "deterministic idempotent-by-content heartbeat — analyze → append flexibility obs on change (+ bb CLI)"}
+  {:method/id "claim"    :method/file "methods/claim.cljc"    :method/role "R1 seam: tawami analysis to 澪 mio flow-improvement claim maps (the five §9 verification facts)"}]
+
+ :actor/lex
+ [{:lex/id "flexibilityAsset"}
+  {:lex/id "flexOffer"}]
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.tawami.edn"
+  :seed/sourcing :representative
+  :seed/classes [:battery :ev-fleet :cold-store :datacenter :heat-pump :industrial-process]}
+
+ :actor/ledger
+ {:ledger/file "data/persisted/tawami.flexibility.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/idempotent-by-content true
+  :ledger/note "Generated flexibility ledger; tamper-evident (verify-chain); no-server-key; appends only on change. A flexibility map, never a dispatch order."}
+
+ :actor/suite
+ {:suite/name "Energy Order Protocol"
+  :suite/role :flexibility
+  :suite/backbone "mio"
+  :suite/siblings ["mio" "okibi" "toi" "yudane"]
+  :suite/note "tawami maps flexibility assets and submits flow-improvement claims to 澪 mio (the verification backbone); hikari actuates verified outcomes under Council gate."}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/tawami/run_tests.sh"
+  :suites ["methods/test_tawami_edn.cljc" "methods/test_analyze.cljc"
+           "methods/test_kotoba.cljc" "methods/test_autorun.cljc"]}}

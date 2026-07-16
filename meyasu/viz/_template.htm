@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>meyasu 目安 — 統合 arbitrage / 需給 intel</title>
+<!--
+  meyasu 目安 unified arbitrage-intel dashboard. One row per product: price spread,
+  supply/demand now, forecast band, trajectory, and an attention flag with its planner
+  route. A BUYER-transparency + supply-resilience surface, NEVER a trading board (G1):
+  no buy/sell call, no affiliate, no purchase nudge.
+
+  SELF-CONTAINED: the payload is inlined at build time (build_viz_data.py replaces the
+  __PAYLOAD__ marker); opens via file:// with zero external fetch. Fusion is computed once
+  in py/agent.py (single source of truth); this page only renders it.
+-->
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; background:#0b0e14; color:#cdd6f4; font:13px/1.5 ui-sans-serif,system-ui,sans-serif; }
+  header { padding:12px 16px; border-bottom:1px solid #1e2330; }
+  h1 { font-size:16px; margin:0 0 2px; }
+  .sub { color:#7f8aa3; font-size:11px; }
+  main { padding:14px 16px; }
+  table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid #1e2330; }
+  th { color:#7f8aa3; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+  .spreadbar { height:10px; border-radius:3px; background:#89b4fa; display:inline-block; vertical-align:middle; }
+  .badge { display:inline-block; padding:1px 7px; border-radius:999px; font-size:11px; font-weight:600; }
+  .tightening { background:#f38ba8; color:#1a0f14; }
+  .easing { background:#a6e3a1; color:#0f1a10; }
+  .stable, .unknown { background:#585b70; color:#cdd6f4; }
+  .attn { color:#fab387; font-weight:700; }
+  .route { color:#7f8aa3; font-size:11px; }
+  .band { color:#f9e2af; }
+  .foot { padding:10px 16px; color:#585b70; font-size:11px; border-top:1px solid #1e2330; }
+</style>
+</head>
+<body>
+<header>
+  <h1>meyasu 目安 — 統合 arbitrage / 需給 intel</h1>
+  <div class="sub" id="sub">buyer-transparency + supply-resilience — a yardstick, never a trade (G1)</div>
+</header>
+<main><table id="tbl"><thead><tr>
+  <th>product</th><th>price spread</th><th>供給/需要 now</th><th>forecast band</th>
+  <th>trajectory</th><th>route</th>
+</tr></thead><tbody id="rows"></tbody></table></main>
+<div class="foot" id="foot"></div>
+<script>
+  const PAYLOAD = /*__PAYLOAD__*/null;
+  function el(t, cls, txt){ const e=document.createElement(t); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; }
+  function render(p){
+    const tb=document.getElementById('rows');
+    if(!p||!p.cards||!p.cards.length){ document.getElementById('sub').textContent='(no data — run build_viz_data.py)'; return; }
+    const maxFrac=Math.max(...p.cards.map(c=>c.spreadFraction||0), 0.01);
+    for(const c of p.cards){
+      const tr=el('tr');
+      tr.appendChild(el('td', null, c.productId));
+      const sp=el('td');
+      const bar=el('span','spreadbar'); bar.style.width=Math.max(6, Math.round(140*(c.spreadFraction||0)/maxFrac))+'px';
+      sp.appendChild(bar);
+      sp.appendChild(el('span',null,' '+c.priceSpread+' ('+Math.round((c.spreadFraction||0)*1000)/10+'%)'+(c.notableSpread?' ⚠':'')));
+      tr.appendChild(sp);
+      tr.appendChild(el('td', null, (c.supplyDemandNow)+' · '+(c.reading||'')));
+      tr.appendChild(el('td','band', c.forecastBand?('['+c.forecastBand[0]+', '+c.forecastBand[1]+']'):'—'));
+      const tj=el('td'); tj.appendChild(el('span','badge '+(c.trajectory||'unknown'), c.trajectory||'unknown')); tr.appendChild(tj);
+      const rt=el('td'); if(c.attention){ rt.appendChild(el('span','attn','ATTENTION → ')); }
+      rt.appendChild(el('span','route', c.routeTo)); tr.appendChild(rt);
+      tb.appendChild(tr);
+    }
+  }
+  render(PAYLOAD);
+  document.getElementById('foot').textContent =
+    (PAYLOAD&&PAYLOAD.generator?PAYLOAD.generator+' · ':'') +
+    'intent: ' + (PAYLOAD&&PAYLOAD.intent?PAYLOAD.intent:'n/a') +
+    ' · no ads / no affiliate / no trade call (G1/G3)';
+</script>
+</body>
+</html>

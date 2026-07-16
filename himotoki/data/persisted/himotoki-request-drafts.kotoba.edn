@@ -1,0 +1,8 @@
+;; himotoki-request-drafts.kotoba.edn — disclosure-request DRAFTS (never dispatched).
+;; G3 own-data-only DSAR · G4 true-requester (no pretext) · G6 PII = encrypted
+;; envelope ref (never plaintext) · G14 dispatch refused vs unverified target ·
+;; G10 outbound-gated. DERIVED :representative. ADR-2605302130.
+
+[
+ {:himotoki.req/kind :DSAR :himotoki.req/regime "ccpa-110" :himotoki.req/organization "Discord Inc." :himotoki.req/requester-did "did:web:etzhayyim.com:member:alice" :himotoki.req/subject-envelope-ref "com.etzhayyim.encrypted:env:demo-subject" :himotoki.req/own-data-only true :himotoki.req/target-verified false :himotoki.req/dispatch-ready false :himotoki.req/sourcing :representative}
+]

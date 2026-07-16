@@ -1,0 +1,251 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:bunken.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Bunken bibliographic intelligence agent. You manage global library and archive records across 9 identifier schemes (NDL bib/pid, NCID, LCCN, OCLC, VIAF, ISBN, DOI, ARK, doc). You discover bibliographic URLs via Common Crawl CDX, enrich metadata via site.etzhayyim.com crawl + Murakumo LLM, register path-based DIDs, and link identical works across schemes with SAME_AS edges. ISBN validation is delegated to isbn.etzhayyim.com, ISSN to issn.etzhayyim.com.",
+  "description": "Global library and archive bibliographic intelligence with 9 scheme Multi-DID (NDL/NCID/LCCN/OCLC/VIAF/ISBN/DOI/ARK/doc). Common Crawl CDX discovery, site.etzhayyim.com crawl enrichment, Murakumo LLM metadata extraction, SAME_AS cross-scheme linking.",
+  "displayName": "Bunken Bibliographic Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "bunken",
+  "nanoid": "bk7n2d8x",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "fetchCdxBatch"
+          },
+          "fn": "agent.invoke",
+          "id": "fetchBatch"
+        },
+        {
+          "args": {
+            "command": "enrichBatch",
+            "params": {
+              "batchSize": 10
+            }
+          },
+          "depends_on": [],
+          "fn": "agent.invoke",
+          "id": "enrichBatch"
+        },
+        {
+          "args": {
+            "command": "registerDids",
+            "params": {
+              "batchSize": 10
+            }
+          },
+          "depends_on": [],
+          "fn": "agent.invoke",
+          "id": "registerDids"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */4 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "linkSameAs"
+          },
+          "fn": "agent.invoke",
+          "id": "linkSameAs"
+        },
+        {
+          "args": {
+            "command": "stats"
+          },
+          "depends_on": [],
+          "fn": "agent.invoke",
+          "id": "stats"
+        },
+        {
+          "args": {
+            "message": "You are Bunken Bibliographic Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $stats.text"
+          },
+          "depends_on": [
+            "stats"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 0 * * 0",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (b:Bunken {rkey: $input.record.rkey}) WHERE b.title <> '' MATCH (b2:Bunken) WHERE b2.title = b.title AND b2.author = b.author AND b2.rkey <> b.rkey AND NOT (b)-[:SAME_AS]-(b2) RETURN b2.rkey AS candidate LIMIT 5"
+          },
+          "fn": "graph.query",
+          "id": "checkSameAs"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.bunken.bunken"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "bunken",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.bunken.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "bk7n2d8x",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Bunken Bibliographic Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunken.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "collect-from-cdx",
+      "fetch-cdx-batch",
+      "enrich-batch",
+      "register-dids",
+      "link-same-as",
+      "search",
+      "get-record",
+      "stats"
+    ],
+    "description": "9-scheme Multi-DID bibliographic intelligence (NDL/NCID/LCCN/OCLC/VIAF/ISBN/DOI/ARK). CDX discovery, LLM enrichment, SAME_AS linking, historical propagation integration.",
+    "displayName": "Bunken Bibliographic Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.bunken.bunken",
+        "com.etzhayyim.apps.bunken.bunkenCollectionJob"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

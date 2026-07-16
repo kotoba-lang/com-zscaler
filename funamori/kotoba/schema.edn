@@ -1,0 +1,68 @@
+;; funamori (舫) kotoba EAVT schema — 淡水化発電 / salinity-gradient power (PRO/RED)
+;; ADR-2605265600 (sub-ADR of 2605264100 §4) · R0
+;; State is kotoba EAVT Datoms (:funamori.salinity.*); no SQL/RisingWave/Cypher.
+[;; ── river-mouth site (mizuho R2+ attested) ──────────────────────────────────
+ {:db/ident :funamori.site/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :funamori.site/glyph         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.site/draw-g-l      :db/valueType :db.type/double  :db/cardinality :db.cardinality/one} ;; 海水側 g/L
+ {:db/ident :funamori.site/feed-g-l      :db/valueType :db.type/double  :db/cardinality :db.cardinality/one} ;; 河川側 g/L
+ {:db/ident :funamori.site/temp-k        :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.site/salinity-diff-g-l :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.site/technology    :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one} ;; :pro | :red | :defer
+ {:db/ident :funamori.site/rated-kw      :db/valueType :db.type/double  :db/cardinality :db.cardinality/one} ;; ≤50 (§1.9)
+ {:db/ident :funamori.site/mizuho-attested :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; §1.3 waterSupplySourceRegistry
+ {:db/ident :funamori.site/estuary-baseline-cid :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.site/lands-parcel  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one} ;; ADR-2605192330 marine parcel
+ {:db/ident :funamori.site/permitted     :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+
+ ;; ── membrane attestation (open-publication / in-house; §1.1/§1.2/§2) ─────────
+ {:db/ident :funamori.membrane/id        :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :funamori.membrane/type      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one} ;; :pro | :red
+ {:db/ident :funamori.membrane/vendor    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.membrane/chemistry :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.membrane/license   :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one} ;; :in-house|:open-publication|:openmta|:apache-2.0
+ {:db/ident :funamori.membrane/formula-cid :db/valueType :db.type/string :db/cardinality :db.cardinality/one} ;; open-publication 公開膜処方 CID
+ {:db/ident :funamori.membrane/pfas-free  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.membrane/permitted :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+
+ ;; ── power-density characterization (§1.6 R3 ≥1 W/m² ゲート) ───────────────────
+ {:db/ident :funamori.measure/id         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :funamori.measure/site       :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.measure/membrane   :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.measure/delta-pi-pa :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.measure/power-density-w-m2 :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.measure/membrane-area-m2 :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.measure/meets-r3-gate :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.measure/witness-quorum :db/valueType :db.type/long :db/cardinality :db.cardinality/one} ;; Council Lv6+ ≥3
+
+ ;; ── stack robotics (install/clean/swap dry-run plans; ADR §5 + ADR-2606091800) ─
+ {:db/ident :funamori.robotics/job-id    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :funamori.robotics/use       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one} ;; assemble|service|clean|inspect|swap (N1 allowlist)
+ {:db/ident :funamori.robotics/coverage  :db/valueType :db.type/double  :db/cardinality :db.cardinality/one} ;; anti-fouling 被覆率 0..1
+ {:db/ident :funamori.robotics/lanes     :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.robotics/membrane-id :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.robotics/membrane-permitted :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.robotics/reachable :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.robotics/envelope-ok :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; motion safety envelope
+ {:db/ident :funamori.robotics/witness-ok :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; G8 ≥2 robot DIDs
+ {:db/ident :funamori.robotics/member-sig :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.robotics/server-held-key :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; G11 invariant — always false
+ {:db/ident :funamori.robotics/dry-run   :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; R0 no-live-actuation — always true
+
+ ;; ── plant + grid-tie (tidal generation → hikari microgrid; ADR §4) ───────────
+ {:db/ident :funamori.plant/technology   :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one} ;; :pro | :red
+ {:db/ident :funamori.plant/rated-kw     :db/valueType :db.type/double  :db/cardinality :db.cardinality/one} ;; 平均 Δ塩分 定格
+ {:db/ident :funamori.plant/peak-kw      :db/valueType :db.type/double  :db/cardinality :db.cardinality/one} ;; 満潮ピーク ≤50 (§1.9)
+ {:db/ident :funamori.plant/mean-kw      :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.plant/capacity-factor :db/valueType :db.type/double :db/cardinality :db.cardinality/one} ;; mean/peak
+ {:db/ident :funamori.plant/delivered-kw :db/valueType :db.type/double  :db/cardinality :db.cardinality/one} ;; 平滑後 一定出力
+ {:db/ident :funamori.plant/battery-kwh  :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.plant/fully-smoothed :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.plant/microgrid    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one} ;; "hikari" sink (ADR §4)
+ {:db/ident :funamori.plant/model-only   :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one} ;; R0 invariant — always true
+
+ ;; ── annual review (silenSalinityGradientReview; §1.10) ───────────────────────
+ {:db/ident :funamori.review/id          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :funamori.review/site        :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.review/as-of       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :funamori.review/council-attestation :db/valueType :db.type/string :db/cardinality :db.cardinality/one}]

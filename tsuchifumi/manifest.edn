@@ -1,0 +1,79 @@
+;; tsuchifumi 土踏み — actor manifest (clj-native, kotoba-Datom-native)
+;; earthing (アーシング) under-institutionalization × ambient-EMF → bioelectric-
+;; Wellbecoming observatory + system-dynamics model + risk analysis + transparent
+;; おせっかい (ossekai) nudge over social-proto / atproto. ADR-2606212000 (R0).
+{:actor/id        "tsuchifumi"
+ :actor/glyph     "土"
+ :actor/tier      :tier-b
+ :actor/integrates ["mitate" "iyashi" "kokoro" "ossekai" "mitooshi" "suimin"]
+ :actor/domain    "tsuchifumi.etzhayyim.com"
+ :actor/kind      :earthing-emf-wellbecoming-observatory
+ :actor/purpose   "Earthing (アーシング) under-institutionalization × ambient-EMF exposure as a Wellbecoming observatory. Edge-primary exposure-load (ambient-EMF + device-hours + indoor-fraction) × earthing-deficit (1 − weighted earthing access/policy), scored ON READ, routed to RELIEF (拡充): the actionable target is the INSTITUTIONAL GAP — barefoot-friendly public greenspace, grounded building design, screen-free outdoor-time policy. EPISTEMIC HONESTY is the defining invariant (G2, anti-pseudoscience): exposure-load + earthing-deficit are MEASURED facts (:established/:emerging), but the bioelectric HEALTH burden is a HYPOTHESIS reported only with its resting evidence tier; a :contested/:anecdotal claim (non-thermal EMF harm, earthing-therapy benefit) is NEVER asserted as established harm. Includes a Forrester/Meadows SYSTEM-DYNAMICS model (stocks/flows, distribution-only ensemble, G6 no point-forecast), a RISK register + Meadows leverage points (evidence-discounted), and DRY-RUN atproto おせっかい posts routed to ossekai (御節介) which CARRIES them consent-bound + on-chain-logged. OBSERVATORY + MODEL + NUDGE — NON-DIAGNOSTIC, NON-THERAPEUTIC, sells NOTHING (no earthing mat/device/affiliate). Routes care to mitate/iyashi/kokoro, evening-light to suimin, forecasting to mitooshi."
+ :actor/status    :r0
+ :actor/adr       "2606212000"
+ :actor/related   ["2605262130" "2605312345" "2606073000" "2606082102" "2605264000"
+                   "2605312700" "2606072800" "2606111500" "2606201200"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "non-diagnostic-non-therapeutic" :gate/rule "Observatory + model + nudge only; never diagnoses/treats/cures. :tsuchifumi/diagnose|:treat|:cure unrepresentable; care routes to mitate/iyashi/kokoro (test-enforced)"}
+  {:gate/id "G2" :gate/name "evidence-honesty-anti-pseudoscience" :gate/rule "Every health-burden carries a DISCLOSED evidence tier; a :contested/:anecdotal claim is never asserted as established harm (→ :await-evidence). A practice nudge must rest on ≥:emerging evidence; only the honesty post may NAME a contested claim, to disclaim it. risk-score discounts by tier (test-enforced)"}
+  {:gate/id "G3" :gate/name "no-person-data" :gate/rule "Aggregate cohort/region only; :tsuchifumi.person/health|:biometric unrepresentable — no individual biometric / personal EMF dosimetry"}
+  {:gate/id "G4" :gate/name "ossekai-transparent-nudge-no-fear" :gate/rule "ossekai PROPOSES a no-regret low-risk practice; the ossekai 御節介 actor CARRIES it consent-bound + on-chain-logged. Fear/alarm/manipulation bodies refused; :tsuchifumi/fear-appeal unrepresentable (test-enforced)"}
+  {:gate/id "G5" :gate/name "no-commerce" :gate/rule "Sells nothing — no earthing mat/device/product/affiliate; :tsuchifumi/product|:buy unrepresentable; sales tokens in a post body refused (test-enforced)"}
+  {:gate/id "G6" :gate/name "model-is-hypothesis-distribution-only" :gate/rule "The system-dynamics model is a disclosed-parameter what-if with p10/p50/p90 ensemble bands; a single point forecast is unrepresentable (非終末論); forecasting routes to mitooshi (test-enforced)"}
+  {:gate/id "G7" :gate/name "synthetic-seed" :gate/rule "R0 seed is :synthetic; real environmental-EMF / public-health / greenspace-access data is an operator/Council step"}
+  {:gate/id "G8" :gate/name "no-server-key-kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms; the heartbeat holds no key + performs no network I/O (appends to a local ledger only); live atproto carry is member-signed + done by ossekai, never tsuchifumi (test-enforced)"}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "Never diagnoses/treats/cures — care is mitate (route) + iyashi/kokoro (provide)"}
+  {:n/id "N2" :n/rule "Not a fear-monger AND not a do-nothing observatory — a real relief gate (refuses harm-assertion AND prioritizes no-regret institutional relief)"}
+  {:n/id "N3" :n/rule "Never sells earthing products/devices or earns affiliate revenue (G5)"}
+  {:n/id "N4" :n/rule "Never asserts contested EMF/earthing health claims as established (G2)"}
+  {:n/id "N5" :n/rule "No person-level data; aggregate cohort/region only (G3)"}
+  {:n/id "N6" :n/rule "Never publishes to atproto itself — drafts dry-run proposals; ossekai 御節介 carries them with member consent (G8)"}]
+
+ :actor/methods
+ [{:method/id "tsuchifumi_edn" :method/file "methods/tsuchifumi_edn.cljc" :method/role "seed loader + classify (regions/evidence/drivers)"}
+  {:method/id "analyze" :method/file "methods/analyze.cljc" :method/role "exposure-load × earthing-deficit → verdict (evidence-honest) → relief-gap → datoms → report (+ bb CLI)"}
+  {:method/id "sysdyn"  :method/file "methods/sysdyn.cljc"  :method/role "system-dynamics stocks/flows; distribution-only ensemble; scenario comparison (neglect/baseline/relief) (+ bb CLI)"}
+  {:method/id "risk"    :method/file "methods/risk.cljc"    :method/role "risk register (evidence-discounted) + Meadows leverage points → datoms → report (+ bb CLI)"}
+  {:method/id "coscientist" :method/file "methods/coscientist.cljc" :method/role "特定+分析: Generate→Reflect→Rank→Evolve→Meta-review over a charter-clean catalog; IDENTIFY top no-regret action (→ossekai) + top contested research hypothesis (→suimin/mitooshi, studied not acted on) (+ bb CLI)"}
+  {:method/id "social"  :method/file "methods/social.cljc"  :method/role "DRY-RUN atproto おせっかい posts (G1/G2/G4/G5 + no-server-key) routed to ossekai (+ bb CLI)"}
+  {:method/id "viz"     :method/file "methods/viz.cljc"     :method/role "self-contained HTML viz (system dynamics bands + leverage + relief-gap) from real method output (+ bb CLI)"}
+  {:method/id "kotoba"  :method/file "methods/kotoba.cljc"  :method/role "持続永続化: content-addressed append-only OBSERVATION LEDGER (tx-cid/make-tx/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun" :method/file "methods/autorun.cljc" :method/role "持続永続化: deterministic, idempotent-by-content heartbeat — analyze+risk → append datoms to the ledger (+ bb CLI)"}]
+
+ :actor/lex
+ [{:lex/id "reliefVerdict"}
+  {:lex/id "earthingEmfMap"}
+  {:lex/id "ossekaiNudge"}
+  {:lex/id "coscientistHypothesis"}]
+
+ :actor/ledger
+ {:ledger/file "data/persisted/tsuchifumi.observation.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/note "Generated observation ledger of earthing-EMF relief verdicts + risk register; tamper-evident (verify-chain); no-server-key; a relief record, NEVER a harm/target list, NEVER person-level."}
+
+ :actor/viz
+ {:viz/file "viz/sysdyn-risk.html"
+  :viz/kind :self-contained-canvas
+  :viz/note "Generated by viz.cljc from REAL sysdyn/analyze/risk output (no hand-copied data, no network); system-dynamics distribution bands + Meadows leverage + institutional relief-gap; carries the G2/G6 epistemic-honesty banner."}
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.tsuchifumi.edn"
+  :seed/sourcing :synthetic
+  :seed/verdicts [:relief-priority :infrastructure-gap :await-evidence :await-consent :monitor]}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/tsuchifumi/run_tests.sh"
+  :suites ["methods/test_ontology.cljc" "methods/test_analyze.cljc" "methods/test_sysdyn.cljc"
+           "methods/test_risk.cljc" "methods/test_coscientist.cljc" "methods/test_social.cljc"
+           "methods/test_kotoba.cljc" "methods/test_autorun.cljc" "methods/test_viz.cljc"]
+  :green "56 tests / 197 assertions"}}

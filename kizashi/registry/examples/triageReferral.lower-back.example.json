@@ -1,0 +1,11 @@
+{
+  "_comment": "Worked example of the triageReferral produced from the lower-back attributionReport (ADR-2605312700, lexicon com.etzhayyim.kizashi.triageReferral). Demonstrates G3 (kizashi can only REFER — targetActor ∈ {mitate,iyashi,kokoro}, never self-treats) + G5 (emergencyFlag present; false here = routine). The target actor ingests this record via pull (mitate.emergencyEscalation.intakeUri / kokoro.acuteCrisisEscalationLog.detectionSourceCid for emergencies). NOT real member data.",
+  "$schema": "com.etzhayyim.kizashi.triageReferral",
+  "createdAt": "2026-06-01T00:00:00Z",
+  "attributionReportCid": "bafkreiattribution-lower-back-EXAMPLE",
+  "targetActor": "mitate",
+  "emergencyFlag": false,
+  "referralReason": "sign-warrants-diagnosis",
+  "consentToShareCid": "bafkreiconsent-share-EXAMPLE",
+  "charterRiderScanPass": true
+}

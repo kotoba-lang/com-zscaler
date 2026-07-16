@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--
+  助 (tasuke) — browser-local cybercrime-victim-support app.
+
+  The "etzhayyim.com の actor として誰でも使える" surface. A victim opens this page and gets their
+  complete, ready-to-print document packet — and NOTHING leaves the device: no network request, no
+  form POST, no analytics, no server. All logic runs client-side (the ameno browser-local model,
+  ADR-2606014500). That is the G6 (PII-by-reference / never uploaded) + G7 (no-server-key) invariant
+  expressed as a static file. Free (G1). Member-authored + member-submitted (G2/G3): the page
+  generates drafts the victim prints, signs, and submits themselves.
+
+  Parity: the closed vocab below (SCAM_KINDS / WINDOW_CODES / DOC_KINDS) MUST equal the kotoba
+  ontology — methods/test_app_parity.py is the drift-lock.
+-->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>助 (tasuke) — サイバー犯罪 被害対応(無料・端末内完結)</title>
+<style>
+  :root { --ink:#1a1a1a; --accent:#9a1f2b; --bg:#faf8f5; --line:#ddd6cc; }
+  * { box-sizing:border-box; }
+  body { font-family:system-ui,"Hiragino Kaku Gothic ProN",sans-serif; color:var(--ink);
+         background:var(--bg); margin:0; line-height:1.7; }
+  header { background:var(--accent); color:#fff; padding:1.2rem 1.4rem; }
+  header h1 { margin:0; font-size:1.3rem; }
+  header p { margin:.3rem 0 0; font-size:.85rem; opacity:.92; }
+  main { max-width:820px; margin:0 auto; padding:1.4rem; }
+  .badge { display:inline-block; background:#fff; color:var(--accent); border:1px solid #fff;
+           border-radius:1rem; padding:.05rem .6rem; font-size:.78rem; margin-right:.4rem; }
+  fieldset { border:1px solid var(--line); border-radius:.5rem; margin:1rem 0; padding:1rem; background:#fff; }
+  legend { font-weight:700; padding:0 .4rem; }
+  label { display:block; margin:.6rem 0 .2rem; font-size:.92rem; }
+  input[type=text], textarea, select { width:100%; padding:.5rem; border:1px solid var(--line);
+           border-radius:.35rem; font:inherit; }
+  textarea { min-height:4.5rem; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:.4rem; padding:.6rem 1.1rem;
+           font:inherit; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  .row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
+  .doc { border:1px solid var(--line); border-radius:.5rem; margin:.8rem 0; background:#fff; }
+  .doc h3 { margin:0; padding:.6rem .9rem; background:#f1ece4; font-size:.95rem;
+            border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+  .doc pre { margin:0; padding:.9rem; white-space:pre-wrap; font:.85rem/1.6 ui-monospace,monospace; }
+  .cover { background:#fff; border:2px solid var(--accent); border-radius:.5rem; padding:1rem 1.2rem; }
+  .cover h2 { margin:.2rem 0 .6rem; color:var(--accent); }
+  .free { font-weight:700; color:var(--accent); }
+  ol li, ul li { margin:.25rem 0; }
+  .note { font-size:.8rem; color:#665; }
+  footer { max-width:820px; margin:0 auto; padding:1rem 1.4rem 2.5rem; font-size:.78rem; color:#776; }
+  @media print { header, #intake, .controls, footer { display:none; } .doc { page-break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>助 (tasuke) — サイバー犯罪 被害対応</h1>
+  <p><span class="badge">無料 ¥0</span><span class="badge">端末内で完結・送信なし</span>
+     <span class="badge">本人作成・本人提出</span> あなたの情報はこの端末から外に出ません。</p>
+</header>
+<main>
+  <form id="intake">
+    <fieldset>
+      <legend>被害の内容を教えてください</legend>
+      <label>① 何が起きましたか?(具体的に)</label>
+      <textarea id="narrative" placeholder="例: ネットバンキングから身に覚えのない振込があり残高が減っていた"></textarea>
+      <label>② いつ起きましたか?</label>
+      <input type="text" id="occurred" placeholder="例: 2026-06-03 朝">
+      <label>③ 金銭被害の額(なければ空欄)</label>
+      <input type="text" id="loss" placeholder="例: 48万 / 480000 / なし">
+      <label>④ 関係するサービス名(銀行・SNS など)</label>
+      <input type="text" id="service" placeholder="例: ○○銀行 / LINE">
+      <label>⑤ 対象のアカウントID・口座・URL(あれば)</label>
+      <input type="text" id="account" placeholder="例: 普通1234567 / @your_id">
+      <label>⑥ 種類が分かっていれば選択(不明なら自動判定)</label>
+      <select id="kindsel"><option value="">自動判定</option></select>
+      <label class="row" style="margin-top:.8rem"><input type="checkbox" id="consent" style="width:auto">
+        &nbsp;この内容で被害対応の書類を作成することに同意します(必須)</label>
+    </fieldset>
+    <div class="row controls">
+      <button type="submit">書類一式を作成</button>
+      <button type="button" class="ghost" onclick="window.print()">印刷 / PDF保存</button>
+    </div>
+  </form>
+  <div id="out"></div>
+</main>
+<footer>
+  助 は etzhayyim の actor(<code>did:web:etzhayyim.com:actor:tasuke</code>)です。生成書類はあなた本人が
+  署名・提出するものであり、警察官名義の公文書ではありません。弁護士費用も利用料も一切かかりません。
+  R0: 設計・書面生成のみ。実際の提出・送付はご自身で行ってください。
+</footer>
+
+<script>
+"use strict";
+// ── closed vocab (PARITY: must equal the kotoba ontology; test_app_parity.py locks this) ──
+const SCAM_KINDS = ["phishing","unauthorized-transfer","account-takeover","support-scam","romance-scam","investment-scam","ransomware","impersonation","fake-billing","sns-fraud","leak-extortion"];
+const DOC_KINDS = ["damage-report","incident-statement","evidence-index","damage-calculation","platform-request","bank-freeze-request","recovery-plan"];
+const WINDOW_CODES = ["police-cyber-9110","consumer-188","nccc","antiphishing-council","jpcert","safeline","bank-direct","platform-abuse-desk","no-and-bank-fund-recovery"];
+
+const JA = {phishing:"フィッシング","unauthorized-transfer":"不正送金","account-takeover":"アカウント乗っ取り","support-scam":"サポート詐欺","romance-scam":"ロマンス詐欺","investment-scam":"投資詐欺",ransomware:"ランサムウェア",impersonation:"なりすまし","fake-billing":"架空請求","sns-fraud":"SNS型詐欺","leak-extortion":"情報流出・脅迫"};
+const WIN = {
+  "police-cyber-9110":["警察相談専用電話(サイバー犯罪相談窓口)","#9110 / 各都道府県警 サイバー犯罪相談窓口"],
+  "consumer-188":["消費者ホットライン","188(いやや!)"],
+  "nccc":["国民生活センター","kokusen.go.jp"],
+  "antiphishing-council":["フィッシング対策協議会","antiphishing.jp 報告窓口"],
+  "jpcert":["JPCERT/CC","jpcert.or.jp(インシデント報告)"],
+  "safeline":["セーフライン(違法・有害情報 通報)","safe-line.jp"],
+  "bank-direct":["取引金融機関 不正利用窓口","各行 不正利用デスク"],
+  "platform-abuse-desk":["各プラットフォーム abuse / 復旧窓口","各社公式 abuse・復旧フォーム"],
+  "no-and-bank-fund-recovery":["預金口座凍結・被害回復分配金","取引金融機関(振り込め詐欺救済法)"]
+};
+const KW = [
+  ["unauthorized-transfer",["不正送金","勝手に振込","残高が減","身に覚えのない出金","振込"]],
+  ["account-takeover",["乗っ取り","ログインできない","パスワード変更された","二段階"]],
+  ["phishing",["フィッシング","偽サイト","偽メール","sms","ショートメール","リンク"]],
+  ["support-scam",["サポート詐欺","警告画面","ウイルスに感染","電話してください","遠隔操作"]],
+  ["romance-scam",["ロマンス","国際恋愛","結婚"]],
+  ["investment-scam",["投資詐欺","必ず儲かる","暗号資産","fx","未公開株"]],
+  ["ransomware",["ランサム","暗号化された","復号","身代金"]],
+  ["impersonation",["なりすまし","偽アカウント","偽プロフィール"]],
+  ["fake-billing",["架空請求","未払い","請求メール","電子マネー","ギフトカード"]],
+  ["leak-extortion",["流出","晒す","拡散する","脅迫"]],
+  ["sns-fraud",["sns","dm","副業","もうけ話"]]
+];
+const WINDOWS = {
+  "unauthorized-transfer":["bank-direct","no-and-bank-fund-recovery","police-cyber-9110"],
+  "account-takeover":["platform-abuse-desk","police-cyber-9110","jpcert"],
+  "phishing":["antiphishing-council","safeline","police-cyber-9110"],
+  "support-scam":["consumer-188","police-cyber-9110","jpcert"],
+  "romance-scam":["police-cyber-9110","consumer-188","nccc"],
+  "investment-scam":["police-cyber-9110","consumer-188","nccc"],
+  "ransomware":["jpcert","police-cyber-9110"],
+  "impersonation":["platform-abuse-desk","police-cyber-9110","safeline"],
+  "fake-billing":["consumer-188","police-cyber-9110"],
+  "leak-extortion":["police-cyber-9110","safeline","jpcert"],
+  "sns-fraud":["platform-abuse-desk","consumer-188","police-cyber-9110"]
+};
+
+function parseYen(s){ s=(s||"").trim().replace(/,/g,"").replace(/円/g,"");
+  if(!s||/^(なし|無し|ない|0)$/.test(s))return 0;
+  let m=s.match(/^(\d+(?:\.\d+)?)万(\d+)?$/); if(m)return Math.round(parseFloat(m[1])*10000)+(+(m[2]||0));
+  m=s.match(/^(\d+)$/); return m?+m[1]:0; }
+function classify(text,explicit){ if(explicit&&SCAM_KINDS.includes(explicit))return explicit;
+  const t=(text||"").toLowerCase(); for(const[k,kws]of KW){ if(kws.some(w=>t.includes(w.toLowerCase())))return k; } return "sns-fraud"; }
+function severity(loss,kind){ if(kind==="unauthorized-transfer"&&loss>0)return"critical";
+  if(kind==="ransomware"||kind==="leak-extortion")return loss>0?"critical":"urgent";
+  if(loss>=100000||kind==="account-takeover"||kind==="investment-scam")return"urgent";
+  if(loss>0||["phishing","support-scam","romance-scam","fake-billing"].includes(kind))return"elevated"; return"info"; }
+function actions(kind){ const base=["まず証拠を保全(スクショ・URL・メール全文ヘッダ・取引履歴を保存。改変しない)"];
+  const by={"unauthorized-transfer":["ただちに金融機関へ電話し不正送金の申告と口座凍結・組戻しを依頼(振り込め詐欺救済法)","ネットバンキングのパスワードを変更し追加被害を止める"],
+    "account-takeover":["別端末からパスワードをリセットし攻撃者のセッションを失効","二段階認証を再設定し登録メール・電話番号を確認"],
+    "phishing":["入力したID/パスワード/カード番号を直ちに変更・停止","フィッシング対策協議会・セーフラインへURLを通報"],
+    "support-scam":["遠隔操作ソフトを入れた場合はネット切断のうえ削除しパスワード全変更"],
+    "ransomware":["感染端末をネットワークから隔離(電源は切らずLAN/Wi-Fi遮断)","身代金は支払わずJPCERT/CCへ相談"],
+    "leak-extortion":["要求に応じず送金・画像送付をしない。やり取りを保全"]}[kind]||[];
+  return base.concat(by,["被害状況報告書(時系列)・証拠目録・被害額算定書を作成して届出に添える","無料の公的窓口(警察#9110 / 消費者188 / 国民生活センター)に相談"]); }
+function deadlines(kind){ const d=[];
+  if(["unauthorized-transfer","phishing","account-takeover"].includes(kind))d.push("クレジットカード不正利用は約款上おおむね60日以内の申告で補償対象になりやすい — 至急申告");
+  if(["fake-billing","support-scam","romance-scam","investment-scam"].includes(kind))d.push("不実告知等があれば契約を取消し得る(消費生活センター188で確認)");
+  if(kind==="unauthorized-transfer")d.push("口座凍結は早いほど組戻し成功率が上がる — 認知後ただちに銀行へ"); return d; }
+
+const hdr=(c,t)=>`${t}\n\n申告者: ${c.subject||"(被害者氏名)"}(本人作成・要署名)\n作成日: (提出日を記入)\n`;
+function damageReport(c,k){ return {kind:"damage-report",to:"(管轄)警察署長 殿",body:
+  hdr(c,"被 害 届(下書き)")+`\n下記のとおり被害を受けましたので届け出ます。\n\n1. 被害の種類: サイバー犯罪(${JA[k]})\n2. 被害日時: ${c.occurred||"(記入)"}\n3. 被害の概要:\n   ${c.narrative||"(別紙「被害状況報告書」参照)"}\n4. 被害額: 金 ${c.loss.toLocaleString()} 円\n5. 証拠資料: 別紙「証拠目録」のとおり\n6. 相手方情報: ${c.account||"(口座番号・URL・連絡先を記入)"}\n\n上記に相違ありません。\n\n                          申告者署名 ____________________ 印\n\n※ これは被害者本人が提出するための下書きです。`}; }
+function incidentStatement(c){ return {kind:"incident-statement",to:"(警察・金融機関 提出用)",body:
+  hdr(c,"被害状況報告書")+`\n■ 経緯\n  ${c.narrative||"(出来事を起きた順に記入)"}\n\n■ 現在の状況\n  (口座凍結依頼済 / パスワード変更済 等)\n\n※ 本書面は被害者本人が事実を整理したものです。`}; }
+function evidenceIndex(c){ return {kind:"evidence-index",to:"(届出添付用)",body:
+  hdr(c,"証 拠 目 録")+`\n各証拠は本人が保管しています。\n\n  1. (スクリーンショット)\n  2. (メール全文ヘッダ)\n  3. (取引履歴)\n\n※ 改変しないよう原本を保全してください。`}; }
+function damageCalculation(c){ return {kind:"damage-calculation",to:"(届出添付用)",body:
+  hdr(c,"被害額算定書")+`\n■ 内訳\n  ・被害額: 金 ${c.loss.toLocaleString()} 円\n\n■ 合計: 金 ${c.loss.toLocaleString()} 円\n\n※ 領収書・取引明細は証拠目録に対応します。`}; }
+function bankFreeze(c){ return {kind:"bank-freeze-request",to:"(金融機関名)御中",body:
+  hdr(c,"不正送金に関する組戻し・口座凍結のご依頼")+`\n振り込め詐欺救済法に基づき、振込先口座の凍結および組戻し手続きをお願いいたします。\n\n・被害日時: ${c.occurred||"(記入)"}\n・送金額: 金 ${c.loss.toLocaleString()} 円\n・振込先(判明分): ${c.account||"(口座番号・名義)"}\n\n                          依頼人署名 ____________________ 印`}; }
+function platformReq(c,k){ return {kind:"platform-request",to:(c.service||"(プラットフォーム)")+" abuse 窓口",body:
+  hdr(c,"アカウントに関する凍結・復旧のご依頼")+`\n私のアカウントが ${JA[k]} の被害に遭いました。利用規約の不正利用条項に基づき、凍結・復旧の対応をお願いいたします。\n\n・対象アカウント: ${c.account||"(ID/URLを記入)"}\n・被害日時: ${c.occurred||"(記入)"}\n\n                          利用者署名 ____________________`}; }
+function recoveryPlan(c){ const steps=["別の安全な端末から対象サービスのパスワードをリセット","ログイン中の全セッションを失効させる","二段階認証を再設定しバックアップコードを更新","登録メール・電話番号・復旧用情報の改ざんを確認し戻す","連携アプリ・APIトークンを見直し不審な連携を解除","同じパスワードを使い回した他サービスも変更","復旧後プラットフォームへ報告し再発防止設定を有効化"];
+  return {kind:"recovery-plan",to:"(本人実行)",body:hdr(c,"アカウント復旧手順書("+(c.service||"対象サービス")+")")+"\n■ 手順(上から順に本人が実行)\n"+steps.map((s,i)=>`  ${i+1}. ${s}`).join("\n")+"\n\n※ 復旧操作は本人が行ってください(助 は代理ログインしません)。"}; }
+
+function documentsFor(c,k){ const d=[damageReport(c,k),incidentStatement(c),evidenceIndex(c),damageCalculation(c)];
+  if(k==="unauthorized-transfer"||(c.loss>0&&["investment-scam","fake-billing","support-scam"].includes(k)))d.push(bankFreeze(c));
+  if(["account-takeover","impersonation","sns-fraud","phishing","leak-extortion"].includes(k))d.push(platformReq(c,k));
+  if(["account-takeover","phishing","support-scam"].includes(k))d.push(recoveryPlan(c)); return d; }
+
+const sel=document.getElementById("kindsel");
+SCAM_KINDS.forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=JA[k];sel.appendChild(o);});
+const esc=s=>s.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));
+
+document.getElementById("intake").addEventListener("submit",ev=>{
+  ev.preventDefault();
+  if(!document.getElementById("consent").checked){ alert("書類作成には同意(チェック)が必要です。"); return; }
+  const c={ subject:"(被害者氏名)", narrative:document.getElementById("narrative").value.trim(),
+    occurred:document.getElementById("occurred").value.trim(), loss:parseYen(document.getElementById("loss").value),
+    service:document.getElementById("service").value.trim(), account:document.getElementById("account").value.trim() };
+  const kind=classify(c.narrative+" "+c.service,document.getElementById("kindsel").value);
+  const sev=severity(c.loss,kind), docs=documentsFor(c,kind);
+  const wins=(WINDOWS[kind]||["police-cyber-9110"]).map(code=>WIN[code]);
+  let h=`<div class="cover"><h2>被害対応パケット — ${JA[kind]}</h2>`+
+    `<p>緊急度: <b>${sev}</b>　<span class="free">あなたの負担: ¥0(全て無料)</span></p>`+
+    `<p class="note">この一式はあなた本人が作成・署名・提出する書類です。助 は作成を手伝うだけで、提出はご自身で行います。</p>`+
+    `<h3>まず行うこと</h3><ol>${actions(kind).map(a=>`<li>${esc(a)}</li>`).join("")}</ol>`;
+  const dls=deadlines(kind); if(dls.length)h+=`<h3>⏰ 期限の注意</h3><ul>${dls.map(d=>`<li>${esc(d)}</li>`).join("")}</ul>`;
+  h+=`<h3>無料の相談・通報窓口</h3><ul>${wins.map(w=>`<li><b>${esc(w[0])}</b> — ${esc(w[1])}</li>`).join("")}</ul></div>`;
+  docs.forEach((d,i)=>{ const id="doc"+i;
+    h+=`<div class="doc"><h3>${String(i+1).padStart(2,"0")}. ${d.kind}　<span class="note">宛先: ${esc(d.to)}</span>`+
+       `<button class="ghost" type="button" onclick="dl('${id}','${d.kind}')">ダウンロード</button></h3>`+
+       `<pre id="${id}">${esc(d.body)}</pre></div>`; });
+  const out=document.getElementById("out"); out.innerHTML=h; out.scrollIntoView({behavior:"smooth"});
+});
+function dl(id,kind){ const text=document.getElementById(id).textContent;
+  const b=new Blob([text],{type:"text/plain;charset=utf-8"}); const u=URL.createObjectURL(b);
+  const a=document.createElement("a"); a.href=u; a.download=kind+".txt"; a.click(); URL.revokeObjectURL(u); }
+window.dl=dl;
+</script>
+</body>
+</html>

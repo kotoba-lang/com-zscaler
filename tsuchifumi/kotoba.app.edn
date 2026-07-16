@@ -1,0 +1,7 @@
+;; kotoba.app.edn — actor:tsuchifumi KOTOBA Mesh application manifest (observatory on-kse, ADR-2606230001 §4).
+{:kotoba.app/name    "tsuchifumi"
+ :kotoba.app/version "0.1.0"
+ :kotoba.app/components
+ [{:name "tsuchifumi" :src "methods/mesh.clj" :scale 1
+   :triggers [{:type :kse :topic "etzhayyim/actor/tsuchifumi"}] :requires #{:cap/kqe}}]
+ :kotoba.app/placement {:spread :zone :require {:tier "edge"}}}

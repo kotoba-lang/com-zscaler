@@ -1,0 +1,123 @@
+;; seed-cybercrime-cases.kotoba.edn
+;; 助 (tasuke) — :representative victim cases + the FREE public-window registry (ADR-2606060900).
+;;
+;; HONEST R0: these are illustrative cases (one per major scam KIND), NOT real victim data.
+;; The registry windows/contacts are :representative and MUST be verified against the primary
+;; source before any live use (G10). Every case is free (support-cost 0, G1), consent-true (G7),
+;; and no-server-key (G7). No real PII; evidence is referenced as an encrypted-envelope CID (G6).
+
+{:case/batch
+ [{:case/id "c-fund-1"
+   :case/subject "did:web:etzhayyim.com:member:alice"
+   :case/scam-kind ":unauthorized-transfer"
+   :case/narrative "ネットバンキングから身に覚えのない振込が複数行われ残高が減っていた"
+   :case/occurred-at 1717500000
+   :case/occurred-at-text "2026-06-03 02:14 頃"
+   :case/loss-jpy 480000
+   :case/counterparty "○○銀行 △△支店 普通 1234567"
+   :case/ongoing false
+   :case/consent true
+   :case/support-cost-jpy 0
+   :case/server-held-key false
+   :case/timeline ["フィッシングSMSのリンクからログインIDとワンタイムパスワードを入力してしまった"
+                   "翌朝、複数件の不正送金に気づいた"
+                   "銀行アプリのパスワードを変更した"]
+   :case/loss-breakdown [{:label "不正送金 1件目" :jpy 300000} {:label "不正送金 2件目" :jpy 180000}]}
+
+  {:case/id "c-takeover-1"
+   :case/subject "did:web:etzhayyim.com:member:bob"
+   :case/scam-kind ":account-takeover"
+   :case/narrative "SNSアカウントにログインできなくなり、知人に詐欺DMが送られていた"
+   :case/occurred-at 1717400000
+   :case/occurred-at-text "2026-06-02"
+   :case/loss-jpy 0
+   :case/account-id "@bob_example"
+   :case/ongoing true
+   :case/consent true
+   :case/support-cost-jpy 0
+   :case/server-held-key false}
+
+  {:case/id "c-phish-1"
+   :case/subject "did:web:etzhayyim.com:member:carol"
+   :case/scam-kind ":phishing"
+   :case/narrative "宅配の不在通知を装う偽SMSのURLでカード番号を入力してしまった"
+   :case/occurred-at 1717300000
+   :case/occurred-at-text "2026-06-01"
+   :case/loss-jpy 0
+   :case/ongoing false
+   :case/consent true
+   :case/support-cost-jpy 0
+   :case/server-held-key false}
+
+  {:case/id "c-support-1"
+   :case/subject "did:web:etzhayyim.com:member:dave"
+   :case/scam-kind ":support-scam"
+   :case/narrative "警告画面が出てサポートに電話し、遠隔操作と電子マネーでの支払いを指示された"
+   :case/occurred-at 1717200000
+   :case/occurred-at-text "2026-05-31"
+   :case/loss-jpy 50000
+   :case/ongoing false
+   :case/consent true
+   :case/support-cost-jpy 0
+   :case/server-held-key false}
+
+  {:case/id "c-invest-1"
+   :case/subject "did:web:etzhayyim.com:member:erin"
+   :case/scam-kind ":investment-scam"
+   :case/narrative "SNSで知り合った相手に必ず儲かる暗号資産投資を勧められ送金した"
+   :case/occurred-at 1717100000
+   :case/occurred-at-text "2026-05-30"
+   :case/loss-jpy 1200000
+   :case/counterparty "暗号資産アドレス 0xabc…（証拠目録参照）"
+   :case/ongoing false
+   :case/consent true
+   :case/support-cost-jpy 0
+   :case/server-held-key false}]
+
+ ;; ── FREE public-window registry (G5/G10 :representative) ──────────────────────
+ :registry/windows
+ [{:registry/window ":police-cyber-9110"
+   :registry/name "警察相談専用電話（サイバー犯罪相談窓口）"
+   :registry/contact "#9110 / 各都道府県警 サイバー犯罪相談窓口"
+   :registry/basis "警察庁 相談窓口"
+   :registry/sourcing ":representative"}
+  {:registry/window ":consumer-188"
+   :registry/name "消費者ホットライン"
+   :registry/contact "188（いやや！）"
+   :registry/basis "消費者安全法 / 消費生活センター"
+   :registry/sourcing ":representative"}
+  {:registry/window ":nccc"
+   :registry/name "国民生活センター"
+   :registry/contact "kokusen.go.jp"
+   :registry/basis "独立行政法人国民生活センター法"
+   :registry/sourcing ":representative"}
+  {:registry/window ":antiphishing-council"
+   :registry/name "フィッシング対策協議会"
+   :registry/contact "antiphishing.jp 報告窓口"
+   :registry/basis "URL/メール 通報"
+   :registry/sourcing ":representative"}
+  {:registry/window ":jpcert"
+   :registry/name "JPCERT/CC"
+   :registry/contact "jpcert.or.jp（インシデント報告）"
+   :registry/basis "ランサム/侵害インシデント相談"
+   :registry/sourcing ":representative"}
+  {:registry/window ":safeline"
+   :registry/name "セーフライン（違法・有害情報 通報）"
+   :registry/contact "safe-line.jp"
+   :registry/basis "削除・拡散対策 通報"
+   :registry/sourcing ":representative"}
+  {:registry/window ":bank-direct"
+   :registry/name "取引金融機関 不正利用窓口"
+   :registry/contact "各行 カード/ネットバンキング 不正利用デスク"
+   :registry/basis "各行 約款 / 補償"
+   :registry/sourcing ":representative"}
+  {:registry/window ":platform-abuse-desk"
+   :registry/name "各プラットフォーム abuse / 復旧窓口"
+   :registry/contact "Google/Apple/Meta/LINE/X 等の公式 abuse・アカウント復旧フォーム"
+   :registry/basis "各社利用規約 abuse 条項"
+   :registry/sourcing ":representative"}
+  {:registry/window ":no-and-bank-fund-recovery"
+   :registry/name "預金口座凍結・被害回復分配金"
+   :registry/contact "取引金融機関 → 預金保険機構 公告"
+   :registry/basis "振り込め詐欺救済法"
+   :registry/sourcing ":representative"}]}

@@ -1,0 +1,16 @@
+name = "etzhayyim-esign"
+main = "src/worker.ts"
+compatibility_date = "2026-05-23"
+
+# Phase 0: no route binding yet. The Worker is deployable as
+# `etzhayyim-esign.<account>.workers.dev` for smoke testing only.
+# Phase 1 will add a route binding to `esign.etzhayyim.com/*` once the
+# zone DNS record for that hostname is provisioned and the procedure
+# handlers are wired through @etzhayyim/sdk.
+
+[observability]
+enabled = true
+head_sampling_rate = 1.0
+
+[placement]
+mode = "smart"

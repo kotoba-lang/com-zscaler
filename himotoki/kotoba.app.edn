@@ -1,0 +1,21 @@
+;; kotoba.app.edn — actor:himotoki KOTOBA Mesh application manifest (service concierge on-http, SERVICE-MESH-PATTERN.md).
+{:kotoba.app/name    "himotoki"
+ :kotoba.app/version "0.1.0"
+ :kotoba.app/components
+ [{:name "himotoki" :src "methods/mesh.clj" :scale 1
+   :triggers [{:type :http :route "/himotoki"}] :requires #{:cap/kqe}}
+  ;; self-publication: the actor periodically drafts its OWN history (aggregate, own-data-only
+  ;; filed-request / disclosure-received records) + procedures (the DSAR/FOIA disclosure
+  ;; procedures: root-of-right statute, coded target registry, how a member self-files) as
+  ;; DRY-RUN social posts, and — once it holds its own mesh-runtime key (self-custodied,
+  ;; no-server-key, ADR-2605231525) under a member CACAO leash — signs + emits them itself.
+  ;; Publishes ONLY about its own procedures + own-data results, never a third party's PII
+  ;; (G3/G6/N13). Live broadcast stays Council Lv6+ + operator gated (§1.12/G11); R0 =
+  ;; dry-run. ADR-2606272355.
+  {:name     "himotoki-social"
+   :src      "methods/social.cljc"
+   :scale    1
+   :triggers [{:type :tick :cron "0 */6 * * *"}                  ; every 6h: self-publish backlog
+              {:type :kse  :topic "etzhayyim/actor/himotoki/publish"}]
+   :requires #{:cap/kqe :cap/atproto}}]
+ :kotoba.app/placement {:spread :zone :require {:tier "edge"}}}

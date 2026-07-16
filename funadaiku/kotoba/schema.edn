@@ -1,0 +1,174 @@
+;; funadaiku 船大工 — kotoba EAVT schema
+;; ADR-2606013400 · migration plan Phase 3 (R0 scaffold)
+;; Zero-emission cargo shipbuilding state: vessel + powertrain + blocks + welds + trials
+
+[;; ───────────────────────────── :vessel/* — ship reference model ─────────────────────────────
+ {:db/ident :vessel/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "vessel DID (did:web:funadaiku.etzhayyim.com/vessel/...)"}
+ {:db/ident :vessel/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "vessel name (e.g. Nagi class reference)"}
+ {:db/ident :vessel/dwt
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "deadweight tonnage"}
+ {:db/ident :vessel/loa
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "length overall (meters)"}
+ {:db/ident :vessel/service-speed-kn
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "service speed (knots); ≤14 per G11"}
+ {:db/ident :vessel/propulsion-ready
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "powertrain fully integrated (L4 complete)"}
+ {:db/ident :vessel/outfitting-status
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":draft | :pipe-rough | :electrical-rough | :outfitting-complete"}
+ {:db/ident :vessel/floats
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "hull launch success"}
+ {:db/ident :vessel/fc-commissioned
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "fuel cell stack cold-start verified"}
+ {:db/ident :vessel/gnc-ready
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "autonomy GNC smoke-test pass"}
+ {:db/ident :vessel/sea-trial-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "at-sea acceptance trials pass"}
+ {:db/ident :vessel/eexi-rating
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IMO EEXI rating (Energy Efficiency Existing Ship Index)"}
+ {:db/ident :vessel/cii-rating
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IMO CII rating (Carbon Intensity Indicator)"}
+ {:db/ident :vessel/imo-number
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "International Maritime Organization registration number"}
+ {:db/ident :vessel/mmsi
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Maritime Mobile Service Identity"}
+ {:db/ident :vessel/class-notation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ABS/DNV/ClassNK notation (e.g. A1 ZEV — zero-emission vessel addendum)"}
+
+ ;; ───────────────────────────── :steel-block/* — fabrication ─────────────────────────────
+ {:db/ident :block/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :block/dimensions
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "LxWxT (mm)"}
+ {:db/ident :block/weight-kg
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :block/steel-grade
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "AH36 | EH36 | etc"}
+ {:db/ident :block/status
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":draft | :cutting-plan | :cut | :ready-for-assembly"}
+ {:db/ident :block/cutting-plan
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :grand-block/* — assembly ─────────────────────────────
+ {:db/ident :grand-block/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :grand-block/status
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":subblocks-assembled | :fit-check-pass | :tack-welded | :ready-for-ndt"}
+ {:db/ident :grand-block/location
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "shipyard bay / dock identifier"}
+ {:db/ident :grand-block/ndt-status
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":pending | :in-progress | :pass | :rework | :fail"}
+
+ ;; ───────────────────────────── :weld/* — NDT inspection ─────────────────────────────
+ {:db/ident :weld/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :weld/location
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "seam location description"}
+ {:db/ident :weld/pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :weld/rework
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :powertrain/* — zero-emission heart ─────────────────────────────
+ {:db/ident :powerplant/type
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":wind-solar-hydrogen (the ONLY option; G8)"}
+ {:db/ident :hydrogen-source/certification
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "green H₂ chain-of-custody (electrolysis, renewable power); MANDATORY per G9"}
+ {:db/ident :hydrogen-source/co2-intensity
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg CO₂e per kg H₂ (well-to-gate)"}
+ {:db/ident :solar-panel/wattage
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :solar-panel/eol-recycling
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :battery-pack/capacity-kwh
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "LFP capacity, usable"}
+ {:db/ident :battery-pack/state-of-charge
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "0..100 %"}
+ {:db/ident :battery-pack/eol-recycling
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :pod/thrust-kw
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "per azimuth pod (electric drive only)"}
+ {:db/ident :vessel/performance-data
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "wind/solar/hydrogen efficiency % per sea-trial"}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter ─────────────────────────────
+ {:db/ident :settlement-intent-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC Base L2 settlement intent (R0 stops here; G13)"}
+]

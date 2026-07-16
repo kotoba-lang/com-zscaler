@@ -1,0 +1,135 @@
+;; hoshimori 星守 — seed orbital graph (real, PUBLIC regimes / operators / hazards / services)
+;; ADR-2606073600 · vocabulary: orbit-ontology (00-contracts/schemas/orbit-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - hoshimori is a STEWARDSHIP / orbital-sustainability map, NEVER a targeting / interception
+;;     / weaponization aid. NO precise predictive ephemeris (no interception-grade state vector)
+;;     appears here; all positional facts are orbital-shell / regime-AGGREGATE band labels.
+;;   - The lens is ORBITAL-CONGESTION concentration vs STEWARDSHIP, routed to stewardship. The
+;;     取-holder is the hazard/occupancy; the bearer is the regime + the public services that
+;;     depend on it. karma lives ONLY on edges (:en/orbit-load; N1).
+;;   - Mirrors ONLY already-public catalogs (object counts, regime defs, disposal rules, named
+;;     public debris EVENTS). ASAT / kinetic-intercept uses are unrepresentable (§1.12).
+;;
+;; SOURCING: orbital-regime definitions, public constellation existence + home jurisdiction,
+;;   and named public debris EVENTS (e.g. 2007 FY-1C, 2021 Cosmos 1408) are :authoritative; the
+;;   SAMPLE is a bounded illustrative seed (:representative coverage), NOT exhaustive, and
+;;   orbit-load values are representative severities, NOT measured conjunction probabilities. No
+;;   fabricated coverage. Live catalog ingest (space-track/CelesTrak-shaped public feeds) is
+;;   G7/Council-gated. Regime/event facts are DISCLOSED, never hoshimori adjudications (N3).
+
+[;; ───────────────────────────── shells (orbital regimes — bearers) ──────────
+ {:organism/id "orbit.shell.leo-low" :organism/kind :shell :organism/label "LEO low (megaconstellation band)" :shell/regime :leo-low :shell/alt-band-km "340-550" :organism/sourcing :authoritative}
+ {:organism/id "orbit.shell.leo-high" :organism/kind :shell :organism/label "LEO high" :shell/regime :leo-high :shell/alt-band-km "550-1200" :organism/sourcing :authoritative}
+ {:organism/id "orbit.shell.sso" :organism/kind :shell :organism/label "Sun-synchronous orbit" :shell/regime :sso :shell/alt-band-km "600-800" :organism/sourcing :authoritative}
+ {:organism/id "orbit.shell.meo" :organism/kind :shell :organism/label "MEO (GNSS band)" :shell/regime :meo :shell/alt-band-km "~20000" :organism/sourcing :authoritative}
+ {:organism/id "orbit.shell.geo" :organism/kind :shell :organism/label "Geostationary belt" :shell/regime :geo :shell/alt-band-km "~35786" :organism/sourcing :authoritative}
+ {:organism/id "orbit.shell.heo" :organism/kind :shell :organism/label "Highly-elliptical / GTO" :shell/regime :heo :shell/alt-band-km "elliptical" :organism/sourcing :authoritative}
+
+ ;; ───────────────────────────── operators / constellations / assets ─────────
+ {:organism/id "orbit.op.starlink" :organism/kind :operator :organism/label "Starlink" :op/kind :constellation :op/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.oneweb" :organism/kind :operator :organism/label "OneWeb" :op/kind :constellation :op/jurisdiction "GB" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.kuiper" :organism/kind :operator :organism/label "Project Kuiper" :op/kind :constellation :op/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.planet" :organism/kind :operator :organism/label "Planet Labs (EO)" :op/kind :constellation :op/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.sentinel" :organism/kind :operator :organism/label "Copernicus Sentinel (ESA)" :op/kind :constellation :op/jurisdiction "EU" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.gps" :organism/kind :operator :organism/label "GPS (USSF)" :op/kind :constellation :op/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.galileo" :organism/kind :operator :organism/label "Galileo (EU)" :op/kind :constellation :op/jurisdiction "EU" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.beidou" :organism/kind :operator :organism/label "BeiDou" :op/kind :constellation :op/jurisdiction "CN" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.goes" :organism/kind :operator :organism/label "GOES (NOAA, GEO weather)" :op/kind :single-asset :op/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.iss" :organism/kind :operator :organism/label "International Space Station" :op/kind :station :op/jurisdiction "INT" :organism/sourcing :authoritative}
+ {:organism/id "orbit.op.adr-vendor" :organism/kind :operator :organism/label "Active-debris-removal vendor (representative)" :op/kind :single-asset :op/jurisdiction "JP" :organism/sourcing :representative}
+
+ ;; ───────────────────────────── hazards (取-holders) ────────────────────────
+ {:organism/id "orbit.hazard.debris" :organism/kind :hazard :organism/label "Tracked debris density" :hazard/kind :debris-density :organism/sourcing :authoritative}
+ {:organism/id "orbit.hazard.conjunction" :organism/kind :hazard :organism/label "Conjunction (close-approach) risk" :hazard/kind :conjunction :organism/sourcing :authoritative}
+ {:organism/id "orbit.hazard.congestion" :organism/kind :hazard :organism/label "Slot / shell congestion" :hazard/kind :congestion :organism/sourcing :authoritative}
+ {:organism/id "orbit.hazard.cosmos1408" :organism/kind :hazard :organism/label "Cosmos-1408 ASAT debris (2021)" :hazard/kind :asat-debris-event :organism/sourcing :authoritative}
+ {:organism/id "orbit.hazard.fy1c" :organism/kind :hazard :organism/label "FY-1C ASAT debris (2007)" :hazard/kind :asat-debris-event :organism/sourcing :authoritative}
+ {:organism/id "orbit.hazard.space-weather" :organism/kind :hazard :organism/label "Space weather (solar drag / flux)" :hazard/kind :space-weather :organism/sourcing :authoritative}
+ {:organism/id "orbit.hazard.deorbit-shortfall" :organism/kind :hazard :organism/label "Post-mission disposal shortfall" :hazard/kind :deorbit-shortfall :organism/sourcing :authoritative}
+
+ ;; ───────────────────────────── services (public utilities borne) ──────────
+ {:organism/id "orbit.svc.pnt" :organism/kind :service :organism/label "Positioning / navigation / timing" :service/kind :pnt :organism/sourcing :representative}
+ {:organism/id "orbit.svc.broadband" :organism/kind :service :organism/label "Satellite broadband" :service/kind :broadband :organism/sourcing :representative}
+ {:organism/id "orbit.svc.eo" :organism/kind :service :organism/label "Earth observation / climate monitoring" :service/kind :earth-observation :organism/sourcing :representative}
+ {:organism/id "orbit.svc.weather" :organism/kind :service :organism/label "Weather forecasting" :service/kind :weather :organism/sourcing :representative}
+
+ ;; ───────────────────────────── 縁 (edges) ──────────────────────────────────
+ ;; (A) OCCUPANCY 縁 — :congests (operator → shell; load = orbital occupancy share)
+ {:en/from "orbit.op.starlink" :en/to "orbit.shell.leo-low" :en/kind :congests :en/orbit-load 0.90 :en/sourcing :authoritative}
+ {:en/from "orbit.op.oneweb" :en/to "orbit.shell.leo-high" :en/kind :congests :en/orbit-load 0.55 :en/sourcing :authoritative}
+ {:en/from "orbit.op.kuiper" :en/to "orbit.shell.leo-low" :en/kind :congests :en/orbit-load 0.60 :en/sourcing :authoritative}
+ {:en/from "orbit.op.planet" :en/to "orbit.shell.sso" :en/kind :congests :en/orbit-load 0.45 :en/sourcing :authoritative}
+ {:en/from "orbit.op.sentinel" :en/to "orbit.shell.sso" :en/kind :congests :en/orbit-load 0.35 :en/sourcing :authoritative}
+ {:en/from "orbit.op.gps" :en/to "orbit.shell.meo" :en/kind :congests :en/orbit-load 0.40 :en/sourcing :authoritative}
+ {:en/from "orbit.op.galileo" :en/to "orbit.shell.meo" :en/kind :congests :en/orbit-load 0.35 :en/sourcing :authoritative}
+ {:en/from "orbit.op.beidou" :en/to "orbit.shell.meo" :en/kind :congests :en/orbit-load 0.40 :en/sourcing :authoritative}
+ {:en/from "orbit.op.goes" :en/to "orbit.shell.geo" :en/kind :congests :en/orbit-load 0.30 :en/sourcing :authoritative}
+ {:en/from "orbit.op.iss" :en/to "orbit.shell.leo-low" :en/kind :congests :en/orbit-load 0.20 :en/sourcing :authoritative}
+
+ ;; (B) HAZARD 縁 — :imperils (hazard → shell; load = collision/debris severity)
+ {:en/from "orbit.hazard.debris" :en/to "orbit.shell.leo-low" :en/kind :imperils :en/orbit-load 0.85 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.debris" :en/to "orbit.shell.sso" :en/kind :imperils :en/orbit-load 0.80 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.conjunction" :en/to "orbit.shell.leo-low" :en/kind :imperils :en/orbit-load 0.80 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.congestion" :en/to "orbit.shell.leo-low" :en/kind :imperils :en/orbit-load 0.75 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.congestion" :en/to "orbit.shell.geo" :en/kind :imperils :en/orbit-load 0.55 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.cosmos1408" :en/to "orbit.shell.leo-low" :en/kind :imperils :en/orbit-load 0.65 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.fy1c" :en/to "orbit.shell.sso" :en/kind :imperils :en/orbit-load 0.60 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.space-weather" :en/to "orbit.shell.leo-low" :en/kind :imperils :en/orbit-load 0.50 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.deorbit-shortfall" :en/to "orbit.shell.leo-high" :en/kind :imperils :en/orbit-load 0.60 :en/sourcing :authoritative}
+ {:en/from "orbit.hazard.deorbit-shortfall" :en/to "orbit.shell.geo" :en/kind :imperils :en/orbit-load 0.45 :en/sourcing :authoritative}
+
+ ;; (C) DEPENDENCY 縁 — :depends-on (service → shell; load = criticality on that regime)
+ {:en/from "orbit.svc.pnt" :en/to "orbit.shell.meo" :en/kind :depends-on :en/orbit-load 0.95 :en/sourcing :authoritative}
+ {:en/from "orbit.svc.broadband" :en/to "orbit.shell.leo-low" :en/kind :depends-on :en/orbit-load 0.85 :en/sourcing :authoritative}
+ {:en/from "orbit.svc.eo" :en/to "orbit.shell.sso" :en/kind :depends-on :en/orbit-load 0.90 :en/sourcing :authoritative}
+ {:en/from "orbit.svc.weather" :en/to "orbit.shell.geo" :en/kind :depends-on :en/orbit-load 0.80 :en/sourcing :authoritative}
+
+ ;; (D) STEWARDSHIP 縁 — :remediates / :deconflicts / :deorbits (the sustainability buffers)
+ {:en/from "orbit.op.adr-vendor" :en/to "orbit.hazard.debris" :en/kind :remediates :en/orbit-load 0.55 :en/sourcing :representative}
+ {:en/from "orbit.op.adr-vendor" :en/to "orbit.hazard.deorbit-shortfall" :en/kind :remediates :en/orbit-load 0.45 :en/sourcing :representative}
+ {:en/from "orbit.op.starlink" :en/to "orbit.shell.leo-low" :en/kind :deconflicts :en/orbit-load 0.60 :en/sourcing :representative}
+ {:en/from "orbit.op.starlink" :en/to "orbit.shell.leo-low" :en/kind :deorbits :en/orbit-load 0.55 :en/sourcing :representative}
+ {:en/from "orbit.op.oneweb" :en/to "orbit.shell.leo-high" :en/kind :deorbits :en/orbit-load 0.50 :en/sourcing :representative}
+ {:en/from "orbit.op.iss" :en/to "orbit.shell.leo-low" :en/kind :deconflicts :en/orbit-load 0.50 :en/sourcing :authoritative}
+ {:en/from "orbit.op.sentinel" :en/to "orbit.shell.sso" :en/kind :deconflicts :en/orbit-load 0.45 :en/sourcing :representative}
+ ;; ── CelesTrak SATCAT aggregate ingest (:authoritative; counts only, G1 no-ephemeris) ──
+ {:organism/id "orbit.cat.us" :organism/kind :operator :organism/label "United States (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "US" :op/object-count 17703 :op/payload-count 13054 :op/rocket-body-count 777 :op/debris-count 3871 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.ru" :organism/kind :operator :organism/label "Russia / CIS (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "RU" :op/object-count 6679 :op/payload-count 1700 :op/rocket-body-count 1050 :op/debris-count 3922 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.cn" :organism/kind :operator :organism/label "China (PRC) (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "CN" :op/object-count 5944 :op/payload-count 1462 :op/rocket-body-count 271 :op/debris-count 4193 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.gb" :organism/kind :operator :organism/label "United Kingdom (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "GB" :op/object-count 726 :op/payload-count 725 :op/rocket-body-count 1 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.fr" :organism/kind :operator :organism/label "France (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "FR" :op/object-count 649 :op/payload-count 129 :op/rocket-body-count 165 :op/debris-count 354 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.jp" :organism/kind :operator :organism/label "Japan (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "JP" :op/object-count 322 :op/payload-count 232 :op/rocket-body-count 53 :op/debris-count 36 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.in" :organism/kind :operator :organism/label "India (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "IN" :op/object-count 196 :op/payload-count 118 :op/rocket-body-count 42 :op/debris-count 36 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.tbd" :organism/kind :operator :organism/label "TBD (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "TBD" :op/object-count 162 :op/payload-count 144 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.itso" :organism/kind :operator :organism/label "Intelsat (ITSO) (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "INT" :op/object-count 138 :op/payload-count 100 :op/rocket-body-count 0 :op/debris-count 38 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.esa" :organism/kind :operator :organism/label "European Space Agency (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "EU" :op/object-count 129 :op/payload-count 112 :op/rocket-body-count 7 :op/debris-count 10 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.it" :organism/kind :operator :organism/label "IT (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "IT" :op/object-count 96 :op/payload-count 95 :op/rocket-body-count 1 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.de" :organism/kind :operator :organism/label "Germany (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "DE" :op/object-count 94 :op/payload-count 93 :op/rocket-body-count 0 :op/debris-count 1 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.glob" :organism/kind :operator :organism/label "Globalstar (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "US" :op/object-count 85 :op/payload-count 84 :op/rocket-body-count 0 :op/debris-count 1 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.ca" :organism/kind :operator :organism/label "Canada (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "CA" :op/object-count 82 :op/payload-count 76 :op/rocket-body-count 0 :op/debris-count 6 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.kr" :organism/kind :operator :organism/label "South Korea (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "KR" :op/object-count 72 :op/payload-count 68 :op/rocket-body-count 4 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.lu" :organism/kind :operator :organism/label "SES (Luxembourg) (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "LU" :op/object-count 68 :op/payload-count 68 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.orb" :organism/kind :operator :organism/label "Orbcomm (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "US" :op/object-count 66 :op/payload-count 59 :op/rocket-body-count 0 :op/debris-count 7 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.eute" :organism/kind :operator :organism/label "Eutelsat (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "FR" :op/object-count 62 :op/payload-count 62 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.es" :organism/kind :operator :organism/label "Spain (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "ES" :op/object-count 61 :op/payload-count 61 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.au" :organism/kind :operator :organism/label "Australia (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "AU" :op/object-count 44 :op/payload-count 42 :op/rocket-body-count 2 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.tr" :organism/kind :operator :organism/label "Turkey (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "TR" :op/object-count 41 :op/payload-count 41 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.ar" :organism/kind :operator :organism/label "Argentina (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "AR" :op/object-count 34 :op/payload-count 34 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.seal" :organism/kind :operator :organism/label "SEAL (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "SEAL" :op/object-count 34 :op/payload-count 1 :op/rocket-body-count 30 :op/debris-count 3 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.roc" :organism/kind :operator :organism/label "ROC (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "ROC" :op/object-count 33 :op/payload-count 33 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.o3b" :organism/kind :operator :organism/label "O3B (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "O3B" :op/object-count 30 :op/payload-count 30 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.fin" :organism/kind :operator :organism/label "FIN (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "FIN" :op/object-count 30 :op/payload-count 30 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.no" :organism/kind :operator :organism/label "Norway (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "NO" :op/object-count 27 :op/payload-count 27 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.il" :organism/kind :operator :organism/label "Israel (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "IL" :op/object-count 24 :op/payload-count 24 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.br" :organism/kind :operator :organism/label "Brazil (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "BR" :op/object-count 23 :op/payload-count 23 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.ae" :organism/kind :operator :organism/label "United Arab Emirates (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "AE" :op/object-count 23 :op/payload-count 23 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.id" :organism/kind :operator :organism/label "Indonesia (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "ID" :op/object-count 20 :op/payload-count 20 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.im" :organism/kind :operator :organism/label "IM (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "IM" :op/object-count 20 :op/payload-count 20 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.eume" :organism/kind :operator :organism/label "EUMETSAT (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "EU" :op/object-count 20 :op/payload-count 12 :op/rocket-body-count 0 :op/debris-count 8 :organism/sourcing :authoritative}
+ {:organism/id "orbit.cat.sing" :organism/kind :operator :organism/label "SING (cataloged objects)" :op/kind :catalog-owner :op/jurisdiction "SING" :op/object-count 20 :op/payload-count 20 :op/rocket-body-count 0 :op/debris-count 0 :organism/sourcing :authoritative}
+ {:organism/id "orbit.occ.geo" :organism/kind :occupancy :organism/label "On-orbit occupancy GEO" :occ/regime :geo :occ/on-orbit-count 1608 :organism/sourcing :authoritative}
+ {:organism/id "orbit.occ.heo" :organism/kind :occupancy :organism/label "On-orbit occupancy HEO" :occ/regime :heo :occ/on-orbit-count 892 :organism/sourcing :authoritative}
+ {:organism/id "orbit.occ.leo" :organism/kind :occupancy :organism/label "On-orbit occupancy LEO" :occ/regime :leo :occ/on-orbit-count 17821 :organism/sourcing :authoritative}
+ {:organism/id "orbit.occ.meo" :organism/kind :occupancy :organism/label "On-orbit occupancy MEO" :occ/regime :meo :occ/on-orbit-count 840 :organism/sourcing :authoritative}
+]

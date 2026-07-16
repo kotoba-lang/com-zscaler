@@ -1,0 +1,61 @@
+{:actor/id        "tate"
+ :actor/glyph     "盾"
+ :actor/tier      :tier-b
+ :actor/integrates ["chigiri" "kaiyaku" "kokoro" "kurashimori" "saisei" "tasuke" "toritsugi"]
+ :actor/domain    "tate.etzhayyim.com"
+ :actor/did       "did:web:etzhayyim.com:actor:tate"
+ :actor/purpose   "Citizen legal-defense CONCIERGE (盾 = shield; defensive only) — two legs over the member's OWN paper: (1) 不利条項スキャン: the member's consumer ToS / credit-card member agreements / B2B 法人契約 matched against a coded clause-pattern registry (自動更新トラップ・過大違約金・全部免責・年14.6%超遅延損害金・リボ自動設定・抗弁放棄・無限賠償・競業避止・長期支払サイト・知財包括譲渡), each flag = pattern + DISCLOSED statutory anchor (消費者契約法8-10条 / 民法548条の2 / 割賦販売法 / 下請法 / 独禁法) + route (kurashimori rights / kaiyaku severance / professional referral) — never a validity verdict; (2) 法的手続き応答支援: coded procedure registry for notices an individual RECEIVES (支払督促・少額訴訟呼出・訴状・行政処分・内容証明) → DISCLOSED deadline rules (民訴391/393, 373, 378, 159; 行審法18条; 行訴法14条) + response options (督促異議/答弁書/通常移行申述/審査請求/書面回答) + self-submit checklist + 架空請求 guard (genuine court papers arrive by 特別送達 ONLY — court vocabulary on SMS/email/普通郵便 is :suspected-fake: never contact the sender, preserve evidence, route tasuke/#9110/188). UPL: the member decides + submits THEMSELVES; representation structurally unrepresentable; high-stakes always referral-forward (法テラス/弁護士会/認定司法書士)."
+ :actor/status    :r2 ; R0 JP-only (2606112301) → R1 worldwide (2606112400) → R2 registry maturity (2606122000) + publication layer (2606122300: crawlable site 36p + 135 case-actors + 書面雛形 — deploy-ready)
+ :actor/adr       "2606112301"
+ :actor/adr-r1    "2606112400"
+ :actor/jurisdictions [:jp :us :eu :uk :de :kr :fr :au :ca :it :es :nl :br :tw :sg :in :cn :pl :se :at :pt :ie :ch :dk :fi :no :mx :be :ar :nz] ; + us-states.edn 10/50 + :labor track (jp/de/uk) + :housing track (jp/de/uk/us) + :enforcement track (jp/us/de) + :insolvency track (jp/us/de 債権者側 — debtor-side self-petition is NOT this actor's scope, N2 defensive-only; sibling actor `saisei` (ADR-2607061800) covers debtor-initiated self-filing, jp/us/uk/de) + :family track (jp/us/de — kokoro 心 routing 必在) ; representative — coverage_report.py names the gap (G10)
+ :actor/related   ["2606112201"   ; kaiyaku (severance executor — tate routes :kaiyaku)
+                   "2605312500"   ; kurashimori (クーリングオフ/返金 rights — tate routes :kurashimori)
+                   "2605262700"   ; chigiri (legal-procedure substrate, UPL prior art)
+                   "2605312030"   ; toritsugi (default-self-submit pattern)
+                   "2606060900"   ; tasuke (架空請求/詐欺 victim support — fake-guard route)
+                   "2605302130"   ; himotoki (own-data-only prior art)
+                   "2605231525"   ; no-server-key
+                   "2605215000"   ; Murakumo-only
+                   "2605181100"   ; encrypted consent envelope (live member docs)
+                   "2605312345"]  ; kotoba Datom = canonical state
+ :actor/labor
+ {:isic   "N8299"
+  :isco   ["3411"]
+  :unspsc ["80121600"]
+  :lps-rank nil}
+
+ :actor/charter-rider {:rider/version "3.1" :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "member-principal-own-documents-only" :gate/req "scans ONLY contracts the member is party to and notices the member received, under member consent; live member docs encrypted (com.etzhayyim.encrypted.*); R0 ships SYNTHETIC seeds; never a third party's papers"}
+  {:gate/id "G2" :gate/name "non-adjudicating-anchor-not-verdict" :gate/req "a clause flag = pattern + DISCLOSED statutory anchor + :verify-current-law; tate NEVER asserts validity/invalidity; report language stays 可能性/専門家確認"}
+  {:gate/id "G3" :gate/name "upl-self-submit-only" :gate/req "弁護士法72条: no representation (structurally unrepresentable — _make_option raises), no individualized legal judgment, no 報酬; options come verbatim from the coded registry; the MEMBER decides and submits"}
+  {:gate/id "G4" :gate/name "deadline-honesty" :gate/req "NEVER computes a calendar deadline; emits the DISCLOSED rule text + statutory anchor + verify-service-date=true (member confirms the actual service date)"}
+  {:gate/id "G5" :gate/name "context-honesty" :gate/req "consumer-protection anchors NEVER applied to :b2b documents (B2B has materially fewer protections → referral-forward); contexts are disjoint by construction (scan_doc)"}
+  {:gate/id "G6" :gate/name "kakuu-seikyu-guard" :gate/req "genuine 支払督促/訴状 arrive by 特別送達 ONLY; court vocabulary on any other channel → :suspected-fake: do-not-contact-sender + preserve-evidence + route tasuke/#9110/188; no deadlines/options offered on a fake"}
+  {:gate/id "G7" :gate/name "referral-forward" :gate/req "本訴/高額(>60万)/執行段階/重大処分 always carry professional referral (法テラス 0570-078374 / 弁護士会 / 認定司法書士 140万円以下); tate is a shield-shaped map, not a substitute for counsel"}
+  {:gate/id "G8" :gate/name "kotoba-eavt-audit" :gate/req "registries + member docs (ground) and flags/plans (transient, :bond/is-transient — computed on read) on the append-only Datom log; a stale risk-pointer cannot outlive its document"}
+  {:gate/id "G9" :gate/name "murakumo-only" :gate/req "any LLM step (document classification at R2+) via LiteLLM 127.0.0.1:4000 only (ADR-2605215000)"}
+  {:gate/id "G10" :gate/name "jurisdiction-honesty" :gate/req "anchors/procedures NEVER cross jurisdictions (structural filter in scan_doc/classify); a notice from an uncovered jurisdiction degrades to :unknown-jurisdiction (declare-uncovered + evidence + local-professional referral) — tate NEVER guesses foreign law; coverage_report.py reports covered/193 + named gaps (ADR-2606112400)"}]
+
+ :actor/non-goals
+ [{:ng/id "N1" :ng/req "NOT a law firm / no representation / no individualized legal advice (chigiri prior art: UPL prohibited); generic registry shapes + statutory pointers only"}
+  {:ng/id "N2" :ng/req "DEFENSIVE only: supports the member RESPONDING to procedures; never drafts or files claims/suits AGAINST others (no 取立, no offensive litigation support)"}
+  {:ng/id "N3" :ng/req "no evasion of lawful obligations: a genuine debt/penalty/deadline is surfaced honestly, never planned around (kaiyaku G8 sibling)"}
+  {:ng/id "N4" :ng/req "no adjudication of the counterparty: flags pattern-match CLAUSES, never score companies or persons (no blacklist, 反個人主義)"}
+  {:ng/id "N5" :ng/req "not kurashimori (クーリングオフ/返金 rights) and not toritsugi (proactive 行政手続) — tate owns the DEFENSIVE response surface; overlaps route, never duplicate"}
+  {:ng/id "N6" :ng/req "criminal procedure out of scope: 刑事 → immediate 弁護士/当番弁護士 referral, no template support"}]
+
+ :actor/cells ; langgraph→WASM; .solve() raises at R0 (scaffold follow-up)
+ [{:cell/id "doc_intake"      :cell/kind :langgraph :cell/runtime :wasm :cell/node "reuben"}
+  {:cell/id "terms_scan"      :cell/kind :langgraph :cell/runtime :wasm :cell/node "simeon"}
+  {:cell/id "notice_classify" :cell/kind :langgraph :cell/runtime :wasm :cell/node "levi"}
+  {:cell/id "respond_plan"    :cell/kind :langgraph :cell/runtime :wasm :cell/node "judah"}
+  {:cell/id "refer_route"     :cell/kind :langgraph :cell/runtime :wasm :cell/node "zebulun"}]
+
+ :actor/lex
+ [{:lex/id "memberDoc"}        ; com.etzhayyim.apps.tate.memberDoc (encrypted at R1+)
+  {:lex/id "clauseFlag"}       ; com.etzhayyim.apps.tate.clauseFlag (transient)
+  {:lex/id "noticeRecord"}     ; com.etzhayyim.apps.tate.noticeRecord
+  {:lex/id "responsePlan"}]}   ; com.etzhayyim.apps.tate.responsePlan (dry-run; member self-submit)

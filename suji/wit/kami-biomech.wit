@@ -1,0 +1,63 @@
+// kami-biomech.wit — WIT contract for the suji (筋) sagittal body as a kami-genesis
+// articulation / Isaac-Sim Articulation. ADR-2606061900. The interface an eventual Rust
+// `kami-biomech` crate (a kami-genesis `PlanarChain` specialisation) would implement;
+// `methods/kami_biomech_bridge.py` is the reference behaviour.
+//
+// kami-genesis (ADR-2605311500/1800) solves articulated rigid-body dynamics with a
+// Featherstone reduced-coordinate solver (RNEA + CRBA + LDLᵀ) over a PlanarChain, and
+// exposes an Isaac-Sim-shaped `ArticulationBatch` / nv-compat `isaacsim.core.api`
+// `ArticulationView` (ADR-2606010030 v6). The suji segment chain (head→cervical→thorax
+// →lumbar + arm) is exactly such a planar articulation: links = body segments (mass,
+// CoM, length), joints = revolute (flexion). The STATIC inverse-dynamics suji solves in
+// stdlib is the gravity term of that solver's RNEA; loading this articulation into
+// kami-genesis lets the same posture be advanced as a full forward dynamic simulation.
+//
+// HONEST INTEGRATION STATE (G7): the 40-engine/kami-engine submodule is unpopulated in
+// this checkout (the kami-genesis crate is not present), so the live Rust wiring is this
+// WIT contract + a Python reference, NOT a compiled crate — the noroshi/sumitsubo
+// "contract now, live kami-app binding follow-up" pattern. No live actuation: this is a
+// passive biomechanical model of a posture, never a command to a powered body (kotoba-os
+// liveActuation=false / tazuna force-class precedent).
+
+package etzhayyim:kami-biomech@0.1.0;
+
+interface articulation {
+    // A body segment = one link of the planar articulation.
+    record link {
+        name: string,
+        mass-kg: f64,
+        length-m: f64,         // proximal joint → distal joint
+        com-frac: f64,         // CoM from proximal joint, fraction of length
+    }
+
+    // A revolute (flexion) joint connecting two links in the sagittal plane.
+    // axis is implicitly the medio-lateral axis (out of the sagittal plane).
+    record joint {
+        name: string,
+        parent-link: string,
+        child-link: string,
+        angle-deg: f64,        // flexion from neutral (the posture DOF)
+    }
+
+    // The articulation spec a kami-genesis PlanarChain / Isaac Articulation loads.
+    record body-articulation {
+        links: list<link>,
+        joints: list<joint>,
+        gravity-mps2: f64,
+    }
+
+    // The gravity-term static solve (RNEA statics): per-joint resisting moment.
+    // This is what suji computes in stdlib; a kami-genesis backend returns the same
+    // quantity from its full RNEA. NO actuation — a moment report, not a command.
+    record joint-moment {
+        joint: string,
+        moment-nm: f64,
+    }
+
+    // Build the articulation from anthropometry (total body mass, stature).
+    build: func(total-mass-kg: f64, stature-m: f64) -> body-articulation;
+
+    // Solve the static (gravity) joint moments for a posed articulation.
+    // A real kami-genesis backend runs RNEA; the reference runs the closed-form statics.
+    solve-static: func(body: body-articulation) -> list<joint-moment>;
+}

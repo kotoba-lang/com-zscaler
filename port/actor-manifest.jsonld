@@ -1,0 +1,384 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:port.etzhayyim.com",
+  "actors": [
+    {
+      "description": "Shanghai, Singapore, Ningbo, Shenzhen, Guangzhou, Busan, Qingdao, Hong Kong, Tianjin, Port Klang, Kaohsiung, Xiamen, Tanjung Pelepas, Laem Chabang, Colombo, Keelung, Ho Chi Minh City",
+      "displayName": "Asia-Pacific Ports",
+      "path": "region:asia"
+    },
+    {
+      "description": "Rotterdam, Antwerp-Bruges, Hamburg, Piraeus, Marseille (Fos)",
+      "displayName": "European Ports",
+      "path": "region:europe"
+    },
+    {
+      "description": "Los Angeles, Long Beach, New York/NJ, Tubarão (Vitória)",
+      "displayName": "Americas Ports",
+      "path": "region:americas"
+    },
+    {
+      "description": "Dubai (Jebel Ali), Ras Tanura, Fujairah",
+      "displayName": "Middle East Ports",
+      "path": "region:mideast"
+    },
+    {
+      "description": "Yokohama, Tokyo, Kobe, Osaka, Nagoya — 5 major JP ports",
+      "displayName": "Japan Ports",
+      "path": "region:japan"
+    },
+    {
+      "description": "Crude oil and LNG terminals — Ras Tanura, Fujairah",
+      "displayName": "Tanker Ports",
+      "path": "type:tanker"
+    },
+    {
+      "description": "Iron ore and coal terminals — Port Hedland, Tubarão, Richards Bay",
+      "displayName": "Bulk Ports",
+      "path": "type:bulk"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Port Infrastructure agent. You manage world port registries (35+ ports with UN/LOCODE), berths, terminals, and vessel call tracking. You receive port call events from vessel.etzhayyim.com and track port occupancy/utilization. Coverage includes top container ports (Shanghai, Singapore, Rotterdam, Busan), JP ports (Yokohama, Tokyo, Kobe, Osaka, Nagoya), tanker ports (Ras Tanura, Fujairah), and bulk ports (Port Hedland, Richards Bay).",
+  "description": "World port infrastructure registry (35+ ports, berths, terminals), vessel call tracking, occupancy intelligence. Covers top container ports (Shanghai, Singapore, Rotterdam, etc.), tanker ports (Ras Tanura, Fujairah), bulk ports (Port Hedland, Tubarão, Richards Bay). JP coverage: Yokohama, Tokyo, Kobe, Osaka, Nagoya.",
+  "displayName": "Port Infrastructure & Call Tracking",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "IMO Conventions",
+      "ISPS Code"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "port",
+  "nanoid": "p0rt7890",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:Port) RETURN p.country AS country, count(p) AS ports, sum(p.annualThroughputTeu) AS totalTeu ORDER BY totalTeu DESC LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "portStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (pc:PortCall) WHERE pc.status IN ['berthed', 'approaching'] RETURN pc.portLocode AS port, pc.status AS status, count(pc) AS count LIMIT 30"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "berthOccupancy"
+        },
+        {
+          "args": {
+            "message": "Port infrastructure status report.\n\nPorts by country and throughput:\n$portStats.rows\n\nCurrent berth occupancy:\n$berthOccupancy.rows\n\nProvide a concise port intelligence summary: busiest regions, occupancy trends, and notable congestion points."
+          },
+          "depends_on": [
+            "portStats",
+            "berthOccupancy"
+          ],
+          "fn": "agent.chat",
+          "id": "analyze"
+        },
+        {
+          "args": {
+            "template": "Port intelligence: $analyze.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "template": "MERGE (pce:PortCallEvent {callId: $input.record.callId, portLocode: $input.record.portLocode}) SET pce.imoNumber = $input.record.imoNumber, pce.status = $input.record.status, pce.eta = $input.record.eta, pce.ata = $input.record.ata, pce.nodeLabel = 'PortCallEvent', pce.repo = $did, pce.collection = 'com.etzhayyim.apps.port.portCallEvent'"
+          },
+          "fn": "graph.write",
+          "id": "recordEvent"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.vessel.portCall"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:Port {portId: $input.portId}) RETURN p.vertex_id, p.rkey, p.repo, p.did, p.name, p.display_name, p.description, p.category, p.code, p.manufacturer, p.model, p.lat, p.lng, p.geohash, p.status, p.props, p._seq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "port"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.infrastructure.getPort",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:Port) RETURN p.vertex_id, p.rkey, p.repo, p.did, p.name, p.display_name, p.description, p.category, p.code, p.manufacturer, p.model, p.lat, p.lng, p.geohash, p.status, p.props, p._seq ORDER BY p.annualThroughputTeu DESC LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "ports"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.infrastructure.listPorts",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:Port) WHERE p.unLocode = $input.query RETURN p.vertex_id, p.rkey, p.repo, p.did, p.name, p.display_name, p.description, p.category, p.code, p.manufacturer, p.model, p.lat, p.lng, p.geohash, p.status, p.props, p._seq LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "results"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.infrastructure.searchPorts",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (b:Berth {portId: $input.portId}) RETURN b.vertex_id, b.rkey, b.repo, b.did, b.status, b.props, b._seq LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "berths"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.infrastructure.getPortBerths",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (t:Terminal {portId: $input.portId}) RETURN t.vertex_id, t.rkey, t.repo, t.did, t.status, t.props, t._seq LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "terminals"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.infrastructure.getPortTerminals",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (pc:PortCall {portLocode: $input.locode}) WHERE pc.status IN ['berthed', 'approaching'] RETURN pc.vertex_id, pc.rkey, pc.repo, pc.did, pc.status, pc.props, pc._seq ORDER BY pc.createdAt DESC LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "vessels"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.portCallTracking.getVesselsAtPort",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (pc:PortCall {portLocode: $input.locode, status: 'berthed'}) RETURN count(pc) AS cnt LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "berthed"
+        },
+        {
+          "args": {
+            "sql": "MATCH (pc:PortCall {portLocode: $input.locode, status: 'approaching'}) RETURN count(pc) AS cnt LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "approaching"
+        },
+        {
+          "args": {
+            "sql": "MATCH (b:Berth {portId: $input.locode}) RETURN count(b) AS cnt LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "totalBerths"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.portCallTracking.getPortOccupancy",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:Port) WITH count(p) AS ports MATCH (b:Berth) WITH ports, count(b) AS berths MATCH (t:Terminal) RETURN ports, berths, count(t) AS terminals LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "counts"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.getDashboard",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:Port) RETURN count(p) AS ports LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "stats"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.health",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:Port) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n:Port) WHERE n.repo = $did RETURN count(n) AS cnt LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "port",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.port.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "p0rt7890",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n:Port) WHERE n.repo = $did RETURN count(n) AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.port.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "port-registry",
+      "berth-management",
+      "terminal-operations",
+      "port-call-tracking",
+      "occupancy-intelligence"
+    ],
+    "description": "World port infrastructure registry — 35+ major ports across 15+ countries, berth/terminal management, vessel call tracking from vessel.etzhayyim.com, port occupancy intelligence.",
+    "displayName": "Port Infrastructure & Call Tracking",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.port.port",
+        "com.etzhayyim.apps.port.berth",
+        "com.etzhayyim.apps.port.terminal",
+        "com.etzhayyim.apps.port.portCallEvent",
+        "com.etzhayyim.apps.vessel.portCall"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

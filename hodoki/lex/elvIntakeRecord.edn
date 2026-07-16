@@ -1,0 +1,4 @@
+[{:db/id -1
+  :elv-intake-record/lexicon 1
+  :elv-intake-record/id "com.etzhayyim.hodoki.elvIntakeRecord"
+  :elv-intake-record/defs "{:main {:type \"record\", :key \"tid\", :record {:type \"object\", :required [\"tid\" \"vin\" \"titleDoc\" \"ownerConsent\" \"charterScanStatus\" \"arrivalTimestamp\"], :properties {:tid {:type \"string\", :description \"Transaction ID\"}, :vin {:type \"string\", :description \"Vehicle Identification Number\"}, :titleDoc {:type \"string\", :description \"Title documentation reference\"}, :ownerConsent {:type \"string\", :description \"Prior-owner consent record\"}, :charterScanStatus {:type \"string\", :description \"Charter §2(a-h) scan status\"}, :arrivalTimestamp {:type \"string\", :description \"ISO-8601 arrival time\"}}}}}"}]

@@ -1,0 +1,22 @@
+{
+  "methodId": "v1-sources",
+  "methodVersion": "1.0.0-draft",
+  "adr": "2606272030",
+  "status": "draft-pending-council-attestation",
+  "basis": "Open, citable data authorities for external-market valuation. Independence is counted by AUTHORITY (not source id); the £ point is anchored ONLY by recorded PRICE comps; indices CORROBORATE (kind :index) but never vote the level. ToS-restricted sources contribute derived-only (G4). Inalienable Land Trust holdings are out of scope entirely (G5; ADR-2605192245).",
+  "councilAttestation": [],
+  "notes": [
+    "DRAFT. Reliability priors are cold-start; the kenchi_flywheel cell recalibrates them against realized sales. Do NOT treat as authoritative until status flips to 'attested' with ≥3 Council Lv6+ DIDs.",
+    "G8 open-data-first: every authority below is open data or used derived-only. No closed AVM.",
+    "G3 publish gate: ≥3 independent recorded comps AND ≥2 independent authorities AND a fresh anchor."
+  ],
+  "publishGate": { "minComps": 3, "minAuthorities": 2, "outlierMadK": 3.5, "maxPublishAgeDays": 1825 },
+  "kindPrior": { "sale": 1.0, "assessment": 0.8, "avm": 0.65, "list": 0.5, "index": 0.3 },
+  "sources": [
+    { "sourceId": "uk-landreg",   "authority": "hm-land-registry", "region": "uk",    "kind": "sale",       "licenseClass": "open",         "openData": true,  "reliability": 0.95, "endpoint": "https://landregistry.data.gov.uk/landregistry/query" },
+    { "sourceId": "jp-registry",  "authority": "mlit",             "region": "jp",    "kind": "sale",       "licenseClass": "open",         "openData": true,  "reliability": 0.95, "endpoint": "https://www.reinfolib.mlit.go.jp/ex-api/external/XIT001" },
+    { "sourceId": "bis",          "authority": "bis",              "region": "world", "kind": "index",      "licenseClass": "open",         "openData": true,  "reliability": 0.45, "endpoint": "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_SPP/1.0/" },
+    { "sourceId": "oecd-hpi",     "authority": "oecd",             "region": "world", "kind": "index",      "licenseClass": "open",         "openData": true,  "reliability": 0.40, "endpoint": "https://sdmx.oecd.org/public/rest/data/OECD.ECO.MPD,DSD_AN_HOUSE_PRICES@DF_HOUSE_PRICES/" },
+    { "sourceId": "common-crawl", "authority": "rightmove.co.uk",  "region": "uk",    "kind": "list",       "licenseClass": "derived-only", "openData": true,  "reliability": 0.50, "endpoint": "https://index.commoncrawl.org/ (+ data.commoncrawl.org WARC)" }
+  ]
+}

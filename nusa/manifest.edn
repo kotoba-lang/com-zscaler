@@ -1,0 +1,50 @@
+{:actor/id        "nusa"
+ :actor/glyph     "幣"
+ :actor/tier      :tier-b
+ :actor/integrates ["chigiri" "danjo" "iyashi" "mitate" "moushibumi" "yakushi"]
+ :actor/domain    "nusa.etzhayyim.com"
+ :actor/did       "did:web:etzhayyim.com:actor:nusa"
+ :actor/purpose   "Ritual + industrial HEMP (麻) heritage knowledge graph + low-THC cultivation-revival design (幣 = ōnusa, the hemp purification wand). Datafies Japan's ritual-hemp heritage — Shinto purification (注連縄/祓串/大幣), the imperial-accession 麁服 (aratae, Daijōsai hemp cloth) + the 阿波忌部 lineage that 調進 it, and the LOW-THC fibre cultivars whose licensed cultivation the 2023 reform (大麻草の栽培の規制に関する法律) reopened — into the kotoba Datom log with as-of history. Charter-clean by construction: fibre + ritual + heritage ONLY; recreational THC excluded by the :thc-class invariant (G1); cannabis-derived medicine out of scope (G10, → yakushi); no 解禁-推進/反対 stance (G3, → danjo/moushibumi)."
+ :actor/status    :r0
+ :actor/adr       "2606039800"
+ :actor/related   ["2605192100" "2605192200" "2605301600" "2605312400" "2605250500" "2605262700" "2606012100" "2605215000" "2606013800" "2605181100"]
+ :actor/labor
+ {:isic   "A0116"
+  :isco   ["6111" "7318"]
+  :unspsc ["10" "11"]
+  :lps-rank nil}
+
+ :actor/charter-rider {:rider/version "2.0" :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "low-thc-fiber-and-ritual-only" :gate/req "only 繊維型/神事用 低THC 大麻草; cultivar :thc-class ∈ {:fiber, :low-thc}; :psychoactive is NOT a representable value (schema + lexicon const + analyze.py); recreational/high-THC excluded by construction"}
+  {:gate/id "G2" :gate/name "non-recreational" :gate/req "never facilitates 嗜好使用; emits no consumption/dosing guidance; respects the 使用罪 (THC use criminalized, 令和5年法律第84号)"}
+  {:gate/id "G3" :gate/name "non-adjudicating-political-neutral" :gate/req "records cultural + legislative FACTS only; legal characterization → danjo/chigiri; takes NO 推進/反対 stance on 解禁論 (§1.12 / 1 SBT = 1 vote)"}
+  {:gate/id "G4" :gate/name "member-principal-no-fiat-inflow" :gate/req "栽培者免許 fees never from religious-corp funds or a fiat processor; member-principal via okaimono assisted-checkout (ADR-2606012100); nusa never licensee-of-record / funder"}
+  {:gate/id "G5" :gate/name "no-server-key" :gate/req "cultivation/licence authorization = member signature; server signature refused (ADR-2605231525); serverHeldKey=false"}
+  {:gate/id "G6" :gate/name "murakumo-only" :gate/req "all inference via LiteLLM 127.0.0.1:4000 (ADR-2605215000)"}
+  {:gate/id "G7" :gate/name "sourcing-honesty" :gate/req "all seed :representative; heritage/legal figures flagged; legal references require primary-source (e-Gov 法令 / 官報) citation"}
+  {:gate/id "G8" :gate/name "outward-gated" :gate/req "real cultivation, live licence filing, live 法令/heritage ingest, atproto publish all Council Lv6+ + operator gated; R0 = offline design + intent only"}
+  {:gate/id "G9" :gate/name "pii-consent" :gate/req "cultivator personal data consent-bound + encrypted (com.etzhayyim.encrypted.*, ADR-2605181100)"}
+  {:gate/id "G10" :gate/name "medical-boundary" :gate/req "大麻由来医薬品 out of scope (薬機法/医師法 → yakushi/iyashi/mitate); nusa stops at fibre + ritual + heritage"}]
+
+ :actor/non-goals
+ [{:ng/id "N1" :ng/req "no recreational cannabis / THC intoxicant production or advocacy"}
+  {:ng/id "N2" :ng/req "not a 解禁-推進/反対 political/lobbying organization (G3)"}
+  {:ng/id "N3" :ng/req "not a cannabis-derived-medicine manufacturer (→ yakushi)"}
+  {:ng/id "N4" :ng/req "never facilitates unlicensed cultivation"}
+  {:ng/id "N5" :ng/req "no trafficking of high-THC seed / strains"}]
+
+ :actor/cells
+ [{:cell/id "heritage_ingest"         :cell/kind :langgraph :cell/runtime :wasm :cell/node "dan"}
+  {:cell/id "fiber_provenance"        :cell/kind :langgraph :cell/runtime :wasm :cell/node "naphtali"}
+  {:cell/id "cultivation_license_plan" :cell/kind :langgraph :cell/runtime :wasm :cell/node "gad"}
+  {:cell/id "rite_supply"             :cell/kind :langgraph :cell/runtime :wasm :cell/node "asher"}
+  {:cell/id "observation_bridge"      :cell/kind :langgraph :cell/runtime :wasm :cell/node "issachar"}]
+
+ :actor/lex
+ [{:lex/id "heritageRecord"}
+  {:lex/id "hempCultivar"}
+  {:lex/id "ritualArtifact"}
+  {:lex/id "cultivationLicensePlan"}
+  {:lex/id "fiberProvenance"}]}

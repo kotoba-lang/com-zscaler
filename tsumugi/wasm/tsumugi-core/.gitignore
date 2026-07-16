@@ -1,0 +1,3 @@
+# Rust build dir — the shippable artifact is committed at ../loader/tsumugi-core.wasm
+# and dist/tsumugi-core.wasm (the bytes the IPFS CID refers to). target/ is not.
+/target/

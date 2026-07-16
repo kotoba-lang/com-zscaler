@@ -1,0 +1,20 @@
+;; funadaiku 船大工 — produced-goods catalog (Ring 1 internal economy)
+;; Declared by the producing actor; ingested by okaimono (ADR-2606012100 §R1).
+;; Shared :product/* vocabulary. Prices in USDC minor (6-dp). All :representative (R0).
+[{:product/id "int.funadaiku.nagi-coastal-cargo" :product/title "funadaiku Nagi 凪 ゼロエミッション沿岸貨物船 (3,000 DWT)"
+  :product/ring :internal :product/maker-actor "funadaiku" :product/source :internal-actor
+  :product/unspsc "25101500" :product/price-minor 0 :product/currency "USDC"
+  :product/build-to-order true :product/durability-years 30.0 :product/repairability 8
+  :product/labor-provenance :etzhayyim-dignity :product/carbon-kg 0.0
+  :product/carbon-note "tank-to-wake CO2=0 (no fossil engine, G13); well-to-wake per green-H2 CoC (G14)"
+  :product/lifecycle-route :hodoki+kanayama :product/gate "Council + operator (G11/G12)"
+  :product/sourcing :representative}
+
+ {:product/id "svc.funadaiku.zero-emission-freight" :product/title "funadaiku ゼロエミッション海上貨物輸送サービス"
+  :product/ring :internal :product/maker-actor "funadaiku" :product/source :internal-actor
+  :product/kind :service :product/unspsc "78101800" :product/price-minor 0 :product/currency "USDC"
+  :product/labor-provenance :etzhayyim-dignity :product/carbon-kg 0.0
+  :product/carbon-note "wind + solar + green-H2 powertrain; well-to-wake audited (decarbonization_audit cell)"
+  :product/fulfillment :no-gig :product/gate "Council + operator (G11)"
+  :product/note "delivers Basic-High-Income-in-kind logistics (ADR-2605301020) + okaimono fulfillment legs"
+  :product/sourcing :representative}]

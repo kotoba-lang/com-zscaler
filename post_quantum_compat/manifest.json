@@ -1,0 +1,762 @@
+{
+  "schemaVersion": "1.0",
+  "handle": "post_quantum-compat",
+  "did": "did:web:etzhayyim.com:actor:post_quantum-compat",
+  "kind": "compat",
+  "title": "post_quantum clean-room actor",
+  "description": "Clean-room, API-compatible quantum key distribution actor (post_quantum); runs browser-local on IPFS + kotoba-WASM.",
+  "wasmCid": "bafkreiaxbsw7ohkruxsarfayaaxeuv6anpnatg6bbzg5lfvlbli5l3pbci",
+  "wasmProvenance": "built-rust-raw",
+  "runtime": "kotoba-wasm",
+  "exec": "browser-local|donated-mesh",
+  "ipfs": "ipfs://bafkreiaxbsw7ohkruxsarfayaaxeuv6anpnatg6bbzg5lfvlbli5l3pbci",
+  "schema": "schema/post_quantum.kotoba",
+  "tier": "L4",
+  "verified": null,
+  "entities": [
+    "KeySession",
+    "Node",
+    "Channel",
+    "Key",
+    "Protocol",
+    "Alarm"
+  ],
+  "adr": [
+    "260607",
+    "2606014500",
+    "2606013800",
+    "2606036000"
+  ],
+  "capabilities": {
+    "api": {
+      "type": "rest",
+      "runtime": "kotoba-wasm",
+      "endpointCount": 30,
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/v1/keysessions",
+          "op": "create KeySession"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/keysessions",
+          "op": "list KeySession"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/keysessions/{id}",
+          "op": "get KeySession"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/keysessions/{id}",
+          "op": "update KeySession"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/keysessions/{id}",
+          "op": "delete KeySession"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/nodes",
+          "op": "create Node"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/nodes",
+          "op": "list Node"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/nodes/{id}",
+          "op": "get Node"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/nodes/{id}",
+          "op": "update Node"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/nodes/{id}",
+          "op": "delete Node"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/channels",
+          "op": "create Channel"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/channels",
+          "op": "list Channel"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/channels/{id}",
+          "op": "get Channel"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/channels/{id}",
+          "op": "update Channel"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/channels/{id}",
+          "op": "delete Channel"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/keys",
+          "op": "create Key"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/keys",
+          "op": "list Key"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/keys/{id}",
+          "op": "get Key"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/keys/{id}",
+          "op": "update Key"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/keys/{id}",
+          "op": "delete Key"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/protocols",
+          "op": "create Protocol"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/protocols",
+          "op": "list Protocol"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/protocols/{id}",
+          "op": "get Protocol"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/protocols/{id}",
+          "op": "update Protocol"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/protocols/{id}",
+          "op": "delete Protocol"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/alarms",
+          "op": "create Alarm"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/alarms",
+          "op": "list Alarm"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/alarms/{id}",
+          "op": "get Alarm"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/alarms/{id}",
+          "op": "update Alarm"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/alarms/{id}",
+          "op": "delete Alarm"
+        }
+      ],
+      "features": {
+        "pagination": true,
+        "filtering": true,
+        "relationExpansion": true,
+        "strictValidation": true,
+        "contractTest": true
+      },
+      "health": "/healthz"
+    },
+    "supplychain": {
+      "type": "cyclonedx-sbom",
+      "runtime": "kotoba-wasm",
+      "sbom": "manifest:supplychain.sbom",
+      "sbomData": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "metadata": {
+          "component": {
+            "type": "application",
+            "name": "post_quantum-compat",
+            "purl": "pkg:etzhayyim/post_quantum-compat"
+          }
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "kotoba",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotoba"
+          },
+          {
+            "type": "library",
+            "name": "kotodama-wasm",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotodama-wasm"
+          },
+          {
+            "type": "library",
+            "name": "datomic-client",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/datomic-client"
+          }
+        ]
+      },
+      "adr": [
+        "2606036000"
+      ]
+    },
+    "socialpost": {
+      "type": "datom-event-feed",
+      "runtime": "kotoba-wasm",
+      "lexicon": "app.bsky.feed.post",
+      "source": "post_quantum.* Datom events",
+      "mode": "dry-run",
+      "gate": "G8"
+    },
+    "mcp": {
+      "type": "model-context-protocol",
+      "runtime": "kotoba-wasm",
+      "transport": "ipfs+kotoba-wasm",
+      "toolCount": 30,
+      "tools": [
+        {
+          "name": "create_key_session",
+          "description": "Create a KeySession.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "aliceNodeId": {
+                "type": "string"
+              },
+              "bobNodeId": {
+                "type": "string"
+              },
+              "protocol": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "protocol",
+              "status"
+            ]
+          }
+        },
+        {
+          "name": "list_key_sessions",
+          "description": "List KeySessions.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_key_session",
+          "description": "Get a KeySession by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_key_session",
+          "description": "Update a KeySession.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "aliceNodeId": {
+                "type": "string"
+              },
+              "bobNodeId": {
+                "type": "string"
+              },
+              "protocol": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_key_session",
+          "description": "Delete a KeySession.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_node",
+          "description": "Create a Node.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "location"
+            ]
+          }
+        },
+        {
+          "name": "list_nodes",
+          "description": "List Nodes.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_node",
+          "description": "Get a Node by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_node",
+          "description": "Update a Node.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_node",
+          "description": "Delete a Node.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_channel",
+          "description": "Create a Channel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string"
+              },
+              "medium": {
+                "type": "string"
+              },
+              "lossDb": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "medium",
+              "lossDb"
+            ]
+          }
+        },
+        {
+          "name": "list_channels",
+          "description": "List Channels.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_channel",
+          "description": "Get a Channel by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_channel",
+          "description": "Update a Channel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "sessionId": {
+                "type": "string"
+              },
+              "medium": {
+                "type": "string"
+              },
+              "lossDb": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_channel",
+          "description": "Delete a Channel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_key",
+          "description": "Create a Key.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string"
+              },
+              "lengthBits": {
+                "type": "integer"
+              },
+              "qber": {
+                "type": "number"
+              },
+              "contentRef": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "lengthBits",
+              "qber"
+            ]
+          }
+        },
+        {
+          "name": "list_keys",
+          "description": "List Keys.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_key",
+          "description": "Get a Key by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_key",
+          "description": "Update a Key.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "sessionId": {
+                "type": "string"
+              },
+              "lengthBits": {
+                "type": "integer"
+              },
+              "qber": {
+                "type": "number"
+              },
+              "contentRef": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_key",
+          "description": "Delete a Key.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_protocol",
+          "description": "Create a Protocol.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "family": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "family"
+            ]
+          }
+        },
+        {
+          "name": "list_protocols",
+          "description": "List Protocols.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_protocol",
+          "description": "Get a Protocol by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_protocol",
+          "description": "Update a Protocol.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "family": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_protocol",
+          "description": "Delete a Protocol.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_alarm",
+          "description": "Create a Alarm.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "nodeId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "raisedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "raisedAt"
+            ]
+          }
+        },
+        {
+          "name": "list_alarms",
+          "description": "List Alarms.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_alarm",
+          "description": "Get a Alarm by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_alarm",
+          "description": "Update a Alarm.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "nodeId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "raisedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_alarm",
+          "description": "Delete a Alarm.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+;; kizuna — actor manifest (converted from manifest.jsonld, jsonld-retirement wave)
+{:actor/id "kizuna"
+ :actor/glyph "絆"
+ :actor/tier :tier-b
+ :actor/integrates ["kaname" "ossekai"]
+ :actor/status :r0
+ :actor/adr ["2606232200" "2606232100"]
+ :actor/gates [#:gate{:id "G1", :rule "PROPOSE-not-act — :tie/proposed (:dry-run / :ossekai); no execute/auto-follow; actuation via ossekai + member CACAO (no-server-key)"} #:gate{:id "G2", :rule "RECIPROCITY-positive, ANTI-addiction — objective :connectivity+reciprocity, never engagement/retention/affinity (§1.13 / §2(h))"} #:gate{:id "G3", :rule "AGENT-only — :person/* node unrepresentable (person-excluded)"} #:gate{:id "G4", :rule "no-server-key — reads public repos + proposes; holds no key"}]}

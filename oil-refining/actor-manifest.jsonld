@@ -1,0 +1,280 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:oil-refining.etzhayyim.com",
+  "actors": [
+    {
+      "description": "Global refinery asset coverage.",
+      "displayName": "Refinery Registry",
+      "path": "registry:refinery"
+    },
+    {
+      "description": "FCC, hydrocracker, coker and reformer coverage.",
+      "displayName": "Conversion Units",
+      "path": "units:conversion"
+    },
+    {
+      "description": "Crude-to-product yield pressure and output balance.",
+      "displayName": "Yield Analytics",
+      "path": "analytics:yield"
+    },
+    {
+      "description": "Refinery and unit outage monitoring.",
+      "displayName": "Outage Risk",
+      "path": "risk:outage"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Oil Refining agent. Track refinery assets, unit configuration, throughput, outages and product yields. Explain how crude inputs, refinery complexity and unit availability affect gasoline, diesel, jet and fuel oil output.",
+  "description": "Refinery registry, unit configuration, throughput and utilization monitoring, outage tracking, and crude-to-product yield intelligence.",
+  "displayName": "Oil Refining & Product Yield Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "EPA Fuel Standards",
+      "EU Fuel Quality Directive",
+      "IMO Marine Fuel Rules"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "oil-refining",
+  "nanoid": "01lr3f1n",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (r:Refinery) RETURN r.country_code AS country, count(r) AS count, sum(r.throughput_bpd) AS throughput ORDER BY throughput DESC LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "refineryStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (u:RefineryUnit) RETURN u.unit_type AS unitType, count(u) AS count LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "unitStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (o:RefineryOutage) WHERE o.status IN ['planned', 'active'] RETURN o.refinery_code AS refinery, o.unit_type AS unitType, o.status AS status LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "outages"
+        },
+        {
+          "args": {
+            "message": "Oil refining report.\n\nRefinery stats:\n$refineryStats.rows\n\nUnit stats:\n$unitStats.rows\n\nOutages:\n$outages.rows\n\nSummarize refinery concentration, unit bottlenecks and likely product yield pressure."
+          },
+          "depends_on": [
+            "refineryStats",
+            "unitStats",
+            "outages"
+          ],
+          "fn": "agent.chat",
+          "id": "analyze"
+        },
+        {
+          "args": {
+            "template": "Oil refining report: $analyze.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */8 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (r:Refinery) WHERE r.status = 'active' RETURN r.refinery_code AS refinery, r.country_code AS country, r.throughput_bpd AS throughput LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "matchRefineryDemand"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.oilShipping.cargo"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (r:Refinery {refinery_code: $input.refineryCode}) RETURN r.vertex_id, r.repo, r.collection, r.status LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "refinery"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oilRefining.registry.getRefinery",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (r:Refinery) RETURN r.vertex_id, r.repo, r.collection, r.status LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "refineries"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oilRefining.registry.listRefineries",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (u:RefineryUnit {refinery_code: $input.refineryCode}) RETURN u.vertex_id, u.repo, u.collection, u.status LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "units"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oilRefining.registry.listUnits",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (r:Refinery {country_code: $input.countryCode}) RETURN r.refinery_code AS refinery, r.throughput_bpd AS throughput, r.status AS status LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "pressure"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oilRefining.analytics.getYieldPressure",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (r:Refinery) RETURN count(r) AS refineries LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "stats"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oilRefining.health",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "oil-refining",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.oilRefining.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "01lr3f1n",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "refinery-registry",
+      "unit-tracking",
+      "yield-analysis",
+      "outage-monitoring",
+      "product-balance"
+    ],
+    "description": "Tracks refineries, unit complexity, throughput, maintenance and output product mix. Connects crude grades, refinery assets and product grades.",
+    "displayName": "Oil Refining & Product Yield Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.oilRefining.refinery",
+        "com.etzhayyim.apps.oilRefining.unit",
+        "com.etzhayyim.apps.oilRefining.outage",
+        "com.etzhayyim.apps.oilRefining.yieldSnapshot",
+        "com.etzhayyim.apps.oilShipping.cargo"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

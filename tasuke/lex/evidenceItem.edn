@@ -1,0 +1,17 @@
+{:lexicon 1
+ :id "com.etzhayyim.tasuke.evidenceItem"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A preserved piece of evidence for a victim's case. The PII content lives ENCRYPTED (G6); only an envelope ref + a chain-of-custody hash sit in the clear, so the victim can prove the item is unchanged since capture."
+   :record
+   {:type "object"
+    :required ["evidenceId" "case" "kind" "envelopeRef" "sha256"]
+    :properties
+    {:evidenceId   {:type "string" :description "→ :evidence/id"}
+     :case         {:type "string" :description "→ :evidence/case"}
+     :kind         {:type "string" :enum ["url" "email-header" "screenshot" "chat-log" "transaction-record" "wallet-address" "phone-number" "account-id" "file-hash" "audio" "other"]}
+     :envelopeRef  {:type "string" :description "G6 INVARIANT — com.etzhayyim.encrypted.* envelope CID. The plaintext PII is NEVER stored here; a plaintext-PII field is unrepresentable."}
+     :sha256       {:type "string" :description "chain-of-custody integrity hash (64 hex chars)"}
+     :capturedAt   {:type "integer" :description "→ :evidence/captured-at (epoch)"}}}}}}

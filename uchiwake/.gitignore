@@ -1,0 +1,6 @@
+# uchiwake 内訳 — generated artifacts (regenerable; never committed). ADR-2606081800.
+# The committed seed is data/seed-products.kotoba.edn; products.merged.kotoba.edn is the
+# bridge output (tracked). The autonomous heartbeat log + live-fetch staging are per-run.
+data/uchiwake.datoms.kotoba.edn
+data/ingest/openfoodfacts.live.json
+out/

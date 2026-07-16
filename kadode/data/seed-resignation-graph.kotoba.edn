@@ -1,0 +1,121 @@
+;; kadode 門出 — seed labor-exit graph (real, PUBLIC Japanese labour law only)
+;; ADR-2606112238 · vocabulary: labor-exit-ontology (00-contracts/schemas/labor-exit-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - kadode is a 使者 (messenger) + concierge, NEVER a 代理人 (agent) and NEVER the practice of
+;;     law. It RELAYS a worker's already-formed unilateral resignation (民法627 = unilateral
+;;     right, employer consent NOT required) and DRAFTS the worker's own documents. It does NOT
+;;     and CANNOT negotiate terms / severance / settlements (弁護士法72条 非弁行為禁止). Anything
+;;     needing negotiation is routed to :route/union (団体交渉) or :route/lawyer.
+;;   - A ground / citation / risk-counter is a DISCLOSED legal fact (N3), never a kadode verdict;
+;;     kadode never promises an outcome.
+;;
+;; SOURCING: all grounds are :authoritative public statutes (e-Gov 法令検索 / 厚労省). The scenario
+;;   ↔ route mapping is :representative procedural guidance, NOT legal advice for a specific case.
+;;   Coverage of all employment situations is bounded by design (G5). Live relay/sending is
+;;   G7-gated.
+
+[;; ───────────────────────────── routes (escalation ladder) ──────────────────
+ {:lx/id "r.self" :lx/kind :route :lx/label "Worker self-submission (自己申請)" :route/actor :worker-self :route/can-negotiate false :lx/sourcing :authoritative}
+ {:lx/id "r.messenger" :lx/kind :route :lx/label "kadode 使者 relay (意思の伝達のみ・交渉せず)" :route/actor :kadode-messenger :route/can-negotiate false :lx/sourcing :authoritative}
+ {:lx/id "r.union" :lx/kind :route :lx/label "Labour union 団体交渉 (合同労組 / ユニオン)" :route/actor :labor-union :route/can-negotiate true :lx/sourcing :authoritative}
+ {:lx/id "r.lawyer" :lx/kind :route :lx/label "Lawyer 弁護士 (紛争・請求・示談)" :route/actor :lawyer :route/can-negotiate true :lx/sourcing :authoritative}
+
+ ;; ───────────────────────────── grounds (REAL public labour-law articles) ────
+ {:lx/id "g.minpo-627" :lx/kind :ground :lx/label "民法627条 — 期間の定めのない雇用の解約申入れ (申入れから2週間で終了)" :ground/citation "民法627条" :ground/instrument "民法 (明治29年法律第89号)" :ground/url "https://laws.e-gov.go.jp/law/129AC0000000089" :lx/sourcing :authoritative}
+ {:lx/id "g.minpo-628" :lx/kind :ground :lx/label "民法628条 — やむを得ない事由による(期間の定めある雇用の)即時解除" :ground/citation "民法628条" :ground/instrument "民法 (明治29年法律第89号)" :ground/url "https://laws.e-gov.go.jp/law/129AC0000000089" :lx/sourcing :authoritative}
+ {:lx/id "g.minpo-626" :lx/kind :ground :lx/label "民法626条 — 期間が5年を超える/不確定な雇用の解除権" :ground/citation "民法626条" :ground/instrument "民法 (明治29年法律第89号)" :ground/url "https://laws.e-gov.go.jp/law/129AC0000000089" :lx/sourcing :authoritative}
+ {:lx/id "g.rouki-137" :lx/kind :ground :lx/label "労働基準法137条 — 有期契約でも1年経過後はいつでも退職できる" :ground/citation "労働基準法137条" :ground/instrument "労働基準法 (昭和22年法律第49号)" :ground/url "https://laws.e-gov.go.jp/law/322AC0000000049" :lx/sourcing :authoritative}
+ {:lx/id "g.rouki-15-2" :lx/kind :ground :lx/label "労働基準法15条2項 — 労働条件が事実と相違する場合の即時解除権" :ground/citation "労働基準法15条2項" :ground/instrument "労働基準法 (昭和22年法律第49号)" :ground/url "https://laws.e-gov.go.jp/law/322AC0000000049" :lx/sourcing :authoritative}
+ {:lx/id "g.rouki-16" :lx/kind :ground :lx/label "労働基準法16条 — 賠償予定の禁止 (退職に違約金・損害賠償額をあらかじめ定めることは無効)" :ground/citation "労働基準法16条" :ground/instrument "労働基準法 (昭和22年法律第49号)" :ground/url "https://laws.e-gov.go.jp/law/322AC0000000049" :lx/sourcing :authoritative}
+ {:lx/id "g.rouki-5" :lx/kind :ground :lx/label "労働基準法5条 — 強制労働の禁止 (退職をさせない拘束は違法)" :ground/citation "労働基準法5条" :ground/instrument "労働基準法 (昭和22年法律第49号)" :ground/url "https://laws.e-gov.go.jp/law/322AC0000000049" :lx/sourcing :authoritative}
+ {:lx/id "g.rouki-24" :lx/kind :ground :lx/label "労働基準法24条 — 賃金全額払いの原則 (未払い賃金・残業代の請求根拠)" :ground/citation "労働基準法24条" :ground/instrument "労働基準法 (昭和22年法律第49号)" :ground/url "https://laws.e-gov.go.jp/law/322AC0000000049" :lx/sourcing :authoritative}
+ {:lx/id "g.rouki-39" :lx/kind :ground :lx/label "労働基準法39条 — 年次有給休暇 (退職時の有給消化の根拠)" :ground/citation "労働基準法39条" :ground/instrument "労働基準法 (昭和22年法律第49号)" :ground/url "https://laws.e-gov.go.jp/law/322AC0000000049" :lx/sourcing :authoritative}
+ {:lx/id "g.roukumiai-6" :lx/kind :ground :lx/label "労働組合法6条 — 団体交渉 (労働組合は使用者と交渉する権限をもつ)" :ground/citation "労働組合法6条" :ground/instrument "労働組合法 (昭和24年法律第174号)" :ground/url "https://laws.e-gov.go.jp/law/324AC0000000174" :lx/sourcing :authoritative}
+ {:lx/id "g.bengoshi-72" :lx/kind :ground :lx/label "弁護士法72条 — 非弁行為の禁止 (報酬目的の法律事務の代理・交渉は弁護士のみ)" :ground/citation "弁護士法72条" :ground/instrument "弁護士法 (昭和24年法律第205号)" :ground/url "https://laws.e-gov.go.jp/law/324AC0000000205" :lx/sourcing :authoritative}
+ {:lx/id "g.koyouhoken-7" :lx/kind :ground :lx/label "雇用保険法7条 — 離職票の交付 (事業主は離職証明書の手続義務を負う)" :ground/citation "雇用保険法7条" :ground/instrument "雇用保険法 (昭和49年法律第116号)" :ground/url "https://laws.e-gov.go.jp/law/349AC0000000116" :lx/sourcing :authoritative}
+
+ ;; ───────────────────────────── documents (the artefacts kadode drafts) ──────
+ {:lx/id "d.taishoku-todoke" :lx/kind :document :lx/label "退職届 (一方的な退職の意思表示)" :document/kind :taishoku-todoke :document/binding :unilateral :lx/sourcing :authoritative}
+ {:lx/id "d.taishoku-gan" :lx/kind :document :lx/label "退職願 (合意退職の申し出)" :document/kind :taishoku-gan :document/binding :request :lx/sourcing :authoritative}
+ {:lx/id "d.naiyo-shomei" :lx/kind :document :lx/label "内容証明郵便 (退職意思の到達を証明)" :document/kind :naiyo-shomei :document/binding :unilateral :lx/sourcing :authoritative}
+ {:lx/id "d.sokuji" :lx/kind :document :lx/label "即時退職通知 (やむを得ない事由による即時解除)" :document/kind :sokuji :document/binding :unilateral :lx/sourcing :authoritative}
+ {:lx/id "d.yukyu" :lx/kind :document :lx/label "年次有給休暇取得届 (退職時の有給消化)" :document/kind :yukyu :document/binding :unilateral :lx/sourcing :authoritative}
+
+ ;; ───────────────────────────── employer risk patterns (引き止め / 違法対応) ───
+ {:lx/id "risk.taishoku-kyohi" :lx/kind :risk :lx/label "退職を認めない / 受理しない" :risk/pattern "退職拒否" :lx/sourcing :authoritative}
+ {:lx/id "risk.songai-baisho" :lx/kind :risk :lx/label "辞めるなら損害賠償を請求すると脅す" :risk/pattern "損害賠償脅迫" :lx/sourcing :authoritative}
+ {:lx/id "risk.yukyu-kyohi" :lx/kind :risk :lx/label "有給休暇の消化を拒否する" :risk/pattern "有給拒否" :lx/sourcing :authoritative}
+ {:lx/id "risk.rishokuhyo" :lx/kind :risk :lx/label "離職票を交付しない" :risk/pattern "離職票不交付" :lx/sourcing :authoritative}
+ {:lx/id "risk.kyousei" :lx/kind :risk :lx/label "退職させず就労を強要・拘束する" :risk/pattern "強制労働" :lx/sourcing :authoritative}
+
+ ;; ───────────────────────────── scenarios (the worker's situation) ───────────
+ {:lx/id "sc.permanent-amicable" :lx/kind :scenario :lx/label "正社員(無期)・円満退職・2週間前に申し入れ可能" :scenario/employment :no-fixed-term :scenario/needs-negotiation false :lx/sourcing :representative}
+ {:lx/id "sc.permanent-cant-face" :lx/kind :scenario :lx/label "無期・精神的に対面不可(パワハラ等)・交渉は不要、伝達のみ" :scenario/employment :no-fixed-term :scenario/needs-negotiation false :lx/links "actor:kokoro" :lx/sourcing :representative}
+ {:lx/id "sc.permanent-refused" :lx/kind :scenario :lx/label "無期・会社が退職を認めない(退職拒否)" :scenario/employment :no-fixed-term :scenario/needs-negotiation false :lx/sourcing :representative}
+ {:lx/id "sc.immediate-cause" :lx/kind :scenario :lx/label "無期/有期・やむを得ない事由(賃金未払・ハラスメント)で即時退職したい" :scenario/employment :no-fixed-term :scenario/needs-negotiation false :lx/sourcing :representative}
+ {:lx/id "sc.fixed-within-1yr" :lx/kind :scenario :lx/label "有期・契約1年未満・やむを得ない事由の有無が争点" :scenario/employment :fixed-term :scenario/needs-negotiation true :lx/sourcing :representative}
+ {:lx/id "sc.fixed-after-1yr" :lx/kind :scenario :lx/label "有期・契約開始から1年経過・いつでも退職可" :scenario/employment :fixed-term-1yr+ :scenario/needs-negotiation false :lx/sourcing :representative}
+ {:lx/id "sc.unpaid-wages" :lx/kind :scenario :lx/label "未払い賃金・残業代があり請求したい(交渉が必要)" :scenario/employment :no-fixed-term :scenario/needs-negotiation true :lx/sourcing :representative}
+ {:lx/id "sc.damages-threatened" :lx/kind :scenario :lx/label "損害賠償を請求すると脅された(紛争化)" :scenario/employment :no-fixed-term :scenario/needs-negotiation true :lx/sourcing :representative}
+ {:lx/id "sc.yukyu-refused" :lx/kind :scenario :lx/label "有給消化を拒否された(交渉が必要)" :scenario/employment :no-fixed-term :scenario/needs-negotiation true :lx/sourcing :representative}
+ {:lx/id "sc.harassment" :lx/kind :scenario :lx/label "ハラスメントがあり退職+責任追及したい(紛争化)" :scenario/employment :no-fixed-term :scenario/needs-negotiation true :lx/links "actor:tasuke" :lx/sourcing :representative}
+
+ ;; ───────────────────────────── 縁 (edges) ──────────────────────────────────
+ ;; (A) :supported-by — scenario → ground (the labour-law basis for the exit)
+ {:en/from "sc.permanent-amicable" :en/to "g.minpo-627" :en/kind :supported-by :en/force :required :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.permanent-cant-face" :en/to "g.minpo-627" :en/kind :supported-by :en/force :required :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.permanent-refused" :en/to "g.minpo-627" :en/kind :supported-by :en/force :required :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.immediate-cause" :en/to "g.minpo-628" :en/kind :supported-by :en/force :required :en/weight 0.9 :en/sourcing :authoritative}
+ {:en/from "sc.immediate-cause" :en/to "g.rouki-15-2" :en/kind :supported-by :en/force :supporting :en/weight 0.7 :en/sourcing :authoritative}
+ {:en/from "sc.fixed-within-1yr" :en/to "g.minpo-628" :en/kind :supported-by :en/force :required :en/weight 0.9 :en/sourcing :authoritative}
+ {:en/from "sc.fixed-after-1yr" :en/to "g.rouki-137" :en/kind :supported-by :en/force :required :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.fixed-after-1yr" :en/to "g.minpo-626" :en/kind :supported-by :en/force :supporting :en/weight 0.6 :en/sourcing :authoritative}
+ {:en/from "sc.unpaid-wages" :en/to "g.rouki-24" :en/kind :supported-by :en/force :required :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.damages-threatened" :en/to "g.rouki-16" :en/kind :supported-by :en/force :required :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.yukyu-refused" :en/to "g.rouki-39" :en/kind :supported-by :en/force :required :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.harassment" :en/to "g.rouki-5" :en/kind :supported-by :en/force :supporting :en/weight 0.7 :en/sourcing :authoritative}
+
+ ;; (B) :requires-route — scenario → route (UPL-bounded escalation; negotiation ⇒ union/lawyer)
+ {:en/from "sc.permanent-amicable" :en/to "r.self" :en/kind :requires-route :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.permanent-cant-face" :en/to "r.messenger" :en/kind :requires-route :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.permanent-refused" :en/to "r.messenger" :en/kind :requires-route :en/weight 0.9 :en/sourcing :authoritative}
+ {:en/from "sc.immediate-cause" :en/to "r.messenger" :en/kind :requires-route :en/weight 0.8 :en/sourcing :authoritative}
+ {:en/from "sc.fixed-within-1yr" :en/to "r.union" :en/kind :requires-route :en/weight 0.9 :en/sourcing :authoritative}
+ {:en/from "sc.fixed-after-1yr" :en/to "r.messenger" :en/kind :requires-route :en/weight 0.9 :en/sourcing :authoritative}
+ {:en/from "sc.unpaid-wages" :en/to "r.union" :en/kind :requires-route :en/weight 0.9 :en/sourcing :authoritative}
+ {:en/from "sc.unpaid-wages" :en/to "r.lawyer" :en/kind :requires-route :en/weight 0.8 :en/sourcing :authoritative}
+ {:en/from "sc.damages-threatened" :en/to "r.lawyer" :en/kind :requires-route :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "sc.yukyu-refused" :en/to "r.union" :en/kind :requires-route :en/weight 0.8 :en/sourcing :authoritative}
+ {:en/from "sc.harassment" :en/to "r.lawyer" :en/kind :requires-route :en/weight 1.0 :en/sourcing :authoritative}
+
+ ;; (C) :produces — route → document
+ {:en/from "r.self" :en/to "d.taishoku-todoke" :en/kind :produces :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "r.self" :en/to "d.taishoku-gan" :en/kind :produces :en/weight 0.7 :en/sourcing :authoritative}
+ {:en/from "r.self" :en/to "d.yukyu" :en/kind :produces :en/weight 0.6 :en/sourcing :authoritative}
+ {:en/from "r.messenger" :en/to "d.taishoku-todoke" :en/kind :produces :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "r.messenger" :en/to "d.naiyo-shomei" :en/kind :produces :en/weight 0.9 :en/sourcing :authoritative}
+ {:en/from "r.messenger" :en/to "d.sokuji" :en/kind :produces :en/weight 0.8 :en/sourcing :authoritative}
+
+ ;; (D) :rests-on — document → ground
+ {:en/from "d.taishoku-todoke" :en/to "g.minpo-627" :en/kind :rests-on :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "d.sokuji" :en/to "g.minpo-628" :en/kind :rests-on :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "d.naiyo-shomei" :en/to "g.minpo-627" :en/kind :rests-on :en/weight 0.8 :en/sourcing :authoritative}
+ {:en/from "d.yukyu" :en/to "g.rouki-39" :en/kind :rests-on :en/weight 1.0 :en/sourcing :authoritative}
+
+ ;; (E) :counters — ground → risk (the legal ground that defeats an employer pattern)
+ {:en/from "g.minpo-627" :en/to "risk.taishoku-kyohi" :en/kind :counters :en/force :counter :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "g.rouki-16" :en/to "risk.songai-baisho" :en/kind :counters :en/force :counter :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "g.rouki-39" :en/to "risk.yukyu-kyohi" :en/kind :counters :en/force :counter :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "g.koyouhoken-7" :en/to "risk.rishokuhyo" :en/kind :counters :en/force :counter :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "g.rouki-5" :en/to "risk.kyousei" :en/kind :counters :en/force :counter :en/weight 1.0 :en/sourcing :authoritative}
+
+ ;; (F) :triggers — risk → route (a risk that forces escalation OUT of the messenger lane)
+ {:en/from "risk.songai-baisho" :en/to "r.lawyer" :en/kind :triggers :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "risk.yukyu-kyohi" :en/to "r.union" :en/kind :triggers :en/weight 0.8 :en/sourcing :authoritative}
+ {:en/from "risk.kyousei" :en/to "r.lawyer" :en/kind :triggers :en/weight 1.0 :en/sourcing :authoritative}
+
+ ;; (G) :upl-bound — route → 弁護士法72条 (the boundary the non-negotiating lanes are bound by)
+ {:en/from "r.messenger" :en/to "g.bengoshi-72" :en/kind :upl-bound :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "r.self" :en/to "g.bengoshi-72" :en/kind :upl-bound :en/weight 1.0 :en/sourcing :authoritative}
+ {:en/from "r.union" :en/to "g.roukumiai-6" :en/kind :upl-bound :en/weight 1.0 :en/sourcing :authoritative}]

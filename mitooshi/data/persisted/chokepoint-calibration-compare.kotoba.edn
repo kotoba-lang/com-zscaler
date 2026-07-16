@@ -1,0 +1,9 @@
+;; chokepoint-calibration-compare.kotoba.edn — raw vs online-recalibrated.
+;; Bias from PAST residuals only (leak-free); apply_correction from
+;; cells/online_update. PIT-mean→0.5 = bias removed. DERIVED :representative.
+;; G10-gated for live promotion. ADR-2606051800.
+
+[
+ {:fc.calib/method :climatology :fc.calib/raw-crps 33.455745 :fc.calib/cal-crps 29.425612 :fc.calib/raw-pit-mean 0.6647 :fc.calib/cal-pit-mean 0.4862 :fc.calib/raw-deviation 1.24 :fc.calib/cal-deviation 1.16 :fc.calib/sourcing :representative}
+ {:fc.calib/method :persistence :fc.calib/raw-crps 23.64458 :fc.calib/cal-crps 33.77948 :fc.calib/raw-pit-mean 0.76 :fc.calib/cal-pit-mean 0.5289 :fc.calib/raw-deviation 1.44 :fc.calib/cal-deviation 1.4 :fc.calib/sourcing :representative}
+]

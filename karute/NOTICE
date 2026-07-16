@@ -1,0 +1,18 @@
+This product includes software developed by etzhayyim
+(https://etzhayyim.com / did:web:etzhayyim.com).
+
+This software is distributed under the Apache License 2.0 with the
+etzhayyim Charter Compliance Rider v3.1 (see CHARTER-RIDER.md).
+
+By using, modifying, or redistributing this software, you accept both
+the Apache License 2.0 and the Charter Compliance Rider.
+
+Mission Charter: ADR-2605192100
+Rider ADR: ADR-2605192200 + ADR-2606062100 + ADR-2606082400 (v3.1)
+
+This actor processes Protected Health Information (PHI) as defined by
+個人情報保護法 § 2-3 (要配慮個人情報 - 病歴) and the etzhayyim mission
+charter (Wellbecoming). All PHI MUST be handled exclusively through
+the `com.etzhayyim.encrypted.record` envelope as specified in
+ADR-2605181100. Plaintext PHI persistence outside the envelope is a
+constitutional violation and triggers Charter Rider §2(g) enforcement.

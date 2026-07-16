@@ -1,0 +1,16 @@
+{
+  "actor": "maps",
+  "artifact": "maps-core.wasm",
+  "built_with": "cargo (wasm32-unknown-unknown) + wasm-tools strip",
+  "abi": "compute() -> i32 (json len) · result_ptr() -> i32 · exported memory",
+  "format": "wasm raw single-block (no WIT imports; ameno browser-local ABI)",
+  "cid_v1": "bafkreib7d3fzjkhsswr7flwkxejkjhauy67offbfd5o7pukqytdvifdbty",
+  "cid_codec": "raw (sha2-256; ipfs add --cid-version=1 --raw-leaves)",
+  "size_bytes": 25519,
+  "exec_tier": "T1 browser-local|donated-mesh",
+  "browser_local": true,
+  "view": "onsen-osusume",
+  "source": "20-actors/maps/methods/onsen.cljc (score-onsen/recommend read-path)",
+  "note": "Compact executable face of the maps onsen recommender: embeds a bounded :representative seed of famous onsen and computes the transparent place-quality ranking. The full RisingWave→kotoba map renderer migration (ADR-2606064500 R1→R3) is separate. ipfs pin of the bytes = operator step.",
+  "verified_output": "8 onsen, top = 箱根温泉 score 8.5, place_not_person = true"
+}

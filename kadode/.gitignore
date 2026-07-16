@@ -1,0 +1,3 @@
+# runtime append-only resignation-graph ledger (content-addressed commit-DAG) —
+# machine-local, resume-safe, regenerable from the committed seed; never committed.
+data/persisted/

@@ -1,0 +1,244 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:oil-coverage.etzhayyim.com",
+  "actors": [
+    {
+      "description": "Basin, block, field, well, reserves, production coverage.",
+      "displayName": "Upstream Coverage",
+      "path": "segment:upstream"
+    },
+    {
+      "description": "Pipeline, storage, terminal, LNG infrastructure coverage.",
+      "displayName": "Midstream Coverage",
+      "path": "segment:midstream"
+    },
+    {
+      "description": "Refinery, unit, throughput, maintenance coverage.",
+      "displayName": "Refining Coverage",
+      "path": "segment:refining"
+    },
+    {
+      "description": "Benchmarks, contracts, traders, offtake and pricing coverage.",
+      "displayName": "Trading Coverage",
+      "path": "segment:trading"
+    },
+    {
+      "description": "Tanker, route, chokepoint, port and cargo coverage.",
+      "displayName": "Shipping Coverage",
+      "path": "segment:shipping"
+    },
+    {
+      "description": "Product terminal, wholesale and retail coverage.",
+      "displayName": "Distribution Coverage",
+      "path": "segment:distribution"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "derive:social",
+    "agent.chat"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Oil Coverage actor. Keep the global oil supply chain baseline healthy across upstream, midstream, refining, trading, shipping, distribution, and risk. Measure country coverage, segment coverage, graph backbone completeness, and actor freshness. Highlight the largest unresolved topology gaps first.",
+  "description": "Global oil supply chain coverage orchestration. Tracks country x segment baseline, actor freshness, topology gaps, and graph backbone readiness across upstream, midstream, refining, trading, shipping, and downstream.",
+  "displayName": "Oil Coverage Orchestrator",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "oil-coverage",
+  "nanoid": "011c0v3r",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "template": "UNWIND [\n  {country:'SA', segment:'upstream', priority:1},\n  {country:'US', segment:'upstream', priority:1},\n  {country:'RU', segment:'upstream', priority:1},\n  {country:'CA', segment:'upstream', priority:1},\n  {country:'IQ', segment:'upstream', priority:1},\n  {country:'AE', segment:'upstream', priority:1},\n  {country:'IR', segment:'upstream', priority:1},\n  {country:'BR', segment:'upstream', priority:1},\n  {country:'NO', segment:'upstream', priority:1},\n  {country:'KZ', segment:'upstream', priority:1},\n  {country:'SA', segment:'midstream', priority:1},\n  {country:'US', segment:'midstream', priority:1},\n  {country:'AE', segment:'midstream', priority:1},\n  {country:'NL', segment:'midstream', priority:1},\n  {country:'SG', segment:'midstream', priority:1},\n  {country:'US', segment:'refining', priority:1},\n  {country:'CN', segment:'refining', priority:1},\n  {country:'IN', segment:'refining', priority:1},\n  {country:'KR', segment:'refining', priority:1},\n  {country:'SA', segment:'refining', priority:1},\n  {country:'CH', segment:'trading', priority:1},\n  {country:'SG', segment:'trading', priority:1},\n  {country:'GB', segment:'trading', priority:1},\n  {country:'AE', segment:'trading', priority:1},\n  {country:'GR', segment:'shipping', priority:1},\n  {country:'SG', segment:'shipping', priority:1},\n  {country:'AE', segment:'shipping', priority:1},\n  {country:'JP', segment:'shipping', priority:1},\n  {country:'US', segment:'distribution', priority:1},\n  {country:'CN', segment:'distribution', priority:1},\n  {country:'JP', segment:'distribution', priority:1},\n  {country:'DE', segment:'distribution', priority:1}\n] AS t MERGE (n:OilCoverageTarget {targetKey: t.country + ':' + t.segment}) SET n.countryCode = t.country, n.segment = t.segment, n.priority = t.priority, n.repo = 'did:web:oil-coverage.etzhayyim.com', n.collection = 'com.etzhayyim.apps.oil.coverageTarget', n.status = 'active'"
+          },
+          "fn": "graph.write",
+          "id": "seedTargets"
+        },
+        {
+          "args": {
+            "template": "oil coverage baseline refreshed: country x segment targets updated."
+          },
+          "fn": "derive:social",
+          "id": "seedDigest"
+        }
+      ],
+      "trigger": {
+        "cron": "15 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (t:OilCoverageTarget) WHERE t.repo = $did RETURN t.segment AS segment, count(t) AS cnt ORDER BY cnt DESC LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "targetCoverage"
+        },
+        {
+          "args": {
+            "sql": "UNWIND ['OilCompany','OilField','OilPipeline','OilTerminal','Refinery','OilCargo','CrudeGrade','ProductGrade','PricingBenchmark'] AS lbl CALL { WITH lbl MATCH (n) WHERE lbl IN labels(n) RETURN count(n) AS cnt } RETURN lbl AS label, cnt ORDER BY cnt DESC"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "backboneCounts"
+        },
+        {
+          "args": {
+            "message": "Summarize global oil graph coverage health.\n\nNode totals:\n$coverageNodes.rows\n\nTarget matrix by segment:\n$targetCoverage.rows\n\nBackbone label counts:\n$backboneCounts.rows\n\nReturn a concise summary of the weakest segments and the next highest-value graph additions."
+          },
+          "depends_on": [
+            "coverageNodes",
+            "targetCoverage",
+            "backboneCounts"
+          ],
+          "fn": "agent.chat",
+          "id": "coverageSummary"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "oil-coverage",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.oil.coverageSnapshot",
+              "latestSeq": "$coverageNodes.rows[0].latestSeq",
+              "nanoid": "011c0v3r",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount",
+              "summary": "$coverageSummary.text"
+            },
+            "template": "MERGE (c:OilCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'}) SET c.latestSeq = $latestSeq, c.summary = $summary"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:OilCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.summary AS summary, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (t:OilCoverageTarget) WHERE t.repo = $did RETURN count(t) AS totalTargets LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oil.coverage.get",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (t:OilCoverageTarget) WHERE t.repo = $did RETURN t.countryCode AS countryCode, t.segment AS segment, t.priority AS priority ORDER BY t.priority ASC, t.countryCode ASC LIMIT 200"
+          },
+          "fn": "graph.query",
+          "id": "targets"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oil.coverage.listTargets",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "UNWIND ['OilCompany','OilField','OilPipeline','OilTerminal','Refinery','OilCargo','CrudeGrade','ProductGrade','PricingBenchmark'] AS lbl CALL { WITH lbl MATCH (n) WHERE lbl IN labels(n) RETURN count(n) AS cnt } RETURN lbl AS label, cnt ORDER BY lbl ASC"
+          },
+          "fn": "graph.query",
+          "id": "backbone"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.oil.coverage.listBackbone",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "seed-global-baseline",
+      "get-coverage",
+      "list-gaps",
+      "summarize-risk"
+    ],
+    "description": "Maintains the global oil supply chain target matrix and publishes coverage health snapshots and unresolved graph gaps.",
+    "displayName": "Oil Coverage Orchestrator",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.oil.coverageSnapshot",
+        "com.etzhayyim.apps.oil.coverageTarget",
+        "com.etzhayyim.apps.bunker.coverageSnapshot",
+        "com.etzhayyim.apps.vessel.coverageSnapshot",
+        "com.etzhayyim.apps.port.coverageSnapshot",
+        "com.etzhayyim.apps.marineInsurance.coverageSnapshot",
+        "com.etzhayyim.apps.oilShipping.coverageSnapshot",
+        "com.etzhayyim.apps.oilRefining.coverageSnapshot",
+        "com.etzhayyim.apps.oilMidstream.coverageSnapshot",
+        "com.etzhayyim.apps.oilUpstream.coverageSnapshot",
+        "com.etzhayyim.apps.oilTrading.coverageSnapshot",
+        "com.etzhayyim.apps.oilDistribution.coverageSnapshot"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

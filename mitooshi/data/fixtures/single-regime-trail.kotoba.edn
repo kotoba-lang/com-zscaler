@@ -1,0 +1,73 @@
+;; single-regime-trail.kotoba.edn — deterministic single-regime time-varying fixture.
+;; One chokepoint series (gentle trend + bounded mean-reverting noise), 64 snapshots.
+;; Demonstrates the GREEN path: calibrated persistence is skilled (G12) AND calibrated
+;; (G7) here, so a member-signed promotion CLEARS the gate — the complement of the real
+;; two-regime trail (which is honestly refused). DERIVED :representative. ADR-2606051800.
+
+[
+ {:series/id "s-z" :series/kind :transit-load :series/unit "vessels" :series/source-class :public-broadcast :series/sourcing :representative}
+ {:obs/id "obs.s-z.1" :obs/series "s-z" :obs/observed-at 1 :obs/value 81.2 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.2" :obs/series "s-z" :obs/observed-at 2 :obs/value 84.147 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.3" :obs/series "s-z" :obs/observed-at 3 :obs/value 84.507 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.4" :obs/series "s-z" :obs/observed-at 4 :obs/value 82.539 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.5" :obs/series "s-z" :obs/observed-at 5 :obs/value 80.93 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.6" :obs/series "s-z" :obs/observed-at 6 :obs/value 81.905 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.7" :obs/series "s-z" :obs/observed-at 7 :obs/value 84.853 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.8" :obs/series "s-z" :obs/observed-at 8 :obs/value 87.048 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.9" :obs/series "s-z" :obs/observed-at 9 :obs/value 86.682 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.10" :obs/series "s-z" :obs/observed-at 10 :obs/value 84.877 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.11" :obs/series "s-z" :obs/observed-at 11 :obs/value 84.482 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.12" :obs/series "s-z" :obs/observed-at 12 :obs/value 86.957 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.13" :obs/series "s-z" :obs/observed-at 13 :obs/value 90.757 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.14" :obs/series "s-z" :obs/observed-at 14 :obs/value 92.984 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.15" :obs/series "s-z" :obs/observed-at 15 :obs/value 92.499 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.16" :obs/series "s-z" :obs/observed-at 16 :obs/value 91.112 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.17" :obs/series "s-z" :obs/observed-at 17 :obs/value 91.55 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.18" :obs/series "s-z" :obs/observed-at 18 :obs/value 94.427 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.19" :obs/series "s-z" :obs/observed-at 19 :obs/value 97.55 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.20" :obs/series "s-z" :obs/observed-at 20 :obs/value 98.299 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.21" :obs/series "s-z" :obs/observed-at 21 :obs/value 96.504 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.22" :obs/series "s-z" :obs/observed-at 22 :obs/value 94.663 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.23" :obs/series "s-z" :obs/observed-at 23 :obs/value 95.253 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.24" :obs/series "s-z" :obs/observed-at 24 :obs/value 98.084 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.25" :obs/series "s-z" :obs/observed-at 25 :obs/value 100.559 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.26" :obs/series "s-z" :obs/observed-at 26 :obs/value 100.566 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.27" :obs/series "s-z" :obs/observed-at 27 :obs/value 98.823 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.28" :obs/series "s-z" :obs/observed-at 28 :obs/value 98.113 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.29" :obs/series "s-z" :obs/observed-at 29 :obs/value 100.243 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.30" :obs/series "s-z" :obs/observed-at 30 :obs/value 104.049 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.31" :obs/series "s-z" :obs/observed-at 31 :obs/value 106.625 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.32" :obs/series "s-z" :obs/observed-at 32 :obs/value 106.453 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.33" :obs/series "s-z" :obs/observed-at 33 :obs/value 104.999 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.34" :obs/series "s-z" :obs/observed-at 34 :obs/value 105.061 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.35" :obs/series "s-z" :obs/observed-at 35 :obs/value 107.663 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.36" :obs/series "s-z" :obs/observed-at 36 :obs/value 110.908 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.37" :obs/series "s-z" :obs/observed-at 37 :obs/value 112.04 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.38" :obs/series "s-z" :obs/observed-at 38 :obs/value 110.469 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.39" :obs/series "s-z" :obs/observed-at 39 :obs/value 108.446 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.40" :obs/series "s-z" :obs/observed-at 40 :obs/value 108.646 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.41" :obs/series "s-z" :obs/observed-at 41 :obs/value 111.306 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.42" :obs/series "s-z" :obs/observed-at 42 :obs/value 114.017 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.43" :obs/series "s-z" :obs/observed-at 43 :obs/value 114.412 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.44" :obs/series "s-z" :obs/observed-at 44 :obs/value 112.786 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.45" :obs/series "s-z" :obs/observed-at 45 :obs/value 111.799 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.46" :obs/series "s-z" :obs/observed-at 46 :obs/value 113.562 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.47" :obs/series "s-z" :obs/observed-at 47 :obs/value 117.314 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.48" :obs/series "s-z" :obs/observed-at 48 :obs/value 120.21 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.49" :obs/series "s-z" :obs/observed-at 49 :obs/value 120.382 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.50" :obs/series "s-z" :obs/observed-at 50 :obs/value 118.92 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.51" :obs/series "s-z" :obs/observed-at 51 :obs/value 118.628 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.52" :obs/series "s-z" :obs/observed-at 52 :obs/value 120.915 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.53" :obs/series "s-z" :obs/observed-at 53 :obs/value 124.225 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.54" :obs/series "s-z" :obs/observed-at 54 :obs/value 125.729 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.55" :obs/series "s-z" :obs/observed-at 55 :obs/value 124.427 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.56" :obs/series "s-z" :obs/observed-at 56 :obs/value 122.274 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.57" :obs/series "s-z" :obs/observed-at 57 :obs/value 122.088 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.58" :obs/series "s-z" :obs/observed-at 58 :obs/value 124.526 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.59" :obs/series "s-z" :obs/observed-at 59 :obs/value 127.425 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.60" :obs/series "s-z" :obs/observed-at 60 :obs/value 128.213 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.61" :obs/series "s-z" :obs/observed-at 61 :obs/value 126.76 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.62" :obs/series "s-z" :obs/observed-at 62 :obs/value 125.538 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.63" :obs/series "s-z" :obs/observed-at 63 :obs/value 126.919 :obs/source-actor "fixture"}
+ {:obs/id "obs.s-z.64" :obs/series "s-z" :obs/observed-at 64 :obs/value 130.561 :obs/source-actor "fixture"}
+]

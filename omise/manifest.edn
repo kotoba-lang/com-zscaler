@@ -1,0 +1,49 @@
+;; omise お店 — actor manifest (kotoba-native; supersedes actor-manifest.jsonld)
+;; Seller-side storefront commons — the "Shopify layer" for internal sellers.
+;; Listings feed okaimono Ring 1 (com.etzhayyim.okaimono.product :ring "internal").
+;; ADR-2606071400 (promotes legacy JSON-LD scaffold → kotoba-native implementation)
+{:actor/id        "omise"
+ :actor/glyph     "御店"
+ :actor/tier      :tier-b
+ :actor/integrates ["credits" "i18n" "okaimono" "todoke" "toritate" "warifu"]
+ :actor/domain    "omise.etzhayyim.com"
+ :actor/purpose   "Shopify-inverse storefront commons — lets an etzhayyim producing-actor (yakushi/makura/mitsuho/sanae/…) or an SBT member stand up a storefront (catalog/inventory/order/fulfilment-handoff) with ZERO platform commission and ZERO subscription. Settlement USDC+TitheRouter via warifu, member/actor-signed. Listings are okaimono Ring-1 products by construction (no integration glue). Seller-side complement to okaimono's buyer-side commons. kotoba-EAVT-native, Murakumo-only, no ads, no dark-patterns."
+ :actor/status    :r0
+ :actor/adr       "2606071400"
+ :actor/supersedes "actor-manifest.jsonld (legacy JSON-LD / RisingWave-shaped; deprecated, removed after 1 R-cycle)"
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "consent-bound"            :gate/rule "seller/member DID-signed consent before storefront-open, listing, or order action"}
+  {:gate/id "G2"  :gate/name "no-commission"            :gate/rule "ZERO platform commission, ZERO subscription tier; no per-txn extraction field representable; settlement is seller↔buyer + TitheRouter only"}
+  {:gate/id "G3"  :gate/name "seller-gating"            :gate/rule "sellers = etzhayyim producing-actor OR SBT member only (SBT↔SBT carve-out); external open seller onboarding = Council Lv7+"}
+  {:gate/id "G4"  :gate/name "no-ads"                   :gate/rule "data-only catalog; no sponsored ranking / boost / paid placement (Charter Rider §2)"}
+  {:gate/id "G5"  :gate/name "wellbecoming-anti-dark"   :gate/rule "Wellbecoming ordering (durability/repairability/labor-provenance surfaced); no urgency/scarcity/countdown dark-patterns"}
+  {:gate/id "G6"  :gate/name "kotoba-eavt-native"       :gate/rule "storefront/listing/order/fulfilment are kotoba Datoms; no RisingWave/SQL/Kysely/Lance as canonical (corrects legacy manifest)"}
+  {:gate/id "G7"  :gate/name "tithe-non-fiat"           :gate/rule "settlement USDC Base L2 + ERC-4337 + warifu only; TitheRouter 10% auto-split; no Stripe/fiat"}
+  {:gate/id "G8"  :gate/name "labor-dignity-provenance" :gate/rule "fulfilment via etzhayyim logistics actors (todoke/…); no gig; labor-provenance disclosed on every listing"}
+  {:gate/id "G9"  :gate/name "pii-encrypted-envelope"   :gate/rule "order + customer identity → com.etzhayyim.encrypted.*, DID-bound (ADR-2605181100)"}
+  {:gate/id "G10" :gate/name "murakumo-only"            :gate/rule "listing copy / catalog NLP via KotobaLLM 127.0.0.1:4000; no external LLM (ADR-2605215000)"}
+  {:gate/id "G11" :gate/name "okaimono-ring1-coherence" :gate/rule "every listing Datom is shape-compatible with com.etzhayyim.okaimono.product :ring \"internal\" — discoverable in okaimono with no glue"}
+  {:gate/id "G12" :gate/name "no-server-key"            :gate/rule "seller/buyer signs each settlement with own passkey/ERC-4337; omise holds no card secret/key (ADR-2605231525); server signature refused"}]
+
+ :actor/cells
+ [{:cell/id "storefront" :cell/kind :datalog   :cell/runtime :kotoba :cell/doc "seller storefront + inventory registry"}
+  {:cell/id "list"       :cell/kind :langgraph :cell/runtime :wasm   :cell/doc "create/update listing (okaimono Ring-1-compatible, Murakumo copy)"}
+  {:cell/id "order"      :cell/kind :langgraph :cell/runtime :wasm   :cell/doc "consent → order → fulfilment handoff (todoke) → settle"}
+  {:cell/id "settle"     :cell/kind :datalog   :cell/runtime :kotoba :cell/doc "USDC + TitheRouter via warifu (intent-only at R0)"}]
+
+ :actor/lexicons
+ ["com.etzhayyim.omise.storefront"
+  "com.etzhayyim.omise.listing"
+  "com.etzhayyim.omise.order"
+  "com.etzhayyim.omise.settlement"]
+
+ :actor/siblings
+ {:okaimono "buyer-side demand commons (omise listings = okaimono Ring-1 supply)"
+  :warifu   "zero-fee settlement rails"
+  :todoke   "fulfilment / last-mile"
+  :toritate "on-chain accounting/audit of orders"}}

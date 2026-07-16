@@ -1,0 +1,24 @@
+{:lexicon 1
+ :id "com.etzhayyim.tasuke.victimIntake"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A consenting victim's cybercrime support case intake. FREE (G1), consent-gated (G7), member-signed (no-server-key). Classified into a scam KIND for routing — never a finding that a crime occurred (G4, 非裁定)."
+   :record
+   {:type "object"
+    :required ["caseId" "subject" "scamKind" "consent" "supportCostJpy" "serverHeldKey"]
+    :properties
+    {:caseId          {:type "string" :description "→ :case/id"}
+     :subject         {:type "string" :description "G7 — SBT-bound victim member DID. The principal who signs + submits."}
+     :scamKind        {:type "string" :enum ["phishing" "unauthorized-transfer" "account-takeover" "support-scam" "romance-scam" "investment-scam" "ransomware" "impersonation" "fake-billing" "sns-fraud" "leak-extortion"]
+                       :description "G4 — a KIND for routing. A legal verdict (fraud-confirmed / criminal) is NOT an enum member (danjo/chigiri boundary)."}
+     :severity        {:type "string" :enum ["info" "elevated" "urgent" "critical"]}
+     :occurredAt      {:type "integer" :description "→ :case/occurred-at (epoch)"}
+     :lossJpy         {:type "integer" :description "reported victim loss in JPY"}
+     :consent         {:type "boolean" :const true
+                       :description "G7 — a case is opened only with the victim's explicit consent; only true."}
+     :supportCostJpy  {:type "integer" :const 0
+                       :description "G1 全て無料 INVARIANT — the cost of 助's support is always 0. A fee is unrepresentable (cash≡0)."}
+     :serverHeldKey   {:type "boolean" :const false
+                       :description "G7 / no-server-key INVARIANT — only false (ADR-2605231525)."}}}}}}

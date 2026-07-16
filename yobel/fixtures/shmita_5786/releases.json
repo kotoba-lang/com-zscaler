@@ -1,0 +1,42 @@
+[
+  {
+    "release_id": "shmita-5786-rel-credA-d1",
+    "rite_id": "shmita-5786",
+    "debt_id": "credA-d1-community-ok",
+    "debtor_did": "did:web:etzhayyim.com:debtor-community-ok",
+    "creditor_did": "did:web:etzhayyim.com:creditor-A",
+    "release_method": "base_l2_transfer",
+    "released_micro_usdc": 262500000,
+    "released_at": "2026-09-01T12:00:00Z"
+  },
+  {
+    "release_id": "shmita-5786-rel-credA-d2",
+    "rite_id": "shmita-5786",
+    "debt_id": "credA-d2-foreigner",
+    "debtor_did": "did:web:secular.example:debtor-foreigner",
+    "creditor_did": "did:web:etzhayyim.com:creditor-A",
+    "release_method": "voluntary_bookkeeping",
+    "released_micro_usdc": 0,
+    "released_at": "2026-09-01T12:05:00Z"
+  },
+  {
+    "release_id": "shmita-5786-rel-credB-d1",
+    "rite_id": "shmita-5786",
+    "debt_id": "credB-d1-post-cycle",
+    "debtor_did": "did:web:etzhayyim.com:debtor-post-cycle",
+    "creditor_did": "did:web:etzhayyim.com:creditor-B",
+    "release_method": "voluntary_bookkeeping",
+    "released_micro_usdc": 0,
+    "released_at": "2026-09-01T12:10:00Z"
+  },
+  {
+    "release_id": "shmita-5786-rel-credC-d1-violation",
+    "rite_id": "shmita-5786",
+    "debt_id": "credC-d1-clean",
+    "debtor_did": "did:web:etzhayyim.com:debtor-instrument-exposed",
+    "creditor_did": "did:web:etzhayyim.com:creditor-C",
+    "release_method": "base_l2_transfer",
+    "released_micro_usdc": 500000000000,
+    "released_at": "2026-09-01T12:15:00Z"
+  }
+]

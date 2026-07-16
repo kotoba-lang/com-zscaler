@@ -1,0 +1,180 @@
+{
+  "methodId": "v1-retail-equiv",
+  "methodVersion": "1.1.0-draft",
+  "adr": "2605301020",
+  "status": "draft-pending-council-attestation",
+  "currency": "USD",
+  "basis": "retail-equivalent annualized reference prices — the price an adherent would otherwise pay in the commercial market etzhayyim routes around (Charter §1.6 中間排除). Imputed value is expected to EXCEED internal provisioning cost (ADR-2605261000 §3) because retail prices carry margin + rent + intermediary capture that the actor mesh removes.",
+  "councilAttestation": [],
+  "notes": [
+    "DRAFT / 雛形. Every numeric value here is a placeholder planning figure pending (a) Council Lv6+ ≥3 attestation and (b) real per-adherent data from toritate imputed_income_compute + commons_asset_value cells. Do NOT treat as authoritative until status flips to 'attested' and councilAttestation lists ≥3 Lv6+ DIDs.",
+    "FLOW vs STOCK separation prevents double-counting: FLOW = consumption services actually consumed in the period (food, electricity, care, etc.); STOCK = annualized imputed value of SECURED ACCESS to capital/commons that is NOT a consumption service (security-of-tenure, productive-surplus access, substrate access). A dwelling appears in BOTH only as distinct facets: shelter-service consumed (FLOW) vs inalienable tenure security (STOCK).",
+    "All figures are per-adherent per-year USD unless marked otherwise.",
+    "Aggregate-only: these reference prices feed median/percentile computation; no per-adherent figure is ever published (ADR-2605301020 §7 + ADR-2605261000 N6).",
+    "v1.1.0-draft: sourceRef stubs populated with open, citable price sources (FAO / OECD / WHO / UNESCO / IEA / UITP). Figures themselves remain DRAFT pending Council Lv6+ >=3 attestation; status stays draft-pending-council-attestation until councilAttestation is non-empty."
+  ],
+  "valuationSources": [
+    "Reference price sources MUST be open and citable (e.g. national CPI baskets, OECD household-consumption microdata, open retail price indices). Each category below carries a sourceRef stub to be filled at attestation."
+  ],
+  "flow": {
+    "_comment": "Imputed income (FLOW). Market-equivalent annual value of in-kind services consumed per adherent.",
+    "food_staple": {
+      "label": "Minimum-food guarantee (≥4,500 kJ/day staple basket)",
+      "ladderSource": "L2",
+      "retailEquivUsdYr": 2400,
+      "internalCostRefUsdYr": 1200,
+      "sourceRef": "FAO Food Price Index (FFPI) cereals sub-index, monthly — fao.org/worldfoodsituation/foodpricesindex (open)"
+    },
+    "otc_pharma": {
+      "label": "OTC drug access (yakushi Wave 1+1b+1c basket)",
+      "ladderSource": "L2",
+      "retailEquivUsdYr": 300,
+      "internalCostRefUsdYr": 150,
+      "sourceRef": "WHO/HAI Medicine Prices database — OTC basket (open)"
+    },
+    "electricity": {
+      "label": "Electricity (≥3 kWh/day ≈ 1,095 kWh/yr)",
+      "ladderSource": "L2",
+      "retailEquivUsdYr": 180,
+      "internalCostRefUsdYr": 90,
+      "sourceRef": "IEA + Ember monthly electricity prices, residential kWh tariff (open)"
+    },
+    "shelter_service": {
+      "label": "Shelter service (≥10 m²/adherent dwelling-use on Land Trust)",
+      "ladderSource": "L3",
+      "retailEquivUsdYr": 7200,
+      "internalCostRefUsdYr": 6000,
+      "sourceRef": "OECD Affordable Housing Database HC1.2 (rent), 10 m^2 equivalent (open)"
+    },
+    "childcare": {
+      "label": "Childcare (≥40 hr/wk/child)",
+      "ladderSource": "L4",
+      "retailEquivUsdYr": 15600,
+      "internalCostRefUsdYr": 9000,
+      "sourceRef": "OECD Family Database PF3.4 — net childcare cost (open)",
+      "appliesToHouseholdsWithChildrenOnly": true
+    },
+    "eldercare": {
+      "label": "Elder care (daily-living, non-medical)",
+      "ladderSource": "L4",
+      "retailEquivUsdYr": 18000,
+      "internalCostRefUsdYr": 9000,
+      "sourceRef": "OECD Health Statistics — long-term (home) care unit cost (open)",
+      "appliesToHouseholdsWithEldersOnly": true
+    },
+    "education_basic": {
+      "label": "Literacy + numeracy + civics/charter education",
+      "ladderSource": "L4",
+      "retailEquivUsdYr": 1200,
+      "internalCostRefUsdYr": 400,
+      "sourceRef": "UNESCO UIS — adult literacy/numeracy public unit cost (open)"
+    },
+    "education_advanced": {
+      "label": "Advanced + vocational education (manabi R3)",
+      "ladderSource": "L5",
+      "retailEquivUsdYr": 8000,
+      "internalCostRefUsdYr": 3000,
+      "sourceRef": "OECD Education at a Glance — vocational expenditure per student (open)"
+    },
+    "mobility_commute": {
+      "label": "Inter-site commute substrate (wadachi Level-3)",
+      "ladderSource": "L5",
+      "retailEquivUsdYr": 1500,
+      "internalCostRefUsdYr": 600,
+      "sourceRef": "UITP / national transit authority published annual-pass fares (open)"
+    },
+    "healthcare": {
+      "label": "Health access (iyashi / mitate / yakushi)",
+      "ladderSource": "L6",
+      "retailEquivUsdYr": 6000,
+      "internalCostRefUsdYr": 3000,
+      "sourceRef": "WHO Global Health Expenditure Database — out-of-pocket per capita (open)"
+    },
+    "learning_lifelong": {
+      "label": "Lifelong inquiry + creative/spiritual learning",
+      "ladderSource": "L6",
+      "retailEquivUsdYr": 1200,
+      "internalCostRefUsdYr": 500,
+      "sourceRef": "UNESCO UIS — lifelong-learning participation cost (open)"
+    }
+  },
+  "stock": {
+    "_comment": "Commons-asset access (STOCK). Annualized imputed value of SBT-bound NON-ALIENABLE access rights. NEVER title; never sellable / transferable / collateralizable / inheritable-as-title (ADR-2605301020 §2; ADR-2605192245 waqf generalization).",
+    "land_trust_tenure_access": {
+      "label": "Security-of-tenure value of inalienable Land Trust residency right (distinct from shelter_service consumption)",
+      "ladderSource": "L3",
+      "annualizedAccessValueUsdYr": 1800,
+      "alienable": false,
+      "sourceRef": "OECD Affordable Housing Database HM1.3 (tenure security) — imputed rent-security premium (open)"
+    },
+    "actor_mesh_output_access": {
+      "label": "Access to actor-mesh productive surplus beyond subsistence (mitsuho / yakushi / hikari / etc. output)",
+      "ladderSource": "L5",
+      "annualizedAccessValueUsdYr": 2400,
+      "alienable": false,
+      "sourceRef": "derived: imputed cooperative productive-surplus access (method in valuation/README; no single external feed)"
+    },
+    "data_substrate_access": {
+      "label": "kotoba content-addressed data + compute substrate access (Murakumo-resident)",
+      "ladderSource": "L5",
+      "annualizedAccessValueUsdYr": 600,
+      "alienable": false,
+      "sourceRef": "published open object-storage/compute rate cards (e.g. S3 / Backblaze B2) — retail-equivalent (open)"
+    },
+    "energy_infra_access": {
+      "label": "hikari grid-edge capacity access beyond the 3 kWh/day consumption flow",
+      "ladderSource": "L6",
+      "annualizedAccessValueUsdYr": 1200,
+      "alienable": false,
+      "sourceRef": "IEA distributed/grid-edge capacity value — imputed (open)"
+    }
+  },
+  "stageBaskets": {
+    "_comment": "Planning estimates of the per-adherent median imputed income (FLOW) + commons-asset access (STOCK) unlocked at each stage, and the resulting highIncomeBenchmarkRatio. Care categories are household-conditional, so the stage median uses a household-weighted estimate, NOT the per-child sticker price. DRAFT figures — superseded by real toritate metric data once cells are live.",
+    "L0": {
+      "flowUsdYr": 0,
+      "stockUsdYr": 0,
+      "benchmarkRatio": 0.0
+    },
+    "L1": {
+      "flowUsdYr": 300,
+      "stockUsdYr": 0,
+      "benchmarkRatio": 0.01
+    },
+    "L2": {
+      "flowUsdYr": 2880,
+      "stockUsdYr": 0,
+      "benchmarkRatio": 0.06
+    },
+    "L3": {
+      "flowUsdYr": 10080,
+      "stockUsdYr": 1800,
+      "benchmarkRatio": 0.26
+    },
+    "L4": {
+      "flowUsdYr": 18000,
+      "stockUsdYr": 1800,
+      "benchmarkRatio": 0.44
+    },
+    "L5": {
+      "flowUsdYr": 30000,
+      "stockUsdYr": 4800,
+      "benchmarkRatio": 0.77
+    },
+    "L6": {
+      "flowUsdYr": 38000,
+      "stockUsdYr": 6000,
+      "benchmarkRatio": 0.98
+    }
+  },
+  "benchmark": {
+    "name": "OECD upper-income-decile household consumption basket (per-adherent)",
+    "perAdherentUsdYr": 45000,
+    "note": "Target ratio ≥1.0 at L6 is a TARGET, not a promise (ADR-2605301020 §3; N8 asymptotic — each generation re-validates). Benchmark itself is reviewed per Council generation cycle.",
+    "sourceRef": "OECD Income Distribution Database (IDD) + household-consumption microdata, top decile per-capita (open)"
+  },
+  "invariants": {
+    "cashStipendUsd": 0,
+    "note": "No row in this table is ever paid as cash. Every value is imputed (FLOW) or access-imputed (STOCK). cashStipendUsd ≡ 0 mirrors the metricReport structural invariant (ADR-2605261000 §5 N1)."
+  }
+}

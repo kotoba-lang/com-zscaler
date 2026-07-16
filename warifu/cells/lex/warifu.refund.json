@@ -1,0 +1,42 @@
+{
+  "lexicon": 1,
+  "id": "warifu.refund",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Reverse a settled transaction (purpose always escrow-refund). Zero fee. For credit, also repays the 0% CreditLine.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["settlementId"],
+          "properties": {
+            "settlementId": { "type": "string" },
+            "amountUsdc": { "type": "integer", "description": "omit for full refundable", "minimum": 1 },
+            "idempotencyKey": { "type": "string" },
+            "reason": { "type": "string" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["refunded", "feeUsdc"],
+          "properties": {
+            "refunded": { "type": "boolean" },
+            "refundId": { "type": "string" },
+            "amountUsdc": { "type": "integer" },
+            "tx": { "type": "string" },
+            "feeUsdc": { "type": "integer", "const": 0 }
+          }
+        }
+      },
+      "errors": [
+        { "name": "SettlementNotFound" },
+        { "name": "AlreadyRefunded" },
+        { "name": "ExceedsRefundable" }
+      ]
+    }
+  }
+}

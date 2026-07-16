@@ -1,0 +1,105 @@
+;; junkan 循環 — governance-asymmetry ontology (kotoba EAVT schema, ADR-2605290927)
+;;
+;; The OUTWARD, ANALYSIS-ONLY societal-systems-dynamics observer applied to ONE
+;; question: which concrete laws / institutions / doctrines / values worldwide
+;; widen (or narrow) the structural ASYMMETRY between citizens (国民) and the
+;; state (政府)? Each instrument feeds an asymmetry STOCK with a polarity; junkan
+;; reads off which feedback LOOPS are spinning 好循環/悪循環 + Meadows leverage
+;; candidates. It may ONLY look, never touch (G4 — no outward channel; enforced
+;; by ABSENCE of any dispatch path).
+;;
+;; Discipline carried into the data model:
+;;   G4  analysis-only — output is append-only findings + a local ledger; no actuation.
+;;   G5  no causal overclaim — every loop/edge is :hypothesis (`:hypothesis? true`),
+;;       correlation/structural-sign only, NEVER proven causation.
+;;   G6  aggregate-only — instruments + INSTITUTIONAL/public-historical enactors only;
+;;       NO private individual modeling, NO PII (enactor/stakeholder = roles &
+;;       on-the-record bodies, the danjo/tsumugi "on-record basis only" pattern).
+;;   G7  non-eschatological — vicious findings stated soberly; no doom framing.
+;;   G11 no prescription — leverage points are CANDIDATES with uncertainty
+;;       (`:prescription? false`), never directives.
+;;   G9  append-only / immutable datoms.
+;;
+;; Attribute namespaces:
+;;   :junkan.gov.instr/*  — disclosed instrument facts (law/institution/doctrine/value)
+;;   :junkan.gov.stock/*  — DERIVED asymmetry-stock aggregates + regime
+;;   :junkan.gov.loop/*   — DERIVED loop regime (hypothesis only)
+;;   :junkan.gov.era/*    — DERIVED temporal trajectory (widen/narrow force per era)
+;;   :junkan/derived      — true on every derived datom
+;;   :junkan/sourcing     — ":authoritative" | ":representative" | ":synthetic"
+;;   :junkan/hypothesis   — ":true" on every loop/regime read-off (G5)
+
+{:ontology/id "junkan-gov"
+ :ontology/version "0.1.0"
+ :ontology/adr ["2605290927" "2605192100" "2605262130" "2605312345"]
+
+ :node-kinds
+ [{:kind :instrument
+   :doc "A concrete law / institution / doctrine / value that shapes the citizen↔state balance."
+   :keys [:id :name :jurisdiction :kind :year
+          :enactor :origin :stakeholders            ;; 誰が定めたか / 経緯 / 関係者
+          :stock :polarity :magnitude :reversibility :meadows
+          :basis :sourcing :confidence :note]}]
+
+ :enums
+ {;; which asymmetry STOCK an instrument feeds (the A–E structural categories)
+  :stock        #{:information-asymmetry     ;; A 情報・可視性の非対称 (state sees citizen; citizen can't see state)
+                  :participation-barrier     ;; B 参入・退出・代表性の障壁
+                  :coercion-asymmetry        ;; C 強制力の非対称
+                  :paradigm-subordination    ;; D 思想・価値観 (玉座的権威 / 恐怖 / 隷属化)
+                  :economic-capture}         ;; E 経済的レバレッジの集中
+  ;; does the instrument WIDEN the asymmetry (state over citizen), NARROW it, or is it ambiguous
+  :polarity     #{:widen :narrow :ambiguous}
+  ;; kind of instrument
+  :kind         #{:law :institution :doctrine :value}
+  ;; how the instrument could be flipped — informs which Meadows level applies
+  :reversibility #{:constitutional :statutory :institutional :cultural :entrenched}
+  ;; loop regime read-off (G5 hypothesis)
+  :regime       #{:virtuous :vicious :neutral :transitioning}
+  :loop-type    #{:reinforcing :balancing}
+  :sourcing     #{:authoritative :representative :synthetic}}
+
+ ;; canonical STRUCTURAL loops (HYPOTHESES, G5) linking the asymmetry stocks.
+ ;; Each loop's regime is read off its dominant stock's net pressure at analysis time.
+ :loops
+ [{:id "R-secrecy-spiral" :type :reinforcing :dominant-stock :information-asymmetry
+   :edges [[:information-asymmetry :economic-capture :pos]
+           [:economic-capture :information-asymmetry :pos]]
+   :doc "Opacity → weaker accountability → capture/concentration → more opacity (悪循環 when widening)."}
+  {:id "R-coercion-paradigm-lock" :type :reinforcing :dominant-stock :paradigm-subordination
+   :edges [[:coercion-asymmetry :paradigm-subordination :pos]
+           [:paradigm-subordination :coercion-asymmetry :pos]]
+   :doc "Force normalizes a throne-like / fear-based authority paradigm, which licenses more force."}
+  {:id "R-capture-barrier" :type :reinforcing :dominant-stock :economic-capture
+   :edges [[:economic-capture :participation-barrier :pos]
+           [:participation-barrier :economic-capture :pos]]
+   :doc "Economic capture raises participation/representation barriers, entrenching the capture."}
+  {:id "B-transparency" :type :balancing :dominant-stock :information-asymmetry
+   :edges [[:information-asymmetry :information-asymmetry :neg]]
+   :doc "Transparency/access instruments (FOIA/open-data/相互監視) push the information stock back toward balance."}
+  {:id "B-participation" :type :balancing :dominant-stock :participation-barrier
+   :edges [[:participation-barrier :participation-barrier :neg]]
+   :doc "Democratic/representation/exit instruments push the participation stock back toward balance."}]
+
+ ;; Meadows' 12 leverage levels (referenced, not vendored) — higher number = deeper leverage.
+ :meadows-levels
+ {12 "Constants, parameters, numbers"
+  11 "Buffer sizes"
+  10 "Stock-and-flow structures"
+  9  "Delays"
+  8  "Balancing feedback loops"
+  7  "Reinforcing feedback loops"
+  6  "Information flows (who has access to what)"
+  5  "Rules (incentives, punishments, constraints)"
+  4  "Self-organization (power to add/change structure)"
+  3  "Goals of the system"
+  2  "Mindset/paradigm out of which the system arises"
+  1  "Power to transcend paradigms"}
+
+ ;; negative space — structurally absent (enforced by tests)
+ :unrepresentable
+ [":junkan/actuate"        ;; G4 — junkan never touches; no outward channel
+  ":junkan/dispatch"       ;; G4 — no post/mention/email/tx
+  ":junkan.gov.instr/person"      ;; G6 — no private-individual modeling; enactor/stakeholder are institutional/on-record
+  ":junkan.gov.loop/proven-cause" ;; G5 — never proven causation; loops are hypotheses
+  ":junkan.gov/prescription"]}    ;; G11 — leverage points are candidates, never directives

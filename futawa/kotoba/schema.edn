@@ -1,0 +1,230 @@
+;; futawa 二輪 — kotoba EAVT schema
+;; ADR-2605261330 · motorcycle manufacturing over kotoba Datoms
+;; L1-L5 assembly attestations (frame / engine / drivetrain / electrical / suspension / body / assembly / test / provenance)
+
+[;; ───────────────────────────── :material-lot/* — raw material supply ─────────────────────────────
+ {:db/ident :material-lot/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "material batch ID (steel / aluminum tube stock, engine block cast, etc.)"}
+ {:db/ident :material-lot/grade
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "material grade (e.g. ASTM A513 chromoly, 6061-T6 aluminum)"}
+ {:db/ident :material-lot/supplier-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :frame-attestation/* — L1 output ─────────────────────────────
+ {:db/ident :frame-attestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :frame-attestation/material-lot
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :frame-attestation/weld-quality
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "TIG/MIG vision-guided signature"}
+ {:db/ident :frame-attestation/roundness-um
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "roundness tolerance (micrometers); robot witness"}
+ {:db/ident :frame-attestation/mass-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :frame-attestation/draft-frame-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CAD CID"}
+
+ ;; ───────────────────────────── :engine-attestation/* — L2a output ─────────────────────────────
+ {:db/ident :engine-attestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :engine-attestation/displacement-cc
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "≤250cc (G11 cap)"}
+ {:db/ident :engine-attestation/power-kw
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "≤15kW (G11 cap)"}
+ {:db/ident :engine-attestation/torque-nm
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :engine-attestation/g11-cap-verified
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :drivetrain-attestation/* — L2b output ─────────────────────────────
+ {:db/ident :drivetrain-attestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :drivetrain-attestation/final-ratio
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :drivetrain-attestation/wear-resistance
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":high | :medium | :standard (30-year design, G14)"}
+
+ ;; ───────────────────────────── :suspension-brake-attestation/* — L3b output ─────────────────────────────
+ {:db/ident :suspension-brake-attestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :suspension-brake-attestation/stiffness-rating
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :suspension-brake-attestation/abs-mandatory-certified
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "≥125cc / ≥6kW enforced ABS (G7)"}
+
+ ;; ───────────────────────────── :electrical-attestation/* — L3a output ─────────────────────────────
+ {:db/ident :electrical-attestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :electrical-attestation/harness-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CAD routing diagram"}
+ {:db/ident :electrical-attestation/ecu-firmware-hash
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "open-source firmware hash"}
+ {:db/ident :electrical-attestation/g8-surveillance-clear
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "NO GPS / NO telematics / NO connected-app / NO V2X (G8)"}
+
+ ;; ───────────────────────────── :paint-attestation/* — L4 output ─────────────────────────────
+ {:db/ident :paint-attestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :paint-attestation/paint-batch
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :paint-attestation/voc-test-result
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :paint-attestation/g5-charter-scan-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Charter §2(a-h) scan (G5)"}
+
+ ;; ───────────────────────────── :vehicle-lot-attestation/* — L5a output ─────────────────────────────
+ {:db/ident :vehicle-lot-attestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :vehicle-lot-attestation/vin
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Vehicle Identification Number (17 chars)"}
+ {:db/ident :vehicle-lot-attestation/parts-catalog-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS-pinned parts catalog (G12 right-to-repair)"}
+ {:db/ident :vehicle-lot-attestation/hodoki-preregister-ok
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "VIN pre-registered with hodoki (G13)"}
+
+ ;; ───────────────────────────── :test-record/* — L5b output ─────────────────────────────
+ {:db/ident :test-record/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :test-record/vehicle-lot-attestation
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :test-record/power-kw
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :test-record/torque-nm
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :test-record/emissions-result
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :test-record/sound-db
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "≤80 dB(A) (G6)"}
+ {:db/ident :test-record/abs-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "ABS function verified (G7)"}
+ {:db/ident :test-record/result
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":pass | :fail | :rework"}
+
+ ;; ───────────────────────────── :silen-mobility-review/* — L5c output (terminal) ─────────────────────────────
+ {:db/ident :silen-mobility-review/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :silen-mobility-review/vehicle-lot-attestation
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :silen-mobility-review/provenance-chain-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of merged L1-L5b provenance"}
+ {:db/ident :silen-mobility-review/council-sig
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Council 5-of-7 Safe multisig reference"}
+ {:db/ident :silen-mobility-review/council-approval
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":approved | :rejected | :pending"}
+
+ ;; ───────────────────────────── :sbt/* — Adherent SBT eligibility ─────────────────────────────
+ {:db/ident :sbt/holder-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "member/operator SBT holder"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter intent ─────────────────────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :settlement/rail
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":usdc-base-l2 (no fiat, G16)"}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC minor (6-dp) gross value"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split"}
+ {:db/ident :settlement/maker-payout-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "net to maker"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (computed) | :executed (member-signed, G18)"}
+ {:db/ident :settlement/buyer-sig-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "member passkey/smart-account sig; platform holds no key"}]

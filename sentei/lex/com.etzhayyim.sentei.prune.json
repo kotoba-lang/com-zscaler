@@ -1,0 +1,86 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.sentei.prune",
+  "description": "A 剪定 (sentei) PRUNE over a manifested branch (ADR-2606072000). The Council is the PRUNER, not the censor: the organism's growth from root is never pre-blocked; a branch is pruned only AFTER it manifests. CONSTITUTIONAL (structural at the schema layer): `branchManifested` is const:true — a prune of an unmanifested branch is UNREPRESENTABLE, so prior restraint cannot be expressed (G1). `action` enum has NO delete/halt/prior-restraint/verdict member (G2/G3/G7). `serverHeldKey` is const:false (G5 no-server-key). `nonAdjudicating` is const:true and `reversible` is const:true — a prune is care (美しく保つ), never punishment, and always healable by regraft (G6/G7). Persisted in kotoba EAVT (G2; non-eschatological — the pruned branch's history is never deleted).",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": [
+          "createdAt",
+          "branchId",
+          "branchManifested",
+          "action",
+          "basis",
+          "signerDid",
+          "serverHeldKey",
+          "councilLevel",
+          "nonAdjudicating",
+          "reversible"
+        ],
+        "properties": {
+          "createdAt": { "type": "string", "format": "datetime" },
+          "branchId": {
+            "type": "string",
+            "description": "The manifested branch (published datom/record id) being pruned."
+          },
+          "branchManifested": {
+            "type": "boolean",
+            "const": true,
+            "description": "G1 no-prior-restraint: a prune exists ONLY over a manifested branch. The Council cannot stop a branch before it grows."
+          },
+          "action": {
+            "type": "string",
+            "knownValues": ["quarantine", "retract", "rollback", "revoke"],
+            "description": "D5 vocabulary. delete / halt-organism / prior-restraint / verdict are absent by construction (G2/G3/G7)."
+          },
+          "basis": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "G7: the Charter basis for the cut (overgrowth / §2(a)-(h) / mirror-violation / G10 named-party). No verdict/guilt value — 剪定 is care, not 制裁."
+          },
+          "signerDid": {
+            "type": "string",
+            "format": "did",
+            "description": "Council/member signer (G5). The server can never sign a prune."
+          },
+          "serverHeldKey": {
+            "type": "boolean",
+            "const": false,
+            "description": "G5 no-server-key (ADR-2605231525)."
+          },
+          "councilLevel": {
+            "type": "integer",
+            "minimum": 6,
+            "description": "Transparent Force: Lv6+ ordinary, Lv7+ for an invariant-adjacent prune."
+          },
+          "contestedVote": {
+            "type": "ref",
+            "ref": "#voteTally",
+            "description": "Present only for a contested prune: 1 SBT = 1 vote must carry it (G4)."
+          },
+          "nonAdjudicating": {
+            "type": "boolean",
+            "const": true,
+            "description": "G7: a prune carries no guilt/verdict value."
+          },
+          "reversible": {
+            "type": "boolean",
+            "const": true,
+            "description": "G6: every prune has the inverse regraft; a mistaken cut heals via as-of."
+          }
+        }
+      }
+    },
+    "voteTally": {
+      "type": "object",
+      "required": ["yes", "no"],
+      "properties": {
+        "yes": { "type": "integer", "minimum": 0 },
+        "no": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

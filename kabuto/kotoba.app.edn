@@ -1,0 +1,25 @@
+;; kotoba.app.edn — actor:kabuto 兜 KOTOBA Mesh application manifest.
+;;
+;; The mesh-hosting (wadm-style) declaration of kabuto: which component(s) the
+;; lattice (kotoba-lattice) should place, how many, on what triggers, and which
+;; host-import capabilities they require. One language family throughout —
+;;   manifest = EDN · component = Clojure (kotoba-clj) · data = Datomic/Datalog.
+;;
+;; Deploy:  kotoba app deploy kotoba.app.edn
+;;   → compiles methods/mesh.clj (`:lang` omitted ⇒ Clojure default) to a CID,
+;;     resolves the content-addressed desired state, emits control datoms the
+;;     lattice reconciler converges on (auction → StartComponent → WasmExecutor).
+;;
+;; Constitutional posture (ADR-2606022000): G2 resilience map (never a
+;; target-list) · G1 public-record only · G7 offline/seed (no live universe).
+{:kotoba.app/name    "kabuto"
+ :kotoba.app/version "0.1.0"
+ :kotoba.app/components
+ [{:name     "kabuto"
+   :src      "methods/mesh.clj"                  ; Clojure default → run + on-kse
+   :scale    1
+   :triggers [{:type :kse :topic "etzhayyim/actor/kabuto"}]  ; observatory on-kse (ADR-2606230001 §4)
+   :requires #{:cap/kqe}}]                        ; kqe-assert! / kqe-query host-imports
+
+ :kotoba.app/placement {:spread  :zone
+                        :require {:tier "edge"}}}

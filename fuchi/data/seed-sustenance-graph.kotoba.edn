@@ -1,0 +1,113 @@
+;; seed-sustenance-graph.kotoba.edn
+;; 扶持 (fuchi) — :representative maintainer-sustenance seed (ADR-2606052300)
+;;
+;; A bounded, illustrative cohort of covenant-bound maintainers (信者) who keep etzhayyim's
+;; actors alive, one per governance route (auto / sbt-vote / council-lv7 / refused) plus an
+;; outreach (pre-vow) maintainer. NOT a live roster — :representative (G12). Imputed values
+;; are in USD micros / yr (1 USD = 1_000_000 micros); cash is structurally 0 everywhere.
+
+{:graph/id  "com.etzhayyim.fuchi.seed"
+ :graph/adr "2606052300"
+ :graph/sourcing :representative
+
+ ;; ── maintainers (信者 under covenant) ───────────────────────────────────────
+ :maintainer/batch
+ [{:maintainer/did "did:web:etzhayyim.com:member:abel"
+   :maintainer/covenant :vowed
+   :maintainer/tenure-months 96            ;; 8y
+   :maintainer/hazard-permille 1800        ;; robotics field maintenance, high toil-hazard
+   :maintainer/maintains ["sanae" "kamado"]
+   :maintainer/prior-imputed-usd-micros-yr 9000000000
+   :maintainer/owns-payoff false
+   :maintainer/note "field-robotics maintainer (sow/weed harvester + refinery decommission rig)"}
+
+  {:maintainer/did "did:web:etzhayyim.com:member:seth"
+   :maintainer/covenant :vowed
+   :maintainer/tenure-months 36            ;; 3y
+   :maintainer/hazard-permille 1400
+   :maintainer/maintains ["tazuna"]
+   :maintainer/prior-imputed-usd-micros-yr 28000000000
+   :maintainer/owns-payoff false
+   :maintainer/note "remote-robotics teleop operator + fleet-control maintainer; has a pre-existing fiat-bank rent (external liquidity residual)"}
+
+  {:maintainer/did "did:web:etzhayyim.com:member:eve"
+   :maintainer/covenant :vowed
+   :maintainer/tenure-months 60            ;; 5y
+   :maintainer/hazard-permille 1200
+   :maintainer/maintains ["mitooshi" "ake"]
+   :maintainer/prior-imputed-usd-micros-yr 15000000000
+   :maintainer/owns-payoff false
+   :maintainer/note "requests a NEW commons-land grant for on-site maintainer housing (invariant-touch → Council Lv7+)"}
+
+  {:maintainer/did "did:web:etzhayyim.com:member:noah"
+   :maintainer/covenant :outreach          ;; pre-vow — minimal floor, no tenure share
+   :maintainer/tenure-months 2
+   :maintainer/hazard-permille 1000
+   :maintainer/maintains []
+   :maintainer/prior-imputed-usd-micros-yr 6000000000
+   :maintainer/owns-payoff false
+   :maintainer/note "prospective maintainer in outreach; minimal floor until the §1.16 covenant vow"}
+
+  {:maintainer/did "did:web:etzhayyim.com:member:cain"
+   :maintainer/covenant :vowed
+   :maintainer/tenure-months 24
+   :maintainer/hazard-permille 1100
+   :maintainer/maintains ["okaimono"]
+   :maintainer/prior-imputed-usd-micros-yr 10000000000
+   :maintainer/owns-payoff false
+   :maintainer/note "requests an affiliate ad-revenue share on the maintained storefront (Charter-Rider §2 hit → refused)"}]
+
+ ;; ── sustenance envelopes (in-kind imputed need; cash structurally 0) ─────────
+ :envelope/batch
+ [;; abel — fully in-kind, modest total → auto
+  {:envelope/maintainer "did:web:etzhayyim.com:member:abel" :envelope/line :food     :envelope/imputed-usd-micros-yr 4000000000 :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:abel" :envelope/line :energy   :envelope/imputed-usd-micros-yr 1500000000 :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:abel" :envelope/line :compute  :envelope/imputed-usd-micros-yr 2000000000 :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:abel" :envelope/line :care     :envelope/imputed-usd-micros-yr 1000000000 :envelope/cash-usd-micros 0}
+
+  ;; seth — large total incl. external liquidity residual → sbt-vote
+  {:envelope/maintainer "did:web:etzhayyim.com:member:seth" :envelope/line :food      :envelope/imputed-usd-micros-yr 5000000000  :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:seth" :envelope/line :energy    :envelope/imputed-usd-micros-yr 2000000000  :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:seth" :envelope/line :compute   :envelope/imputed-usd-micros-yr 4000000000  :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:seth" :envelope/line :tooling   :envelope/imputed-usd-micros-yr 3000000000  :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:seth" :envelope/line :liquidity :envelope/imputed-usd-micros-yr 14000000000 :envelope/cash-usd-micros 0}
+
+  ;; eve — includes housing (new commons-land grant) → council-lv7
+  {:envelope/maintainer "did:web:etzhayyim.com:member:eve" :envelope/line :housing :envelope/imputed-usd-micros-yr 12000000000 :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:eve" :envelope/line :food    :envelope/imputed-usd-micros-yr 4000000000  :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:eve" :envelope/line :care    :envelope/imputed-usd-micros-yr 2000000000  :envelope/cash-usd-micros 0}
+
+  ;; noah — outreach minimal
+  {:envelope/maintainer "did:web:etzhayyim.com:member:noah" :envelope/line :food   :envelope/imputed-usd-micros-yr 4000000000 :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:noah" :envelope/line :care   :envelope/imputed-usd-micros-yr 1500000000 :envelope/cash-usd-micros 0}
+
+  ;; cain — modest total, but the request carries a Charter-Rider hit → refused upstream
+  {:envelope/maintainer "did:web:etzhayyim.com:member:cain" :envelope/line :food    :envelope/imputed-usd-micros-yr 4000000000 :envelope/cash-usd-micros 0}
+  {:envelope/maintainer "did:web:etzhayyim.com:member:cain" :envelope/line :compute :envelope/imputed-usd-micros-yr 3000000000 :envelope/cash-usd-micros 0}]
+
+ ;; ── R1(b) 1 SBT = 1 vote ballots for escalated allocations (consulted when route=:sbt-vote)
+ ;;        opened at hour 1000, 48h timelock window; the graph "now" is hour 1060 (window closed).
+ :gov/ballots
+ [{:gov/maintainer "did:web:etzhayyim.com:member:seth"
+   :gov/opened-at-hours 1000 :gov/timelock-h 48
+   :gov/votes [{:ballot/voter "did:web:etzhayyim.com:member:abel" :ballot/choice :yes :ballot/cast-at 1004}
+               {:ballot/voter "did:web:etzhayyim.com:member:eve"  :ballot/choice :yes :ballot/cast-at 1010}
+               {:ballot/voter "did:web:etzhayyim.com:member:noah" :ballot/choice :yes :ballot/cast-at 1020}
+               {:ballot/voter "did:web:etzhayyim.com:member:cain" :ballot/choice :yes :ballot/cast-at 1031}
+               {:ballot/voter "did:web:etzhayyim.com:member:adam" :ballot/choice :yes :ballot/cast-at 1041}
+               {:ballot/voter "did:web:etzhayyim.com:member:lot"  :ballot/choice :no  :ballot/cast-at 1018}]}]
+
+ ;; wall-clock for tally finalization (hour stamp; the script clock is unavailable by design)
+ :graph/now-hours 1060
+
+ ;; ── R1(d) Displacement-Dividend coupling — a displacing actor's surplus → donation →
+ ;;        TitheRouter 10% split → per-cohort Public-Fund earmark. The G2 coupling gate:
+ ;;        no live displacement without a funded cohort.
+ ;;        cohort-sanae : sanae automates farm toil, $60k surplus, FUNDED → admissible.
+ ;;        cohort-hataori : hataori displacement with $0 surplus / unfunded → REFUSED (G2).
+ :cohort/displacement
+ [{:event/displacing-actor "sanae"   :event/cohort-id "cohort-sanae-2026"   :event/displaced-count 12 :event/surplus-usd-micros-yr 60000000000 :event/funded true}
+  {:event/displacing-actor "hataori" :event/cohort-id "cohort-hataori-2026" :event/displaced-count 30 :event/surplus-usd-micros-yr 0           :event/funded false}]
+
+ ;; stage-capacity ceiling for the in-kind sustenance floor (USD micros / yr)
+ :graph/stage-ceiling-usd-micros-yr 30000000000}

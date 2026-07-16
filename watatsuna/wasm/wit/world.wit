@@ -1,0 +1,9 @@
+package etzhayyim:watatsuna;
+
+// The watatsuna actor's executable interface. A single export returns the
+// chokepoint-criticality result as a JSON string — same logical contract as
+// the tsumugi core ABI, but realized as a WASI Component-Model component built
+// with componentize-py (ADR-2606014600).
+world watatsuna-actor {
+  export compute: func() -> string;
+}

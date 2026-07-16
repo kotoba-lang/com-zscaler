@@ -1,0 +1,27 @@
+// hinagata 雛形 — kotoba pywasm actor world (ADR-2606111954 / 2606014500 / 2606014600).
+// Pure-stdlib methods (analyze / datom_emit / coverage_report / esign) compile to a WASM
+// Component via componentize-py. No network, no filesystem at runtime: the bounded PUBLIC
+// template-commons seed is embedded read-only (build step). G1 holds in WASM — the component
+// is a COMMONS of public openly-licensed templates, never advice; it cannot leak what it does
+// not contain. The esign `envelope` export builds an UNSIGNED record only — no signing key
+// ever enters the component (no-server-key).
+
+package etzhayyim:hinagata@0.1.0;
+
+world hinagata-actor {
+  /// Run the edge-primary statutory-groundedness analyzer over the embedded template commons.
+  /// Returns JSON: { "grounded":[{id,label,score}], "reuse":[...], "statute_pull":[...] }.
+  export analyze: func() -> string;
+
+  /// Emit the kotoba Datom log (EAVT) for the embedded graph as EDN text. `tx` threads the
+  /// transaction id; ground datoms are op :add, derived readouts are flagged transient (N1/G2).
+  export datoms: func(tx: u32) -> string;
+
+  /// Honest coverage report (markdown): denominators + statute-binding integrity + gap map (G5).
+  export coverage: func() -> string;
+
+  /// Render a template to its contract body and build an UNSIGNED com.etzhayyim.esign.envelope.
+  /// `signers-csv` is a comma-separated DID list. Returns JSON {document, envelope}. The member
+  /// signs client-side with a WebAuthn passkey — the component never signs (no-server-key).
+  export envelope: func(template-id: string, requester-did: string, signers-csv: string) -> string;
+}

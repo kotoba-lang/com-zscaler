@@ -1,0 +1,21 @@
+{:lexicon 1
+ :id "com.etzhayyim.keizu.committeeComposition"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A composition snapshot of a government committee / advisory council (審議会・委員会): its convening organ + the PUBLIC seats on it as-of a term (G10 — a re-composition is a NEW snapshot, never an overwrite). Members are public SEATS (G1), never private persons. Sourced (G3)."
+   :record
+   {:type "object"
+    :required ["committeeId" "label" "jurisdiction" "organ" "members" "termFrom" "sources" "sourcing"]
+    :properties
+    {:committeeId {:type "string" :description "→ :committee/id"}
+     :label       {:type "string" :description "committee name (e.g. 財政制度等審議会)"}
+     :jurisdiction {:type "string" :description "jp / us / eu / gb / oecd / un …"}
+     :organ       {:type "string" :description "the convening public body (ministry/agency)"}
+     :members     {:type "array" :items {:type "string"} :minLength 1
+                   :description "G1 INVARIANT — each entry is a → :node/id of a PUBLIC seat/role. A private-person node is unrepresentable upstream."}
+     :termFrom    {:type "integer" :description "G10 — composition as-of timestamp."}
+     :sources     {:type "array" :items {:type "string"} :minLength 1
+                   :description "G3 — public roster source(s) (official committee page / 官報 / Federal Register)."}
+     :sourcing    {:type "string" :enum ["representative" "authoritative"]}}}}}}

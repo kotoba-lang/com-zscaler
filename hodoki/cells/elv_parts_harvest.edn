@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_parts_harvest cell (L3a)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_parts_harvest"
+  :cell/glyph "🛠️"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G4" "G9" "G12"]
+  :cell/state-graph "{:nodes [{:id \"identify-parts\", :type \"llm-prompt\", :prompt \"Identify harvested parts with condition grading (A/B/C/D).\"} {:id \"grade-condition\", :type \"function\", :func \"grade_part_condition\"} {:id \"issue-did\", :type \"function\", :func \"issue_part_did\"} {:id \"catalog-ipfs\", :type \"function\", :func \"catalog_ipfs\"} {:id \"end\", :type \"return\"}], :entry \"identify-parts\", :edges [{:from \"identify-parts\", :to \"grade-condition\"} {:from \"grade-condition\", :to \"issue-did\"} {:from \"issue-did\", :to \"catalog-ipfs\"} {:from \"catalog-ipfs\", :to \"end\"}]}"
+  :cell/doc "L3a: Parts harvest — grade + DID + IPFS catalog (G12 right-to-repair)."
+  :cell/kotoba "{:reads [:parts-harvest/vin :parts-harvest/part-did :parts-harvest/ipfs-cid :parts-harvest/condition-grade :parts-harvest/bilingual-description], :writes [:parts-harvest/catalog-id :parts-harvest/vin :parts-harvest/part-did :parts-harvest/ipfs-cid :parts-harvest/part-name :parts-harvest/condition-grade :parts-harvest/bilingual-description :parts-harvest/timestamp]}"}]

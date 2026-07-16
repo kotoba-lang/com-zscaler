@@ -1,0 +1,43 @@
+;; funamori (舫) kotoba EAVT seed — illustrative R0 site/membrane/measure
+;; ALL :representative design data — no real deployment exists (R0; live = R1+ Council-gated).
+;; Numbers reproduce funamori.methods.salinity-gradient evaluate-site at draw 36.5 / feed 0.5 g/L.
+[;; ── reference river-mouth site (design only) ────────────────────────────────
+ {:funamori.site/id            "site.kiso-rivermouth-ref"
+  :funamori.site/glyph         "木曽川河口 (reference)"
+  :funamori.site/draw-g-l      36.5
+  :funamori.site/feed-g-l      0.5
+  :funamori.site/temp-k        293.15
+  :funamori.site/salinity-diff-g-l 36.0
+  :funamori.site/technology    :pro      ;; Δ36 ≥35 → PRO (high Δsalinity deep estuary)
+  :funamori.site/rated-kw      30.0      ;; 20,000 m² × 1.5 W/m² ; ≤50 kW cap (§1.9)
+  :funamori.site/mizuho-attested false   ;; R0: mizuho R2 attestation not yet done (§1.3)
+  :funamori.site/lands-parcel  "lands.marine.pending"  ;; ADR-2605192330 marine parcel pending
+  :funamori.site/permitted     true}
+
+ ;; ── in-house open-design PRO membrane (passes §1.1/§1.2/§2) ──────────────────
+ {:funamori.membrane/id        "membrane.pro.tfc-inhouse-r0"
+  :funamori.membrane/type      :pro
+  :funamori.membrane/vendor    "in-house"
+  :funamori.membrane/chemistry "tfc-polyamide-on-polysulfone"  ;; ADR 表 (PFAS-free)
+  :funamori.membrane/license   :in-house
+  :funamori.membrane/formula-cid "bafy-membrane-formula-pending"
+  :funamori.membrane/pfas-free true
+  :funamori.membrane/permitted true}
+
+ ;; ── open-publication RED stack reference (Wetsus-style SPEEK; PFAS-free) ─────
+ {:funamori.membrane/id        "membrane.red.speek-openpub-r0"
+  :funamori.membrane/type      :red
+  :funamori.membrane/vendor    "wetsus-openpub"
+  :funamori.membrane/chemistry "speek-sulfonated-polystyrene-divinylbenzene"
+  :funamori.membrane/license   :open-publication
+  :funamori.membrane/formula-cid "bafy-red-speek-pending"
+  :funamori.membrane/pfas-free true
+  :funamori.membrane/permitted true}
+
+ ;; ── power-density characterization (PRO, meets ≥1 W/m² R3 gate; §1.6) ────────
+ {:funamori.measure/id         "measure.pro.kiso-r0-bench"
+  :funamori.measure/delta-pi-pa 3.00e6     ;; ≈30 bar (draw 36.5 / feed 0.5 g/L, 20°C)
+  :funamori.measure/power-density-w-m2 1.5 ;; ≥1.0 floor (§1.6)
+  :funamori.measure/membrane-area-m2 20000.0
+  :funamori.measure/meets-r3-gate true
+  :funamori.measure/witness-quorum 3}]     ;; Council Lv6+ ≥3

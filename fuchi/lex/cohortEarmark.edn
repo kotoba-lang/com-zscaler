@@ -1,0 +1,26 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.cohortEarmark"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "R1(d) — the Displacement-Dividend coupling record. A displacing actor's surplus → donation → TitheRouter 10% split → a per-cohort Public-Fund earmark, which is the imputed-value BUDGET CEILING 扶持's in-kind sustenance for that cohort draws on. G2 coupling gate (ADR-2606032130): no live displacement without a funded cohort — admissible only if funded AND committed ≤ earmark. The surplus→donation is real USDC inflow; what the maintainer receives stays in-kind (cash≡0 enforced at the allocation layer)."
+   :record
+   {:type "object"
+    :required ["cohortId" "displacingActor" "grossUsdMicrosYr" "titheUsdMicros" "earmarkUsdMicrosYr" "funded" "admissible"]
+    :properties
+    {:cohortId           {:type "string"}
+     :displacingActor    {:type "string" :description "the actor whose automation displaces toil"}
+     :displacedCount     {:type "integer" :minimum 0}
+     :grossUsdMicrosYr   {:type "integer" :minimum 0
+                          :description "gross surplus donation; grossUsdMicrosYr = titheUsdMicros + earmarkUsdMicrosYr (exact)"}
+     :titheUsdMicros     {:type "integer" :minimum 0
+                          :description "10% TitheRouter auto-split → Public Fund (ADR-2605192130)"}
+     :earmarkUsdMicrosYr {:type "integer" :minimum 0
+                          :description "90% per-cohort earmark — the budget ceiling for in-kind sustenance"}
+     :funded             {:type "boolean"
+                          :description "G2 — true only when the surplus→donation has landed in the Public Fund"}
+     :committedUsdMicrosYr {:type "integer" :minimum 0
+                          :description "the in-kind sustenance floor committed to this cohort; must be ≤ earmark"}
+     :admissible         {:type "boolean"
+                          :description "G2 coupling gate — true iff funded AND committed ≤ earmark; else the displacement is REFUSED"}}}}}}

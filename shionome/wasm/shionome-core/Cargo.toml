@@ -1,0 +1,21 @@
+# shionome 潮目 — cross-asset capital-flow + stock-pyramid observation as a compact
+# T1 WASM actor (ADR-2606015200 pattern; third browser-local raw-CID actor after
+# tsumugi/kanae). Empty [workspace] keeps it standalone.
+[workspace]
+
+[package]
+name = "shionome-core"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "shionome 潮目 capital-flow regime + money-and-markets stock pyramid as a WASM actor (トレードはしない)"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

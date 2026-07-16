@@ -1,0 +1,177 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:business-person.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "graph.vectorSearch",
+    "agent.chat",
+    "browser.fetch",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Business Person agent -- public organizational contact intelligence. You aggregate and search publicly disclosed business person information: corporate officers, board members, registered agents, and key personnel from Wikipedia, XBRL filings, and public registries. You use Murakumo LLM for structured extraction and normalization. You ONLY use publicly available data. Never infer or fabricate private contact information. Respond helpfully in the user's language.",
+  "description": "Aggregates publicly disclosed business person information from corporate registries, XBRL filings, Wikipedia, and official directories. Officers, directors, registered agents, key personnel. Murakumo LLM-powered structured extraction, dedup, and normalization.",
+  "displayName": "Business Person -- Public Organizational Contact Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "public",
+    "complianceFrameworks": [
+      "APPI",
+      "GDPR-public-interest"
+    ],
+    "dataPolicy": "public-filings-only",
+    "raci": "responsible"
+  },
+  "graphLabels": [
+    "BusinessPerson",
+    "Person",
+    "Organization",
+    "OfficerRole",
+    "BoardMembership",
+    "Affiliation",
+    "PersonnelChange",
+    "RegistrySource",
+    "RoleType"
+  ],
+  "heartbeatRequired": true,
+  "name": "business-person",
+  "nanoid": "bp3r5n0x",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:Person) WHERE n.repo = $did RETURN count(n) AS personCount, count(DISTINCT n.source) AS sourceCount LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "weeklyRefresh"
+        },
+        {
+          "args": {
+            "message": "You are Business Person agent. Weekly coverage report: $weeklyRefresh.rows. Summarize current state in 1-2 sentences."
+          },
+          "depends_on": [
+            "weeklyRefresh"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 3 * * 1",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "business-person",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.businessPerson.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "bp3r5n0x",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Business Person agent. Coverage snapshot: $coverageSnapshot.text. Summarize in 1 sentence."
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "corporate-officer-lookup",
+      "board-member-tracking",
+      "registered-agent-search",
+      "personnel-change-detection",
+      "org-chart-graph",
+      "cross-org-affiliation"
+    ],
+    "description": "Aggregates publicly disclosed business person information. Murakumo LLM agent for extraction and normalization.",
+    "displayName": "Business Person -- Public Organizational Contact Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.businessPerson.person",
+        "com.etzhayyim.apps.businessPerson.officerRole",
+        "com.etzhayyim.apps.businessPerson.boardMembership",
+        "com.etzhayyim.apps.businessPerson.affiliation",
+        "com.etzhayyim.apps.businessPerson.personnelChange",
+        "com.etzhayyim.apps.businessPerson.collectionJob"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

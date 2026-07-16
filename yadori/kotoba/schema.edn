@@ -1,0 +1,35 @@
+;; yadori (宿り) kotoba EAVT schema — DNS-availability + domain acquisition (R0)
+[{:db/ident :domain/fqdn            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :domain/ascii-fqdn      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :domain/tld             :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :domain/availability    :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}  ;; :available :registered :unsupported-tld :invalid :unknown
+ {:db/ident :domain/rdap-url        :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :domain/checked-at      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}  ;; as-of availability history (非終末論)
+ {:db/ident :domain/source          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}  ;; :fixture :live :none
+
+ {:db/ident :domain/brief           :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :domain/candidate       :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :candidate/fqdn         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :candidate/charter-clean :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}  ;; G6
+ {:db/ident :candidate/squat-clear  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G6
+
+ {:db/ident :registrar/id           :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :registrar/pricing      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :at-cost :markup
+ {:db/ident :registrar/council-gated :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}  ;; G3
+ {:db/ident :registrar/policy       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :domain/quote           :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+
+ {:db/ident :domain/reservation-intent :db/valueType :db.type/ref  :db/cardinality :db.cardinality/one}
+ {:db/ident :reservation/registrant-principal :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}  ;; G2 :member
+ {:db/ident :reservation/payer      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; G2 :member
+ {:db/ident :reservation/funding-source :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}  ;; :member-okaimono
+ {:db/ident :reservation/server-held-key :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}  ;; G5 false
+ {:db/ident :domain/authorization   :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :authorization/authorized-by :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}  ;; G5 :member
+ {:db/ident :authorization/server-signed :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}  ;; G5 false
+ {:db/ident :authorization/outward-gated :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}  ;; G7
+
+ {:db/ident :zone/record-plan       :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :zone/record-type       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; A/AAAA/TXT/CNAME
+ {:db/ident :zone/record-value      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :zone/didweb-target     :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}]

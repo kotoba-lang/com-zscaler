@@ -1,0 +1,58 @@
+{
+  "generator": "meyasu/viz/build_viz_data.py",
+  "intent": "buyer-transparency+supply-resilience",
+  "cards": [
+    {
+      "productId": "jan_4901777300443",
+      "priceSpread": 700,
+      "spreadFraction": 0.2188,
+      "notableSpread": true,
+      "cheapestMerchant": "a_com",
+      "supplyDemandNow": 0.12,
+      "reading": "balanced",
+      "forecastBand": [
+        0.24,
+        0.6
+      ],
+      "trajectory": "tightening",
+      "attention": true,
+      "routeTo": "danjo",
+      "intent": "buyer-transparency+supply-resilience"
+    },
+    {
+      "productId": "gtin_04901234567894",
+      "priceSpread": 1200,
+      "spreadFraction": 0.31,
+      "notableSpread": true,
+      "cheapestMerchant": "c_com",
+      "supplyDemandNow": -0.05,
+      "reading": "balanced",
+      "forecastBand": [
+        -0.62,
+        -0.18
+      ],
+      "trajectory": "easing",
+      "attention": false,
+      "routeTo": "okaimono",
+      "intent": "buyer-transparency+supply-resilience"
+    },
+    {
+      "productId": "jan_4906543210123",
+      "priceSpread": 90,
+      "spreadFraction": 0.03,
+      "notableSpread": false,
+      "cheapestMerchant": "b_com",
+      "supplyDemandNow": 0.0,
+      "reading": "balanced",
+      "forecastBand": [
+        -0.25,
+        0.35
+      ],
+      "trajectory": "stable",
+      "attention": false,
+      "routeTo": "okaimono",
+      "intent": "buyer-transparency+supply-resilience"
+    }
+  ],
+  "refused": []
+}

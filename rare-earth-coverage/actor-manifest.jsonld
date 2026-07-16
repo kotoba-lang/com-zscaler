@@ -1,0 +1,536 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:rare-earth-coverage.etzhayyim.com",
+  "riskAssessmentAxis": {
+    "adr": "ADR-2606161700",
+    "kind": "observation-watcher",
+    "summary": "Observation watcher (supply-chain / dependency KG mirror), NOT an extractor. Its analytical core is the multi-generational (子・孫) × wellbecoming risk-assessment axis (Charter Rider §2(l) v3.2): map where rare-metal value chains create (i) monopoly / chokepoint dependency and (ii) irreversible multi-generational environmental risk, routed to RESILIENCE / de-monopolization / restoration.",
+    "prohibited": "NEVER a target-list, an extraction recipe, or a by-industry-name 'mining is forbidden' verdict. Extraction is not banned as such; it is judged by measured harm to 子孫.",
+    "routesTo": ["resilience", "de-monopolization", "restoration"]
+  },
+  "actors": [
+    {
+      "description": "Top-level mineral dependency system covering the rare earth value chain.",
+      "displayName": "Rare Earth Mineral System",
+      "path": "mineral:rare-earth"
+    },
+    {
+      "description": "Light rare earth oxide and metal subsystem tied to traction magnets.",
+      "displayName": "NdPr Mineral Subsystem",
+      "path": "mineral:ndpr"
+    },
+    {
+      "description": "Heavy rare earth subsystem important for heat-resistant magnet applications.",
+      "displayName": "Dy/Tb Mineral Subsystem",
+      "path": "mineral:dytb"
+    },
+    {
+      "description": "Strategic mineral dependency spanning defense, tooling, and high-performance industrial uses.",
+      "displayName": "Tungsten Mineral System",
+      "path": "mineral:tungsten"
+    },
+    {
+      "description": "Strategic mineral dependency spanning flame retardants, munitions, and defense supply.",
+      "displayName": "Antimony Mineral System",
+      "path": "mineral:antimony"
+    },
+    {
+      "description": "Strategic semiconductor and defense-adjacent mineral dependency actor.",
+      "displayName": "Gallium Mineral System",
+      "path": "mineral:gallium"
+    },
+    {
+      "description": "Strategic optical, infrared, and defense-adjacent mineral dependency actor.",
+      "displayName": "Germanium Mineral System",
+      "path": "mineral:germanium"
+    },
+    {
+      "description": "Battery and magnet-adjacent mineral dependency actor.",
+      "displayName": "Graphite Mineral System",
+      "path": "mineral:graphite"
+    },
+    {
+      "description": "Top-level rare earth industrial and administrative rule setter in China.",
+      "displayName": "State Council of China",
+      "path": "regulator:china-state-council"
+    },
+    {
+      "description": "Export licensing and trade control actor for rare earth items.",
+      "displayName": "MOFCOM",
+      "path": "regulator:china-mofcom"
+    },
+    {
+      "description": "Customs enforcement actor for rare earth export controls.",
+      "displayName": "General Administration of Customs of China",
+      "path": "regulator:china-customs"
+    },
+    {
+      "description": "State-linked upstream actor around Bayan Obo resource control.",
+      "displayName": "Baogang Group",
+      "path": "operator:baogang-group"
+    },
+    {
+      "description": "Core China light rare earth extraction base.",
+      "displayName": "Bayan Obo Resource Base",
+      "path": "resource:bayan-obo"
+    },
+    {
+      "description": "Major northern China separation and refining actor.",
+      "displayName": "China Northern Rare Earth Group",
+      "path": "processor:china-northern-rare-earth"
+    },
+    {
+      "description": "Domestic heavy rare earth resource cluster.",
+      "displayName": "Southern China Ion-Adsorption Clay Sector",
+      "path": "resource:southern-ion-clays"
+    },
+    {
+      "description": "External heavy rare earth feedstock cluster tied to China processing.",
+      "displayName": "Myanmar Ion-Adsorption Clay Sector",
+      "path": "resource:myanmar-ion-clays"
+    },
+    {
+      "description": "Major heavy rare earth separation actor.",
+      "displayName": "China Rare Earth Group",
+      "path": "processor:china-rare-earth-group"
+    },
+    {
+      "description": "Processing and trading support actor in China rare earth chain.",
+      "displayName": "Shenghe Resources",
+      "path": "processor:shenghe-resources"
+    },
+    {
+      "description": "Major Chinese permanent magnet maker.",
+      "displayName": "JL MAG Rare-Earth",
+      "path": "magnet:jl-mag"
+    },
+    {
+      "description": "Chinese permanent magnet manufacturing actor.",
+      "displayName": "Zhong Ke San Huan",
+      "path": "magnet:zhong-ke-san-huan"
+    },
+    {
+      "description": "Additional downstream Chinese magnet manufacturing actor.",
+      "displayName": "Beijing Zhong Ke San Huan Magnetics",
+      "path": "magnet:beijing-zhong-ke-san-huan"
+    },
+    {
+      "description": "Dominant downstream NdFeB magnet manufacturing cluster.",
+      "displayName": "China Permanent Magnet Sector",
+      "path": "sector:china-magnet-sector"
+    },
+    {
+      "description": "China-centered tungsten processing and industrial concentration cluster.",
+      "displayName": "China Tungsten Sector",
+      "path": "sector:china-tungsten-sector"
+    },
+    {
+      "description": "China-centered antimony processing and trade concentration cluster.",
+      "displayName": "China Antimony Sector",
+      "path": "sector:china-antimony-sector"
+    },
+    {
+      "description": "US executive critical minerals policy direction actor.",
+      "displayName": "The White House",
+      "path": "regulator:white-house"
+    },
+    {
+      "description": "Defense-backed financing and strategic procurement actor.",
+      "displayName": "U.S. DoD / Office of Strategic Capital",
+      "path": "financer:us-dod-osc"
+    },
+    {
+      "description": "US processing support and energy-industrial policy actor.",
+      "displayName": "U.S. Department of Energy",
+      "path": "regulator:us-doe"
+    },
+    {
+      "description": "Official production and market intelligence actor.",
+      "displayName": "U.S. Geological Survey",
+      "path": "intel:usgs"
+    },
+    {
+      "description": "US integrated mining, separation, metal, and magnet actor.",
+      "displayName": "MP Materials",
+      "path": "operator:mp-materials"
+    },
+    {
+      "description": "Core US rare earth resource and processing base.",
+      "displayName": "Mountain Pass",
+      "path": "resource:mountain-pass"
+    },
+    {
+      "description": "US magnet manufacturing actor for downstream offtake.",
+      "displayName": "MP Independence Magnetics Facility",
+      "path": "plant:mp-independence-texas"
+    },
+    {
+      "description": "US recycled magnet manufacturing actor.",
+      "displayName": "Urban Mining Company",
+      "path": "recycling:urban-mining-company"
+    },
+    {
+      "description": "US refining and recycling actor for separated rare earth products.",
+      "displayName": "ReElement Technologies",
+      "path": "processor:reelement-technologies"
+    },
+    {
+      "description": "US high-performance magnet manufacturing actor.",
+      "displayName": "Arnold Magnetic Technologies",
+      "path": "magnet:arnold-magnetic"
+    },
+    {
+      "description": "US tungsten processing and supply-security cluster.",
+      "displayName": "U.S. Tungsten Sector",
+      "path": "sector:us-tungsten-sector"
+    },
+    {
+      "description": "US antimony processing and supply-security cluster.",
+      "displayName": "U.S. Antimony Sector",
+      "path": "sector:us-antimony-sector"
+    },
+    {
+      "description": "Automotive offtake anchor in the US diversification chain.",
+      "displayName": "General Motors",
+      "path": "oem:general-motors"
+    },
+    {
+      "description": "Leading non-China integrated rare earth producer.",
+      "displayName": "Lynas Rare Earths",
+      "path": "operator:lynas-rare-earths"
+    },
+    {
+      "description": "Core Australian rare earth mine.",
+      "displayName": "Mt Weld",
+      "path": "resource:mt-weld"
+    },
+    {
+      "description": "Major non-China separation plant.",
+      "displayName": "Lynas Malaysia",
+      "path": "plant:lynas-malaysia"
+    },
+    {
+      "description": "Japan trading and offtake actor in non-China rare earth diversification.",
+      "displayName": "Sojitz",
+      "path": "trader:sojitz"
+    },
+    {
+      "description": "Rare earth processing and magnet materials actor with non-China downstream relevance.",
+      "displayName": "Neo Performance Materials",
+      "path": "processor:neo-performance-materials"
+    },
+    {
+      "description": "UK rare earth magnet recycling and remanufacturing actor.",
+      "displayName": "HyProMag",
+      "path": "recycling:hypromag"
+    },
+    {
+      "description": "Rare earth metal and alloy conversion actor in the UK.",
+      "displayName": "Less Common Metals",
+      "path": "metal:less-common-metals"
+    },
+    {
+      "description": "European high-performance magnet manufacturing actor.",
+      "displayName": "VACUUMSCHMELZE",
+      "path": "magnet:vacuumschmelze"
+    },
+    {
+      "description": "Japan permanent magnet manufacturing actor.",
+      "displayName": "Proterial",
+      "path": "magnet:proterial"
+    },
+    {
+      "description": "Japan electronics and magnet materials actor.",
+      "displayName": "TDK",
+      "path": "magnet:tdk"
+    },
+    {
+      "description": "Australian critical minerals policy actor.",
+      "displayName": "Australian Department of Industry, Science and Resources",
+      "path": "regulator:australia-disr"
+    },
+    {
+      "description": "Australia strategic reserve and financing actor.",
+      "displayName": "Export Finance Australia",
+      "path": "financer:export-finance-australia"
+    },
+    {
+      "description": "Australian refinery project developer actor.",
+      "displayName": "Iluka Resources",
+      "path": "operator:iluka-resources"
+    },
+    {
+      "description": "Planned Australian separation/refining diversification node.",
+      "displayName": "Eneabba Rare Earths Refinery",
+      "path": "plant:eneabba-refinery"
+    },
+    {
+      "description": "EU policy and mandate actor for critical raw materials.",
+      "displayName": "Council of the European Union",
+      "path": "regulator:eu-council"
+    },
+    {
+      "description": "EU diversification and CRMA execution actor.",
+      "displayName": "European Commission",
+      "path": "regulator:eu-commission"
+    },
+    {
+      "description": "EU strategic project and vulnerability governance actor.",
+      "displayName": "European Critical Raw Materials Board",
+      "path": "governance:eu-crm-board"
+    },
+    {
+      "description": "European processing and recycling actor for rare earth materials.",
+      "displayName": "Solvay",
+      "path": "processor:solvay"
+    },
+    {
+      "description": "EU antimony processing and supply-security cluster.",
+      "displayName": "EU Antimony Sector",
+      "path": "sector:eu-antimony-sector"
+    },
+    {
+      "description": "Japan industrial policy actor for supply diversification.",
+      "displayName": "METI",
+      "path": "regulator:meti"
+    },
+    {
+      "description": "Japan resource security financing and equity actor.",
+      "displayName": "JOGMEC",
+      "path": "financer:jogmec"
+    },
+    {
+      "description": "France-based heavy rare earth refining project actor.",
+      "displayName": "Caremag SAS",
+      "path": "operator:caremag"
+    },
+    {
+      "description": "Demand cluster for EV traction magnets.",
+      "displayName": "Global EV OEM Cluster",
+      "path": "sector:global-ev-oem"
+    },
+    {
+      "description": "Demand cluster for permanent magnet wind turbines.",
+      "displayName": "Global Wind Turbine OEM Cluster",
+      "path": "sector:global-wind-oem"
+    },
+    {
+      "description": "Demand cluster for defense and high-performance magnet systems.",
+      "displayName": "Global Defense OEM Cluster",
+      "path": "sector:global-defense-oem"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "derive:social",
+    "agent.chat"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Rare Earth Coverage actor. Keep the rare earth supply chain baseline healthy across extraction, separation, magnet manufacturing, regulation, strategic finance, and downstream demand. Register each major actor as a mitama DID, maintain backbone flow coverage, and highlight unresolved bottlenecks around China concentration, heavy rare earth exposure, and non-China diversification.",
+  "derive": {
+    "social": {
+      "template": "Rare earth coverage update: baseline actor DID registry and backbone flow coverage refreshed."
+    }
+  },
+  "description": "Global rare earth supply chain coverage orchestration. Registers major mining, separation, magnet, policy, finance, and demand actors as mitama DIDs and maintains graph backbone coverage across upstream, midstream, regulation, and downstream demand.",
+  "displayName": "Rare Earth Coverage Orchestrator",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "rare-earth-coverage",
+  "nanoid": "re4c0v26",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "template": "UNWIND [\n  {path:'mineral:rare-earth', displayName:'Rare Earth Mineral System', role:'mineral', stage:'taxonomy', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:china-northern-rare-earth','did:web:rare-earth-coverage.etzhayyim.com:operator:mp-materials','did:web:rare-earth-coverage.etzhayyim.com:operator:lynas-rare-earths']},\n  {path:'mineral:ndpr', displayName:'NdPr Mineral Subsystem', role:'mineral-subsystem', stage:'taxonomy', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:china-northern-rare-earth','did:web:rare-earth-coverage.etzhayyim.com:operator:mp-materials']},\n  {path:'mineral:dytb', displayName:'Dy/Tb Mineral Subsystem', role:'mineral-subsystem', stage:'taxonomy', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:china-rare-earth-group','did:web:rare-earth-coverage.etzhayyim.com:resource:myanmar-ion-clays']},\n  {path:'mineral:tungsten', displayName:'Tungsten Mineral System', role:'mineral', stage:'taxonomy', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:sector:china-tungsten-sector','did:web:rare-earth-coverage.etzhayyim.com:sector:us-tungsten-sector','did:web:rare-earth-coverage.etzhayyim.com:sector:global-defense-oem']},\n  {path:'mineral:antimony', displayName:'Antimony Mineral System', role:'mineral', stage:'taxonomy', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:sector:china-antimony-sector','did:web:rare-earth-coverage.etzhayyim.com:sector:us-antimony-sector','did:web:rare-earth-coverage.etzhayyim.com:sector:eu-antimony-sector']},\n  {path:'mineral:gallium', displayName:'Gallium Mineral System', role:'mineral', stage:'taxonomy', jurisdiction:'GLOBAL', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:china-mofcom','did:web:rare-earth-coverage.etzhayyim.com:sector:china-antimony-sector']},\n  {path:'mineral:germanium', displayName:'Germanium Mineral System', role:'mineral', stage:'taxonomy', jurisdiction:'GLOBAL', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:china-mofcom','did:web:rare-earth-coverage.etzhayyim.com:sector:global-defense-oem']},\n  {path:'mineral:graphite', displayName:'Graphite Mineral System', role:'mineral', stage:'taxonomy', jurisdiction:'GLOBAL', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:sector:global-ev-oem','did:web:rare-earth-coverage.etzhayyim.com:sector:china-magnet-sector']},\n  {path:'regulator:china-state-council', displayName:'State Council of China', role:'regulator', stage:'regulation', jurisdiction:'CN', priority:1, deps:[]},\n  {path:'regulator:china-mofcom', displayName:'MOFCOM', role:'regulator', stage:'regulation', jurisdiction:'CN', priority:1, deps:[]},\n  {path:'regulator:china-customs', displayName:'General Administration of Customs of China', role:'regulator', stage:'regulation', jurisdiction:'CN', priority:1, deps:[]},\n  {path:'operator:baogang-group', displayName:'Baogang Group', role:'state-owned-enterprise', stage:'mining', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:resource:bayan-obo']},\n  {path:'resource:bayan-obo', displayName:'Bayan Obo Resource Base', role:'resource-base', stage:'extraction', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:baogang-group']},\n  {path:'processor:china-northern-rare-earth', displayName:'China Northern Rare Earth Group', role:'processor', stage:'separation', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:resource:bayan-obo','did:web:rare-earth-coverage.etzhayyim.com:regulator:china-mofcom']},\n  {path:'resource:southern-ion-clays', displayName:'Southern China Ion-Adsorption Clay Sector', role:'resource-cluster', stage:'extraction', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:china-rare-earth-group']},\n  {path:'resource:myanmar-ion-clays', displayName:'Myanmar Ion-Adsorption Clay Sector', role:'resource-cluster', stage:'extraction', jurisdiction:'MM', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:china-rare-earth-group']},\n  {path:'processor:china-rare-earth-group', displayName:'China Rare Earth Group', role:'processor', stage:'separation', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:resource:southern-ion-clays','did:web:rare-earth-coverage.etzhayyim.com:resource:myanmar-ion-clays']},\n  {path:'processor:shenghe-resources', displayName:'Shenghe Resources', role:'processor-trader', stage:'processing', jurisdiction:'CN', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:sector:china-magnet-sector']},\n  {path:'magnet:jl-mag', displayName:'JL MAG Rare-Earth', role:'magnet-maker', stage:'magnet-manufacturing', jurisdiction:'CN', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:shenghe-resources']},\n  {path:'magnet:zhong-ke-san-huan', displayName:'Zhong Ke San Huan', role:'magnet-maker', stage:'magnet-manufacturing', jurisdiction:'CN', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:china-northern-rare-earth']},\n  {path:'magnet:beijing-zhong-ke-san-huan', displayName:'Beijing Zhong Ke San Huan Magnetics', role:'magnet-maker', stage:'magnet-manufacturing', jurisdiction:'CN', priority:3, deps:['did:web:rare-earth-coverage.etzhayyim.com:magnet:zhong-ke-san-huan']},\n  {path:'sector:china-magnet-sector', displayName:'China Permanent Magnet Sector', role:'manufacturing-cluster', stage:'magnet-manufacturing', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:china-northern-rare-earth','did:web:rare-earth-coverage.etzhayyim.com:processor:china-rare-earth-group']},\n  {path:'sector:china-tungsten-sector', displayName:'China Tungsten Sector', role:'manufacturing-cluster', stage:'processing', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:china-mofcom']},\n  {path:'sector:china-antimony-sector', displayName:'China Antimony Sector', role:'manufacturing-cluster', stage:'processing', jurisdiction:'CN', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:china-mofcom']},\n  {path:'regulator:white-house', displayName:'The White House', role:'policy-executive', stage:'policy', jurisdiction:'US', priority:1, deps:[]},\n  {path:'financer:us-dod-osc', displayName:'U.S. DoD / Office of Strategic Capital', role:'government-financer', stage:'finance', jurisdiction:'US', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:white-house']},\n  {path:'regulator:us-doe', displayName:'U.S. Department of Energy', role:'regulator', stage:'policy', jurisdiction:'US', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:white-house']},\n  {path:'intel:usgs', displayName:'U.S. Geological Survey', role:'government-data', stage:'intelligence', jurisdiction:'US', priority:2, deps:[]},\n  {path:'operator:mp-materials', displayName:'MP Materials', role:'integrated-producer', stage:'separation', jurisdiction:'US', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:resource:mountain-pass','did:web:rare-earth-coverage.etzhayyim.com:financer:us-dod-osc']},\n  {path:'resource:mountain-pass', displayName:'Mountain Pass', role:'mine-processing-site', stage:'extraction', jurisdiction:'US', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:mp-materials']},\n  {path:'plant:mp-independence-texas', displayName:'MP Independence Magnetics Facility', role:'magnet-plant', stage:'magnet-manufacturing', jurisdiction:'US', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:mp-materials']},\n  {path:'recycling:urban-mining-company', displayName:'Urban Mining Company', role:'recycler-magnet-maker', stage:'magnet-manufacturing', jurisdiction:'US', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:processor:reelement-technologies']},\n  {path:'processor:reelement-technologies', displayName:'ReElement Technologies', role:'refinery-recycler', stage:'separation', jurisdiction:'US', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:recycling:urban-mining-company']},\n  {path:'magnet:arnold-magnetic', displayName:'Arnold Magnetic Technologies', role:'magnet-maker', stage:'magnet-manufacturing', jurisdiction:'US', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:sector:global-defense-oem']},\n  {path:'sector:us-tungsten-sector', displayName:'U.S. Tungsten Sector', role:'manufacturing-cluster', stage:'processing', jurisdiction:'US', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:mineral:tungsten']},\n  {path:'sector:us-antimony-sector', displayName:'U.S. Antimony Sector', role:'manufacturing-cluster', stage:'processing', jurisdiction:'US', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:mineral:antimony']},\n  {path:'oem:general-motors', displayName:'General Motors', role:'oem', stage:'demand', jurisdiction:'US', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:plant:mp-independence-texas']},\n  {path:'operator:lynas-rare-earths', displayName:'Lynas Rare Earths', role:'integrated-producer', stage:'separation', jurisdiction:'AU', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:resource:mt-weld','did:web:rare-earth-coverage.etzhayyim.com:plant:lynas-malaysia']},\n  {path:'resource:mt-weld', displayName:'Mt Weld', role:'mine', stage:'extraction', jurisdiction:'AU', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:lynas-rare-earths']},\n  {path:'plant:lynas-malaysia', displayName:'Lynas Malaysia', role:'separation-plant', stage:'separation', jurisdiction:'MY', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:lynas-rare-earths']},\n  {path:'trader:sojitz', displayName:'Sojitz', role:'trader-offtaker', stage:'finance', jurisdiction:'JP', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:lynas-rare-earths']},\n  {path:'processor:neo-performance-materials', displayName:'Neo Performance Materials', role:'processor-magnet-maker', stage:'magnet-manufacturing', jurisdiction:'CA', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:plant:lynas-malaysia']},\n  {path:'recycling:hypromag', displayName:'HyProMag', role:'recycler-magnet-maker', stage:'magnet-manufacturing', jurisdiction:'GB', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:metal:less-common-metals']},\n  {path:'metal:less-common-metals', displayName:'Less Common Metals', role:'metal-alloy-maker', stage:'processing', jurisdiction:'GB', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:magnet:vacuumschmelze']},\n  {path:'magnet:vacuumschmelze', displayName:'VACUUMSCHMELZE', role:'magnet-maker', stage:'magnet-manufacturing', jurisdiction:'DE', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:metal:less-common-metals','did:web:rare-earth-coverage.etzhayyim.com:processor:solvay']},\n  {path:'magnet:proterial', displayName:'Proterial', role:'magnet-maker', stage:'magnet-manufacturing', jurisdiction:'JP', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:plant:lynas-malaysia']},\n  {path:'magnet:tdk', displayName:'TDK', role:'magnet-electronics-maker', stage:'magnet-manufacturing', jurisdiction:'JP', priority:3, deps:['did:web:rare-earth-coverage.etzhayyim.com:sector:global-ev-oem']},\n  {path:'regulator:australia-disr', displayName:'Australian Department of Industry, Science and Resources', role:'regulator', stage:'policy', jurisdiction:'AU', priority:2, deps:[]},\n  {path:'financer:export-finance-australia', displayName:'Export Finance Australia', role:'government-financer', stage:'finance', jurisdiction:'AU', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:australia-disr']},\n  {path:'operator:iluka-resources', displayName:'Iluka Resources', role:'producer-project-developer', stage:'separation', jurisdiction:'AU', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:plant:eneabba-refinery']},\n  {path:'plant:eneabba-refinery', displayName:'Eneabba Rare Earths Refinery', role:'refinery', stage:'separation', jurisdiction:'AU', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:iluka-resources']},\n  {path:'regulator:eu-council', displayName:'Council of the European Union', role:'intergovernmental-body', stage:'policy', jurisdiction:'EU', priority:2, deps:[]},\n  {path:'regulator:eu-commission', displayName:'European Commission', role:'supranational-executive', stage:'policy', jurisdiction:'EU', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:governance:eu-crm-board']},\n  {path:'governance:eu-crm-board', displayName:'European Critical Raw Materials Board', role:'policy-board', stage:'policy', jurisdiction:'EU', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:regulator:eu-commission']},\n  {path:'processor:solvay', displayName:'Solvay', role:'processor-recycler', stage:'separation', jurisdiction:'FR', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:magnet:vacuumschmelze']},\n  {path:'sector:eu-antimony-sector', displayName:'EU Antimony Sector', role:'manufacturing-cluster', stage:'processing', jurisdiction:'EU', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:mineral:antimony']},\n  {path:'regulator:meti', displayName:'METI', role:'regulator', stage:'policy', jurisdiction:'JP', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:financer:jogmec']},\n  {path:'financer:jogmec', displayName:'JOGMEC', role:'government-financer', stage:'finance', jurisdiction:'JP', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:operator:caremag']},\n  {path:'operator:caremag', displayName:'Caremag SAS', role:'refinery-project', stage:'separation', jurisdiction:'FR', priority:2, deps:['did:web:rare-earth-coverage.etzhayyim.com:financer:jogmec']},\n  {path:'sector:global-ev-oem', displayName:'Global EV OEM Cluster', role:'demand-cluster', stage:'demand', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:mineral:rare-earth','did:web:rare-earth-coverage.etzhayyim.com:mineral:graphite']},\n  {path:'sector:global-wind-oem', displayName:'Global Wind Turbine OEM Cluster', role:'demand-cluster', stage:'demand', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:mineral:rare-earth','did:web:rare-earth-coverage.etzhayyim.com:mineral:tungsten']},\n  {path:'sector:global-defense-oem', displayName:'Global Defense OEM Cluster', role:'demand-cluster', stage:'demand', jurisdiction:'GLOBAL', priority:1, deps:['did:web:rare-earth-coverage.etzhayyim.com:mineral:rare-earth','did:web:rare-earth-coverage.etzhayyim.com:mineral:tungsten','did:web:rare-earth-coverage.etzhayyim.com:mineral:antimony','did:web:rare-earth-coverage.etzhayyim.com:mineral:gallium','did:web:rare-earth-coverage.etzhayyim.com:mineral:germanium']}\n] AS a MERGE (n:RareEarthActor {did: 'did:web:rare-earth-coverage.etzhayyim.com:' + a.path}) SET n.path = a.path, n.displayName = a.displayName, n.role = a.role, n.stage = a.stage, n.jurisdiction = a.jurisdiction, n.priority = a.priority, n.repo = 'did:web:rare-earth-coverage.etzhayyim.com', n.collection = 'com.etzhayyim.apps.rareEarth.actor', n.status = 'active', n.deps = a.deps"
+          },
+          "fn": "graph.write",
+          "id": "seedActors"
+        },
+        {
+          "args": {
+            "template": "UNWIND [\n  {id:'state-council-authorizes-mofcom', source:'regulator:china-state-council', target:'regulator:china-mofcom', relation:'authorizes', kind:'policy', status:'active', priority:1},\n  {id:'state-council-authorizes-customs', source:'regulator:china-state-council', target:'regulator:china-customs', relation:'authorizes', kind:'policy', status:'active', priority:1},\n  {id:'rare-earth-feeds-ev', source:'mineral:rare-earth', target:'sector:global-ev-oem', relation:'enables', kind:'dependency', status:'active', priority:1},\n  {id:'rare-earth-feeds-wind', source:'mineral:rare-earth', target:'sector:global-wind-oem', relation:'enables', kind:'dependency', status:'active', priority:1},\n  {id:'rare-earth-feeds-defense', source:'mineral:rare-earth', target:'sector:global-defense-oem', relation:'enables', kind:'dependency', status:'active', priority:1},\n  {id:'tungsten-feeds-defense', source:'mineral:tungsten', target:'sector:global-defense-oem', relation:'enables', kind:'dependency', status:'active', priority:1},\n  {id:'tungsten-feeds-wind', source:'mineral:tungsten', target:'sector:global-wind-oem', relation:'enables', kind:'dependency', status:'active', priority:2},\n  {id:'antimony-feeds-defense', source:'mineral:antimony', target:'sector:global-defense-oem', relation:'enables', kind:'dependency', status:'active', priority:1},\n  {id:'gallium-feeds-defense', source:'mineral:gallium', target:'sector:global-defense-oem', relation:'enables', kind:'dependency', status:'active', priority:2},\n  {id:'germanium-feeds-defense', source:'mineral:germanium', target:'sector:global-defense-oem', relation:'enables', kind:'dependency', status:'active', priority:2},\n  {id:'graphite-feeds-ev', source:'mineral:graphite', target:'sector:global-ev-oem', relation:'enables', kind:'dependency', status:'active', priority:2},\n  {id:'mofcom-shapes-tungsten', source:'regulator:china-mofcom', target:'sector:china-tungsten-sector', relation:'regulates', kind:'regulation', status:'active', priority:1},\n  {id:'mofcom-shapes-antimony', source:'regulator:china-mofcom', target:'sector:china-antimony-sector', relation:'regulates', kind:'regulation', status:'active', priority:1},\n  {id:'china-tungsten-connected-to-mineral', source:'sector:china-tungsten-sector', target:'mineral:tungsten', relation:'depends-on', kind:'dependency', status:'active', priority:1},\n  {id:'us-tungsten-connected-to-mineral', source:'sector:us-tungsten-sector', target:'mineral:tungsten', relation:'depends-on', kind:'dependency', status:'active', priority:2},\n  {id:'china-antimony-connected-to-mineral', source:'sector:china-antimony-sector', target:'mineral:antimony', relation:'depends-on', kind:'dependency', status:'active', priority:1},\n  {id:'us-antimony-connected-to-mineral', source:'sector:us-antimony-sector', target:'mineral:antimony', relation:'depends-on', kind:'dependency', status:'active', priority:2},\n  {id:'eu-antimony-connected-to-mineral', source:'sector:eu-antimony-sector', target:'mineral:antimony', relation:'depends-on', kind:'dependency', status:'active', priority:2},\n  {id:'baogang-controls-bayan-obo', source:'operator:baogang-group', target:'resource:bayan-obo', relation:'controls', kind:'ownership', status:'active', priority:1},\n  {id:'bayan-obo-supplies-cnr', source:'resource:bayan-obo', target:'processor:china-northern-rare-earth', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'southern-clays-supply-cerg', source:'resource:southern-ion-clays', target:'processor:china-rare-earth-group', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'myanmar-supplies-cerg', source:'resource:myanmar-ion-clays', target:'processor:china-rare-earth-group', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'cnr-supplies-china-magnets', source:'processor:china-northern-rare-earth', target:'sector:china-magnet-sector', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'cerg-supplies-china-magnets', source:'processor:china-rare-earth-group', target:'sector:china-magnet-sector', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'shenghe-supplies-jlmag', source:'processor:shenghe-resources', target:'magnet:jl-mag', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'cnr-supplies-sanhuan', source:'processor:china-northern-rare-earth', target:'magnet:zhong-ke-san-huan', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'sanhuan-supplies-beijing-sanhuan', source:'magnet:zhong-ke-san-huan', target:'magnet:beijing-zhong-ke-san-huan', relation:'supplies', kind:'resource_flow', status:'active', priority:3},\n  {id:'jlmag-supplies-ev', source:'magnet:jl-mag', target:'sector:global-ev-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'sanhuan-supplies-wind', source:'magnet:zhong-ke-san-huan', target:'sector:global-wind-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'china-magnets-supply-ev', source:'sector:china-magnet-sector', target:'sector:global-ev-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'china-magnets-supply-wind', source:'sector:china-magnet-sector', target:'sector:global-wind-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'china-magnets-supply-defense', source:'sector:china-magnet-sector', target:'sector:global-defense-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'white-house-directs-dod', source:'regulator:white-house', target:'financer:us-dod-osc', relation:'directs', kind:'policy', status:'active', priority:1},\n  {id:'white-house-directs-doe', source:'regulator:white-house', target:'regulator:us-doe', relation:'directs', kind:'policy', status:'active', priority:2},\n  {id:'mountain-pass-supplies-mp', source:'resource:mountain-pass', target:'operator:mp-materials', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'dod-finances-mp', source:'financer:us-dod-osc', target:'operator:mp-materials', relation:'finances', kind:'capital_flow', status:'active', priority:1},\n  {id:'mp-supplies-texas-plant', source:'operator:mp-materials', target:'plant:mp-independence-texas', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'texas-plant-supplies-gm', source:'plant:mp-independence-texas', target:'oem:general-motors', relation:'supplies', kind:'offtake', status:'active', priority:1},\n  {id:'reelement-supplies-urban-mining', source:'processor:reelement-technologies', target:'recycling:urban-mining-company', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'urban-mining-supplies-defense', source:'recycling:urban-mining-company', target:'sector:global-defense-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'arnold-supplies-defense', source:'magnet:arnold-magnetic', target:'sector:global-defense-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'mp-supplies-defense', source:'operator:mp-materials', target:'sector:global-defense-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'mt-weld-supplies-lynas-malaysia', source:'resource:mt-weld', target:'plant:lynas-malaysia', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'sojitz-supports-lynas', source:'trader:sojitz', target:'operator:lynas-rare-earths', relation:'supports', kind:'capital_flow', status:'active', priority:2},\n  {id:'lynas-malaysia-supplies-proterial', source:'plant:lynas-malaysia', target:'magnet:proterial', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'lynas-malaysia-supplies-neo', source:'plant:lynas-malaysia', target:'processor:neo-performance-materials', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'lynas-malaysia-supplies-ev', source:'plant:lynas-malaysia', target:'sector:global-ev-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'lynas-malaysia-supplies-wind', source:'plant:lynas-malaysia', target:'sector:global-wind-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:1},\n  {id:'less-common-metals-supplies-vac', source:'metal:less-common-metals', target:'magnet:vacuumschmelze', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'hypromag-supplies-wind', source:'recycling:hypromag', target:'sector:global-wind-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'neo-supplies-ev', source:'processor:neo-performance-materials', target:'sector:global-ev-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'vac-supplies-defense', source:'magnet:vacuumschmelze', target:'sector:global-defense-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'proterial-supplies-ev', source:'magnet:proterial', target:'sector:global-ev-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'tdk-supplies-ev', source:'magnet:tdk', target:'sector:global-ev-oem', relation:'supplies', kind:'resource_flow', status:'active', priority:3},\n  {id:'australia-disr-empowers-efa', source:'regulator:australia-disr', target:'financer:export-finance-australia', relation:'empowers', kind:'policy', status:'active', priority:2},\n  {id:'efa-supports-iluka', source:'financer:export-finance-australia', target:'operator:iluka-resources', relation:'supports', kind:'capital_flow', status:'active', priority:2},\n  {id:'iluka-develops-eneabba', source:'operator:iluka-resources', target:'plant:eneabba-refinery', relation:'develops', kind:'project', status:'planned', priority:2},\n  {id:'eneabba-intends-defense', source:'plant:eneabba-refinery', target:'sector:global-defense-oem', relation:'intended-to-supply', kind:'resource_flow', status:'planned', priority:2},\n  {id:'eu-council-mandates-commission', source:'regulator:eu-council', target:'regulator:eu-commission', relation:'mandates', kind:'policy', status:'active', priority:2},\n  {id:'eu-commission-chairs-board', source:'regulator:eu-commission', target:'governance:eu-crm-board', relation:'chairs', kind:'governance', status:'active', priority:2},\n  {id:'eu-commission-enables-caremag', source:'regulator:eu-commission', target:'operator:caremag', relation:'enables', kind:'policy', status:'active', priority:2},\n  {id:'solvay-supplies-vac', source:'processor:solvay', target:'magnet:vacuumschmelze', relation:'supplies', kind:'resource_flow', status:'active', priority:2},\n  {id:'meti-directs-jogmec', source:'regulator:meti', target:'financer:jogmec', relation:'directs', kind:'policy', status:'active', priority:1},\n  {id:'jogmec-finances-caremag', source:'financer:jogmec', target:'operator:caremag', relation:'finances', kind:'capital_flow', status:'active', priority:1},\n  {id:'caremag-intends-defense', source:'operator:caremag', target:'sector:global-defense-oem', relation:'intended-to-supply', kind:'resource_flow', status:'planned', priority:2},\n  {id:'caremag-intends-ev', source:'operator:caremag', target:'sector:global-ev-oem', relation:'intended-to-supply', kind:'resource_flow', status:'planned', priority:2}\n] AS e MATCH (s:RareEarthActor {did: 'did:web:rare-earth-coverage.etzhayyim.com:' + e.source}) MATCH (t:RareEarthActor {did: 'did:web:rare-earth-coverage.etzhayyim.com:' + e.target}) MERGE (s)-[r:RARE_EARTH_FLOW {flowKey: e.id}]->(t) SET r.relation = e.relation, r.kind = e.kind, r.status = e.status, r.priority = e.priority, r.repo = 'did:web:rare-earth-coverage.etzhayyim.com', r.collection = 'com.etzhayyim.apps.rareEarth.flow'"
+          },
+          "fn": "graph.write",
+          "id": "seedFlows"
+        },
+        {
+          "args": {
+            "template": "rare earth coverage baseline refreshed: actor DID registry and backbone flow map updated."
+          },
+          "fn": "derive:social",
+          "id": "seedDigest"
+        }
+      ],
+      "trigger": {
+        "cron": "15 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:RareEarthActor) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (:RareEarthActor)-[r:RARE_EARTH_FLOW]->(:RareEarthActor) WHERE r.repo = $did RETURN r.kind AS kind, count(r) AS cnt ORDER BY cnt DESC LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageFlows"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n:RareEarthActor) WHERE n.repo = $did RETURN n.stage AS stage, count(n) AS cnt ORDER BY cnt DESC LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageStages"
+        },
+        {
+          "args": {
+            "message": "Summarize rare earth supply chain graph coverage health.\n\nActor totals:\n$coverageNodes.rows\n\nFlow counts by kind:\n$coverageFlows.rows\n\nActors by stage:\n$coverageStages.rows\n\nReturn a concise summary of the largest concentration risks and the next highest-value missing actors to register."
+          },
+          "depends_on": [
+            "coverageNodes",
+            "coverageFlows",
+            "coverageStages"
+          ],
+          "fn": "agent.chat",
+          "id": "coverageSummary"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "rare-earth-coverage",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.rareEarth.coverageSnapshot",
+              "latestSeq": "$coverageNodes.rows[0].latestSeq",
+              "nanoid": "re4c0v26",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount",
+              "summary": "$coverageSummary.text"
+            },
+            "template": "MERGE (c:RareEarthCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'}) SET c.latestSeq = $latestSeq, c.summary = $summary"
+          },
+          "depends_on": [
+            "coverageNodes",
+            "coverageSummary"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:RareEarthCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.summary AS summary, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n:RareEarthActor) WHERE n.repo = $did RETURN count(n) AS totalActors LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.rareEarth.coverage.get",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:RareEarthActor) WHERE n.repo = $did RETURN n.did AS did, n.displayName AS displayName, n.role AS role, n.stage AS stage, n.jurisdiction AS jurisdiction, n.priority AS priority ORDER BY n.priority ASC, n.stage ASC, n.displayName ASC LIMIT 200"
+          },
+          "fn": "graph.query",
+          "id": "actors"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.rareEarth.coverage.listActors",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (s:RareEarthActor)-[r:RARE_EARTH_FLOW]->(t:RareEarthActor) WHERE r.repo = $did RETURN s.displayName AS source, t.displayName AS target, r.relation AS relation, r.kind AS kind, r.status AS status, r.priority AS priority ORDER BY r.priority ASC, r.kind ASC, source ASC LIMIT 300"
+          },
+          "fn": "graph.query",
+          "id": "flows"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.rareEarth.coverage.listFlows",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "seed-rare-earth-baseline",
+      "get-coverage",
+      "list-actors",
+      "list-flows",
+      "summarize-risk"
+    ],
+    "description": "Maintains the rare earth supply chain actor baseline, flow backbone, and coverage health snapshots across China, US, Australia, EU, Japan, and globally relevant demand clusters.",
+    "displayName": "Rare Earth Coverage Orchestrator",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.rareEarth.coverageSnapshot",
+        "com.etzhayyim.apps.rareEarth.actor",
+        "com.etzhayyim.apps.rareEarth.flow"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

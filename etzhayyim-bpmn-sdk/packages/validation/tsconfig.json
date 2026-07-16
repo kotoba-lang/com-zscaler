@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "exactOptionalPropertyTypes": false,
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "CommonJS",
+    "target": "ES2022",
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+}

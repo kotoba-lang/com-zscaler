@@ -1,0 +1,14 @@
+{
+  "actor": "watatsuna",
+  "artifact": "watatsuna-actor.wasm",
+  "built_with": "componentize-py 0.23.0",
+  "wit_world": "watatsuna-actor",
+  "format": "wasm-component (WASI Preview 2)",
+  "cid_v1": "bafybeihusqahaeirwqur64aeh5fvwuoh54cawbmo7smx3h2abvps6li7pa",
+  "cid_codec": "dag-pb (multi-block UnixFS)",
+  "size_bytes": 18456878,
+  "exec_tier": "T2 donated-mesh",
+  "browser_local": false,
+  "note": "Python component bundles CPython (~17.6MB) \u2192 dag-pb CID, not raw single-block; not verifiable by the apex raw-CID gateway nor loadable by the browser-local ameno loader. Runs via jco transpile (node/mesh) or a full IPFS-node host. This is the structural reason compact edge actors use Rust (tsumugi).",
+  "verified_output": "top chokepoint = malacca"
+}

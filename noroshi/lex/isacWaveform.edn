@@ -1,0 +1,19 @@
+{:lexicon 1
+ :id "com.etzhayyim.noroshi.isacWaveform"
+ :defs
+ {:main
+  {:type "record"
+   :key "waveId"
+   :record
+   {:type "object"
+    :required ["waveId" "nSub" "nSym" "bandwidthMhz" "rangeResM" "velResMps" "powerSplit" "capacityGbps" "civilian"]
+    :properties
+    {:waveId {:type "string"}
+     :nSub {:type "integer" :description "subcarriers — the range processing dimension"}
+     :nSym {:type "integer" :description "OFDM symbols — the Doppler processing dimension"}
+     :bandwidthMhz {:type "number" :description "B = nSub · Δf; sets range resolution"}
+     :rangeResM {:type "number" :description "ΔR = c/(2B)"}
+     :velResMps {:type "number" :description "Δv = λ/(2·M·T)"}
+     :powerSplit {:type "number" :description "ρ ∈ [0,1] — fraction of power to communication (the JCAS knob)"}
+     :capacityGbps {:type "number" :description "Shannon capacity of the comms half at this ρ"}
+     :civilian {:type "boolean" :const true :description "G3/N1 — one waveform, two functions; sensing is civilian, fire-control is unrepresentable"}}}}}}

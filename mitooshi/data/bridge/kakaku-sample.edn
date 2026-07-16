@@ -1,0 +1,12 @@
+;; kakaku-shaped price / supply-demand roll-up (DERIVED, :representative) — bridge INPUT.
+;; A snapshot of public merchant-price-derived observations per canonical product; non
+;; price/SD records (offers/merchants/spreads) are present and MUST be ignored by the bridge.
+[
+ {:ph/product "jan_4901777300443" :ph/total-price 3200 :kakaku/derived true}
+ {:ph/product "gtin_04901234567894" :ph/total-price 12800 :kakaku/derived true}
+ {:sd/product "jan_4901777300443" :sd/index 0.42 :sd/reading ":scarcity" :kakaku/derived true}
+ {:sd/product "gtin_04901234567894" :sd/index -0.38 :sd/reading ":glut" :kakaku/derived true}
+ {:spread/product "jan_4901777300443" :spread/fraction 0.18 :kakaku/derived true}
+ {:offer/id "a_com:4549995501234" :offer/total-price 3200 :kakaku/derived true}
+ {:merchant/id "a_com" :merchant/status ":active"}
+]

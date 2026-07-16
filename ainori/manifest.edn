@@ -1,0 +1,55 @@
+;; ainori 相乗り — actor manifest
+;; Pooled passenger-mobility commons (Uber charter-clean inversion)
+;; Reuses todoke-route (NN+2-opt + SAE-L4 refusal envelope) for pooled routing.
+;; ADR-2606071500
+{:actor/id        "ainori"
+ :actor/glyph     "相乗"
+ :actor/tier      :tier-b
+ :actor/integrates ["tazuna" "todoke" "wadachi" "warifu"]
+ :actor/domain    "ainori.etzhayyim.com"
+ :actor/purpose   "Uber-inverse pooled passenger-mobility commons — members already travelling offer seats; riders cost-share (fuel/wear only, no margin); the platform is paid cash≡0. Two non-gig supply modes: human-pooled (member contribution + displacement dividend) and autonomous-pooled (wadachi/tazuna SAE-L4 shuttle). No gig piece-rate, no surge, no person-tracking. kotoba-EAVT-native, Murakumo-only."
+ :actor/status    :r1
+ :actor/adr       "2606071500"
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "no-gig"                   :gate/rule "no piece-rate driver labour; driver = member contribution (contribution→vocation→dividend); platform pays cash≡0; no driver-payment field representable"}
+  {:gate/id "G2"  :gate/name "no-surge"                 :gate/rule "fare = flat cost-share (fuel/energy + wear) split across pooled riders; demand never raises price; no dynamic/surge field representable"}
+  {:gate/id "G3"  :gate/name "safety-envelope"          :gate/rule "SAE-L4 ceiling; per-zone speed caps ENFORCED BY REFUSAL not clamp (reuse todoke-route envelope); out-of-ODD request refused"}
+  {:gate/id "G4"  :gate/name "tithe-non-fiat"           :gate/rule "cost-share settlement USDC Base L2 + ERC-4337 + warifu; TitheRouter 10% auto-split; no Stripe/fiat"}
+  {:gate/id "G5"  :gate/name "no-server-key"            :gate/rule "member signs each settlement (passkey/ERC-4337); ainori holds no key (ADR-2605231525); server signature refused"}
+  {:gate/id "G6"  :gate/name "kotoba-eavt-native"       :gate/rule "ride/route/match/settlement are kotoba Datoms; no RisingWave/SQL/Lance as canonical"}
+  {:gate/id "G7"  :gate/name "privacy-by-construction"  :gate/rule "rider location on-device + ephemeral; NO pattern-of-life datoms; trip history → com.etzhayyim.encrypted.*, DID-bound (ADR-2605181100)"}
+  {:gate/id "G8"  :gate/name "consent-bound"            :gate/rule "member DID-signed consent before match or pickup; no match without recorded consent ref"}
+  {:gate/id "G9"  :gate/name "murakumo-only"            :gate/rule "any NL/ETA narration via KotobaLLM 127.0.0.1:4000; no external LLM (ADR-2605215000)"}
+  {:gate/id "G10" :gate/name "outward-gated"            :gate/rule "live dispatch + live actuation = Council Lv6+ + operator; autonomous-pooled near persons = Lv7+ (Transparent Force audit)"}
+  {:gate/id "G11" :gate/name "anti-individualism"       :gate/rule "pooling-first: occupancy/commons maximized; solo trips deprioritized; never induce solo-hail demand"}
+  {:gate/id "G12" :gate/name "no-person-tracking"       :gate/rule "rider is not a tracked subject; no 'where is person X', no targeting feed; aggregate-first telemetry only"}]
+
+ :actor/cells
+ [{:cell/id "pool_match"     :cell/kind :langgraph :cell/runtime :wasm   :cell/doc "ride-need → pooled match (occupancy-maximizing, Murakumo)"}
+  {:cell/id "route_sequence" :cell/kind :rust      :cell/runtime :wasm   :cell/method "methods/pooled_route.py:sequence_stops"
+                             :cell/doc "WIRED to todoke route core (methods/pooled_route reuses todoke methods/last_mile NN+2-opt); parity-pinned by methods/test_pooled_route.py"}
+  {:cell/id "safety_envelope":cell/kind :rust      :cell/runtime :wasm   :cell/method "py/agent.py:safety_envelope_ok"
+                             :cell/doc "ainori VEHICULAR SAE-L4 refusal envelope (G3) — actor-specific (NOT todoke's pedestrian ODD); sequencing is shared, envelope is not"}
+  {:cell/id "settle"         :cell/kind :datalog   :cell/runtime :kotoba :cell/doc "cost-share split + USDC + TitheRouter via warifu (intent-only at R0)"}]
+
+ :actor/reuses
+ {:crate  "20-actors/todoke/route"            ;; Rust route core (deployed runtime)
+  :module "20-actors/ainori/methods/pooled_route.py"  ;; reuses todoke methods/last_mile sequencing primitives
+  :note   "WIRED: ainori sequences pooled stops via todoke's NN+2-opt core (parity-pinned, test_pooled_route.py). ainori adds passenger/occupancy semantics + its OWN vehicular envelope; only the charter-neutral sequencer is shared, not a second engine."}
+
+ :actor/lexicons
+ ["com.etzhayyim.ainori.rideRequest"
+  "com.etzhayyim.ainori.pooledRoute"
+  "com.etzhayyim.ainori.rideMatch"
+  "com.etzhayyim.ainori.settlement"]
+
+ :actor/siblings
+ {:todoke "goods last-mile (shares route crate)"
+  :wadachi "autonomous ground mobility (autonomous-pooled mode)"
+  :tazuna "fleet teleop / SAE-L4 supervision"
+  :warifu "cost-share settlement rails"}}

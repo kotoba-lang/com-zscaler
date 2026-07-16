@@ -1,0 +1,4 @@
+[{:db/id -1
+  :silen-deconstruction-review/lexicon 1
+  :silen-deconstruction-review/id "com.etzhayyim.hodoki.silenDeconstructionReview"
+  :silen-deconstruction-review/defs "{:main {:type \"record\", :key \"tid\", :record {:type \"object\", :required [\"tid\" \"vin\" \"councilAttestation\" \"reviewTimestamp\"], :properties {:tid {:type \"string\", :description \"Transaction ID\"}, :vin {:type \"string\", :description \"Vehicle Identification Number\"}, :councilAttestation {:type \"boolean\", :description \"Council 5-of-7 Safe attestation\"}, :reviewTimestamp {:type \"string\", :description \"ISO-8601 review time\"}}}}}"}]

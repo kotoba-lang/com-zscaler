@@ -1,0 +1,27 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.provisioningIntent"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "R1(a) — an IN-KIND provisioning intent addressed to a real producing actor / commons / infra (mitsuho food / hikari energy / commons-land housing / Murakumo compute / okaimono tooling / iyashi care / warifu liquidity). A dry-run: published is structurally false (G10), cash is 0 (G2), server-held-key is false (G9). The liquidity intent is member-principal (the member borrows via warifu 0% qard-ḥasan; 扶持 never holds, lends, or pays)."
+   :record
+   {:type "object"
+    :required ["allocId" "railKind" "providerDid" "providerKind" "imputedUsdMicrosYr" "memberPrincipal" "cashUsdMicros" "serverHeldKey" "published"]
+    :properties
+    {:allocId            {:type "string"}
+     :railKind           {:type "string"
+                          :enum ["housing-commons" "food-mitsuho" "energy-hikari"
+                                 "compute-murakumo" "tooling-okaimono" "care-iyashi"
+                                 "liquidity-warifu"]}
+     :providerDid        {:type "string" :description "the producing actor DID / commons / infra ref"}
+     :providerKind       {:type "string" :enum ["actor" "commons" "infra"]}
+     :imputedUsdMicrosYr {:type "integer" :minimum 0}
+     :memberPrincipal    {:type "boolean"
+                          :description "G3b — true only for liquidity-warifu (member is borrower/payer)"}
+     :cashUsdMicros      {:type "integer" :const 0
+                          :description "G2 / cash≡0 INVARIANT — only 0."}
+     :serverHeldKey      {:type "boolean" :const false
+                          :description "G9 / no-server-key INVARIANT — only false."}
+     :published          {:type "boolean" :const false
+                          :description "G10 INVARIANT — only false at R0/R1; live provisioning is Council Lv6+ + operator gated."}}}}}}

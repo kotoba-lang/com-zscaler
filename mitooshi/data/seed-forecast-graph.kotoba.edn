@@ -1,0 +1,137 @@
+;; seed-forecast-graph.kotoba.edn — mitooshi (見通し) :representative seed
+;; ADR-2606051800 · vocabulary: forecasting-ontology.kotoba.edn
+;;
+;; A bounded, illustrative forecasting record: ONE public series (Malacca-Strait
+;; submarine-cable transit load — the watari/watatsuna sibling chokepoint), its realized
+;; observation trail, one model's probabilistic forecasts over it, and the baseline it is
+;; judged against. Time is integer day-index for clarity (epoch ordering only). All
+;; figures :representative — NOT live capture (G11); values are illustrative, the SHAPE is
+;; the point: each forecast's :info-as-of precedes its :target-at, and each target-at has
+;; a realized :obs strictly after the info boundary, so methods/score.py can score it
+;; leak-free.
+
+[;; ───────────────────────────── series ─────────────────────────────
+ {:series/id "s-malacca-transit"
+  :series/name "Malacca-Strait aggregate transit load"
+  :series/kind :transit-load
+  :series/unit "Tbps"
+  :series/freq :daily
+  :series/source "watari/watatsuna chokepoint roll-up (public AIS + cable bulletins)"
+  :series/source-class :public-broadcast
+  :series/sourcing :representative}
+
+ ;; ───────────────────────────── observations (append-only trail) ──
+ {:obs/id "o-1"  :obs/series "s-malacca-transit" :obs/observed-at 1  :obs/value 3.0}
+ {:obs/id "o-2"  :obs/series "s-malacca-transit" :obs/observed-at 2  :obs/value 3.2}
+ {:obs/id "o-3"  :obs/series "s-malacca-transit" :obs/observed-at 3  :obs/value 3.1}
+ {:obs/id "o-4"  :obs/series "s-malacca-transit" :obs/observed-at 4  :obs/value 3.4}
+ {:obs/id "o-5"  :obs/series "s-malacca-transit" :obs/observed-at 5  :obs/value 3.6}
+ {:obs/id "o-6"  :obs/series "s-malacca-transit" :obs/observed-at 6  :obs/value 3.5}
+ {:obs/id "o-7"  :obs/series "s-malacca-transit" :obs/observed-at 7  :obs/value 3.8}
+ {:obs/id "o-8"  :obs/series "s-malacca-transit" :obs/observed-at 8  :obs/value 4.0}
+ {:obs/id "o-9"  :obs/series "s-malacca-transit" :obs/observed-at 9  :obs/value 3.9}
+ {:obs/id "o-10" :obs/series "s-malacca-transit" :obs/observed-at 10 :obs/value 4.2}
+ {:obs/id "o-11" :obs/series "s-malacca-transit" :obs/observed-at 11 :obs/value 4.3}
+ {:obs/id "o-12" :obs/series "s-malacca-transit" :obs/observed-at 12 :obs/value 4.5}
+
+ ;; ───────────────────────────── model + baseline ──────────────────
+ {:fc.model/id "m-ewma-drift" :fc.model/name "EWMA + drift (edge)"
+  :fc.model/method :ewma :fc.model/version 1 :fc.model/runtime :baien-edge
+  :fc.model/params-cid "" :fc.model/skilled false :fc.model/promoted false}
+
+ {:baseline/id "b-climatology" :baseline/kind :climatology}
+
+ ;; ───────────────────────────── forecasts (distribution-only, 1-day horizon) ──
+ ;; each issued seeing obs up to :info-as-of, about :target-at = info-as-of + horizon.
+ {:forecast/id "fc-7"  :forecast/series "s-malacca-transit" :forecast/model "m-ewma-drift"
+  :forecast/dist-kind :gaussian :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 6  :forecast/horizon 1 :forecast/target-at 7  :forecast/mean 3.63 :forecast/sd 0.25 :forecast/sourcing :representative}
+ {:forecast/id "fc-8"  :forecast/series "s-malacca-transit" :forecast/model "m-ewma-drift"
+  :forecast/dist-kind :gaussian :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 7  :forecast/horizon 1 :forecast/target-at 8  :forecast/mean 3.93 :forecast/sd 0.25 :forecast/sourcing :representative}
+ {:forecast/id "fc-9"  :forecast/series "s-malacca-transit" :forecast/model "m-ewma-drift"
+  :forecast/dist-kind :gaussian :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 8  :forecast/horizon 1 :forecast/target-at 9  :forecast/mean 4.13 :forecast/sd 0.25 :forecast/sourcing :representative}
+ {:forecast/id "fc-10" :forecast/series "s-malacca-transit" :forecast/model "m-ewma-drift"
+  :forecast/dist-kind :gaussian :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 9  :forecast/horizon 1 :forecast/target-at 10 :forecast/mean 4.03 :forecast/sd 0.25 :forecast/sourcing :representative}
+ {:forecast/id "fc-11" :forecast/series "s-malacca-transit" :forecast/model "m-ewma-drift"
+  :forecast/dist-kind :gaussian :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 10 :forecast/horizon 1 :forecast/target-at 11 :forecast/mean 4.33 :forecast/sd 0.25 :forecast/sourcing :representative}
+ {:forecast/id "fc-12" :forecast/series "s-malacca-transit" :forecast/model "m-ewma-drift"
+  :forecast/dist-kind :gaussian :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 11 :forecast/horizon 1 :forecast/target-at 12 :forecast/mean 4.43 :forecast/sd 0.25 :forecast/sourcing :representative}
+
+ ;; ═══════════════════════ QUANTILE forecaster (Luzon-Strait flow-rate) ═══════════
+ ;; :forecast/quantiles stored as a literal edn map {level value …} for the analyzer;
+ ;; the wire lexicon serializes it as an edn-string (schema :forecast/quantiles string).
+ {:series/id "s-luzon-flow" :series/name "Luzon-Strait aggregate flow" :series/kind :flow-rate
+  :series/unit "Tbps" :series/freq :daily :series/source "watari chokepoint roll-up"
+  :series/source-class :public-broadcast :series/sourcing :representative}
+ {:obs/id "lo-1" :obs/series "s-luzon-flow" :obs/observed-at 1 :obs/value 5.0}
+ {:obs/id "lo-2" :obs/series "s-luzon-flow" :obs/observed-at 2 :obs/value 5.2}
+ {:obs/id "lo-3" :obs/series "s-luzon-flow" :obs/observed-at 3 :obs/value 4.9}
+ {:obs/id "lo-4" :obs/series "s-luzon-flow" :obs/observed-at 4 :obs/value 5.3}
+ {:obs/id "lo-5" :obs/series "s-luzon-flow" :obs/observed-at 5 :obs/value 5.1}
+ {:obs/id "lo-6" :obs/series "s-luzon-flow" :obs/observed-at 6 :obs/value 5.4}
+ {:obs/id "lo-7" :obs/series "s-luzon-flow" :obs/observed-at 7 :obs/value 5.2}
+ {:obs/id "lo-8" :obs/series "s-luzon-flow" :obs/observed-at 8 :obs/value 5.5}
+ {:fc.model/id "m-q-edge" :fc.model/name "Quantile regressor (edge)" :fc.model/method :state-space
+  :fc.model/version 1 :fc.model/runtime :baien-edge :fc.model/params-cid "" :fc.model/skilled false :fc.model/promoted false}
+ {:forecast/id "fc-q6" :forecast/series "s-luzon-flow" :forecast/model "m-q-edge"
+  :forecast/dist-kind :quantile :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 5 :forecast/horizon 1 :forecast/target-at 6 :forecast/quantiles {0.1 5.15 0.5 5.35 0.9 5.55} :forecast/sourcing :representative}
+ {:forecast/id "fc-q7" :forecast/series "s-luzon-flow" :forecast/model "m-q-edge"
+  :forecast/dist-kind :quantile :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 6 :forecast/horizon 1 :forecast/target-at 7 :forecast/quantiles {0.1 5.0 0.5 5.25 0.9 5.5} :forecast/sourcing :representative}
+ {:forecast/id "fc-q8" :forecast/series "s-luzon-flow" :forecast/model "m-q-edge"
+  :forecast/dist-kind :quantile :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 7 :forecast/horizon 1 :forecast/target-at 8 :forecast/quantiles {0.1 5.2 0.5 5.45 0.9 5.7} :forecast/sourcing :representative}
+
+ ;; ═══════════════════════ CATEGORICAL forecaster (Suez congestion direction) ═════
+ {:series/id "s-suez-dir" :series/name "Suez-Red-Sea congestion direction" :series/kind :congestion
+  :series/unit "class" :series/freq :daily :series/source "watari/watatsuna roll-up"
+  :series/source-class :public-broadcast :series/sourcing :representative}
+ {:obs/id "so-1" :obs/series "s-suez-dir" :obs/observed-at 1 :obs/value 0 :obs/class "flat"}
+ {:obs/id "so-2" :obs/series "s-suez-dir" :obs/observed-at 2 :obs/value 0 :obs/class "up"}
+ {:obs/id "so-3" :obs/series "s-suez-dir" :obs/observed-at 3 :obs/value 0 :obs/class "up"}
+ {:obs/id "so-4" :obs/series "s-suez-dir" :obs/observed-at 4 :obs/value 0 :obs/class "flat"}
+ {:obs/id "so-5" :obs/series "s-suez-dir" :obs/observed-at 5 :obs/value 0 :obs/class "down"}
+ {:obs/id "so-6" :obs/series "s-suez-dir" :obs/observed-at 6 :obs/value 0 :obs/class "up"}
+ {:obs/id "so-7" :obs/series "s-suez-dir" :obs/observed-at 7 :obs/value 0 :obs/class "up"}
+ {:obs/id "so-8" :obs/series "s-suez-dir" :obs/observed-at 8 :obs/value 0 :obs/class "flat"}
+ {:fc.model/id "m-c-edge" :fc.model/name "Direction classifier (edge)" :fc.model/method :gradient-boost
+  :fc.model/version 1 :fc.model/runtime :baien-edge :fc.model/params-cid "" :fc.model/skilled false :fc.model/promoted false}
+ {:forecast/id "fc-c6" :forecast/series "s-suez-dir" :forecast/model "m-c-edge"
+  :forecast/dist-kind :categorical :forecast/use :early-warning :forecast/point-asserted false
+  :forecast/info-as-of 5 :forecast/horizon 1 :forecast/target-at 6 :forecast/probs {"up" 0.6 "flat" 0.3 "down" 0.1} :forecast/sourcing :representative}
+ {:forecast/id "fc-c7" :forecast/series "s-suez-dir" :forecast/model "m-c-edge"
+  :forecast/dist-kind :categorical :forecast/use :early-warning :forecast/point-asserted false
+  :forecast/info-as-of 6 :forecast/horizon 1 :forecast/target-at 7 :forecast/probs {"up" 0.55 "flat" 0.35 "down" 0.1} :forecast/sourcing :representative}
+ {:forecast/id "fc-c8" :forecast/series "s-suez-dir" :forecast/model "m-c-edge"
+  :forecast/dist-kind :categorical :forecast/use :early-warning :forecast/point-asserted false
+  :forecast/info-as-of 7 :forecast/horizon 1 :forecast/target-at 8 :forecast/probs {"up" 0.4 "flat" 0.5 "down" 0.1} :forecast/sourcing :representative}
+
+ ;; ═══════════════════════ ENSEMBLE forecaster (Bab-el-Mandeb flow) ═══════════════
+ ;; :forecast/members = literal edn vector for the analyzer; energy-form CRPS scores it,
+ ;; baseline = the visible history treated as a climatology ensemble.
+ {:series/id "s-bab-flow" :series/name "Bab-el-Mandeb aggregate flow" :series/kind :flow-rate
+  :series/unit "Tbps" :series/freq :daily :series/source "watari chokepoint roll-up"
+  :series/source-class :public-broadcast :series/sourcing :representative}
+ {:obs/id "bo-1" :obs/series "s-bab-flow" :obs/observed-at 1 :obs/value 4.0}
+ {:obs/id "bo-2" :obs/series "s-bab-flow" :obs/observed-at 2 :obs/value 4.2}
+ {:obs/id "bo-3" :obs/series "s-bab-flow" :obs/observed-at 3 :obs/value 4.1}
+ {:obs/id "bo-4" :obs/series "s-bab-flow" :obs/observed-at 4 :obs/value 4.3}
+ {:obs/id "bo-5" :obs/series "s-bab-flow" :obs/observed-at 5 :obs/value 4.2}
+ {:obs/id "bo-6" :obs/series "s-bab-flow" :obs/observed-at 6 :obs/value 4.4}
+ {:fc.model/id "m-e-edge" :fc.model/name "Ensemble (edge)" :fc.model/method :state-space
+  :fc.model/version 1 :fc.model/runtime :baien-edge :fc.model/params-cid "" :fc.model/skilled false :fc.model/promoted false}
+ {:forecast/id "fc-e4" :forecast/series "s-bab-flow" :forecast/model "m-e-edge"
+  :forecast/dist-kind :ensemble :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 3 :forecast/horizon 1 :forecast/target-at 4 :forecast/members [4.15 4.25 4.30 4.20] :forecast/sourcing :representative}
+ {:forecast/id "fc-e5" :forecast/series "s-bab-flow" :forecast/model "m-e-edge"
+  :forecast/dist-kind :ensemble :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 4 :forecast/horizon 1 :forecast/target-at 5 :forecast/members [4.10 4.20 4.25 4.15] :forecast/sourcing :representative}
+ {:forecast/id "fc-e6" :forecast/series "s-bab-flow" :forecast/model "m-e-edge"
+  :forecast/dist-kind :ensemble :forecast/use :resilience :forecast/point-asserted false
+  :forecast/info-as-of 5 :forecast/horizon 1 :forecast/target-at 6 :forecast/members [4.30 4.40 4.45 4.35] :forecast/sourcing :representative}]

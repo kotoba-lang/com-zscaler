@@ -1,0 +1,24 @@
+{:lexicon 1
+ :id "com.etzhayyim.tasuke.policeReportDraft"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A police-side document GENERATED for the victim to submit: 被害届 / 被害状況報告書 / 証拠目録 / 被害額算定書. CRITICAL INVARIANT (G3): the document is authored BY THE MEMBER (本人作成の申告書類), never by the police — an official police-authored record is unrepresentable (公文書偽造を構造的に排除). It is 'ready to use' in that an officer can work from it at intake, but the victim signs and submits it."
+   :record
+   {:type "object"
+    :required ["docId" "case" "kind" "authoredBy" "needsMemberSignature" "supportCostJpy" "published"]
+    :properties
+    {:docId         {:type "string" :description "→ :doc/id"}
+     :case          {:type "string" :description "→ :doc/case"}
+     :kind          {:type "string" :enum ["damage-report" "incident-statement" "evidence-index" "damage-calculation"]
+                     :description "police-side document kinds. platform-request / bank-freeze-request / recovery-plan are emitted by their own lexicons."}
+     :authoredBy    {:type "string" :const "member"
+                     :description "G3 INVARIANT — only 'member'. 'police' / 'official' / 'server' are unrepresentable. The actor produces the VICTIM's own filing, not a police-authored 公文書."}
+     :addressedTo   {:type "string" :description "宛先 (e.g. ○○警察署長) — a recipient, NOT the author."}
+     :body          {:type "string" :description "the generated draft text (Japanese)"}
+     :needsMemberSignature {:type "boolean" :const true
+                            :description "G2/G7 — the member must review + sign before use; only true (no 代理提出)."}
+     :supportCostJpy {:type "integer" :const 0 :description "G1 — generation is free; only 0."}
+     :published     {:type "boolean" :const false
+                     :description "G9 — R0 is draft-only; live filing is Council Lv6+ + operator gated. Only false."}}}}}}

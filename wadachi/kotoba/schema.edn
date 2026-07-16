@@ -1,0 +1,214 @@
+;; wadachi 轍 — kotoba EAVT schema
+;; ADR-2605242000 · R0 scaffold
+;; Autonomous mobility mission orchestration: delivery routes, trajectory plans,
+;; steering commands, safety status, telemetry, and mission completion records
+;; all stored as kotoba Datoms (G9).
+
+[;; ───────────────────────────── :delivery-route/* — mission input ─────────────────────────────
+ {:db/ident :delivery-route/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for delivery route (mission input)"}
+ {:db/ident :delivery-route/origin
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "GPS origin (lat,lon)"}
+ {:db/ident :delivery-route/destination
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "GPS destination (lat,lon)"}
+ {:db/ident :delivery-route/obstacles
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Obstacle descriptors (static/dynamic)"}
+ {:db/ident :delivery-route/payload-kg
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Payload mass ≤100 kg (G11)"}
+ {:db/ident :delivery-route/site-map-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Site map reference (IPFS CID or URL)"}
+
+ ;; ───────────────────────────── :trajectory-plan/* — route planning output ─────────────────────────────
+ {:db/ident :trajectory-plan/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for trajectory plan"}
+ {:db/ident :trajectory-plan/route-ref
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to originating delivery-route"}
+ {:db/ident :trajectory-plan/waypoints
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Sequence of (lat,lon,heading) waypoints"}
+ {:db/ident :trajectory-plan/buffer-zones
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Obstacle avoidance buffer zone coordinates"}
+ {:db/ident :trajectory-plan/speed-profile
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Speed command profile (m/s over distance), R0 ≤1 m/s (G11)"}
+ {:db/ident :trajectory-plan/determinism-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Commit hash for replay determinism @ 10 Hz (G6)"}
+
+ ;; ───────────────────────────── :steering-command/* — motion control output ─────────────────────────────
+ {:db/ident :steering-command/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique steering command ID"}
+ {:db/ident :steering-command/wheel-angle
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Steering wheel angle (degrees)"}
+ {:db/ident :steering-command/throttle
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Throttle command (0.0–1.0)"}
+ {:db/ident :steering-command/brake
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Brake command (0.0–1.0); regenerative logged (G12)"}
+ {:db/ident :steering-command/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp @ 10 Hz (G6)"}
+
+ ;; ───────────────────────────── :sensor-fusion/* — obstacle detection input ─────────────────────────────
+ {:db/ident :sensor-fusion/lidar
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "LIDAR point cloud (50m range, 0.1° res)"}
+ {:db/ident :sensor-fusion/camera
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Camera frame descriptor"}
+ {:db/ident :sensor-fusion/radar
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Radar velocity/range data"}
+
+ ;; ───────────────────────────── :avoidance-adjustment/* — obstacle avoidance output ─────────────────────────────
+ {:db/ident :avoidance-adjustment/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique avoidance adjustment ID"}
+ {:db/ident :avoidance-adjustment/dynamic-heading
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Adjusted heading (degrees) if obstacle detected"}
+ {:db/ident :avoidance-adjustment/obstacle-detected
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Boolean: obstacle detected requiring replanning"}
+ {:db/ident :avoidance-adjustment/new-waypoint
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Emergency waypoint (lat,lon) if replanning triggered"}
+
+ ;; ───────────────────────────── :motion-telemetry/* — safety monitoring input ─────────────────────────────
+ {:db/ident :motion-telemetry/speed-mps
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Current speed (m/s), must stay ≤1 m/s R0 (G11)"}
+ {:db/ident :motion-telemetry/acceleration-mps2
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Longitudinal acceleration (m/s²)"}
+ {:db/ident :motion-telemetry/tilt-deg
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Vehicle tilt angle (degrees)"}
+ {:db/ident :motion-telemetry/wheel-slip
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Wheel slip ratio (0.0–1.0)"}
+ {:db/ident :energy-consumed-kwh
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Cumulative energy consumed (≤5 kWh mission budget, G12)"}
+
+ ;; ───────────────────────────── :safety-status/* — safety monitoring output ─────────────────────────────
+ {:db/ident :safety-status/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique safety status ID"}
+ {:db/ident :safety-status/pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Boolean: all safety thresholds pass"}
+ {:db/ident :safety-status/anomaly
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Anomaly description (speed_violation | tilt | slip | energy)"}
+ {:db/ident :safety-status/halt-required
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Boolean: immediate mission halt required"}
+ {:db/ident :safety-status/reason
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Explanation for halt (G11/G12)"}
+ {:db/ident :safety-status/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp"}
+
+ ;; ───────────────────────────── :mission-complete-record/* — telemetry log output ─────────────────────────────
+ {:db/ident :mission-complete-record/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique mission completion record ID"}
+ {:db/ident :mission-complete-record/route-ref
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to original delivery-route"}
+ {:db/ident :mission-complete-record/completion-timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 mission completion time"}
+ {:db/ident :mission-complete-record/ipfs-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of pinned telemetry package (G2)"}
+ {:db/ident :mission-complete-record/gps-track
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Executed GPS track (lat,lon array)"}
+ {:db/ident :mission-complete-record/energy-kwh
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "Total energy consumed (≤5 kWh, G12)"}
+ {:db/ident :mission-complete-record/safety-summary
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Summary: pass | anomaly | halt (G11)"}
+ {:db/ident :mission-complete-record/operator-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Operator DID (SBT-gated, G10)"}
+
+ ;; ───────────────────────────── :sbt/* — operator eligibility (G10) ─────────────────────────────
+ {:db/ident :sbt/operator-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "DID of operator with active Adherent SBT"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Boolean: operator holds active Adherent SBT (G10)"}
+ {:db/ident :sbt/certification-level
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Operator certification level (R0 | R1 | R2 | R3)"}]

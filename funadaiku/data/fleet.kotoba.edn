@@ -1,0 +1,41 @@
+;; funadaiku 船大工 — shipyard robotics fleet (kotoba EAVT)
+;; ADR-2606013400 · the robots that build the Nagi 凪 class.
+;;
+;; CONSTITUTIONAL: every robot below acts ONLY to fabricate / assemble / inspect / coat /
+;;   outfit a zero-emission cargo hull. No weapons fitment, no naval work (N1-N4).
+;;
+;; HONEST: R0 design-only. Maturity flags conservative; nothing here is built hardware.
+;;   All inference Murakumo-only (G10). All firmware open-source (G1).
+
+[{:fleet/id "funadaiku.yard" :fleet/actor "actor:funadaiku" :fleet/adr "2606013400"
+  :fleet/purpose "build zero-emission autonomous cargo ships (Nagi class)" :fleet/sourcing :representative}
+
+ {:robot/id "funadaiku.ita-ori" :robot/glyph "板織" :robot/name "Ita-ori — panel-line / curved-block automated welder"
+  :robot/role :fabrication :robot/mode :gantry-portal
+  :robot/spec "one-side SAW flat panels + stiffener fit; line/press-heat curved block forming"
+  :robot/op-sequence ["plate-stage" "tack" "saw-weld" "stiffener-fit" "dimensional-check"]
+  :robot/phase "R1+" :robot/maturity :design-only :robot/witness-capable true}
+
+ {:robot/id "funadaiku.oshidashi" :robot/glyph "押出" :robot/name "Oshidashi — grand-block transport + erection crane / SPMT"
+  :robot/role :erection :robot/mode :spmt+gantry
+  :robot/spec "transport grand blocks to building dock; align + tack for joining"
+  :robot/op-sequence ["block-lift" "transport" "align-on-dock" "tack-hold"]
+  :robot/phase "R1+" :robot/maturity :design-only}
+
+ {:robot/id "funadaiku.tsutsuki" :robot/glyph "突き" :robot/name "Tsutsuki — hull-seam NDT crawler (RT/UT/PT), weld witness"
+  :robot/role :inspection :robot/mode :magnetic-crawler :robot/inherits "watatsumi Tako (蛸)"
+  :robot/spec "100% hull-seam NDT; Ed25519-signed weld-witness attestation (G3/G4)"
+  :robot/op-sequence ["seam-register" "rt-ut-pt-scan" "defect-flag" "sign-attestation"]
+  :robot/phase "R1+" :robot/maturity :design-only :robot/witness-capable true}
+
+ {:robot/id "funadaiku.nuri-de" :robot/glyph "塗手" :robot/name "Nuri-de — hull coating / blasting robot (VOC-bounded)"
+  :robot/role :coating :robot/mode :rail+arm
+  :robot/spec "abrasive blast + low-VOC marine coating; emissions captured (G14)"
+  :robot/op-sequence ["mask" "blast" "coat" "cure-monitor"]
+  :robot/phase "R2+" :robot/maturity :design-only}
+
+ {:robot/id "funadaiku.otete-yard" :robot/glyph "御手" :robot/name "Otete-yard — outfitting + powertrain-bay manipulator"
+  :robot/role :outfitting :robot/mode :arm :robot/inherits "kuni-umi Otete"
+  :robot/spec "wind-assist rig + FC stack + LFP + e-pod install in ATEX-zoned bay (G11)"
+  :robot/op-sequence ["component-stage" "fit" "torque" "leak-test" "sign-off"]
+  :robot/phase "R1+" :robot/maturity :design-only :robot/witness-capable true}]

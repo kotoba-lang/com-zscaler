@@ -1,0 +1,14 @@
+{
+  "@context" : [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1" ],
+  "id" : "did:web:etzhayyim.com:actor:hagukumi",
+  "alsoKnownAs" : [ "at://hagukumi.etzhayyim.com", "https://github.com/etzhayyim/com-etzhayyim-hagukumi", "rad:bafkreiaqqeo76lgptiqvgfehbnuonv2uffgud7fkkhylcdc4ei7hk4qnai", "did:web:etzhayyim.github.io:com-etzhayyim-hagukumi" ],
+  "service" : [ {
+    "id" : "did:web:etzhayyim.com:actor:hagukumi#atproto_pds",
+    "type" : "AtprotoPersonalDataServer",
+    "serviceEndpoint" : "https://pds.etzhayyim.com"
+  }, {
+    "id" : "did:web:etzhayyim.com:actor:hagukumi#aozora",
+    "type" : "AozoraAppView",
+    "serviceEndpoint" : "https://aozora.app"
+  } ]
+}

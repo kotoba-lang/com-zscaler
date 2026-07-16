@@ -1,0 +1,56 @@
+{:actor/id        "sanae"
+ :actor/glyph     "早苗"
+ :actor/tier      :tier-b
+ :actor/integrates ["mitsuho"]
+ :actor/domain    "sanae.etzhayyim.com"
+ :actor/did       "did:web:etzhayyim.com:actor:sanae"
+ :actor/purpose   "Field-agriculture robotics — sow/weed/harvest automation for the single largest pool of human toil on Earth (ISIC A01 / ISCO 6,92 / UNSPSC 70). The robotics body of mitsuho's L2-Sustenance mandate. LPS #1 in ADR-2606032100."
+ :actor/status    :r0
+ :actor/adr       "2606032100"
+ :actor/related   ["2606032130" "2605261015" "2605261000" "2605301020" "2605201400"]
+ :actor/labor
+ {:isic   "A01"
+  :isco   ["6111" "6112" "6113" "9211"]
+  :unspsc ["70" "10" "11"]
+  :lps-rank 1}
+
+ :actor/charter-rider {:rider/version "2.0" :rider/applied true}
+
+ :actor/fleet
+ [{:robot/id "saotome"  :robot/glyph "早乙女" :robot/role "transplant + precision-seeding arm"}
+  {:robot/id "kusanagi" :robot/glyph "草薙"   :robot/role "autonomous weeding/cultivation crawler (mechanical + laser, no herbicide)"}
+  {:robot/id "hasa"     :robot/glyph "稲架"   :robot/role "harvest + in-field threshing"}
+  {:robot/id "kakashi"  :robot/glyph "案山子" :robot/role "survey + spot-treat drone"}
+  {:robot/id "tanishi"  :robot/glyph "田螺"   :robot/role "soil-microbiome + moisture probe"}]
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "open-source-firmware" :gate/req "all robot control + skill code Apache 2.0 (WASM/Rust); no proprietary trait IP"}
+  {:gate/id "G2" :gate/name "displacement-dividend-coupling" :gate/req "no live displacement without the displaced cohort registered for the tenure-weighted Displacement Dividend (ADR-2606032130)"}
+  {:gate/id "G3" :gate/name "witness-quorum" :gate/req ">=2 distinct robot Ed25519 sigs + >=1 human agronomist attestation"}
+  {:gate/id "G4" :gate/name "murakumo-only" :gate/req "inference via LiteLLM 127.0.0.1:4000 only (ADR-2605215000)"}
+  {:gate/id "G5" :gate/name "no-payroll-cash-zero" :gate/req "no payroll; cash to adherents ≡0; contribution is vocation→donation"}
+  {:gate/id "G6" :gate/name "wellbecoming" :gate/req "remove toil, never intensify it; no dark-pattern design"}
+  {:gate/id "G7" :gate/name "outward-gated" :gate/req "live field deployment Council Lv6+ + operator gated; R0-R2 design+sim only"}
+  {:gate/id "G8" :gate/name "sourcing-honesty" :gate/req ":representative seed flagged; no inflated capability"}
+  {:gate/id "G9" :gate/name "regenerative-only" :gate/req "mechanical/biological weed+pest control, NO synthetic pesticide/herbicide; net soil-carbon >=0; seed sovereignty (open seed banks, no patented lines)"}]
+
+ :actor/non-goals
+ [{:ng/id "N1" :ng/req "no military/weaponized/dual-use-for-harm variants"}
+  {:ng/id "N2" :ng/req "no surveillance product; telemetry on-device/encrypted"}
+  {:ng/id "N3" :ng/req "no labour intensification for external commercial throughput"}
+  {:ng/id "N4" :ng/req "no industrial monoculture (>50 ha single-crop) — inherits mitsuho N2"}
+  {:ng/id "N5" :ng/req "no patented seeds / IP-restricted varietals"}]
+
+ :actor/cells
+ [{:cell/id "field_preparation"       :cell/kind :langgraph :cell/runtime :wasm :cell/node "naphtali"}
+  {:cell/id "precision_seeding"       :cell/kind :langgraph :cell/runtime :wasm :cell/node "joseph"}
+  {:cell/id "autonomous_weeding"      :cell/kind :langgraph :cell/runtime :wasm :cell/node "judah"}
+  {:cell/id "harvest_coordination"    :cell/kind :langgraph :cell/runtime :wasm :cell/node "simeon"}
+  {:cell/id "soil_regeneration_audit" :cell/kind :langgraph :cell/runtime :wasm :cell/node "levi"}]
+
+ :actor/lex
+ [{:lex/id "fieldStateRecord"}
+  {:lex/id "seedingAttestation"}
+  {:lex/id "weedingPassRecord"}
+  {:lex/id "harvestAttestation"}
+  {:lex/id "soilRegenerationReport"}]}

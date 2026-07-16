@@ -1,0 +1,58 @@
+{
+  "generator": "device_loop.py (device-loop-host + real open-ot BFB wasm)",
+  "device_cells": [
+    "DROOP_P_F",
+    "ANTI_ISLANDING_ROCOF"
+  ],
+  "artefact_target": "wasm32-unknown-unknown (cdylib, WAMR/Cortex-M7 artefact class)",
+  "results": [
+    {
+      "scenario": "normal-load-step",
+      "load_step_kw": 140.0,
+      "final_freq_hz": 50.0,
+      "freq_restored": true,
+      "final_command_kw": 140.0,
+      "rocof_trip": false,
+      "rocof_max_uhz_per_s": 1250000,
+      "droop_final_state": "Responding",
+      "twin_final_freq_hz": 50.0,
+      "twin_max_cmd_delta_kw": 0.0001,
+      "twin_verdict_match": true,
+      "ticks": 8000,
+      "dry_run": true,
+      "server_held_key": false
+    },
+    {
+      "scenario": "load-shed",
+      "load_step_kw": 60.0,
+      "final_freq_hz": 50.0,
+      "freq_restored": true,
+      "final_command_kw": 60.0,
+      "rocof_trip": false,
+      "rocof_max_uhz_per_s": 1250000,
+      "droop_final_state": "Responding",
+      "twin_final_freq_hz": 50.0,
+      "twin_max_cmd_delta_kw": 0.0001,
+      "twin_verdict_match": true,
+      "ticks": 8000,
+      "dry_run": true,
+      "server_held_key": false
+    },
+    {
+      "scenario": "islanding-scale-step",
+      "load_step_kw": 190.0,
+      "final_freq_hz": 50.0,
+      "freq_restored": true,
+      "final_command_kw": 190.0,
+      "rocof_trip": true,
+      "rocof_max_uhz_per_s": 2812500,
+      "droop_final_state": "Responding",
+      "twin_final_freq_hz": 50.0,
+      "twin_max_cmd_delta_kw": 0.0001,
+      "twin_verdict_match": true,
+      "ticks": 8000,
+      "dry_run": true,
+      "server_held_key": false
+    }
+  ]
+}

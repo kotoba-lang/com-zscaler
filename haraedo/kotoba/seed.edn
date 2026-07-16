@@ -1,0 +1,90 @@
+;; haraedo 祓戸 — kotoba seed data (representative, R0)
+;; ADR-2606010200  ·  :sourcing :representative
+;; Worldwide bulky-waste registry sample: item categories, jurisdictions,
+;; processing facilities, collection points, vehicles, crew, + one worked
+;; application and dispatch route. Coordinates/capacities are representative,
+;; NOT authoritative. Currency fees in minor units of each jurisdiction.
+
+[;; ============ item categories (粗大ゴミ品目区分) ============
+ {:item-category/code :furniture       :item-category/label "家具 / furniture"            :item-category/hazardous false :item-category/base-fee 1000 :item-category/est-weight-kg 35.0 :item-category/requires-dismantle false}
+ {:item-category/code :appliance-large :item-category/label "大型家電 / large appliance"  :item-category/hazardous false :item-category/base-fee 2000 :item-category/est-weight-kg 55.0 :item-category/requires-dismantle true}
+ {:item-category/code :bedding         :item-category/label "寝具 / bedding (mattress)"   :item-category/hazardous false :item-category/base-fee 1500 :item-category/est-weight-kg 25.0 :item-category/requires-dismantle false}
+ {:item-category/code :bicycle         :item-category/label "自転車 / bicycle"            :item-category/hazardous false :item-category/base-fee  800 :item-category/est-weight-kg 15.0 :item-category/requires-dismantle false}
+ {:item-category/code :garden          :item-category/label "庭木・剪定枝 / garden waste" :item-category/hazardous false :item-category/base-fee  600 :item-category/est-weight-kg 20.0 :item-category/requires-dismantle false}
+ {:item-category/code :electronics     :item-category/label "小型電子機器 / electronics"  :item-category/hazardous false :item-category/base-fee  500 :item-category/est-weight-kg  8.0 :item-category/requires-dismantle true}
+ ;; hazardous → G3: NOT collected as bulky waste; routed to licensed handler
+ {:item-category/code :appliance-recycle-law :item-category/label "家電リサイクル法対象 (TV/AC/冷蔵庫/洗濯機)" :item-category/hazardous true :item-category/base-fee 0 :item-category/est-weight-kg 50.0 :item-category/requires-dismantle true}
+ {:item-category/code :battery         :item-category/label "バッテリー / battery"        :item-category/hazardous true  :item-category/base-fee 0    :item-category/est-weight-kg  5.0 :item-category/requires-dismantle true}
+ {:item-category/code :other           :item-category/label "その他 / other"              :item-category/hazardous false :item-category/base-fee 1000 :item-category/est-weight-kg 20.0 :item-category/requires-dismantle false}
+
+ ;; ============ jurisdictions (自治体) — R1 fee params (minor units) ============
+ {:jurisdiction/id "jp.shibuya" :jurisdiction/name "渋谷区 (Shibuya)"   :jurisdiction/country "JP" :jurisdiction/admin-level :ward         :jurisdiction/bulky-fee-model :per-sticker :jurisdiction/currency "JPY" :jurisdiction/fee-per-sticker 400 :jurisdiction/fee-per-kg 0   :jurisdiction/fee-flat 0}
+ {:jurisdiction/id "jp.setagaya" :jurisdiction/name "世田谷区 (Setagaya)" :jurisdiction/country "JP" :jurisdiction/admin-level :ward        :jurisdiction/bulky-fee-model :per-sticker :jurisdiction/currency "JPY" :jurisdiction/fee-per-sticker 300 :jurisdiction/fee-per-kg 0   :jurisdiction/fee-flat 0}
+ {:jurisdiction/id "us.nyc"     :jurisdiction/name "New York City"      :jurisdiction/country "US" :jurisdiction/admin-level :municipality :jurisdiction/bulky-fee-model :free       :jurisdiction/currency "USD" :jurisdiction/fee-per-sticker 0   :jurisdiction/fee-per-kg 0   :jurisdiction/fee-flat 0}
+ {:jurisdiction/id "us.sf"      :jurisdiction/name "San Francisco"      :jurisdiction/country "US" :jurisdiction/admin-level :municipality :jurisdiction/bulky-fee-model :per-item   :jurisdiction/currency "USD" :jurisdiction/fee-per-sticker 0   :jurisdiction/fee-per-kg 0   :jurisdiction/fee-flat 0}
+ {:jurisdiction/id "de.berlin"  :jurisdiction/name "Berlin (BSR)"       :jurisdiction/country "DE" :jurisdiction/admin-level :region       :jurisdiction/bulky-fee-model :flat       :jurisdiction/currency "EUR" :jurisdiction/fee-per-sticker 0   :jurisdiction/fee-per-kg 0   :jurisdiction/fee-flat 5000}
+ {:jurisdiction/id "gb.camden"  :jurisdiction/name "London Borough of Camden" :jurisdiction/country "GB" :jurisdiction/admin-level :municipality :jurisdiction/bulky-fee-model :per-weight :jurisdiction/currency "GBP" :jurisdiction/fee-per-sticker 0 :jurisdiction/fee-per-kg 100 :jurisdiction/fee-flat 0}
+
+ ;; ============ processing facilities (ゴミ処理場) ============
+ ;; --- Japan ---
+ {:facility/id "jp.shibuya.fac.incinerator-01" :facility/jurisdiction "jp.shibuya" :facility/name "渋谷区清掃工場"
+  :facility/kind :incinerator :facility/lat 35.6580 :facility/lon 139.6990 :facility/capacity-tonnes-day 200.0 :facility/load-tonnes-today 0.0
+  :facility/accepted-categories #{:furniture :bedding :garden :other} :facility/operating-hours "Mon-Sat 08:00-17:00" :facility/gate-fee-per-tonne 4000 :facility/sourcing :representative}
+ {:facility/id "jp.shibuya.fac.bulky-dismantle-01" :facility/jurisdiction "jp.shibuya" :facility/name "粗大ごみ破砕処理施設"
+  :facility/kind :bulky-dismantle :facility/lat 35.6620 :facility/lon 139.7050 :facility/capacity-tonnes-day 60.0 :facility/load-tonnes-today 0.0
+  :facility/accepted-categories #{:furniture :appliance-large :bicycle :electronics :bedding :other} :facility/operating-hours "Mon-Fri 09:00-16:00" :facility/gate-fee-per-tonne 6000 :facility/sourcing :representative}
+ {:facility/id "jp.setagaya.fac.recycling-01" :facility/jurisdiction "jp.setagaya" :facility/name "世田谷リサイクルセンター"
+  :facility/kind :recycling-center :facility/lat 35.6460 :facility/lon 139.6530 :facility/capacity-tonnes-day 80.0 :facility/load-tonnes-today 0.0
+  :facility/accepted-categories #{:furniture :bicycle :electronics :garden} :facility/operating-hours "Tue-Sun 09:00-17:00" :facility/gate-fee-per-tonne 5000 :facility/sourcing :representative}
+ ;; --- United States ---
+ {:facility/id "us.nyc.fac.transfer-01" :facility/jurisdiction "us.nyc" :facility/name "DSNY Marine Transfer Station (Manhattan)"
+  :facility/kind :transfer-station :facility/lat 40.7740 :facility/lon -73.9920 :facility/capacity-tonnes-day 1500.0 :facility/load-tonnes-today 0.0
+  :facility/accepted-categories #{:furniture :bedding :appliance-large :other} :facility/operating-hours "Mon-Sat 06:00-18:00" :facility/gate-fee-per-tonne 0 :facility/sourcing :representative}
+ {:facility/id "us.sf.fac.mrf-01" :facility/jurisdiction "us.sf" :facility/name "Recology Recycle Central (Pier 96)"
+  :facility/kind :mrf :facility/lat 37.7390 :facility/lon -122.3770 :facility/capacity-tonnes-day 1000.0 :facility/load-tonnes-today 0.0
+  :facility/accepted-categories #{:furniture :bicycle :electronics :appliance-large :other} :facility/operating-hours "Mon-Fri 07:00-16:00" :facility/gate-fee-per-tonne 8500 :facility/sourcing :representative}
+ ;; --- Europe ---
+ {:facility/id "de.berlin.fac.recycling-01" :facility/jurisdiction "de.berlin" :facility/name "BSR Recyclinghof Nordring"
+  :facility/kind :recycling-center :facility/lat 52.5440 :facility/lon 13.3680 :facility/capacity-tonnes-day 120.0 :facility/load-tonnes-today 0.0
+  :facility/accepted-categories #{:furniture :bedding :garden :electronics :bicycle :other} :facility/operating-hours "Mon-Sat 07:00-19:00" :facility/gate-fee-per-tonne 9000 :facility/sourcing :representative}
+ {:facility/id "gb.camden.fac.reuse-01" :facility/jurisdiction "gb.camden" :facility/name "Regis Road Reuse & Recycling Centre"
+  :facility/kind :recycling-center :facility/lat 51.5530 :facility/lon -0.1430 :facility/capacity-tonnes-day 90.0 :facility/load-tonnes-today 0.0
+  :facility/accepted-categories #{:furniture :bedding :bicycle :garden :other} :facility/operating-hours "Daily 08:00-16:00" :facility/gate-fee-per-tonne 11000 :facility/sourcing :representative}
+
+ ;; ============ collection points (収集地点) — Shibuya worked example ============
+ {:collection-point/id "jp.shibuya.cp.udagawa-1"  :collection-point/jurisdiction "jp.shibuya" :collection-point/lat 35.6615 :collection-point/lon 139.6980 :collection-point/kind :curbside :collection-point/service-area "shibuya-north"}
+ {:collection-point/id "jp.shibuya.cp.jinnan-1"   :collection-point/jurisdiction "jp.shibuya" :collection-point/lat 35.6645 :collection-point/lon 139.6975 :collection-point/kind :curbside :collection-point/service-area "shibuya-north"}
+ {:collection-point/id "jp.shibuya.cp.dogenzaka-1" :collection-point/jurisdiction "jp.shibuya" :collection-point/lat 35.6575 :collection-point/lon 139.6960 :collection-point/kind :curbside :collection-point/service-area "shibuya-north"}
+ {:collection-point/id "jp.shibuya.cp.ebisu-1"    :collection-point/jurisdiction "jp.shibuya" :collection-point/lat 35.6465 :collection-point/lon 139.7100 :collection-point/kind :curbside :collection-point/service-area "shibuya-south"}
+
+ ;; ============ vehicles (車両) ============
+ {:vehicle/id "jp.shibuya.veh.packer-01"  :vehicle/jurisdiction "jp.shibuya" :vehicle/kind :packer      :vehicle/capacity-kg 4000 :vehicle/depot-lat 35.6600 :vehicle/depot-lon 139.7020 :vehicle/status :available}
+ {:vehicle/id "jp.shibuya.veh.flatbed-01" :vehicle/jurisdiction "jp.shibuya" :vehicle/kind :flatbed     :vehicle/capacity-kg 3000 :vehicle/depot-lat 35.6600 :vehicle/depot-lon 139.7020 :vehicle/status :available}
+ {:vehicle/id "jp.shibuya.veh.evpacker-01" :vehicle/jurisdiction "jp.shibuya" :vehicle/kind :ev-packer  :vehicle/capacity-kg 3500 :vehicle/depot-lat 35.6600 :vehicle/depot-lon 139.7020 :vehicle/status :available}
+
+ ;; ============ crew (担当者) — labor-liberation participants (G5) ============
+ {:crew/id "jp.shibuya.crew.driver-01" :crew/jurisdiction "jp.shibuya" :crew/member-did "did:web:etzhayyim.com:member:hkw01" :crew/role :driver     :crew/certifications #{:hgv-license :first-aid} :crew/shift :early :crew/labor-level :l3}
+ {:crew/id "jp.shibuya.crew.loader-01" :crew/jurisdiction "jp.shibuya" :crew/member-did "did:web:etzhayyim.com:member:hkw02" :crew/role :loader     :crew/certifications #{:first-aid}            :crew/shift :early :crew/labor-level :l2}
+ {:crew/id "jp.shibuya.crew.loader-02" :crew/jurisdiction "jp.shibuya" :crew/member-did "did:web:etzhayyim.com:member:hkw03" :crew/role :loader     :crew/certifications #{}                       :crew/shift :early :crew/labor-level :l1}
+ {:crew/id "jp.shibuya.crew.dispatch-01" :crew/jurisdiction "jp.shibuya" :crew/member-did "did:web:etzhayyim.com:member:hkw04" :crew/role :dispatcher :crew/certifications #{:first-aid}          :crew/shift :day   :crew/labor-level :l4}
+
+ ;; ============ worked example: application + route (R0 design illustration) ============
+ {:application/id "jp.shibuya.app.20260605-0001" :application/member-did "did:web:etzhayyim.com:member:resident-x"
+  :application/jurisdiction "jp.shibuya" :application/items #{:furniture :bedding}
+  :application/collection-point "jp.shibuya.cp.udagawa-1" :application/scheduled-date "2026-06-05"
+  :application/fee 2500 :application/sticker-id "SBY-26060500001" :application/consent-sig "z-did-sig-placeholder"
+  :application/slot-id "jp.shibuya.slot.20260605-north-am" :application/state :scheduled}
+
+ {:route/id "jp.shibuya.route.20260605-north-01" :route/jurisdiction "jp.shibuya" :route/date "2026-06-05"
+  :route/vehicle "jp.shibuya.veh.packer-01"
+  :route/crew #{"jp.shibuya.crew.driver-01" "jp.shibuya.crew.loader-01" "jp.shibuya.crew.loader-02"}
+  :route/stops #{"jp.shibuya.cp.jinnan-1" "jp.shibuya.cp.udagawa-1" "jp.shibuya.cp.dogenzaka-1"}
+  :route/stop-order "[\"jp.shibuya.cp.jinnan-1\" \"jp.shibuya.cp.udagawa-1\" \"jp.shibuya.cp.dogenzaka-1\"]"
+  :route/facility-destination "jp.shibuya.fac.bulky-dismantle-01"
+  :route/distance-km 4.8 :route/est-duration-min 95 :route/load-kg 320 :route/state :planned}
+
+ ;; ============ collection slots (R1) — capacity-honest calendar ============
+ {:slot/id "jp.shibuya.slot.20260605-north-am" :slot/jurisdiction "jp.shibuya" :slot/date "2026-06-05" :slot/service-area "shibuya-north" :slot/window :am :slot/capacity 20 :slot/booked 3 :slot/window-start 480 :slot/window-end 720}
+ {:slot/id "jp.shibuya.slot.20260605-north-pm" :slot/jurisdiction "jp.shibuya" :slot/date "2026-06-05" :slot/service-area "shibuya-north" :slot/window :pm :slot/capacity 20 :slot/booked 0 :slot/window-start 780 :slot/window-end 1020}
+ {:slot/id "jp.shibuya.slot.20260605-south-am" :slot/jurisdiction "jp.shibuya" :slot/date "2026-06-05" :slot/service-area "shibuya-south" :slot/window :am :slot/capacity 20 :slot/booked 0 :slot/window-start 480 :slot/window-end 720}
+ {:slot/id "jp.shibuya.slot.20260612-north-am" :slot/jurisdiction "jp.shibuya" :slot/date "2026-06-12" :slot/service-area "shibuya-north" :slot/window :am :slot/capacity 20 :slot/booked 0 :slot/window-start 480 :slot/window-end 720}]

@@ -1,0 +1,938 @@
+{
+  "schemaVersion": "1.0",
+  "handle": "salesforce-compat",
+  "did": "did:web:etzhayyim.com:actor:salesforce-compat",
+  "kind": "compat",
+  "title": "salesforce clean-room actor",
+  "description": "Clean-room, API-compatible CRM / sales-pipeline actor (salesforce); runs browser-local on IPFS + kotoba-WASM.",
+  "wasmCid": "bafkreibdx5qgaxqdbmvr6ldhkfin74yxndkjkyfhhb4zsmvdy3pfylfxbu",
+  "wasmProvenance": "built-rust-raw",
+  "runtime": "kotoba-wasm",
+  "exec": "browser-local|donated-mesh",
+  "ipfs": "ipfs://bafkreibdx5qgaxqdbmvr6ldhkfin74yxndkjkyfhhb4zsmvdy3pfylfxbu",
+  "schema": "schema/salesforce.kotoba",
+  "tier": "L4",
+  "verified": null,
+  "entities": [
+    "Account",
+    "Contact",
+    "Lead",
+    "Opportunity",
+    "Case",
+    "Campaign",
+    "Task"
+  ],
+  "adr": [
+    "260607",
+    "2606014500",
+    "2606013800",
+    "2606036000"
+  ],
+  "capabilities": {
+    "api": {
+      "type": "rest",
+      "runtime": "kotoba-wasm",
+      "endpointCount": 35,
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/v1/accounts",
+          "op": "create Account"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/accounts",
+          "op": "list Account"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/accounts/{id}",
+          "op": "get Account"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/accounts/{id}",
+          "op": "update Account"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/accounts/{id}",
+          "op": "delete Account"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/contacts",
+          "op": "create Contact"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/contacts",
+          "op": "list Contact"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/contacts/{id}",
+          "op": "get Contact"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/contacts/{id}",
+          "op": "update Contact"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/contacts/{id}",
+          "op": "delete Contact"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/leads",
+          "op": "create Lead"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/leads",
+          "op": "list Lead"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/leads/{id}",
+          "op": "get Lead"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/leads/{id}",
+          "op": "update Lead"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/leads/{id}",
+          "op": "delete Lead"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/opportunities",
+          "op": "create Opportunity"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/opportunities",
+          "op": "list Opportunity"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/opportunities/{id}",
+          "op": "get Opportunity"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/opportunities/{id}",
+          "op": "update Opportunity"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/opportunities/{id}",
+          "op": "delete Opportunity"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/cases",
+          "op": "create Case"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/cases",
+          "op": "list Case"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/cases/{id}",
+          "op": "get Case"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/cases/{id}",
+          "op": "update Case"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/cases/{id}",
+          "op": "delete Case"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/campaigns",
+          "op": "create Campaign"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/campaigns",
+          "op": "list Campaign"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/campaigns/{id}",
+          "op": "get Campaign"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/campaigns/{id}",
+          "op": "update Campaign"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/campaigns/{id}",
+          "op": "delete Campaign"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/tasks",
+          "op": "create Task"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/tasks",
+          "op": "list Task"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/tasks/{id}",
+          "op": "get Task"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/tasks/{id}",
+          "op": "update Task"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/tasks/{id}",
+          "op": "delete Task"
+        }
+      ],
+      "features": {
+        "pagination": true,
+        "filtering": true,
+        "relationExpansion": true,
+        "strictValidation": true,
+        "contractTest": true
+      },
+      "health": "/healthz"
+    },
+    "supplychain": {
+      "type": "cyclonedx-sbom",
+      "runtime": "kotoba-wasm",
+      "sbom": "manifest:supplychain.sbom",
+      "sbomData": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "metadata": {
+          "component": {
+            "type": "application",
+            "name": "salesforce-compat",
+            "purl": "pkg:etzhayyim/salesforce-compat"
+          }
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "kotoba",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotoba"
+          },
+          {
+            "type": "library",
+            "name": "kotodama-wasm",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotodama-wasm"
+          },
+          {
+            "type": "library",
+            "name": "datomic-client",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/datomic-client"
+          }
+        ]
+      },
+      "adr": [
+        "2606036000"
+      ]
+    },
+    "socialpost": {
+      "type": "datom-event-feed",
+      "runtime": "kotoba-wasm",
+      "lexicon": "app.bsky.feed.post",
+      "source": "salesforce.* Datom events",
+      "mode": "dry-run",
+      "gate": "G8"
+    },
+    "mcp": {
+      "type": "model-context-protocol",
+      "runtime": "kotoba-wasm",
+      "transport": "ipfs+kotoba-wasm",
+      "toolCount": 35,
+      "tools": [
+        {
+          "name": "create_account",
+          "description": "Create a Account.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "industry": {
+                "type": "string"
+              },
+              "annualRevenue": {
+                "type": "number"
+              },
+              "ownerId": {
+                "type": "string"
+              },
+              "website": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "industry"
+            ]
+          }
+        },
+        {
+          "name": "list_accounts",
+          "description": "List Accounts.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_account",
+          "description": "Get a Account by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_account",
+          "description": "Update a Account.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "industry": {
+                "type": "string"
+              },
+              "annualRevenue": {
+                "type": "number"
+              },
+              "ownerId": {
+                "type": "string"
+              },
+              "website": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_account",
+          "description": "Delete a Account.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_contact",
+          "description": "Create a Contact.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "firstName",
+              "lastName"
+            ]
+          }
+        },
+        {
+          "name": "list_contacts",
+          "description": "List Contacts.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_contact",
+          "description": "Get a Contact by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_contact",
+          "description": "Update a Contact.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "accountId": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_contact",
+          "description": "Delete a Contact.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_lead",
+          "description": "Create a Lead.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "company": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "leadSource": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "company",
+              "firstName"
+            ]
+          }
+        },
+        {
+          "name": "list_leads",
+          "description": "List Leads.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_lead",
+          "description": "Get a Lead by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_lead",
+          "description": "Update a Lead.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "company": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "leadSource": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_lead",
+          "description": "Delete a Lead.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_opportunity",
+          "description": "Create a Opportunity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "stageName": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number"
+              },
+              "closeDate": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "stageName"
+            ]
+          }
+        },
+        {
+          "name": "list_opportunities",
+          "description": "List Opportunities.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_opportunity",
+          "description": "Get a Opportunity by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_opportunity",
+          "description": "Update a Opportunity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "accountId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "stageName": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number"
+              },
+              "closeDate": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_opportunity",
+          "description": "Delete a Opportunity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_case",
+          "description": "Create a Case.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string"
+              },
+              "origin": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "subject",
+              "status"
+            ]
+          }
+        },
+        {
+          "name": "list_cases",
+          "description": "List Cases.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_case",
+          "description": "Get a Case by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_case",
+          "description": "Update a Case.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "accountId": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string"
+              },
+              "origin": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_case",
+          "description": "Delete a Case.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_campaign",
+          "description": "Create a Campaign.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "budgetedCost": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "name",
+              "type"
+            ]
+          }
+        },
+        {
+          "name": "list_campaigns",
+          "description": "List Campaigns.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_campaign",
+          "description": "Get a Campaign by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_campaign",
+          "description": "Update a Campaign.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "budgetedCost": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_campaign",
+          "description": "Delete a Campaign.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_task",
+          "description": "Create a Task.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "whoId": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "activityDate": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "subject",
+              "status"
+            ]
+          }
+        },
+        {
+          "name": "list_tasks",
+          "description": "List Tasks.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_task",
+          "description": "Get a Task by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_task",
+          "description": "Update a Task.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "whoId": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "activityDate": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_task",
+          "description": "Delete a Task.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

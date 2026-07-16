@@ -1,0 +1,8 @@
+[[cell]]
+name = "shionome_ingest"
+module = "shionome_ingest.cell"
+entry = "compiled"
+node = "issachar"
+trigger = { kind = "cron", expression = "5 * * * *" }
+healthz_port = 14010
+adr = ["2606072200"]

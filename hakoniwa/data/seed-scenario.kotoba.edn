@@ -1,0 +1,109 @@
+;; hakoniwa 箱庭 — seed forward-simulation scenario (FICTIONAL latent personas only)
+;; ADR-2606111500 · vocabulary: hakoniwa-scenario-ontology (00-contracts/schemas/)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - EVERY :persona below is SYNTHETIC (:persona/synthetic true) — a fictional cohort
+;;     archetype, NOT a real individual. There is NO PII, NO real-person profile, NO
+;;     re-identifiable trait. No persona maps to a natural person. This is a contained
+;;     miniature world (箱庭), not a model of real people (cf. ADR-2606111400).
+;;   - The OUTPUT is a DISTRIBUTION over a population statistic (quantiles + histogram),
+;;     never a point prediction (:sim/point-asserted structurally false, G2).
+;;   - The USE is RESILIENCE only (:outcome/use :preparedness). hakoniwa never trades,
+;;     never targets a person, never runs an influence/persuasion campaign (G3).
+;;
+;; SCENARIO (fictional): the town of "Hakoniwa-machi" is weighing whether residents will
+;;   voluntarily adopt a community flood-preparedness drill (a sonae 備え-aligned measure).
+;;   The simulated topic is each persona's STANCE ∈ [0,1] toward adopting the drill. An
+;;   official-warning RELAY (signal.s1, a sonae-style authoritative relay — see G8) and a
+;;   neighbour word-of-mouth wave (signal.s2) enter the box at later steps. We read out the
+;;   DISTRIBUTION of the final town-wide mean adoption stance across replicas — a resilience
+;;   planning lens for sonae/kazaori, never a prediction asserted as fact.
+
+[;; ───────────────────────── topic entity (public mirror; not a person) ──────────────────
+ {:sim/id "entity.drill-adoption" :sim/kind :entity :sim/label "voluntary community flood-preparedness drill (topic)" :sim/sourcing :representative :entity/public-ref "topic.preparedness.drill"}
+
+ ;; ───────────────────────── signals (exogenous information entering the box) ─────────────
+ {:sim/id "signal.s1" :sim/kind :signal :sim/label "official preparedness advisory RELAY (sonae-style authoritative relay)" :sim/sourcing :representative :signal/push 0.18 :signal/at-step 3}
+ {:sim/id "signal.s2" :sim/kind :signal :sim/label "neighbour word-of-mouth wave" :sim/sourcing :synthetic :signal/push 0.08 :signal/at-step 6}
+
+ ;; ───────────────────────── outcome (the measured aggregate) ─────────────────────────────
+ {:sim/id "outcome.adoption" :sim/kind :outcome :sim/label "town-wide mean adoption stance" :sim/sourcing :representative :outcome/measures :all :outcome/statistic :mean-stance :outcome/use :preparedness}
+
+ ;; ───────────────────────── personas (SYNTHETIC latent agents — G1) ──────────────────────
+ ;; cohorts: :prepared-anchor (high stance, low susceptibility) · :cautious-commuter (mid) ·
+ ;;          :skeptic (low stance) · :connector (high susceptibility, social hub) · :newcomer (mid, very open)
+ {:sim/id "persona.p01" :sim/kind :persona :sim/label "archetype: prepared anchor A" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :prepared-anchor :persona/susceptibility 0.15 :persona/initial-stance 0.85}
+ {:sim/id "persona.p02" :sim/kind :persona :sim/label "archetype: prepared anchor B" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :prepared-anchor :persona/susceptibility 0.20 :persona/initial-stance 0.80}
+ {:sim/id "persona.p03" :sim/kind :persona :sim/label "archetype: cautious commuter A" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :cautious-commuter :persona/susceptibility 0.45 :persona/initial-stance 0.55}
+ {:sim/id "persona.p04" :sim/kind :persona :sim/label "archetype: cautious commuter B" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :cautious-commuter :persona/susceptibility 0.50 :persona/initial-stance 0.50}
+ {:sim/id "persona.p05" :sim/kind :persona :sim/label "archetype: cautious commuter C" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :cautious-commuter :persona/susceptibility 0.48 :persona/initial-stance 0.52}
+ {:sim/id "persona.p06" :sim/kind :persona :sim/label "archetype: skeptic A" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :skeptic :persona/susceptibility 0.30 :persona/initial-stance 0.20}
+ {:sim/id "persona.p07" :sim/kind :persona :sim/label "archetype: skeptic B" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :skeptic :persona/susceptibility 0.25 :persona/initial-stance 0.15}
+ {:sim/id "persona.p08" :sim/kind :persona :sim/label "archetype: skeptic C" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :skeptic :persona/susceptibility 0.35 :persona/initial-stance 0.25}
+ {:sim/id "persona.p09" :sim/kind :persona :sim/label "archetype: connector A (social hub)" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :connector :persona/susceptibility 0.65 :persona/initial-stance 0.55 :persona/weight 1.5}
+ {:sim/id "persona.p10" :sim/kind :persona :sim/label "archetype: connector B (social hub)" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :connector :persona/susceptibility 0.60 :persona/initial-stance 0.50 :persona/weight 1.5}
+ {:sim/id "persona.p11" :sim/kind :persona :sim/label "archetype: newcomer A" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :newcomer :persona/susceptibility 0.75 :persona/initial-stance 0.45}
+ {:sim/id "persona.p12" :sim/kind :persona :sim/label "archetype: newcomer B" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :newcomer :persona/susceptibility 0.80 :persona/initial-stance 0.40}
+ {:sim/id "persona.p13" :sim/kind :persona :sim/label "archetype: cautious commuter D" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :cautious-commuter :persona/susceptibility 0.42 :persona/initial-stance 0.58}
+ {:sim/id "persona.p14" :sim/kind :persona :sim/label "archetype: skeptic D" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :skeptic :persona/susceptibility 0.28 :persona/initial-stance 0.22}
+ {:sim/id "persona.p15" :sim/kind :persona :sim/label "archetype: prepared anchor C" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :prepared-anchor :persona/susceptibility 0.18 :persona/initial-stance 0.82}
+ {:sim/id "persona.p16" :sim/kind :persona :sim/label "archetype: connector C (social hub)" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :connector :persona/susceptibility 0.62 :persona/initial-stance 0.48 :persona/weight 1.5}
+ {:sim/id "persona.p17" :sim/kind :persona :sim/label "archetype: newcomer C" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :newcomer :persona/susceptibility 0.78 :persona/initial-stance 0.42}
+ {:sim/id "persona.p18" :sim/kind :persona :sim/label "archetype: cautious commuter E" :sim/sourcing :synthetic :persona/synthetic true :persona/cohort :cautious-commuter :persona/susceptibility 0.47 :persona/initial-stance 0.53}
+
+ ;; ───────────────────────── stance edges (persona → topic; initial holding) ──────────────
+ {:en/from "persona.p01" :en/to "entity.drill-adoption" :en/kind :holds-stance :en/weight 0.85 :en/sourcing :synthetic}
+ {:en/from "persona.p06" :en/to "entity.drill-adoption" :en/kind :holds-stance :en/weight 0.20 :en/sourcing :synthetic}
+
+ ;; ───────────────────────── exposure edges (persona → signal) ────────────────────────────
+ ;; signal.s1 (official relay) reaches most of the town; signal.s2 (word-of-mouth) reaches the connectors' circles
+ {:en/from "persona.p01" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p02" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p03" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p04" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p05" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p09" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p10" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p11" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p12" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p13" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p16" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p17" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p18" :en/to "signal.s1" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p09" :en/to "signal.s2" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p10" :en/to "signal.s2" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p11" :en/to "signal.s2" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p12" :en/to "signal.s2" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p16" :en/to "signal.s2" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+ {:en/from "persona.p17" :en/to "signal.s2" :en/kind :exposed-to :en/weight 1.0 :en/sourcing :synthetic}
+
+ ;; ───────────────────────── influence edges (persona → persona; j influences i means j→i) ─
+ ;; connectors (p09/p10/p16) are hubs; anchors (p01/p02/p15) seed; skeptics cluster together
+ {:en/from "persona.p01" :en/to "persona.p03" :en/kind :influences :en/weight 0.6 :en/sourcing :synthetic}
+ {:en/from "persona.p02" :en/to "persona.p04" :en/kind :influences :en/weight 0.5 :en/sourcing :synthetic}
+ {:en/from "persona.p15" :en/to "persona.p05" :en/kind :influences :en/weight 0.5 :en/sourcing :synthetic}
+ {:en/from "persona.p09" :en/to "persona.p03" :en/kind :influences :en/weight 0.7 :en/sourcing :synthetic}
+ {:en/from "persona.p09" :en/to "persona.p04" :en/kind :influences :en/weight 0.7 :en/sourcing :synthetic}
+ {:en/from "persona.p09" :en/to "persona.p11" :en/kind :influences :en/weight 0.8 :en/sourcing :synthetic}
+ {:en/from "persona.p09" :en/to "persona.p12" :en/kind :influences :en/weight 0.8 :en/sourcing :synthetic}
+ {:en/from "persona.p10" :en/to "persona.p05" :en/kind :influences :en/weight 0.6 :en/sourcing :synthetic}
+ {:en/from "persona.p10" :en/to "persona.p13" :en/kind :influences :en/weight 0.6 :en/sourcing :synthetic}
+ {:en/from "persona.p10" :en/to "persona.p17" :en/kind :influences :en/weight 0.7 :en/sourcing :synthetic}
+ {:en/from "persona.p16" :en/to "persona.p18" :en/kind :influences :en/weight 0.6 :en/sourcing :synthetic}
+ {:en/from "persona.p16" :en/to "persona.p11" :en/kind :influences :en/weight 0.5 :en/sourcing :synthetic}
+ {:en/from "persona.p06" :en/to "persona.p07" :en/kind :influences :en/weight 0.5 :en/sourcing :synthetic}
+ {:en/from "persona.p07" :en/to "persona.p08" :en/kind :influences :en/weight 0.5 :en/sourcing :synthetic}
+ {:en/from "persona.p08" :en/to "persona.p14" :en/kind :influences :en/weight 0.5 :en/sourcing :synthetic}
+ {:en/from "persona.p06" :en/to "persona.p04" :en/kind :influences :en/weight 0.3 :en/sourcing :synthetic}
+ {:en/from "persona.p14" :en/to "persona.p05" :en/kind :influences :en/weight 0.3 :en/sourcing :synthetic}
+ {:en/from "persona.p03" :en/to "persona.p09" :en/kind :influences :en/weight 0.4 :en/sourcing :synthetic}
+ {:en/from "persona.p04" :en/to "persona.p10" :en/kind :influences :en/weight 0.4 :en/sourcing :synthetic}
+ {:en/from "persona.p11" :en/to "persona.p16" :en/kind :influences :en/weight 0.4 :en/sourcing :synthetic}
+ {:en/from "persona.p12" :en/to "persona.p09" :en/kind :influences :en/weight 0.3 :en/sourcing :synthetic}
+ {:en/from "persona.p13" :en/to "persona.p18" :en/kind :influences :en/weight 0.4 :en/sourcing :synthetic}
+ {:en/from "persona.p17" :en/to "persona.p10" :en/kind :influences :en/weight 0.3 :en/sourcing :synthetic}
+ {:en/from "persona.p05" :en/to "persona.p06" :en/kind :influences :en/weight 0.2 :en/sourcing :synthetic}
+ {:en/from "persona.p18" :en/to "persona.p07" :en/kind :influences :en/weight 0.2 :en/sourcing :synthetic}
+
+ ;; ───────────────────────── measures edge (outcome → population) ─────────────────────────
+ {:en/from "outcome.adoption" :en/to "entity.drill-adoption" :en/kind :measures :en/weight 1.0 :en/sourcing :synthetic}]

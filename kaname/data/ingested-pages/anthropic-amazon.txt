@@ -1,0 +1,8 @@
+We have signed a new agreement with Amazon that will deepen our existing partnership and secure up to 5 gigawatts (GW) of capacity for training and deploying Claude.
+We have worked closely with Amazon since 2023 and over 100,000 customers now run Claude on Amazon Bedrock.
+We are committing more than $100 billion over the next ten years to AWS technologies, securing up to 5GW of new capacity.
+The commitment spans Graviton and Trainium2 through Trainium4 chips, with the option to purchase future generations.
+We continue to choose AWS as our primary training and cloud provider for mission-critical workloads.
+Amazon is investing $5 billion in Anthropic today, with up to an additional $20 billion in the future.
+This builds on the $8 billion Amazon has previously invested.
+Claude remains the only frontier AI model available to customers on all three of the world's largest cloud platforms: AWS (Bedrock), Google Cloud (Vertex AI), and Microsoft Azure (Foundry).

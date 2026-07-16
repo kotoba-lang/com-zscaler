@@ -1,0 +1,14 @@
+{
+  "actor": "shionome",
+  "artifact": "shionome-actor.wasm",
+  "built_with": "componentize-py",
+  "wit_world": "shionome-actor",
+  "format": "wasm-component (WASI Preview 2)",
+  "cid_v1": "bafybeigk6whellozcybop4btzcrdtybd5yejjrax7tczxhapfsyya64hka",
+  "cid_codec": "dag-pb (multi-block UnixFS)",
+  "size_bytes": 18527538,
+  "exec_tier": "T2 donated-mesh",
+  "browser_local": false,
+  "note": "Python component bundles CPython (~17.7MB) -> dag-pb CID, not raw single-block; runs via jco transpile (node/mesh) or a full IPFS-node host, NOT the browser-local ameno loader. Compact edge actors use Rust; this is the kotoba-WASM face of the shionome Python analyzer.",
+  "verified_output": "regime = risk-on, no_trade = true, top inflow = US equities"
+}

@@ -1,0 +1,768 @@
+{
+  "schemaVersion": "1.0",
+  "handle": "zalo-compat",
+  "did": "did:web:etzhayyim.com:actor:zalo-compat",
+  "kind": "compat",
+  "title": "zalo clean-room actor",
+  "description": "Clean-room, API-compatible communications / social actor (zalo); runs browser-local on IPFS + kotoba-WASM.",
+  "wasmCid": "bafkreibywzmow7nrh5rr7mt6k6raek4w25vgoj72wy472bsuvpx55a6b3i",
+  "wasmProvenance": "built-rust-raw",
+  "runtime": "kotoba-wasm",
+  "exec": "browser-local|donated-mesh",
+  "ipfs": "ipfs://bafkreibywzmow7nrh5rr7mt6k6raek4w25vgoj72wy472bsuvpx55a6b3i",
+  "schema": "schema/zalo.kotoba",
+  "tier": "L4",
+  "verified": null,
+  "entities": [
+    "Channel",
+    "Message",
+    "User",
+    "Room",
+    "Stream",
+    "Webhook"
+  ],
+  "adr": [
+    "260607",
+    "2606014500",
+    "2606013800",
+    "2606036000"
+  ],
+  "capabilities": {
+    "api": {
+      "type": "rest",
+      "runtime": "kotoba-wasm",
+      "endpointCount": 30,
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/v1/channels",
+          "op": "create Channel"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/channels",
+          "op": "list Channel"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/channels/{id}",
+          "op": "get Channel"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/channels/{id}",
+          "op": "update Channel"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/channels/{id}",
+          "op": "delete Channel"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages",
+          "op": "create Message"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/messages",
+          "op": "list Message"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/messages/{id}",
+          "op": "get Message"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/messages/{id}",
+          "op": "update Message"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/messages/{id}",
+          "op": "delete Message"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/users",
+          "op": "create User"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/users",
+          "op": "list User"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/users/{id}",
+          "op": "get User"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/users/{id}",
+          "op": "update User"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/users/{id}",
+          "op": "delete User"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/rooms",
+          "op": "create Room"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/rooms",
+          "op": "list Room"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/rooms/{id}",
+          "op": "get Room"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/rooms/{id}",
+          "op": "update Room"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/rooms/{id}",
+          "op": "delete Room"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/streams",
+          "op": "create Stream"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/streams",
+          "op": "list Stream"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/streams/{id}",
+          "op": "get Stream"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/streams/{id}",
+          "op": "update Stream"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/streams/{id}",
+          "op": "delete Stream"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/webhooks",
+          "op": "create Webhook"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/webhooks",
+          "op": "list Webhook"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/webhooks/{id}",
+          "op": "get Webhook"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/webhooks/{id}",
+          "op": "update Webhook"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/webhooks/{id}",
+          "op": "delete Webhook"
+        }
+      ],
+      "features": {
+        "pagination": true,
+        "filtering": true,
+        "relationExpansion": true,
+        "strictValidation": true,
+        "contractTest": true
+      },
+      "health": "/healthz"
+    },
+    "supplychain": {
+      "type": "cyclonedx-sbom",
+      "runtime": "kotoba-wasm",
+      "sbom": "manifest:supplychain.sbom",
+      "sbomData": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "metadata": {
+          "component": {
+            "type": "application",
+            "name": "zalo-compat",
+            "purl": "pkg:etzhayyim/zalo-compat"
+          }
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "kotoba",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotoba"
+          },
+          {
+            "type": "library",
+            "name": "kotodama-wasm",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotodama-wasm"
+          },
+          {
+            "type": "library",
+            "name": "datomic-client",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/datomic-client"
+          }
+        ]
+      },
+      "adr": [
+        "2606036000"
+      ]
+    },
+    "socialpost": {
+      "type": "datom-event-feed",
+      "runtime": "kotoba-wasm",
+      "lexicon": "app.bsky.feed.post",
+      "source": "zalo.* Datom events",
+      "mode": "dry-run",
+      "gate": "G8"
+    },
+    "mcp": {
+      "type": "model-context-protocol",
+      "runtime": "kotoba-wasm",
+      "transport": "ipfs+kotoba-wasm",
+      "toolCount": 30,
+      "tools": [
+        {
+          "name": "create_channel",
+          "description": "Create a Channel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "topic": {
+                "type": "string"
+              },
+              "memberCount": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "name",
+              "type"
+            ]
+          }
+        },
+        {
+          "name": "list_channels",
+          "description": "List Channels.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_channel",
+          "description": "Get a Channel by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_channel",
+          "description": "Update a Channel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "topic": {
+                "type": "string"
+              },
+              "memberCount": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_channel",
+          "description": "Delete a Channel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_message",
+          "description": "Create a Message.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "channelId": {
+                "type": "string"
+              },
+              "authorId": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              },
+              "sentAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "body",
+              "sentAt"
+            ]
+          }
+        },
+        {
+          "name": "list_messages",
+          "description": "List Messages.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_message",
+          "description": "Get a Message by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_message",
+          "description": "Update a Message.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "channelId": {
+                "type": "string"
+              },
+              "authorId": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              },
+              "sentAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_message",
+          "description": "Delete a Message.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_user",
+          "description": "Create a User.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "handle": {
+                "type": "string"
+              },
+              "displayName": {
+                "type": "string"
+              },
+              "verified": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "handle",
+              "displayName"
+            ]
+          }
+        },
+        {
+          "name": "list_users",
+          "description": "List Users.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_user",
+          "description": "Get a User by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_user",
+          "description": "Update a User.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "handle": {
+                "type": "string"
+              },
+              "displayName": {
+                "type": "string"
+              },
+              "verified": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_user",
+          "description": "Delete a User.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_room",
+          "description": "Create a Room.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "maxParticipants": {
+                "type": "integer"
+              },
+              "recording": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name",
+              "maxParticipants"
+            ]
+          }
+        },
+        {
+          "name": "list_rooms",
+          "description": "List Rooms.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_room",
+          "description": "Get a Room by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_room",
+          "description": "Update a Room.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "maxParticipants": {
+                "type": "integer"
+              },
+              "recording": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_room",
+          "description": "Delete a Room.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_stream",
+          "description": "Create a Stream.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "roomId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "bitrate": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "status",
+              "bitrate"
+            ]
+          }
+        },
+        {
+          "name": "list_streams",
+          "description": "List Streams.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_stream",
+          "description": "Get a Stream by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_stream",
+          "description": "Update a Stream.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "roomId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "bitrate": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_stream",
+          "description": "Delete a Stream.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_webhook",
+          "description": "Create a Webhook.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "event": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "active": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "event",
+              "url"
+            ]
+          }
+        },
+        {
+          "name": "list_webhooks",
+          "description": "List Webhooks.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_webhook",
+          "description": "Get a Webhook by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_webhook",
+          "description": "Update a Webhook.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "event": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "active": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_webhook",
+          "description": "Delete a Webhook.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

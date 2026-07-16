@@ -1,0 +1,179 @@
+;; aburi 炙り — seed personal-tracking-exposure graph (REPRESENTATIVE public-catalogue facts)
+;; ADR-2606161630 · vocabulary: tracker-exposure-ontology
+;;   (00-contracts/schemas/tracker-exposure-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional — read first):
+;;   G1 — OWN-DATA-ONLY. This PUBLIC seed is REPRESENTATIVE/aggregate: it carries NO real person's
+;;     data. The member's OWN exposure graph is built locally from THEIR OWN consented exports
+;;     (Google Takeout / Apple "App Privacy" / Google Play "Data safety" / on-device permission
+;;     dump) under data/local/ (gitignored, never committed/pinned/published — G7). There are NO
+;;     records of any OTHER person here, NO third-party PII, NO biometric, NO raw identifier values.
+;;   G3/N3 — NON-ADJUDICATING. The collectors named below are REAL, PUBLICLY-CATALOGUED ad-tech
+;;     entities (Exodus Privacy / εxodus tracker catalogue; IAB sellers.json; Apple App-Privacy
+;;     labels; Google Play Data-safety). Naming an SDK as an ad collector, or stating which data it
+;;     discloses collecting, is a PUBLIC CATALOGUE FACT — NOT an aburi accusation of wrongdoing.
+;;     :en/load values are REPRESENTATIVE exposure intensities, not measurements of a real person.
+;;   G4 — RECIPROCITY-RESTORING. The lens is EXPOSURE (asymmetric ad-surveillance) vs RELIEF
+;;     (reciprocal sight + opt-out). aburi makes the watcher visible to the watched (§2(c) v3.1,
+;;     ADR-2606082400 — symmetric 相互監視 affirmed; monetized/asymmetric surveillance prohibited).
+;;   N1/G2 — karma (exposure) lives ONLY on edges (:en/load). Per-collector tracking-load is the
+;;     INTEGRAL of incident inbound :flows-to 縁, computed on READ. No stored score.
+;;
+;; SOURCING: collector catalogue membership + collector→data-type mappings + sensitivity bands
+;;   reflect public sources (Exodus Privacy tracker DB, IAB sellers.json/ads.txt, Apple App-Privacy
+;;   nutrition labels, Google Play Data-safety). The SAMPLE is a bounded illustrative seed
+;;   (:representative coverage), NOT exhaustive. Live ingest of a member's exports + any relief
+;;   routing are G7/Council + member-sig-gated.
+
+[;; ───────────────────────────── surfaces (the consent venues the member uses) ─────────────
+ {:organism/id "ax.surface.google-search"   :organism/kind :surface :organism/label "Google Search"        :surface/kind :search     :surface/operator "org.corp.alphabet" :organism/sourcing :authoritative}
+ {:organism/id "ax.surface.google-android"  :organism/kind :surface :organism/label "Google / Android + Play" :surface/kind :os       :surface/operator "org.corp.alphabet" :organism/sourcing :authoritative}
+ {:organism/id "ax.surface.facebook"        :organism/kind :surface :organism/label "Facebook (Meta)"       :surface/kind :social     :surface/operator "org.corp.meta"     :organism/sourcing :authoritative}
+ {:organism/id "ax.surface.x"               :organism/kind :surface :organism/label "X (Twitter)"           :surface/kind :social     :surface/operator "org.corp.x-corp"   :organism/sourcing :authoritative}
+ {:organism/id "ax.surface.apple-appstore"  :organism/kind :surface :organism/label "Apple App Store / iOS" :surface/kind :app-store  :surface/operator "org.corp.apple"    :organism/sourcing :authoritative}
+ {:organism/id "ax.surface.free-mobile-app" :organism/kind :surface :organism/label "Free mobile app (3rd-party SDKs)" :surface/kind :mobile-app :surface/operator "org.corp.various" :organism/sourcing :representative}
+
+ ;; ──────────────── permissions / ToS data-sharing clauses the member grants (DISCLOSED sensitivity) ───
+ {:organism/id "ax.perm.ad-id"             :organism/kind :permission :organism/label "Advertising ID (GAID / IDFA)"     :permission/kind :ad-id            :permission/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.precise-location"  :organism/kind :permission :organism/label "Precise location"                :permission/kind :precise-location :permission/sensitivity :critical  :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.coarse-location"   :organism/kind :permission :organism/label "Approximate location"            :permission/kind :location         :permission/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.contacts"          :organism/kind :permission :organism/label "Contacts / address book"         :permission/kind :contacts         :permission/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.browsing-history"  :organism/kind :permission :organism/label "Browsing / search history"       :permission/kind :browsing-history :permission/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.purchase-history"  :organism/kind :permission :organism/label "Purchase history"                :permission/kind :purchase-history :permission/sensitivity :moderate  :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.app-usage"         :organism/kind :permission :organism/label "App / device usage"              :permission/kind :app-usage        :permission/sensitivity :moderate  :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.photos"            :organism/kind :permission :organism/label "Photos / media"                  :permission/kind :photos           :permission/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.microphone"        :organism/kind :permission :organism/label "Microphone"                      :permission/kind :microphone       :permission/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.health"            :organism/kind :permission :organism/label "Health / fitness data"           :permission/kind :health           :permission/sensitivity :critical  :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.tos-data-sharing"  :organism/kind :permission :organism/label "ToS: share data with partners"   :permission/kind :tos-data-sharing :permission/sensitivity :critical  :organism/sourcing :authoritative}
+ {:organism/id "ax.perm.ad-personalization" :organism/kind :permission :organism/label "Ad personalization on"          :permission/kind :ad-personalization :permission/sensitivity :moderate :organism/sourcing :authoritative}
+
+ ;; ──────────────── collectors (REAL publicly-catalogued ad networks / brokers / SDKs; G3 = facts not verdicts) ───
+ {:organism/id "ax.col.admob"             :organism/kind :collector :organism/label "Google AdMob"             :collector/kind :ad-network :collector/org "org.corp.alphabet"  :collector/catalog :exodus       :organism/sourcing :authoritative}
+ {:organism/id "ax.col.google-admanager"  :organism/kind :collector :organism/label "Google Ad Manager (DoubleClick)" :collector/kind :exchange :collector/org "org.corp.alphabet" :collector/catalog :sellers-json :organism/sourcing :authoritative}
+ {:organism/id "ax.col.firebase"          :organism/kind :collector :organism/label "Google Firebase Analytics" :collector/kind :analytics :collector/org "org.corp.alphabet" :collector/catalog :exodus       :organism/sourcing :authoritative}
+ {:organism/id "ax.col.meta-audience"     :organism/kind :collector :organism/label "Meta Audience Network (FB SDK)" :collector/kind :ad-network :collector/org "org.corp.meta" :collector/catalog :exodus       :organism/sourcing :authoritative}
+ {:organism/id "ax.col.applovin"          :organism/kind :collector :organism/label "AppLovin"                 :collector/kind :ad-network :collector/org "org.corp.applovin" :collector/catalog :exodus      :organism/sourcing :authoritative}
+ {:organism/id "ax.col.unity-ads"         :organism/kind :collector :organism/label "Unity Ads"                :collector/kind :ad-network :collector/org "org.corp.unity"    :collector/catalog :exodus      :organism/sourcing :authoritative}
+ {:organism/id "ax.col.ironsource"        :organism/kind :collector :organism/label "ironSource (mediation)"   :collector/kind :ssp        :collector/org "org.corp.unity"    :collector/catalog :exodus      :organism/sourcing :authoritative}
+ {:organism/id "ax.col.the-trade-desk"    :organism/kind :collector :organism/label "The Trade Desk"           :collector/kind :dsp        :collector/org "org.corp.ttd"      :collector/catalog :sellers-json :organism/sourcing :authoritative}
+ {:organism/id "ax.col.criteo"            :organism/kind :collector :organism/label "Criteo (retargeting)"     :collector/kind :dsp        :collector/org "org.corp.criteo"   :collector/catalog :sellers-json :organism/sourcing :authoritative}
+ {:organism/id "ax.col.amazon-ads"        :organism/kind :collector :organism/label "Amazon Advertising"       :collector/kind :ad-network :collector/org "org.corp.amazon"   :collector/catalog :sellers-json :organism/sourcing :authoritative}
+ {:organism/id "ax.col.appsflyer"         :organism/kind :collector :organism/label "AppsFlyer (attribution)"  :collector/kind :analytics  :collector/org "org.corp.appsflyer" :collector/catalog :exodus     :organism/sourcing :authoritative}
+ {:organism/id "ax.col.adjust"            :organism/kind :collector :organism/label "Adjust (attribution)"     :collector/kind :analytics  :collector/org "org.corp.adjust"   :collector/catalog :exodus      :organism/sourcing :authoritative}
+ {:organism/id "ax.col.x-ads"             :organism/kind :collector :organism/label "X Ads"                     :collector/kind :ad-network :collector/org "org.corp.x-corp"   :collector/catalog :sellers-json :organism/sourcing :authoritative}
+ {:organism/id "ax.col.liveramp"          :organism/kind :collector :organism/label "LiveRamp (identity broker)" :collector/kind :data-broker :collector/org "org.corp.liveramp" :collector/catalog :iab       :organism/sourcing :authoritative}
+
+ ;; ──────────────── data-types (kinds that flow; never a raw value — G8) ───
+ {:organism/id "ax.dt.precise-location" :organism/kind :datatype :organism/label "Precise location"     :datatype/kind :precise-location :datatype/sensitivity :critical  :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.coarse-location"  :organism/kind :datatype :organism/label "Coarse location"      :datatype/kind :coarse-location  :datatype/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.device-id"        :organism/kind :datatype :organism/label "Device / advertising ID" :datatype/kind :device-id     :datatype/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.contacts"         :organism/kind :datatype :organism/label "Contacts"             :datatype/kind :contacts         :datatype/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.browsing"         :organism/kind :datatype :organism/label "Browsing / search"    :datatype/kind :browsing         :datatype/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.purchases"        :organism/kind :datatype :organism/label "Purchases"            :datatype/kind :purchases        :datatype/sensitivity :moderate  :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.app-usage"        :organism/kind :datatype :organism/label "App usage / events"   :datatype/kind :app-usage        :datatype/sensitivity :moderate  :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.identifiers"      :organism/kind :datatype :organism/label "Stable identifiers"   :datatype/kind :identifiers      :datatype/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.photos"           :organism/kind :datatype :organism/label "Photos / media"       :datatype/kind :photos           :datatype/sensitivity :sensitive :organism/sourcing :authoritative}
+ {:organism/id "ax.dt.health-fitness"   :organism/kind :datatype :organism/label "Health / fitness"     :datatype/kind :health-fitness   :datatype/sensitivity :critical  :organism/sourcing :authoritative}
+
+ ;; ──────────────── relief routes (restore reciprocity / close the exposure; aburi PROPOSES, others CARRY — G7) ───
+ {:organism/id "ax.relief.dsar"         :organism/kind :relief :organism/label "DSAR — disclosure + deletion request" :relief/kind :dsar             :relief/actor :himotoki    :organism/sourcing :authoritative}
+ {:organism/id "ax.relief.opt-out"      :organism/kind :relief :organism/label "Consumer opt-out (Do-Not-Sell / GPC)" :relief/kind :opt-out          :relief/actor :kurashimori :organism/sourcing :authoritative}
+ {:organism/id "ax.relief.sever"        :organism/kind :relief :organism/label "Sever / close the account"            :relief/kind :sever            :relief/actor :kaiyaku     :organism/sourcing :authoritative}
+ {:organism/id "ax.relief.revoke"       :organism/kind :relief :organism/label "Revoke permission + reset ad-ID (ATT off)" :relief/kind :permission-revoke :relief/actor :tedai    :organism/sourcing :authoritative}
+ {:organism/id "ax.relief.tracking-off" :organism/kind :relief :organism/label "Ad-personalization / tracking off"    :relief/kind :tracking-off     :relief/actor :tedai       :organism/sourcing :authoritative}
+
+ ;; ════════════════════ 縁 (edges) — karma (exposure) lives HERE (N1) ════════════════════
+ ;; ── :grants (surface → permission the member granted there) ──
+ {:en/from "ax.surface.google-android" :en/to "ax.perm.ad-id"            :en/kind :grants :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.surface.google-android" :en/to "ax.perm.precise-location" :en/kind :grants :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.surface.google-android" :en/to "ax.perm.contacts"        :en/kind :grants :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.surface.google-android" :en/to "ax.perm.app-usage"       :en/kind :grants :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.surface.google-search"  :en/to "ax.perm.browsing-history" :en/kind :grants :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.surface.google-search"  :en/to "ax.perm.ad-personalization" :en/kind :grants :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.surface.facebook"       :en/to "ax.perm.contacts"        :en/kind :grants :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.surface.facebook"       :en/to "ax.perm.browsing-history" :en/kind :grants :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.surface.facebook"       :en/to "ax.perm.tos-data-sharing" :en/kind :grants :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.surface.facebook"       :en/to "ax.perm.photos"          :en/kind :grants :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.surface.x"              :en/to "ax.perm.coarse-location"  :en/kind :grants :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.surface.x"              :en/to "ax.perm.browsing-history" :en/kind :grants :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.surface.x"              :en/to "ax.perm.tos-data-sharing" :en/kind :grants :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.surface.apple-appstore" :en/to "ax.perm.ad-id"           :en/kind :grants :en/load 0.5 :en/sourcing :authoritative}
+ {:en/from "ax.surface.apple-appstore" :en/to "ax.perm.purchase-history" :en/kind :grants :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.surface.apple-appstore" :en/to "ax.perm.health"          :en/kind :grants :en/load 0.5 :en/sourcing :authoritative}
+ {:en/from "ax.surface.free-mobile-app" :en/to "ax.perm.ad-id"          :en/kind :grants :en/load 0.9 :en/sourcing :representative}
+ {:en/from "ax.surface.free-mobile-app" :en/to "ax.perm.precise-location" :en/kind :grants :en/load 0.7 :en/sourcing :representative}
+ {:en/from "ax.surface.free-mobile-app" :en/to "ax.perm.microphone"     :en/kind :grants :en/load 0.4 :en/sourcing :representative}
+ {:en/from "ax.surface.free-mobile-app" :en/to "ax.perm.app-usage"      :en/kind :grants :en/load 0.9 :en/sourcing :representative}
+
+ ;; ── :flows-to (permission → collector; THE exposure edge — weighted on read by permission sensitivity) ──
+ {:en/from "ax.perm.ad-id"            :en/to "ax.col.admob"            :en/kind :flows-to :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.perm.ad-id"            :en/to "ax.col.meta-audience"    :en/kind :flows-to :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.perm.ad-id"            :en/to "ax.col.applovin"         :en/kind :flows-to :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.perm.ad-id"            :en/to "ax.col.unity-ads"        :en/kind :flows-to :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.perm.ad-id"            :en/to "ax.col.appsflyer"        :en/kind :flows-to :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.perm.ad-id"            :en/to "ax.col.adjust"           :en/kind :flows-to :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.perm.precise-location" :en/to "ax.col.admob"            :en/kind :flows-to :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.perm.precise-location" :en/to "ax.col.the-trade-desk"   :en/kind :flows-to :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.perm.precise-location" :en/to "ax.col.liveramp"         :en/kind :flows-to :en/load 0.5 :en/sourcing :authoritative}
+ {:en/from "ax.perm.coarse-location"  :en/to "ax.col.x-ads"            :en/kind :flows-to :en/load 0.5 :en/sourcing :authoritative}
+ {:en/from "ax.perm.contacts"         :en/to "ax.col.meta-audience"    :en/kind :flows-to :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.perm.browsing-history" :en/to "ax.col.google-admanager" :en/kind :flows-to :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.perm.browsing-history" :en/to "ax.col.criteo"           :en/kind :flows-to :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.perm.browsing-history" :en/to "ax.col.the-trade-desk"   :en/kind :flows-to :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.perm.browsing-history" :en/to "ax.col.x-ads"            :en/kind :flows-to :en/load 0.5 :en/sourcing :authoritative}
+ {:en/from "ax.perm.purchase-history" :en/to "ax.col.amazon-ads"       :en/kind :flows-to :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.perm.purchase-history" :en/to "ax.col.criteo"           :en/kind :flows-to :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.perm.app-usage"        :en/to "ax.col.firebase"         :en/kind :flows-to :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.perm.app-usage"        :en/to "ax.col.appsflyer"        :en/kind :flows-to :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.perm.app-usage"        :en/to "ax.col.ironsource"       :en/kind :flows-to :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.perm.photos"           :en/to "ax.col.meta-audience"    :en/kind :flows-to :en/load 0.4 :en/sourcing :representative}
+ {:en/from "ax.perm.tos-data-sharing" :en/to "ax.col.liveramp"         :en/kind :flows-to :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.perm.tos-data-sharing" :en/to "ax.col.the-trade-desk"   :en/kind :flows-to :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.perm.ad-personalization" :en/to "ax.col.google-admanager" :en/kind :flows-to :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.perm.microphone"       :en/to "ax.col.applovin"         :en/kind :flows-to :en/load 0.3 :en/sourcing :representative}
+
+ ;; ── :collects (collector → data-type it discloses collecting; DISCLOSED, N3) ──
+ {:en/from "ax.col.admob"            :en/to "ax.dt.device-id"        :en/kind :collects :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.col.admob"            :en/to "ax.dt.coarse-location"  :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.admob"            :en/to "ax.dt.app-usage"        :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.google-admanager" :en/to "ax.dt.browsing"        :en/kind :collects :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.col.google-admanager" :en/to "ax.dt.identifiers"     :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.firebase"         :en/to "ax.dt.app-usage"       :en/kind :collects :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.col.firebase"         :en/to "ax.dt.device-id"       :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.meta-audience"    :en/to "ax.dt.device-id"       :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.meta-audience"    :en/to "ax.dt.contacts"        :en/kind :collects :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.col.meta-audience"    :en/to "ax.dt.browsing"        :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.applovin"         :en/to "ax.dt.device-id"       :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.applovin"         :en/to "ax.dt.app-usage"       :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.unity-ads"        :en/to "ax.dt.device-id"       :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.ironsource"       :en/to "ax.dt.app-usage"       :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.the-trade-desk"   :en/to "ax.dt.browsing"        :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.the-trade-desk"   :en/to "ax.dt.identifiers"     :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.criteo"           :en/to "ax.dt.browsing"        :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.criteo"           :en/to "ax.dt.purchases"       :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.amazon-ads"       :en/to "ax.dt.purchases"       :en/kind :collects :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.col.appsflyer"        :en/to "ax.dt.app-usage"       :en/kind :collects :en/load 0.8 :en/sourcing :authoritative}
+ {:en/from "ax.col.appsflyer"        :en/to "ax.dt.device-id"       :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.adjust"           :en/to "ax.dt.device-id"       :en/kind :collects :en/load 0.7 :en/sourcing :authoritative}
+ {:en/from "ax.col.x-ads"            :en/to "ax.dt.browsing"        :en/kind :collects :en/load 0.6 :en/sourcing :authoritative}
+ {:en/from "ax.col.x-ads"            :en/to "ax.dt.coarse-location" :en/kind :collects :en/load 0.5 :en/sourcing :authoritative}
+ {:en/from "ax.col.liveramp"         :en/to "ax.dt.identifiers"     :en/kind :collects :en/load 0.9 :en/sourcing :authoritative}
+ {:en/from "ax.col.liveramp"         :en/to "ax.dt.purchases"       :en/kind :collects :en/load 0.6 :en/sourcing :authoritative}
+
+ ;; ── :routes-to (permission → relief; the opt-out / DSAR path. SOME permissions left unrouted
+ ;;    on purpose = the reciprocity gap, the next relief to wire) ──
+ {:en/from "ax.perm.ad-id"            :en/to "ax.relief.revoke"       :en/kind :routes-to :en/load 0.9 :en/sourcing :representative}
+ {:en/from "ax.perm.ad-id"            :en/to "ax.relief.tracking-off" :en/kind :routes-to :en/load 0.7 :en/sourcing :representative}
+ {:en/from "ax.perm.precise-location" :en/to "ax.relief.revoke"      :en/kind :routes-to :en/load 0.8 :en/sourcing :representative}
+ {:en/from "ax.perm.contacts"         :en/to "ax.relief.revoke"      :en/kind :routes-to :en/load 0.7 :en/sourcing :representative}
+ {:en/from "ax.perm.browsing-history" :en/to "ax.relief.dsar"        :en/kind :routes-to :en/load 0.7 :en/sourcing :representative}
+ {:en/from "ax.perm.purchase-history" :en/to "ax.relief.dsar"        :en/kind :routes-to :en/load 0.6 :en/sourcing :representative}
+ {:en/from "ax.perm.ad-personalization" :en/to "ax.relief.tracking-off" :en/kind :routes-to :en/load 0.8 :en/sourcing :representative}
+ {:en/from "ax.perm.app-usage"        :en/to "ax.relief.opt-out"     :en/kind :routes-to :en/load 0.5 :en/sourcing :representative}
+
+ ;; ── :relieves (relief → collector; exposure reduced once the route is exercised) ──
+ {:en/from "ax.relief.revoke"       :en/to "ax.col.admob"         :en/kind :relieves :en/load 0.5 :en/sourcing :representative}
+ {:en/from "ax.relief.revoke"       :en/to "ax.col.meta-audience" :en/kind :relieves :en/load 0.4 :en/sourcing :representative}
+ {:en/from "ax.relief.tracking-off" :en/to "ax.col.google-admanager" :en/kind :relieves :en/load 0.4 :en/sourcing :representative}
+ {:en/from "ax.relief.dsar"         :en/to "ax.col.liveramp"      :en/kind :relieves :en/load 0.5 :en/sourcing :representative}
+ {:en/from "ax.relief.opt-out"      :en/to "ax.col.criteo"        :en/kind :relieves :en/load 0.3 :en/sourcing :representative}]

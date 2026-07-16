@@ -1,0 +1,31 @@
+;; 20-actors/ugachi/schema.edn — Datomic/Datascript 互換スキーマ定義
+;; (自動生成 — ugachi actor-local, Phase 4 fan-out, 2026-07-10).
+;; :db/ident 属性定義のリスト。Datomic 固有キー(:db.install/_attribute 等)は使わない。
+;; 手編集禁止 — kotoba/seed.edn または kotoba/ontology.ugachi.edn を再変換したら再生成する。
+;; 対象外(manifest.edn): 70-tools/src/etzhayyim/ の5共有ツール
+;; (gen_tier_b_actors.clj / vitals.cljc / actor_publish.cljc / aozora_deploy.cljc /
+;; ownership_matrix.cljc)が bare-map 前提で :actor/tier :actor/id 等を直読みするため
+;; 未変換のまま(shared-infra patch 待ち)。
+
+[#:db{:ident :ontology/adr, :valueType :db.type/string, :cardinality :db.cardinality/many}
+ #:db{:ident :ontology/enums, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ontology/id, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ontology/node-kinds, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ontology/refuse-reasons, :valueType :db.type/keyword, :cardinality :db.cardinality/many}
+ #:db{:ident :ontology/unrepresentable, :valueType :db.type/string, :cardinality :db.cardinality/many}
+ #:db{:ident :ontology/version, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/carbon, :valueType :db.type/keyword, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/consent, :valueType :db.type/boolean, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/descendant-benefit, :valueType :db.type/double, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/id, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/irreversibility, :valueType :db.type/double, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/jurisdiction, :valueType :db.type/keyword, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/method, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/monopoly-effect, :valueType :db.type/keyword, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/name, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/note, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/recovery-alternative, :valueType :db.type/keyword, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/remediation, :valueType :db.type/double, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/resource, :valueType :db.type/string, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/transparent, :valueType :db.type/boolean, :cardinality :db.cardinality/one}
+ #:db{:ident :ugachi.project/type, :valueType :db.type/keyword, :cardinality :db.cardinality/one}]

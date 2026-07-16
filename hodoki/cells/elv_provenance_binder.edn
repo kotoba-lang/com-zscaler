@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_provenance_binder cell (terminal, L5)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_provenance_binder"
+  :cell/glyph "📖"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G2" "G9"]
+  :cell/state-graph "{:nodes [{:id \"gather-records\", :type \"function\", :func \"gather_all_records\"} {:id \"calc-massbalance\", :type \"function\", :func \"calc_mass_balance\"} {:id \"anchor-kotoba-datomic\", :type \"function\", :func \"anchor_kotoba-datomic\"} {:id \"seal\", :type \"function\", :func \"seal_provenance_binder\"} {:id \"end\", :type \"return\"}], :entry \"gather-records\", :edges [{:from \"gather-records\", :to \"calc-massbalance\"} {:from \"calc-massbalance\", :to \"anchor-kotoba-datomic\"} {:from \"anchor-kotoba-datomic\", :to \"seal\"} {:from \"seal\", :to \"end\"}]}"
+  :cell/doc "Terminal cell: Bind all records into kotoba-datomic-anchored provenance audit (G2 ≥98% closure)."
+  :cell/kotoba "{:reads [:provenance-binder/vin :provenance-binder/kotoba-datomic-anchor-cid :provenance-binder/mass-balance-closure-pct], :writes [:provenance-binder/record-id :provenance-binder/vin :provenance-binder/kotoba-datomic-anchor-cid :provenance-binder/mass-balance-closure-pct :provenance-binder/binder-timestamp]}"}]

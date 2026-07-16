@@ -1,0 +1,602 @@
+{
+ "source": "cable-graph.merged.kotoba.edn",
+ "cables": 18,
+ "stations": 26,
+ "totalCapacity": 2234.2,
+ "chokepoints": [
+  {
+   "name": "malacca",
+   "load": 940.16,
+   "count": 9
+  },
+  {
+   "name": "luzon-strait",
+   "load": 680.56,
+   "count": 8
+  },
+  {
+   "name": "suez-red-sea",
+   "load": 349.6,
+   "count": 4
+  },
+  {
+   "name": "gibraltar",
+   "load": 324.0,
+   "count": 2
+  },
+  {
+   "name": "south-china-sea",
+   "load": 190.56,
+   "count": 3
+  }
+ ],
+ "station_list": [
+  {
+   "id": "station.us.hermosa-beach",
+   "name": "Hermosa Beach, CA",
+   "country": "US",
+   "lat": 33.86,
+   "lon": -118.4,
+   "degree": 1,
+   "capacity": 60.0,
+   "chokepoints": [],
+   "cables": [
+    "JUPITER"
+   ]
+  },
+  {
+   "id": "station.us.bandon",
+   "name": "Bandon, OR",
+   "country": "US",
+   "lat": 43.12,
+   "lon": -124.41,
+   "degree": 1,
+   "capacity": 60.0,
+   "chokepoints": [],
+   "cables": [
+    "FASTER"
+   ]
+  },
+  {
+   "id": "station.us.el-segundo",
+   "name": "El Segundo, CA",
+   "country": "US",
+   "lat": 33.92,
+   "lon": -118.42,
+   "degree": 2,
+   "capacity": 374.0,
+   "chokepoints": [],
+   "cables": [
+    "Bifrost",
+    "Pacific Light Cable Network (PLCN)"
+   ]
+  },
+  {
+   "id": "station.us.virginia-beach",
+   "name": "Virginia Beach, VA",
+   "country": "US",
+   "lat": 36.85,
+   "lon": -75.98,
+   "degree": 2,
+   "capacity": 450.0,
+   "chokepoints": [],
+   "cables": [
+    "Dunant",
+    "MAREA"
+   ]
+  },
+  {
+   "id": "station.us.shirley",
+   "name": "Shirley, NY",
+   "country": "US",
+   "lat": 40.79,
+   "lon": -72.87,
+   "degree": 1,
+   "capacity": 220.0,
+   "chokepoints": [],
+   "cables": [
+    "Grace Hopper"
+   ]
+  },
+  {
+   "id": "station.jp.chikura",
+   "name": "千倉 Chikura",
+   "country": "JP",
+   "lat": 34.93,
+   "lon": 139.95,
+   "degree": 4,
+   "capacity": 250.56,
+   "chokepoints": [
+    "luzon-strait"
+   ],
+   "cables": [
+    "APCN-2",
+    "Asia Direct Cable (ADC)",
+    "FASTER",
+    "SJC (Southeast Asia Japan Cable)"
+   ]
+  },
+  {
+   "id": "station.jp.shima",
+   "name": "志摩 Shima",
+   "country": "JP",
+   "lat": 34.32,
+   "lon": 136.79,
+   "degree": 2,
+   "capacity": 120.0,
+   "chokepoints": [
+    "luzon-strait"
+   ],
+   "cables": [
+    "FASTER",
+    "JUPITER"
+   ]
+  },
+  {
+   "id": "station.jp.maruyama",
+   "name": "丸山 Maruyama",
+   "country": "JP",
+   "lat": 34.97,
+   "lon": 139.98,
+   "degree": 3,
+   "capacity": 286.0,
+   "chokepoints": [
+    "luzon-strait"
+   ],
+   "cables": [
+    "Apricot",
+    "JUPITER",
+    "Japan-Guam-Australia South (JGA-S)"
+   ]
+  },
+  {
+   "id": "station.tw.toucheng",
+   "name": "頭城 Toucheng",
+   "country": "TW",
+   "lat": 24.86,
+   "lon": 121.82,
+   "degree": 3,
+   "capacity": 394.0,
+   "chokepoints": [
+    "luzon-strait"
+   ],
+   "cables": [
+    "Apricot",
+    "FASTER",
+    "Pacific Light Cable Network (PLCN)"
+   ]
+  },
+  {
+   "id": "station.ph.baler",
+   "name": "Baler",
+   "country": "PH",
+   "lat": 15.76,
+   "lon": 121.56,
+   "degree": 2,
+   "capacity": 334.0,
+   "chokepoints": [
+    "luzon-strait"
+   ],
+   "cables": [
+    "Apricot",
+    "Pacific Light Cable Network (PLCN)"
+   ]
+  },
+  {
+   "id": "station.ph.daet",
+   "name": "Daet",
+   "country": "PH",
+   "lat": 14.11,
+   "lon": 122.96,
+   "degree": 2,
+   "capacity": 220.0,
+   "chokepoints": [
+    "luzon-strait"
+   ],
+   "cables": [
+    "Asia Direct Cable (ADC)",
+    "JUPITER"
+   ]
+  },
+  {
+   "id": "station.hk.tseung-kwan-o",
+   "name": "Tseung Kwan O 將軍澳",
+   "country": "HK",
+   "lat": 22.31,
+   "lon": 114.26,
+   "degree": 3,
+   "capacity": 190.56,
+   "chokepoints": [
+    "luzon-strait",
+    "south-china-sea"
+   ],
+   "cables": [
+    "APCN-2",
+    "Asia Direct Cable (ADC)",
+    "SJC (Southeast Asia Japan Cable)"
+   ]
+  },
+  {
+   "id": "station.sg.tuas",
+   "name": "Tuas",
+   "country": "SG",
+   "lat": 1.32,
+   "lon": 103.64,
+   "degree": 3,
+   "capacity": 169.6,
+   "chokepoints": [
+    "malacca"
+   ],
+   "cables": [
+    "SEA-ME-WE 3",
+    "SEA-ME-WE 4",
+    "SEA-ME-WE 6"
+   ]
+  },
+  {
+   "id": "station.sg.changi",
+   "name": "Changi",
+   "country": "SG",
+   "lat": 1.39,
+   "lon": 103.99,
+   "degree": 6,
+   "capacity": 770.56,
+   "chokepoints": [
+    "malacca"
+   ],
+   "cables": [
+    "APCN-2",
+    "Apricot",
+    "Asia Direct Cable (ADC)",
+    "Bifrost",
+    "Echo",
+    "SJC (Southeast Asia Japan Cable)"
+   ]
+  },
+  {
+   "id": "station.id.jakarta",
+   "name": "Jakarta",
+   "country": "ID",
+   "lat": -6.12,
+   "lon": 106.77,
+   "degree": 2,
+   "capacity": 390.0,
+   "chokepoints": [],
+   "cables": [
+    "Bifrost",
+    "Echo"
+   ]
+  },
+  {
+   "id": "station.eg.ras-ghareb",
+   "name": "Ras Ghareb",
+   "country": "EG",
+   "lat": 28.35,
+   "lon": 33.08,
+   "degree": 4,
+   "capacity": 349.6,
+   "chokepoints": [
+    "suez-red-sea"
+   ],
+   "cables": [
+    "2Africa",
+    "SEA-ME-WE 3",
+    "SEA-ME-WE 4",
+    "SEA-ME-WE 6"
+   ]
+  },
+  {
+   "id": "station.eg.port-said",
+   "name": "Port Said",
+   "country": "EG",
+   "lat": 31.26,
+   "lon": 32.3,
+   "degree": 4,
+   "capacity": 349.6,
+   "chokepoints": [
+    "suez-red-sea"
+   ],
+   "cables": [
+    "2Africa",
+    "SEA-ME-WE 3",
+    "SEA-ME-WE 4",
+    "SEA-ME-WE 6"
+   ]
+  },
+  {
+   "id": "station.es.bilbao",
+   "name": "Bilbao / Sopelana",
+   "country": "ES",
+   "lat": 43.38,
+   "lon": -2.98,
+   "degree": 2,
+   "capacity": 420.0,
+   "chokepoints": [],
+   "cables": [
+    "Grace Hopper",
+    "MAREA"
+   ]
+  },
+  {
+   "id": "station.fr.saint-hilaire",
+   "name": "Saint-Hilaire-de-Riez",
+   "country": "FR",
+   "lat": 46.72,
+   "lon": -1.94,
+   "degree": 1,
+   "capacity": 250.0,
+   "chokepoints": [],
+   "cables": [
+    "Dunant"
+   ]
+  },
+  {
+   "id": "station.uk.bude",
+   "name": "Bude",
+   "country": "GB",
+   "lat": 50.83,
+   "lon": -4.55,
+   "degree": 1,
+   "capacity": 220.0,
+   "chokepoints": [],
+   "cables": [
+    "Grace Hopper"
+   ]
+  },
+  {
+   "id": "station.pt.sesimbra",
+   "name": "Sesimbra",
+   "country": "PT",
+   "lat": 38.44,
+   "lon": -9.1,
+   "degree": 2,
+   "capacity": 324.0,
+   "chokepoints": [
+    "gibraltar"
+   ],
+   "cables": [
+    "2Africa",
+    "Equiano"
+   ]
+  },
+  {
+   "id": "station.za.melkbosstrand",
+   "name": "Melkbosstrand",
+   "country": "ZA",
+   "lat": -33.72,
+   "lon": 18.44,
+   "degree": 2,
+   "capacity": 324.0,
+   "chokepoints": [],
+   "cables": [
+    "2Africa",
+    "Equiano"
+   ]
+  },
+  {
+   "id": "station.us.eureka-ca",
+   "name": "Eureka, CA",
+   "country": "US",
+   "lat": 40.8,
+   "lon": -124.16,
+   "degree": 1,
+   "capacity": 160.0,
+   "chokepoints": [],
+   "cables": [
+    "Echo"
+   ]
+  },
+  {
+   "id": "station.fr.marseille",
+   "name": "Marseille",
+   "country": "FR",
+   "lat": 43.3,
+   "lon": 5.37,
+   "degree": 1,
+   "capacity": 100.0,
+   "chokepoints": [],
+   "cables": [
+    "SEA-ME-WE 6"
+   ]
+  },
+  {
+   "id": "station.gu.piti-guam",
+   "name": "Piti, Guam",
+   "country": "GU",
+   "lat": 13.46,
+   "lon": 144.7,
+   "degree": 1,
+   "capacity": 36.0,
+   "chokepoints": [],
+   "cables": [
+    "Japan-Guam-Australia South (JGA-S)"
+   ]
+  },
+  {
+   "id": "station.au.sydney",
+   "name": "Sydney",
+   "country": "AU",
+   "lat": -33.87,
+   "lon": 151.21,
+   "degree": 1,
+   "capacity": 36.0,
+   "chokepoints": [],
+   "cables": [
+    "Japan-Guam-Australia South (JGA-S)"
+   ]
+  }
+ ],
+ "segments": [
+  {
+   "from": [
+    34.32,
+    136.79
+   ],
+   "to": [
+    24.86,
+    121.82
+   ],
+   "traverses": [
+    "luzon-strait"
+   ],
+   "cable": "FASTER"
+  },
+  {
+   "from": [
+    24.86,
+    121.82
+   ],
+   "to": [
+    15.76,
+    121.56
+   ],
+   "traverses": [
+    "luzon-strait"
+   ],
+   "cable": "Pacific Light Cable Network (PLCN)"
+  },
+  {
+   "from": [
+    34.32,
+    136.79
+   ],
+   "to": [
+    14.11,
+    122.96
+   ],
+   "traverses": [
+    "luzon-strait"
+   ],
+   "cable": "JUPITER"
+  },
+  {
+   "from": [
+    34.93,
+    139.95
+   ],
+   "to": [
+    22.31,
+    114.26
+   ],
+   "traverses": [
+    "luzon-strait"
+   ],
+   "cable": "Asia Direct Cable (ADC)"
+  },
+  {
+   "from": [
+    34.93,
+    139.95
+   ],
+   "to": [
+    22.31,
+    114.26
+   ],
+   "traverses": [
+    "luzon-strait"
+   ],
+   "cable": "SJC (Southeast Asia Japan Cable)"
+  },
+  {
+   "from": [
+    34.93,
+    139.95
+   ],
+   "to": [
+    22.31,
+    114.26
+   ],
+   "traverses": [
+    "luzon-strait"
+   ],
+   "cable": "APCN-2"
+  },
+  {
+   "from": [
+    22.31,
+    114.26
+   ],
+   "to": [
+    1.39,
+    103.99
+   ],
+   "traverses": [
+    "south-china-sea",
+    "malacca"
+   ],
+   "cable": "Asia Direct Cable (ADC)"
+  },
+  {
+   "from": [
+    28.35,
+    33.08
+   ],
+   "to": [
+    31.26,
+    32.3
+   ],
+   "traverses": [
+    "suez-red-sea"
+   ],
+   "cable": "SEA-ME-WE 3"
+  },
+  {
+   "from": [
+    28.35,
+    33.08
+   ],
+   "to": [
+    31.26,
+    32.3
+   ],
+   "traverses": [
+    "suez-red-sea"
+   ],
+   "cable": "SEA-ME-WE 4"
+  },
+  {
+   "from": [
+    28.35,
+    33.08
+   ],
+   "to": [
+    31.26,
+    32.3
+   ],
+   "traverses": [
+    "suez-red-sea"
+   ],
+   "cable": "2Africa"
+  },
+  {
+   "from": [
+    -6.12,
+    106.77
+   ],
+   "to": [
+    1.39,
+    103.99
+   ],
+   "traverses": [
+    "malacca"
+   ],
+   "cable": "Bifrost"
+  }
+ ],
+ "faults": [
+  {
+   "id": "fault.smw.redsea.2024",
+   "cable": "SEA-ME-WE 3",
+   "kind": "under-investigation",
+   "detected": "2024-02-24T00:00:00Z",
+   "restored": "None"
+  },
+  {
+   "id": "fault.luzon.quake.2006",
+   "cable": "APCN-2",
+   "kind": "earthquake",
+   "detected": "2006-12-26T12:26:00Z",
+   "restored": "2007-01-31T00:00:00Z"
+  }
+ ]
+}

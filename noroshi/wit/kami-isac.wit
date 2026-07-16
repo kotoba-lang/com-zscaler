@@ -1,0 +1,43 @@
+// kami-isac.wit — WIT contract for the noroshi (烽) ISAC sensor as a kami-autodrive plant.
+// ADR-2606051600 §R1a. The interface an eventual Rust `kami-isac` crate / kami-autodrive
+// `IsacSensor` implements; `methods/kami_isac_bridge.py` is the reference behaviour.
+//
+// Constitutional shape (mirrors the noroshi force-separation): sensing yields CIVILIAN object
+// range+velocity only. There is no person/identity/biometric field and no fire-control/target
+// designation operation — those are structurally absent (G3/G4/N1/N2), exactly as the kotoba
+// schema and lexicons omit them. No live emission is performed by this interface (G8): an
+// implementation that drives a real RF/photonic front-end is Council Lv6+ + operator gated.
+
+package etzhayyim:kami-isac@0.1.0;
+
+interface sensing {
+    // An OFDM-JCAS waveform descriptor (range/Doppler processing dimensions).
+    record waveform {
+        n-sub: u32,            // subcarriers → range dimension
+        n-sym: u32,            // OFDM symbols → Doppler dimension
+        subcarrier-hz: f64,
+        symbol-s: f64,
+        carrier-hz: f64,
+    }
+
+    // A sensed object — NOT a person. No identity, no biometric, no track-of-life.
+    record object-estimate {
+        range-m: f64,
+        velocity-mps: f64,     // radial; closing > 0
+        range-bin: u32,
+        doppler-bin: u32,
+    }
+
+    // Sense the scene: returns one estimate per detected object. Pure DSP over the echo grid;
+    // performs NO live emission itself (the host supplies the reciprocal delay-Doppler grid).
+    sense: func(wf: waveform, grid: list<list<tuple<f64, f64>>>) -> list<object-estimate>;
+
+    // Resolution helpers (closed-form; the kami-autodrive planner uses these for gating).
+    range-resolution: func(wf: waveform) -> f64;     // c / (2·B)
+    velocity-resolution: func(wf: waveform) -> f64;  // λ / (2·M·T)
+}
+
+// The kami-autodrive plant world: an IsacSensor that the GNC perception stage polls each frame.
+world isac-sensor {
+    export sensing;
+}

@@ -1,0 +1,41 @@
+{
+  "fixtureId": "akashi-regulator-bulk-sample-r1",
+  "capturedAt": "2026-06-02T00:00:00Z",
+  "source": {
+    "id": "regulator-ad-repositories",
+    "platform": "multi-platform",
+    "sourceUrl": "https://example.test/public-ad-disclosure-bulk.json",
+    "jurisdiction": "EU"
+  },
+  "records": [
+    {
+      "sourceRecordId": "reg-2026-0001",
+      "sourceUrl": "https://example.test/public-ad-disclosure/ads/reg-2026-0001",
+      "advertiser": {
+        "displayName": "Example Civic Notice Sponsor",
+        "platformAdvertiserId": "adv-001",
+        "websiteDomain": "example.org",
+        "jurisdiction": "EU",
+        "verifiedStatus": "source-verified"
+      },
+      "creativeText": "Public information notice about a community event.",
+      "language": "en",
+      "disclosedCategory": "public-information",
+      "sourceIssuePoliticalFlag": "not-applicable",
+      "landingUrl": "https://example.org/community-event",
+      "startedAt": "2026-05-01T00:00:00Z",
+      "endedAt": "2026-05-15T00:00:00Z",
+      "status": "inactive",
+      "spendRange": {
+        "lower": 1000,
+        "upper": 4999,
+        "currency": "EUR"
+      },
+      "impressionRange": {
+        "lower": 10000,
+        "upper": 49999
+      },
+      "regionSummary": ["EU"]
+    }
+  ]
+}

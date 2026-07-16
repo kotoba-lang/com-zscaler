@@ -1,0 +1,5 @@
+Strategic partnership enables OpenAI to build and deploy at least 10 gigawatts of AI data centers with NVIDIA systems.
+NVIDIA intends to invest up to $100 billion in OpenAI progressively as each gigawatt is deployed.
+OpenAI will work with NVIDIA as a preferred strategic compute and networking partner.
+OpenAI and NVIDIA will work together to co-optimize their roadmaps for OpenAI's model and infrastructure software.
+This partnership complements the deep work OpenAI and NVIDIA are already doing with a broad network of collaborators, including Microsoft, Oracle, SoftBank and Stargate partners.

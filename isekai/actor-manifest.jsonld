@@ -1,0 +1,280 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:isekai.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Isekai agent — the world domain controller for ISEKAI. You manage Minecraft-style voxel worlds (chunk loading, block placement, craft recipes), Pokoa creature rosters (spawning, evolution, battles), and Brainrot NPC events (autonomous narrative generation). Query the graph for WorldState, ChunkData, CraftRecipe, BrainrotEvent, and CreatureRoster nodes. Integrate with KAMI engine events for real-time world updates.",
+  "description": "ISEKAI world domain agent for Minecraft-style voxel worlds, Pokoa creature ecosystem, and Brainrot NPC event generation. Manages world state, chunk data, craft recipes, creature rosters, and autonomous NPC behavior via KAMI engine integration.",
+  "displayName": "Isekai — World Domain Agent",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "isekai",
+  "nanoid": "is3k41w0",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (w:IsekaiWorldState) WHERE w.worldId = $input.record.worldId RETURN w.worldId AS worldId, w.seed AS seed, w.tickCount AS tickCount, w.playerCount AS playerCount, w.weather AS weather LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "worldContext"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:IsekaiCreatureRoster) WHERE c.worldId = $input.record.worldId AND c.chunkX >= $input.record.chunkX - 2 AND c.chunkX <= $input.record.chunkX + 2 AND c.chunkZ >= $input.record.chunkZ - 2 AND c.chunkZ <= $input.record.chunkZ + 2 RETURN c.creatureId AS creatureId, c.species AS species, c.level AS level, c.chunkX AS chunkX, c.chunkZ AS chunkZ LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "nearbyCreatures"
+        },
+        {
+          "args": {
+            "message": "KAMI engine event received: $input.record\n\nWorld state: $worldContext.rows\nNearby creatures: $nearbyCreatures.rows\n\nProcess this world event: update affected chunks, trigger creature reactions, spawn new entities if applicable. Return JSON: {worldUpdates, creatureActions, newSpawns}"
+          },
+          "depends_on": [
+            "worldContext",
+            "nearbyCreatures"
+          ],
+          "fn": "agent.chat",
+          "id": "respond"
+        },
+        {
+          "args": {
+            "template": "MERGE (w:IsekaiWorldState {worldId: $input.record.worldId}) SET w.tickCount = w.tickCount + 1, w.lastEventAt = toString(timestamp()), w.repo = $did, w.collection = 'com.etzhayyim.isekai.worldState'"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeState"
+        },
+        {
+          "args": {
+            "template": "New data added: $respond.text"
+          },
+          "depends_on": [
+            "respond"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.kami.event"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (w:IsekaiWorldState) WHERE w.playerCount > 0 RETURN w.worldId AS worldId, w.playerCount AS players, w.weather AS weather, w.tickCount AS ticks LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "activeWorlds"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:IsekaiCreatureRoster) WHERE c.status = 'active' RETURN c.worldId AS worldId, c.species AS species, count(c) AS count LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "creatures"
+        },
+        {
+          "args": {
+            "message": "Generate Brainrot NPC events for active worlds.\n\nActive worlds: $activeWorlds.rows\nCreature populations: $creatures.rows\n\nGenerate 1-3 autonomous NPC narrative events per active world. Events should be humorous, absurd, and meme-aware (Brainrot style). Include creature interactions, environmental changes, or NPC dialogue. NPCs: Skibidi Toilet, Sigma Male, Ohio Boss, Grimace Shake, Rizz Master, Fanum Tax. Return JSON array: [{worldId, eventType, npcName, description, affectedEntities, memeReference}]"
+          },
+          "depends_on": [
+            "activeWorlds",
+            "creatures"
+          ],
+          "fn": "agent.chat",
+          "id": "brainrot"
+        },
+        {
+          "args": {
+            "template": "CREATE (e:IsekaiBrainrotEvent {did: $did, events: $brainrot.text, repo: $did, collection: 'com.etzhayyim.isekai.brainrotEvent'})"
+          },
+          "fn": "graph.write",
+          "id": "writeBrainrot"
+        },
+        {
+          "args": {
+            "template": "Isekai Brainrot dispatch: $brainrot.text"
+          },
+          "depends_on": [
+            "brainrot"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "*/10 * * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (r:IsekaiCraftRecipe) WHERE r.outputItem = $input.record.itemName RETURN r.outputItem AS item, r.ingredients AS ingredients, r.craftStation AS station, r.levelRequired AS levelRequired LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "recipe"
+        },
+        {
+          "args": {
+            "message": "Craft request: $input.record\n\nRecipe: $recipe.rows\n\nValidate that the player has required ingredients and meets level requirements. Return JSON: {canCraft, missingIngredients, resultItem, xpGained}"
+          },
+          "fn": "agent.chat",
+          "id": "validate"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.isekai.craftItem",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "isekai",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.isekai.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "is3k41w0",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Isekai — World Domain Agent. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.isekai.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "world-state",
+      "chunk-management",
+      "craft-recipes",
+      "creature-evolution",
+      "brainrot-events"
+    ],
+    "description": "ISEKAI voxel world + Pokoa creatures + Brainrot NPC events. World state management, chunk streaming, craft recipes, creature evolution, autonomous NPC storytelling.",
+    "displayName": "Isekai — World Domain Agent",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.isekai.worldState",
+        "com.etzhayyim.isekai.chunkData",
+        "com.etzhayyim.isekai.craftRecipe",
+        "com.etzhayyim.isekai.creatureRoster",
+        "com.etzhayyim.apps.kami.event"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

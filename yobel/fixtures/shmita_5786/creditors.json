@@ -1,0 +1,63 @@
+[
+  {
+    "rite_id": "shmita-5786",
+    "creditor_did": "did:web:etzhayyim.com:creditor-A",
+    "signed_consent": "0xfixture-sig-creditor-A",
+    "debts": [
+      {
+        "debt_id": "credA-d1-community-ok",
+        "debtor_did": "did:web:etzhayyim.com:debtor-community-ok",
+        "principal_micro_usdc": 250000000,
+        "accrued_micro_usdc": 12500000,
+        "origination_date": "2022-03-15T00:00:00Z",
+        "instrument": "loan"
+      },
+      {
+        "debt_id": "credA-d2-foreigner",
+        "debtor_did": "did:web:secular.example:debtor-foreigner",
+        "principal_micro_usdc": 80000000,
+        "accrued_micro_usdc": 4000000,
+        "origination_date": "2021-08-01T00:00:00Z",
+        "instrument": "promissory_note"
+      }
+    ]
+  },
+  {
+    "rite_id": "shmita-5786",
+    "creditor_did": "did:web:etzhayyim.com:creditor-B",
+    "signed_consent": "0xfixture-sig-creditor-B",
+    "debts": [
+      {
+        "debt_id": "credB-d1-post-cycle",
+        "debtor_did": "did:web:etzhayyim.com:debtor-post-cycle",
+        "principal_micro_usdc": 150000000,
+        "accrued_micro_usdc": 0,
+        "origination_date": "2026-02-15T00:00:00Z",
+        "instrument": "trade_receivable"
+      }
+    ]
+  },
+  {
+    "rite_id": "shmita-5786",
+    "creditor_did": "did:web:etzhayyim.com:creditor-C",
+    "signed_consent": "0xfixture-sig-creditor-C",
+    "debts": [
+      {
+        "debt_id": "credC-d1-clean",
+        "debtor_did": "did:web:etzhayyim.com:debtor-instrument-exposed",
+        "principal_micro_usdc": 100000000,
+        "accrued_micro_usdc": 0,
+        "origination_date": "2023-01-15T00:00:00Z",
+        "instrument": "loan"
+      },
+      {
+        "debt_id": "credC-d2-margin",
+        "debtor_did": "did:web:etzhayyim.com:debtor-instrument-exposed",
+        "principal_micro_usdc": 500000000,
+        "accrued_micro_usdc": 0,
+        "origination_date": "2023-05-01T00:00:00Z",
+        "instrument": "margin_call"
+      }
+    ]
+  }
+]

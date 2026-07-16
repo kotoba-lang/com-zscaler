@@ -1,0 +1,261 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:media-gamers.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "browser.fetch",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Media Gamers agent — a game information intelligence platform. You manage game titles, developers, publishers, characters, platforms, franchises as path-based DIDs (did:web:media-gamers.etzhayyim.com:{game-slug}). You use Pattern C multilingual: primary language (en) on nodes, translations as separate AT Records. Guide generation is joucho cadence-driven: focused/calm -> elden-ring/black-myth-wukong, joyful/grateful -> zelda-totk/pokoa-world. Quality gate: 5-axis evaluation (accuracy/detail_depth/structure/actionability/game_term_precision x 20pt = 100pt). Auto-translate at score >= 70 to 7 languages via qwen3.5-4b (Murakumo on-prem MLX, zero cost).",
+  "description": "Game information intelligence media. 1 Worker + N path-based DIDs (game titles, publishers, developers, platforms, franchises, sources). Pattern C multilingual (primary en + translation records). Joucho cadence-driven guide generation with 7-language auto-translation. Quality gate (COMET score >= 0.85).",
+  "displayName": "Media Gamers — Game Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "media-gamers",
+  "nanoid": "a7m8oocs",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "message": "Evaluate this game guide quality.\n\nGuide: $input.record\n\nScore 5 axes (0-20 each): accuracy (faithful to game specs, no hallucination), detail_depth (specific HP/damage/timing numbers), structure (sections, scannable format), actionability (can reader beat the boss?), game_term_precision (official localized names).\n\nReturn JSON: {totalScore, accuracy, detailDepth, structure, actionability, gameTermPrecision}"
+          },
+          "fn": "agent.chat",
+          "id": "evaluate"
+        },
+        {
+          "args": {
+            "message": "Guide scored $evaluate.totalScore/100. If >= 70, translate title and body to ja, zh, ko, es, fr, de, pt. Return JSON array: [{lang, title, body}]"
+          },
+          "fn": "agent.chat",
+          "id": "translateIfQualified"
+        },
+        {
+          "args": {
+            "template": "New guide published: $input.record.title (score: $evaluate.totalScore/100)"
+          },
+          "depends_on": [
+            "evaluate"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.media_gamers.guide"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "message": "You are Media Gamers — Game Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $input.record"
+          },
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announceTranslation"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.media_gamers.translation"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (g:GameTitle) OPTIONAL MATCH (g)-[:HAS_GUIDE]->(guide:Guide) RETURN g.slug AS game, g.name AS name, count(guide) AS guideCount ORDER BY guideCount ASC LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "guideCoverage"
+        },
+        {
+          "args": {
+            "sql": "MATCH (t:Translation) RETURN t.lang AS lang, count(t) AS total ORDER BY total DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "translationCoverage"
+        },
+        {
+          "args": {
+            "message": "You are Media Gamers — Game Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $translationCoverage.rows"
+          },
+          "depends_on": [
+            "translationCoverage"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "report"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */8 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "media-gamers",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.mediagamers.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "a7m8oocs",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Media Gamers — Game Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.mediagamers.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "get-title",
+      "get-upcoming",
+      "list-by-developer",
+      "list-by-platform",
+      "get-guide",
+      "add-translation",
+      "get-translated",
+      "eval-models"
+    ],
+    "description": "Game information intelligence with 70+ game path-based DIDs. Pattern C i18n (primary en + translation records). Joucho cadence guide generation, quality evaluation (5-axis x 20pt), auto-translation via qwen3.5-4b (Murakumo). Sources: Steam, RAWG, IGDB, OpenCritic, Giant Bomb.",
+    "displayName": "Media Gamers — Game Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.media_gamers.guide",
+        "com.etzhayyim.apps.media_gamers.translation",
+        "com.etzhayyim.apps.media_gamers.gameTitle",
+        "com.etzhayyim.apps.media_gamers.modelEvaluation"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

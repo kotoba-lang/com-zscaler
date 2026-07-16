@@ -1,0 +1,60 @@
+;; itonami 営み — seed factory-operations log (ADR-2606082300).
+;; Subject: the sarutahiko 猿田彦 Class-8 truck production line (ADR-2606013100) —
+;; ties the "run the factory" observer to the existing "build the factory" sim.
+;; :station/* = line cells · :tick/* = scan-cycle observations (kotoba-os scan-cycle Datom analog).
+;; STATION SCALE ONLY (G2): no :worker/* dimension exists or is permitted.
+;; Numbers are :representative (synthetic, charter-clean), NOT live OT (G5/G6).
+[
+
+;; ───────────────────────────── stations (8-cell serial line) ─────────────────────────────
+{:db/id -1 :station/id :st.receive    :station/label "Receive / Stage-in"   :station/line :line.sarutahiko-a :station/takt-s 600  :station/rated-kw 8   :station/sourcing :representative}
+{:db/id -2 :station/id :st.frame-weld :station/label "Frame Weld Cell"      :station/line :line.sarutahiko-a :station/takt-s 900  :station/rated-kw 60  :station/sourcing :representative}
+{:db/id -3 :station/id :st.cab-weld   :station/label "Cab BIW Weld"         :station/line :line.sarutahiko-a :station/takt-s 1000 :station/rated-kw 55  :station/sourcing :representative}
+{:db/id -4 :station/id :st.paint      :station/label "Paint Booth"          :station/line :line.sarutahiko-a :station/takt-s 1500 :station/rated-kw 120 :station/sourcing :representative}
+{:db/id -5 :station/id :st.marriage   :station/label "Chassis-Cab Marriage" :station/line :line.sarutahiko-a :station/takt-s 800  :station/rated-kw 40  :station/sourcing :representative}
+{:db/id -6 :station/id :st.eol        :station/label "End-of-Line CMM"      :station/line :line.sarutahiko-a :station/takt-s 700  :station/rated-kw 15  :station/sourcing :representative}
+{:db/id -7 :station/id :st.stage      :station/label "Stage-out"            :station/line :line.sarutahiko-a :station/takt-s 300  :station/rated-kw 5   :station/sourcing :representative}
+{:db/id -8 :station/id :st.ship       :station/label "Loader Ship-out"      :station/line :line.sarutahiko-a :station/takt-s 500  :station/rated-kw 35  :station/sourcing :representative}
+
+;; ───────────── scan-cycle ticks (3 × 1-hour intervals per station) ─────────────
+;; receive — healthy
+{:db/id -9 :tick/station :st.receive :tick/t 0 :tick/state :run :tick/cycles 5 :tick/good 5 :tick/scrap 0 :tick/kwh 7 :tick/interval-s 3600}
+{:db/id -10 :tick/station :st.receive :tick/t 1 :tick/state :run :tick/cycles 5 :tick/good 5 :tick/scrap 0 :tick/kwh 7 :tick/interval-s 3600}
+{:db/id -11 :tick/station :st.receive :tick/t 2 :tick/state :run :tick/cycles 4 :tick/good 4 :tick/scrap 0 :tick/kwh 6 :tick/interval-s 3600}
+
+;; frame-weld — DOWN interval → availability bottleneck
+{:db/id -12 :tick/station :st.frame-weld :tick/t 0 :tick/state :run  :tick/cycles 3 :tick/good 3 :tick/scrap 0 :tick/kwh 55 :tick/interval-s 3600}
+{:db/id -13 :tick/station :st.frame-weld :tick/t 1 :tick/state :down :tick/cycles 0 :tick/good 0 :tick/scrap 0 :tick/kwh 8  :tick/interval-s 3600}
+{:db/id -14 :tick/station :st.frame-weld :tick/t 2 :tick/state :run  :tick/cycles 3 :tick/good 3 :tick/scrap 0 :tick/kwh 54 :tick/interval-s 3600}
+
+;; cab-weld — quality problem (scrap)
+{:db/id -15 :tick/station :st.cab-weld :tick/t 0 :tick/state :run :tick/cycles 3 :tick/good 2 :tick/scrap 1 :tick/kwh 50 :tick/interval-s 3600}
+{:db/id -16 :tick/station :st.cab-weld :tick/t 1 :tick/state :run :tick/cycles 3 :tick/good 2 :tick/scrap 1 :tick/kwh 51 :tick/interval-s 3600}
+{:db/id -17 :tick/station :st.cab-weld :tick/t 2 :tick/state :run :tick/cycles 3 :tick/good 3 :tick/scrap 0 :tick/kwh 50 :tick/interval-s 3600}
+
+;; paint — energy hog + large idle-energy burn
+{:db/id -18 :tick/station :st.paint :tick/t 0 :tick/state :run  :tick/cycles 2 :tick/good 2 :tick/scrap 0 :tick/kwh 115 :tick/interval-s 3600}
+{:db/id -19 :tick/station :st.paint :tick/t 1 :tick/state :idle :tick/cycles 0 :tick/good 0 :tick/scrap 0 :tick/kwh 45  :tick/interval-s 3600}
+{:db/id -20 :tick/station :st.paint :tick/t 2 :tick/state :run  :tick/cycles 2 :tick/good 2 :tick/scrap 0 :tick/kwh 118 :tick/interval-s 3600}
+
+;; marriage — healthy
+{:db/id -21 :tick/station :st.marriage :tick/t 0 :tick/state :run :tick/cycles 4 :tick/good 4 :tick/scrap 0 :tick/kwh 38 :tick/interval-s 3600}
+{:db/id -22 :tick/station :st.marriage :tick/t 1 :tick/state :run :tick/cycles 4 :tick/good 4 :tick/scrap 0 :tick/kwh 38 :tick/interval-s 3600}
+{:db/id -23 :tick/station :st.marriage :tick/t 2 :tick/state :run :tick/cycles 3 :tick/good 3 :tick/scrap 0 :tick/kwh 36 :tick/interval-s 3600}
+
+;; eol — healthy
+{:db/id -24 :tick/station :st.eol :tick/t 0 :tick/state :run :tick/cycles 4 :tick/good 4 :tick/scrap 0 :tick/kwh 13 :tick/interval-s 3600}
+{:db/id -25 :tick/station :st.eol :tick/t 1 :tick/state :run :tick/cycles 4 :tick/good 4 :tick/scrap 0 :tick/kwh 13 :tick/interval-s 3600}
+{:db/id -26 :tick/station :st.eol :tick/t 2 :tick/state :run :tick/cycles 4 :tick/good 4 :tick/scrap 0 :tick/kwh 12 :tick/interval-s 3600}
+
+;; stage — healthy
+{:db/id -27 :tick/station :st.stage :tick/t 0 :tick/state :run :tick/cycles 8 :tick/good 8 :tick/scrap 0 :tick/kwh 4 :tick/interval-s 3600}
+{:db/id -28 :tick/station :st.stage :tick/t 1 :tick/state :run :tick/cycles 8 :tick/good 8 :tick/scrap 0 :tick/kwh 4 :tick/interval-s 3600}
+{:db/id -29 :tick/station :st.stage :tick/t 2 :tick/state :run :tick/cycles 8 :tick/good 8 :tick/scrap 0 :tick/kwh 4 :tick/interval-s 3600}
+
+;; ship — healthy (積込ロボット loader)
+{:db/id -30 :tick/station :st.ship :tick/t 0 :tick/state :run :tick/cycles 5 :tick/good 5 :tick/scrap 0 :tick/kwh 32 :tick/interval-s 3600}
+{:db/id -31 :tick/station :st.ship :tick/t 1 :tick/state :run :tick/cycles 5 :tick/good 5 :tick/scrap 0 :tick/kwh 32 :tick/interval-s 3600}
+{:db/id -32 :tick/station :st.ship :tick/t 2 :tick/state :run :tick/cycles 5 :tick/good 5 :tick/scrap 0 :tick/kwh 33 :tick/interval-s 3600}
+
+]

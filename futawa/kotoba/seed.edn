@@ -1,0 +1,4 @@
+;; futawa 二輪 — seed.edn
+;; ADR-2605261330 · R0 bootstrap seed (representative sourcing) — production-ready vehicles
+;; Empty in R0 (no manufacturing demos yet). Structure shown for Phase R1 population.
+[]

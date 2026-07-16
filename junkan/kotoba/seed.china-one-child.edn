@@ -1,0 +1,130 @@
+;; junkan 循環 — demographic-dynamics seed: China's one-child policy & its reversal.
+;; ADR-2605290927. Schema: ontology.junkan-demography.edn. Flat vector of
+;; {:type :instrument …} rows (loaded by junkan_edn/classify). ANALYSIS-ONLY (G4).
+;;
+;; Each row is a disclosed demographic policy LEVER with 誰が定めたか (:enactor),
+;; 経緯 (:origin), 関係者 (:stakeholders) as on-the-record public facts. :polarity is
+;; a DISCLOSED HYPOTHESIS (G5) about the lever's net effect on fertility/sustainability:
+;;   :suppress = lowers fertility (pushes the age structure toward collapse / vicious)
+;;   :boost    = raises fertility (toward sustainable replacement / virtuous)
+;; :magnitude & :confidence are hypothesis weights in [0,1]; :meadows is the Meadows
+;; leverage level the lever primarily acts at (12 = shallowest parameter, 1 = deepest).
+;; sourcing :representative — real, named, public policy facts (not a cited dataset row,
+;; not synthetic). NO individual / PII (G6). This is a resilience MAP, never a population
+;; target or a country shaming (G7).
+
+[
+ ;; ── the mandate era: levers that SUPPRESSED fertility (1958–2013) ──────────────
+ {:type :instrument :id "cn-one-child-1979" :name "一人っ子政策 (One-Child Policy / 计划生育)"
+  :jurisdiction "CN" :kind :law :year 1979
+  :enactor "CCP Central Committee (1980 «Open Letter» to members); written into the 1982 Constitution Art.25 & the 1980 Marriage Law; administered by the State Family Planning Commission"
+  :origin "Framed as a temporary one-generation measure to curb post-Mao population growth and raise per-capita output; set a hard PARAMETER — one child per (urban) couple — enforced by quotas, permits, fines, and in places coercive sterilization/abortion. Rural & ethnic-minority exemptions varied."
+  :stakeholders ["State Family Planning Commission" "danwei / work units" "local family-planning cadres" "urban couples" "rural households" "ethnic minorities"]
+  :stock :fertility-rate :polarity :suppress :magnitude 0.9 :reversibility :statutory :meadows 12
+  :basis "1980 CCP Open Letter; 1982 Constitution Art.25; 1980 Marriage Law; 2002 Population & Family Planning Law" :sourcing :representative :confidence 0.8
+  :note "The defining lever — and the pedagogical point: it acted at Meadows 12 (a number), the shallowest leverage, yet was treated as the system's master control."}
+
+ {:type :instrument :id "cn-social-compensation-fee" :name "社会撫養費 (Social Compensation/Maintenance Fee)"
+  :jurisdiction "CN" :kind :law :year 2002
+  :enactor "NPC Standing Committee — 2002 Population and Family Planning Law (codifying earlier 超生罚款); abolished by the 2021 amendment"
+  :origin "Income-scaled fines for over-quota births, plus denial of hukou/benefits to 黑户 children — a punishment rule (Meadows 5) that raised the effective cost of an extra child."
+  :stakeholders ["NPC Standing Committee" "provincial family-planning bureaus" "over-quota families" "黑户 (unregistered) children"]
+  :stock :childrearing-cost :polarity :suppress :magnitude 0.7 :reversibility :statutory :meadows 5
+  :basis "2002 Population and Family Planning Law; 2021 amendment (abolition)" :sourcing :representative :confidence 0.7
+  :note "Abolished 2021 as the goal inverted from suppression to encouragement."}
+
+ {:type :instrument :id "cn-hukou-1958" :name "戸籍制度 (Hukou household-registration)"
+  :jurisdiction "CN" :kind :institution :year 1958
+  :enactor "NPC — 1958 Regulations on Household Registration"
+  :origin "Binds welfare/education/housing entitlements to a registered (rural vs urban) hukou. Not a fertility law per se, but it concentrates child-rearing cost (urban education/housing) and constrains the mobility of the reproductive cohort — a structural amplifier of childrearing cost."
+  :stakeholders ["Ministry of Public Security" "municipal governments" "rural-urban migrants" "migrant-worker children"]
+  :stock :childrearing-cost :polarity :suppress :magnitude 0.5 :reversibility :institutional :meadows 5
+  :basis "1958 Regulations on Household Registration (户口登记条例)" :sourcing :representative :confidence 0.55
+  :note "Ambiguous net sign; modeled as a cost-side suppressor via urban education/housing gatekeeping."}
+
+ {:type :instrument :id "cn-late-marriage-1980" :name "晚婚晚育 (Late-marriage / late-birth policy)"
+  :jurisdiction "CN" :kind :law :year 1980
+  :enactor "NPC — 1980 Marriage Law (minimum marriage age men 22 / women 20; later childbearing encouraged with leave incentives)"
+  :origin "Delayed family formation to widen birth spacing — acts on the TIMING of the reproductive cohort, compounding the momentum loop."
+  :stakeholders ["NPC" "local civil-affairs bureaus" "young couples"]
+  :stock :reproductive-cohort :polarity :suppress :magnitude 0.45 :reversibility :statutory :meadows 5
+  :basis "1980 Marriage Law (revised 2001)" :sourcing :representative :confidence 0.55}
+
+ ;; ── the structural / paradigm stocks the levers above crystallized ─────────────
+ {:type :instrument :id "cn-small-family-norm" :name "小家族規範 (small-family social norm)"
+  :jurisdiction "CN" :kind :value :year 2000
+  :enactor "Emergent — three+ decades of one-child policy + state propaganda («晚婚晚育，少生优生» / «只生一个好») internalized as a social default"
+  :origin "The mindset that 'one child is normal / desirable' — a Meadows level-2 paradigm. The reinforcing core of R2: once the norm sets, it keeps fertility low after the mandate is removed (cultural hysteresis). The single hardest stock to reverse."
+  :stakeholders ["urban middle-class families" "媒体/propaganda apparatus" "two generations raised as only children"]
+  :stock :small-family-norm :polarity :suppress :magnitude 0.85 :reversibility :cultural :meadows 2
+  :basis "Population & family-planning propaganda corpus; survey-reported low ideal-family-size" :sourcing :representative :confidence 0.6
+  :note "Year is nominal (a norm has no enactment date); used only for era bucketing. This is the R2 lock-in driver."}
+
+ {:type :instrument :id "cn-421-structure" :name "4-2-1 家族構造 (4-2-1 eldercare structure)"
+  :jurisdiction "CN" :kind :institution :year 2010
+  :enactor "Structural consequence of the one-child cohort reaching working age — no single enactor"
+  :origin "One adult child supports 2 parents + 4 grandparents under a thin public pension. The eldercare + cost squeeze (R3) diverts household capacity away from raising the next generation, reinforcing low fertility."
+  :stakeholders ["only-child adults" "aging parents/grandparents" "pension system" "eldercare sector"]
+  :stock :elderly-dependency :polarity :suppress :magnitude 0.7 :reversibility :entrenched :meadows 10
+  :basis "Old-age dependency-ratio trend; 养老 burden literature" :sourcing :representative :confidence 0.6
+  :note "Acts at Meadows 10 (the stock-flow age-pyramid structure itself) — deep and slow."}
+
+ {:type :instrument :id "cn-childrearing-cost-structure" :name "教育・住宅コスト (childrearing / education / housing cost)"
+  :jurisdiction "CN" :kind :value :year 2015
+  :enactor "Emergent market + status competition (鸡娃 intensive parenting, 学区房 school-district housing, private tutoring)"
+  :origin "High and rising direct + opportunity cost of a child — the binding economic constraint behind low fertility even where the quota is gone. The cost stock that B2 incentives try, weakly, to lower."
+  :stakeholders ["urban parents" "real-estate / education-tutoring markets" "young workers weighing opportunity cost"]
+  :stock :childrearing-cost :polarity :suppress :magnitude 0.8 :reversibility :cultural :meadows 5
+  :basis "Reported child-rearing cost-to-GDP-per-capita ratios among the highest globally" :sourcing :representative :confidence 0.6}
+
+ {:type :instrument :id "cn-gender-care-division" :name "ジェンダー分業 (gendered division of unpaid care)"
+  :jurisdiction "CN" :kind :value :year 2015
+  :enactor "Emergent — labor-market norms + uneven care expectations as women's education/employment rose"
+  :origin "Rising female education and labor participation against an unchanged expectation that women carry childbearing + unpaid care raises the personal opportunity cost of children — a deep (Meadows 2–3) driver the child-count parameter never touched."
+  :stakeholders ["working women" "employers" "households"]
+  :stock :reproductive-cohort :polarity :suppress :magnitude 0.6 :reversibility :cultural :meadows 3
+  :basis "Female labor-force participation + unpaid-care-time gap literature" :sourcing :representative :confidence 0.5}
+
+ ;; ── the reversal era: levers that tried to BOOST fertility (2013–) ─────────────
+ {:type :instrument :id "cn-single-two-child-2013" :name "単独二孩 (Selective two-child relaxation)"
+  :jurisdiction "CN" :kind :law :year 2013
+  :enactor "CCP 18th Central Committee 3rd Plenum (Nov 2013) + NPC Standing Committee implementation"
+  :origin "Couples where one spouse is an only child allowed a second child — the first relaxation. Uptake far below projections (the momentum + norm + cost stocks already bound), the first empirical signal that flipping the parameter does not flip the system."
+  :stakeholders ["CCP Central Committee" "National Health & Family Planning Commission" "eligible couples"]
+  :stock :fertility-rate :polarity :boost :magnitude 0.2 :reversibility :statutory :meadows 12
+  :basis "2013 3rd Plenum Decision; provincial 单独二孩 rollouts 2014" :sourcing :representative :confidence 0.65}
+
+ {:type :instrument :id "cn-universal-two-child-2015" :name "全面二孩 (Universal two-child policy)"
+  :jurisdiction "CN" :kind :law :year 2015
+  :enactor "CCP 18th Central Committee 5th Plenum (Oct 2015); 2015 amendment to the Population & Family Planning Law (effective 2016-01-01)"
+  :origin "All couples allowed two children — the end of the one-child mandate. Produced a brief 2016 birth bump (delayed second births) then resumed decline as the reinforcing stack reasserted."
+  :stakeholders ["CCP Central Committee" "NPC Standing Committee" "all couples" "maternity / childcare sector"]
+  :stock :fertility-rate :polarity :boost :magnitude 0.3 :reversibility :statutory :meadows 12
+  :basis "2015 5th Plenum Communiqué; 2015 amendment to the Population & Family Planning Law" :sourcing :representative :confidence 0.7
+  :note "Still a Meadows-12 move (1→2): a parameter change against level-2/3/7 constraints."}
+
+ {:type :instrument :id "cn-three-child-2021" :name "三孩政策 (Three-child policy + support package)"
+  :jurisdiction "CN" :kind :law :year 2021
+  :enactor "CCP Politburo (May 2021) + Aug 2021 amendment to the Population & Family Planning Law — abolished the social compensation fee and added parental-leave / childcare / tax / housing support (配套支持措施)"
+  :origin "Pivot from suppression to ENCOURAGEMENT: three children permitted plus pronatal supports. The 2022 onset of absolute population decline followed regardless — the clearest demonstration that the corrective lever (B2) is overwhelmed by the reinforcing loops."
+  :stakeholders ["CCP Politburo" "NPC Standing Committee" "State Council" "local governments funding subsidies" "young families"]
+  :stock :fertility-rate :polarity :boost :magnitude 0.25 :reversibility :statutory :meadows 8
+  :basis "2021 Politburo decision; Aug 2021 Population & Family Planning Law amendment" :sourcing :representative :confidence 0.65
+  :note "Mixes a Meadows-12 parameter (2→3) with level-5/8 incentives — the first reach below the parameter level, but late and under-resourced relative to the cost stock."}
+
+ {:type :instrument :id "cn-double-reduction-2021" :name "双減 (Double Reduction — homework & tutoring burden)"
+  :jurisdiction "CN" :kind :law :year 2021
+  :enactor "CCP General Office + State Council General Office (July 2021 «双减» Opinion)"
+  :origin "Curbed for-profit K-9 tutoring and homework load — partly aimed at lowering the education-cost driver behind low fertility (acts on the childrearing-cost stock at Meadows 5). Effect on fertility unproven and contested."
+  :stakeholders ["State Council" "Ministry of Education" "private tutoring industry" "parents"]
+  :stock :childrearing-cost :polarity :boost :magnitude 0.3 :reversibility :statutory :meadows 5
+  :basis "July 2021 «关于进一步减轻义务教育阶段学生作业负担和校外培训负担的意见»" :sourcing :representative :confidence 0.45}
+
+ {:type :instrument :id "cn-birth-subsidy-2024" :name "育児補助金 (local childbirth / childcare subsidies)"
+  :jurisdiction "CN" :kind :institution :year 2024
+  :enactor "Local governments (city/provincial cash subsidies, extended parental leave, childcare expansion); national childcare-subsidy measures under discussion/rollout 2024–2025"
+  :origin "Direct cash + in-kind transfers per additional child to lower the cost stock (B2). Early, fragmented, and small relative to the cost gap — measured fertility response so far limited."
+  :stakeholders ["municipal/provincial governments" "State Council" "young families" "childcare providers"]
+  :stock :childrearing-cost :polarity :boost :magnitude 0.2 :reversibility :statutory :meadows 5
+  :basis "Municipal birth-subsidy schemes 2023–2025; national childcare-support measures" :sourcing :representative :confidence 0.45}
+]

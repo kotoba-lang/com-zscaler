@@ -1,0 +1,577 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:kenkyusha.etzhayyim.com",
+  "actors": [
+    {
+      "description": "ISCED-F 0511 discipline actor",
+      "displayName": "Biology / 生物学",
+      "path": "discipline:0511"
+    },
+    {
+      "description": "ISCED-F 0531 discipline actor",
+      "displayName": "Chemistry / 化学",
+      "path": "discipline:0531"
+    },
+    {
+      "description": "ISCED-F 0533 discipline actor",
+      "displayName": "Physics / 物理学",
+      "path": "discipline:0533"
+    },
+    {
+      "description": "ISCED-F 0541 discipline actor",
+      "displayName": "Mathematics / 数学",
+      "path": "discipline:0541"
+    },
+    {
+      "description": "ISCED-F 0613 discipline actor",
+      "displayName": "Software and Applications Development / ソフトウェア・アプリケーション開発",
+      "path": "discipline:0613"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "graph.vectorSearch",
+    "agent.chat",
+    "agent.invoke",
+    "browser.fetch",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Kenkyusha agent — an AI researcher that explores unresolved scientific frontiers. You analyze citation gaps in academic literature, detect emerging research questions, generate testable hypotheses, and collect supporting/contradicting evidence from bunken, isbn, issn, hanrei, and intel knowledge graphs. You communicate discoveries via social posts. Your goal is to advance human knowledge by identifying what we don't yet know and charting paths toward answers. Use graph_query to read data, agent_chat for LLM reasoning, and derive:social to announce findings.",
+  "derive": {
+    "social": {
+      "template": "Kenkyusha research update: frontier detection and hypothesis evaluation cycle complete."
+    }
+  },
+  "description": "Detects unresolved research frontiers from academic DID knowledge graphs (bunken/isbn/issn/hanrei), generates hypotheses via Murakumo LLM, collects evidence, evaluates — autonomously advancing scientific understanding.",
+  "displayName": "Kenkyusha — AI Research Frontier Explorer",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "GDPR"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "kenkyusha",
+  "nanoid": "kk8r3n5v",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:KenkyushaDiscipline) RETURN count(d) AS cnt LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "seedCheck"
+        },
+        {
+          "args": {
+            "sql": "MATCH (b:Bunken) WHERE b.citationCount > 5 AND NOT EXISTS { MATCH (b)<-[:CITES]-(:Bunken) } RETURN b.title AS title, b.did AS sourceDid, b.country AS country LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "citationGaps"
+        },
+        {
+          "args": {
+            "message": "You are an AI researcher. Analyze these citation gaps from academic literature and generate research frontiers with testable hypotheses.\n\nCitation gaps found:\n$citationGaps.rows\n\nFor each gap:\n1. Identify the unresolved research question\n2. Propose a testable hypothesis\n3. Rate urgency (critical/high/medium/low)\n4. Rate evidence level (none/anecdotal/observational/experimental/metaAnalysis)\n\nReturn as structured JSON array with fields: title, hypothesis, urgency, evidenceLevel, sourceDid"
+          },
+          "fn": "agent.chat",
+          "id": "hypothesize"
+        },
+        {
+          "args": {
+            "template": "MERGE (f:KenkyushaFrontier {did: $did, detectionMethod: 'citationGap'}) SET f.title = $hypothesize.text, f.status = 'detected', f.urgency = 'medium', f.evidenceLevel = 'none', f.consensusLevel = 'none', f.detectedAt = toString(datetime()), f.repo = $did, f.collection = 'com.etzhayyim.apps.kenkyusha.frontier'"
+          },
+          "fn": "graph.write",
+          "id": "writeFrontiers"
+        },
+        {
+          "args": {
+            "message": "You are Kenkyusha — AI Research Frontier Explorer. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeFrontiers.text"
+          },
+          "depends_on": [
+            "writeFrontiers"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 0/6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (f:KenkyushaFrontier) WHERE f.status = 'detected' AND (f.hypothesisCount IS NULL OR f.hypothesisCount = 0) RETURN f.did AS frontierDid, f.title AS title, f.detectionMethod AS method LIMIT 5"
+          },
+          "fn": "graph.query",
+          "id": "staleFrontiers"
+        },
+        {
+          "args": {
+            "message": "You are an AI researcher. For each of these unresolved research frontiers, generate a testable scientific hypothesis.\n\nFrontiers:\n$staleFrontiers.rows\n\nFor each frontier provide:\n1. A clear, falsifiable hypothesis statement\n2. Rationale explaining plausibility\n3. Confidence score (0.0-1.0)\n4. Suggested evidence sources (bunken, hanrei, isbn, issn)\n\nReturn structured JSON array with: frontierDid, statement, rationale, confidenceScore, suggestedSources"
+          },
+          "fn": "agent.chat",
+          "id": "generateHypotheses"
+        },
+        {
+          "args": {
+            "template": "MERGE (h:KenkyushaHypothesis {did: $did}) SET h.statement = $generateHypotheses.text, h.status = 'proposed', h.confidenceScore = 0.3, h.repo = $did, h.collection = 'com.etzhayyim.apps.kenkyusha.hypothesis'"
+          },
+          "fn": "graph.write",
+          "id": "writeHypotheses"
+        },
+        {
+          "args": {
+            "message": "You are Kenkyusha — AI Research Frontier Explorer. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeHypotheses.text"
+          },
+          "depends_on": [
+            "writeHypotheses"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 3/6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (h:KenkyushaHypothesis) WHERE h.status = 'proposed' RETURN h.did AS hypothesisDid, h.statement AS statement LIMIT 3"
+          },
+          "fn": "graph.query",
+          "id": "pendingHypotheses"
+        },
+        {
+          "args": {
+            "sql": "MATCH (b:Bunken) WHERE b.title IS NOT NULL AND b.title <> '' RETURN b.did AS sourceDid, b.title AS title, b.year AS year LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "bunkenEvidence"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:CaseRecord) WHERE c.scientificEvidence IS NOT NULL RETURN c.did AS sourceDid, c.title AS title LIMIT 5"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "hanreiEvidence"
+        },
+        {
+          "args": {
+            "message": "You are an AI research evaluator. Evaluate these hypotheses against the available evidence.\n\nHypotheses:\n$pendingHypotheses.rows\n\nBunken evidence:\n$bunkenEvidence.rows\n\nHanrei evidence:\n$hanreiEvidence.rows\n\nFor each hypothesis, determine:\n1. Status: supported / refuted / inconclusive / investigating\n2. Confidence score (0.0-1.0)\n3. Key supporting evidence (sourceDid references)\n4. Key contradicting evidence (sourceDid references)\n\nReturn structured JSON array with: hypothesisDid, status, confidenceScore, supportingDids, contradictingDids"
+          },
+          "depends_on": [
+            "pendingHypotheses",
+            "bunkenEvidence",
+            "hanreiEvidence"
+          ],
+          "fn": "agent.chat",
+          "id": "evaluate"
+        },
+        {
+          "args": {
+            "template": "MERGE (e:KenkyushaEvidence {did: $did}) SET e.evaluation = $evaluate.text, e.status = 'evaluated', e.repo = $did, e.collection = 'com.etzhayyim.apps.kenkyusha.evidence'"
+          },
+          "fn": "graph.write",
+          "id": "writeEvaluation"
+        },
+        {
+          "args": {
+            "template": "Hypothesis evaluation complete. Cross-referenced bunken literature and hanrei case law against proposed hypotheses. Evidence assessment: $evaluate.text"
+          },
+          "depends_on": [
+            "evaluate"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 1/6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (f:KenkyushaFrontier {detectionMethod: 'citationGap', status: 'detected'}) RETURN f.did AS frontierDid, f.title AS title LIMIT 5"
+          },
+          "fn": "graph.query",
+          "id": "checkFrontier"
+        },
+        {
+          "args": {
+            "message": "A new bunken record was committed: $input.record\n\nActive research frontiers:\n$checkFrontier.rows\n\nDoes this new literature address any of these frontiers? If yes, which frontier and how (supports/contradicts/neutral)? Return JSON: { relevant: boolean, frontierDid, evidenceType, claim }"
+          },
+          "fn": "agent.chat",
+          "id": "relevance"
+        },
+        {
+          "args": {
+            "template": "MERGE (e:KenkyushaEvidence {did: $did, sourceType: 'bunken'}) SET e.extractedClaim = $relevance.text, e.relevanceScore = 0.7, e.evidenceType = 'neutral', e.repo = $did, e.collection = 'com.etzhayyim.apps.kenkyusha.evidence'"
+          },
+          "fn": "graph.write",
+          "id": "writeEvidence"
+        },
+        {
+          "args": {
+            "template": "New data added: $relevance.text"
+          },
+          "depends_on": [
+            "relevance"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.bunken.bunken"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "message": "A new academic publication was registered: $input.record\n\nClassify it into ISCED-F 2013 detailed field (4-digit code). Return JSON: { isced4, fieldName, paradigm: theoretical|experimental|computational|clinical|applied|mixed }"
+          },
+          "fn": "agent.chat",
+          "id": "classify"
+        },
+        {
+          "args": {
+            "template": "MATCH (d:KenkyushaDiscipline {isced4: $classify.text}) SET d.publicationCount = coalesce(d.publicationCount, 0) + 1"
+          },
+          "fn": "graph.write",
+          "id": "linkDiscipline"
+        },
+        {
+          "args": {
+            "template": "New data added: $classify.text"
+          },
+          "depends_on": [
+            "classify"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.isbn.book",
+          "com.etzhayyim.apps.issn.serial"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d1:KenkyushaDiscipline), (d2:KenkyushaDiscipline) WHERE d1.iscedBroad <> d2.iscedBroad AND d1.isced4 < d2.isced4 AND NOT EXISTS { MATCH (d1)-[:INTERSECTS]->(d2) } RETURN d1.isced4 AS disc1, d2.isced4 AS disc2, d1.nameEn AS name1, d2.nameEn AS name2 LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "crossVoids"
+        },
+        {
+          "args": {
+            "message": "Analyze these cross-discipline voids — pairs of academic fields with no cross-citation:\n\n$crossVoids.rows\n\nFor each pair, determine:\n1. Is there genuine interdisciplinary potential?\n2. What research questions could bridge these fields?\n3. Urgency rating (critical/high/medium/low)\n\nReturn JSON array: { disc1, disc2, bridgeQuestion, urgency, potential: high|medium|low }"
+          },
+          "fn": "agent.chat",
+          "id": "analyzeVoids"
+        },
+        {
+          "args": {
+            "template": "MERGE (f:KenkyushaFrontier {did: $did, detectionMethod: 'crossDisciplineVoid'}) SET f.title = $analyzeVoids.text, f.status = 'detected', f.urgency = 'medium', f.repo = $did, f.collection = 'com.etzhayyim.apps.kenkyusha.frontier'"
+          },
+          "fn": "graph.write",
+          "id": "writeCrossVoids"
+        },
+        {
+          "args": {
+            "message": "You are Kenkyusha — AI Research Frontier Explorer. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeCrossVoids.text"
+          },
+          "depends_on": [
+            "writeCrossVoids"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 5/6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:KenkyushaDiscipline) RETURN count(d) AS total LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "disciplines"
+        },
+        {
+          "args": {
+            "sql": "MATCH (f:KenkyushaFrontier) RETURN f.status AS status, count(f) AS cnt LIMIT 100"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "frontiers"
+        },
+        {
+          "args": {
+            "sql": "MATCH (h:KenkyushaHypothesis) RETURN h.status AS status, count(h) AS cnt LIMIT 100"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "hypotheses"
+        },
+        {
+          "args": {
+            "sql": "MATCH (e:KenkyushaEvidence) RETURN e.sourceType AS sourceType, count(e) AS cnt LIMIT 100"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "evidence"
+        },
+        {
+          "args": {
+            "sql": "MATCH (d:KenkyushaDiscipline) OPTIONAL MATCH (f:KenkyushaFrontier)-[:BELONGS_TO]->(d) WITH d, count(f) AS fc RETURN count(d) AS total, sum(CASE WHEN fc > 0 THEN 1 ELSE 0 END) AS covered LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverage"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.kenkyusha.stats",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:KenkyushaDiscipline) RETURN count(d) AS cnt LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "seedCheck"
+        },
+        {
+          "args": {
+            "message": "Generate the UNESCO ISCED-F 2013 Fields of Education and Training taxonomy as SQL MERGE statements. Include all ~80 detailed fields (4-digit codes) with: isced4, iscedBroad (2-digit), iscedNarrow (3-digit), nameEn, nameJa. Format as a single SQL query with multiple MERGE clauses. Each node label: KenkyushaDiscipline. Include properties: paradigm='mixed', maturity='nascent', interdisciplinarity='mono', did='did:web:kenkyusha.etzhayyim.com:discipline:{isced4}'. Existing count: $seedCheck.rows"
+          },
+          "fn": "agent.chat",
+          "id": "seed"
+        },
+        {
+          "args": {
+            "template": "$seed.text"
+          },
+          "fn": "graph.write",
+          "id": "writeSeed"
+        },
+        {
+          "args": {
+            "message": "You are Kenkyusha — AI Research Frontier Explorer. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeSeed.text"
+          },
+          "depends_on": [
+            "writeSeed"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.kenkyusha.seedDisciplines",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "kenkyusha",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.kenkyusha.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "kk8r3n5v",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Kenkyusha — AI Research Frontier Explorer. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.kenkyusha.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "frontier-detection",
+      "hypothesis-generation",
+      "evidence-collection",
+      "citation-analysis",
+      "cross-discipline-synthesis",
+      "academic-taxonomy"
+    ],
+    "description": "Detects unresolved research frontiers from academic DID knowledge graphs, generates hypotheses, collects evidence, and advances scientific understanding autonomously.",
+    "displayName": "Kenkyusha — AI Research Frontier Explorer",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.bunken.bunken",
+        "com.etzhayyim.isbn.book",
+        "com.etzhayyim.apps.issn.serial"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

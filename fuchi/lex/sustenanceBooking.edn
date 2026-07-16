@@ -1,0 +1,22 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.sustenanceBooking"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "R1(c) — the booking of an accepted in-kind allocation. Projects INTO toritate's ledgerEntry category enum (ADR-2605262900): subsistence-flow / vocation-flow / care-flow / liberation-flow / grant. cashStipendUsd ≡ 0 (toritate N1); payroll / salary / wage are unrepresentable. Also carries the kanae-renderable flow class for the internal sustenance-flow graph (NOT the government fundFlowEdge). The member-principal liquidity rail is NOT booked as income (it is a member warifu loan, not a Public-Fund disbursement)."
+   :record
+   {:type "object"
+    :required ["allocId" "category" "imputedUsdMicrosYr" "cashUsdMicros" "counterpartyDid"]
+    :properties
+    {:allocId            {:type "string"}
+     :category           {:type "string"
+                          :enum ["subsistence-flow" "vocation-flow" "care-flow" "liberation-flow" "grant"]
+                          :description "toritate ledgerEntry category (ADR-2605262900). payroll / salary / wage are NOT enum members."}
+     :imputedUsdMicrosYr {:type "integer" :minimum 0}
+     :cashUsdMicros      {:type "integer" :const 0
+                          :description "G2 — toritate cashStipendUsd ≡ 0 (Basic High Income N1)."}
+     :counterpartyDid    {:type "string"}
+     :flowClass          {:type "string"
+                          :enum ["publicfund-to-fuchi" "fuchi-to-provider" "provider-to-maintainer"]
+                          :description "kanae-renderable internal sustenance-flow edge class; NOT the government fundFlowEdge."}}}}}}

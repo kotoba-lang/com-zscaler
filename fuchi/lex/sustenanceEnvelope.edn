@@ -1,0 +1,19 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.sustenanceEnvelope"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A maintainer's in-kind sustenance NEED line (housing/food/energy/compute/tooling/care/liquidity), valued by imputed worth. The unit of sustenance, never of income — cash is structurally 0 (G2, Basic High Income in-kind, ADR-2605301020)."
+   :record
+   {:type "object"
+    :required ["maintainerDid" "line" "imputedUsdMicrosYr" "cashUsdMicros"]
+    :properties
+    {:maintainerDid     {:type "string"}
+     :line              {:type "string"
+                         :enum ["housing" "food" "energy" "compute" "tooling" "care" "liquidity"]
+                         :description "G3 INVARIANT — a covered need line. cash / stipend / disbursement are NOT enum members."}
+     :imputedUsdMicrosYr {:type "integer" :minimum 0
+                         :description "in-kind imputed value of the need (USD micros / yr)"}
+     :cashUsdMicros     {:type "integer" :const 0
+                         :description "G2 / cash≡0 INVARIANT — only 0. 扶持 never delivers cash income."}}}}}}

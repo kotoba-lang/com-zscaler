@@ -1,0 +1,258 @@
+;; kanayama 金 — kotoba EAVT schema
+;; ADR-2605252400 · migration plan Phase 3
+;; Circular metallurgy (UBC recycling) over kotoba Datoms: intake QA, decoating,
+;; melting, casting, rolling, final QC, emissions audit, and mass-balance settlement.
+;; All state is kotoba Datoms — replaces the legacy kotoba-datomic + RisingWave path (G6).
+
+[;; ───────────────────────────── :intake/* — L1 UBC bale QA ─────────────────────────────
+ {:db/ident :intake/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "L1 intake record ID"}
+ {:db/ident :intake/bale-weight
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, gross UBC bale weight"}
+ {:db/ident :intake/cl-residue-pct
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Cl residue % on UBC surface"}
+ {:db/ident :intake/moisture-pct
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "moisture % by weight"}
+ {:db/ident :intake/magnetic-impurity-ppm
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Fe contamination ppm"}
+ {:db/ident :intake/qa-passed
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "passes L1 intake quality thresholds (G3)"}
+
+ ;; ───────────────────────────── :decoating/* — L2 de-coating + sort ─────────────────────────────
+ {:db/ident :decoating/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :decoating/intake
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :intake record"}
+ {:db/ident :decoating/input-mass
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, de-coating input mass"}
+ {:db/ident :decoating/coating-mass-loss
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, burnt-off coating from ~500°C rotary decoater"}
+ {:db/ident :decoating/magnetic-sort
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, Fe fraction separated"}
+ {:db/ident :decoating/output-mass
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, shredded Al ready for melt"}
+ {:db/ident :decoating/ipfs-photo
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of batch photo (G3)"}
+
+ ;; ───────────────────────────── :melting/* — L3 twin-chamber melt + alloy ─────────────────────────────
+ {:db/ident :melting/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :melting/decoating
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :decoating record"}
+ {:db/ident :melting/input-mass
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, decoated shred input"}
+ {:db/ident :melting/melt-temp
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "°C, furnace chamber temp (~720°C for Al)"}
+ {:db/ident :melting/degas-method
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":n2 | :cl2 (degas method for G2 air emissions)"}
+ {:db/ident :melting/output-mass
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, liquid metal cast-ready"}
+ {:db/ident :melting/alloy-designation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "3xxx / 5xxx series alloy code (e.g. 5182)"}
+ {:db/ident :melting/dross-collected
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, dross stream for dross_recovery cell"}
+ {:db/ident :melting/witness-sigs
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "DID signatures of ≥2 robot witnesses (Yokin pour, Kamado tend; G4)"}
+
+ ;; ───────────────────────────── :casting/* — L4 DC slab cast + homogenization ─────────────────────────────
+ {:db/ident :casting/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :casting/melting
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :melting record"}
+ {:db/ident :casting/slab-weight
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg, post-DC cast slab weight"}
+ {:db/ident :casting/cast-temp
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "°C, DC casting temperature"}
+ {:db/ident :casting/homogen-start
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 homogenization start time"}
+ {:db/ident :casting/homogen-end
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 homogenization end time"}
+ {:db/ident :casting/ipfs-photo
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID slab photo (G3)"}
+
+ ;; ───────────────────────────── :rolling/* — L5a/L5b hot + cold rolling ─────────────────────────────
+ {:db/ident :rolling/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :rolling/casting
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :casting record"}
+ {:db/ident :rolling/hot-temp
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "°C, hot-rolling temperature (~500°C)"}
+ {:db/ident :rolling/hot-passes
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "count, number of hot-roll passes"}
+ {:db/ident :rolling/intermediate-thickness
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "mm, thickness after hot-rolling"}
+ {:db/ident :rolling/cold-passes
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "count, number of cold-roll passes"}
+ {:db/ident :rolling/final-thickness
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "mm, final coil gauge (0.27mm typical for can-stock)"}
+ {:db/ident :rolling/coil-weight
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "kg per rolled coil"}
+ {:db/ident :rolling/ipfs-coil-photo
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of final coil"}
+
+ ;; ───────────────────────────── :quality/* — L5b final coil QA ─────────────────────────────
+ {:db/ident :quality/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :quality/rolling
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :rolling record"}
+ {:db/ident :quality/dimensional-ok
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "thickness ±5mm tolerance pass"}
+ {:db/ident :quality/weight-ok
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "weight ±2% pass"}
+ {:db/ident :quality/visual-defect-pct
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "% defect area (<0.5% pass per G12)"}
+ {:db/ident :quality/result
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":pass | :fail | :rework"}
+ {:db/ident :quality/inspector-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "robot inspector DID (Migaki; no-server-key G15)"}
+
+ ;; ───────────────────────────── :emissions/* — cross-cutting air emissions audit ─────────────────────────────
+ {:db/ident :emissions/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :emissions/pfc-level
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "mg/m³, perfluorinated compounds"}
+ {:db/ident :emissions/so2-level
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "mg/m³, sulfur dioxide"}
+ {:db/ident :emissions/passed-audit
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "all levels ≤ regulatory limit (EU IED + 大気汚染防止法; G8)"}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter intent (NOT executed; G7/G11) ─────────────────────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "settlement intent ID (mass-balance batch basis)"}
+ {:db/ident :settlement/batch-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "aggregated batch ID (intakeRecord..silenRecyclingReview)"}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC minor (6-dp) gross batch settlement value"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split → Public Fund (G7)"}
+ {:db/ident :settlement/operator-payout-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "net to operator (gross − tithe), USDC minor"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (computed, NOT broadcast) | :executed (operator-signed + broadcast, G11/G15). R0 stops at :intent"}
+ {:db/ident :settlement/buyer-sig-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "operator passkey/smart-account signature ref; platform holds no key (G15). absent ⇒ stays :intent"}
+
+ ;; ───────────────────────────── :sbt/* — Adherent SBT eligibility (§3 / G2) ─────────────────────────────
+ {:db/ident :sbt/holder-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "DID of an Adherent SBT holder (operator/member)"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "active Adherent SBT? required for internal SBT↔SBT settlement (§3 / G2)"}]

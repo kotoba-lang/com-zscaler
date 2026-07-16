@@ -1,0 +1,28 @@
+// kadode 門出 — kotoba pywasm actor world (ADR-2606112238 / 2606014500 / 2606014600).
+// Pure-stdlib methods (analyze / datom_emit / generate / coverage_report) compile to a WASM
+// Component via componentize-py. No network, no filesystem at runtime: the bounded PUBLIC
+// labour-law seed is embedded read-only. G1 holds in WASM — kadode is a 使者 (messenger) +
+// concierge, never an agent; the `relay` export REFUSES negotiation-needing scenarios and
+// builds an UNSENT record only (no-server-key).
+
+package etzhayyim:kadode@0.1.0;
+
+world kadode-actor {
+  /// Per-scenario lawful route recommendation (UPL-bounded) + ground/risk readout as JSON.
+  export analyze: func() -> string;
+
+  /// Emit the kotoba Datom log (EAVT) for the embedded graph as EDN text (tx threads through).
+  export datoms: func(tx: u32) -> string;
+
+  /// Honest coverage report (markdown): scenario/route spread + the UPL-invariant integrity check.
+  export coverage: func() -> string;
+
+  /// Render a worker's resignation document. `kind` ∈ taishoku-todoke|taishoku-gan|sokuji|
+  /// naiyo-shomei|yukyu. `fields-json` carries worker/employer/date. Returns the document text.
+  /// Rejects any negotiation/demand language (G1 / 弁護士法72条).
+  export generate: func(kind: string, fields-json: string) -> string;
+
+  /// Build a 使者 relay for a scenario, or — if it needs negotiation — REFUSE and return the
+  /// escalation route (union/lawyer). Returns JSON. The record is UNSENT (no-server-key).
+  export relay: func(scenario-id: string, fields-json: string, worker-did: string, employer-ref: string) -> string;
+}

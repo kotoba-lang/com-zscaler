@@ -1,0 +1,19 @@
+;; tsubasa 翼 — kotoba EAVT schema
+;; ADR-2606072800
+;; Flight discovery commons. :fare/co2-kg is REQUIRED (G4 — emissions surfaced). NO :fare/
+;; commission, :fare/affiliate, :fare/sponsored, or :fare/price-will-rise attribute exists
+;; (G1/G2/G3). bookUrl is the airline's own page (affiliate-stripped at handoff). No RW/SQL (G7).
+
+[{:db/ident :fare/id           :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :fare/origin       :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "IATA"}
+ {:db/ident :fare/destination  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "IATA"}
+ {:db/ident :fare/depart-date  :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :fare/carrier      :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :fare/stops        :db/valueType :db.type/long   :db/cardinality :db.cardinality/one}
+ {:db/ident :fare/duration-min :db/valueType :db.type/long   :db/cardinality :db.cardinality/one}
+ {:db/ident :fare/fare-minor   :db/valueType :db.type/long   :db/cardinality :db.cardinality/one}
+ {:db/ident :fare/baggage-minor :db/valueType :db.type/long  :db/cardinality :db.cardinality/one :db/doc "true-total-cost honesty (G4)"}
+ {:db/ident :fare/co2-kg       :db/valueType :db.type/double :db/cardinality :db.cardinality/one :db/doc "REQUIRED — per-passenger CO₂, surfaced (G4)"}
+ {:db/ident :fare/cabin        :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :fare/book-url     :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "airline's OWN page; affiliate-stripped at handoff (G1)"}
+ {:db/ident :fare/sourcing     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":authoritative|:representative|:synthesized (G8)"}]

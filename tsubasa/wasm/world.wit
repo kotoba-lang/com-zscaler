@@ -1,0 +1,33 @@
+// tsubasa 翼 — flight-route / fare discovery commons : WASM Component Model world.
+// ADR-2606072802 (R3). The pure compute core (no network, no key) exposed as a
+// content-addressed WASM component so it can run browser-local (ameno) or on a donated
+// mesh node — One Worker, many WASM actors (ADR-2606014500 / 2606014500).
+//
+// The component is COMPUTE-ONLY: it takes a fare seed/payload (JSON) and returns the
+// honest competition + fare map (JSON). It performs NO I/O — no WASI sockets, no clock,
+// no random — so by construction it cannot phone home, take a commission, or track a
+// searcher. The host (operator/member runtime) owns every side effect (fetch, persist).
+
+package etzhayyim:tsubasa@0.1.0;
+
+interface compute {
+  // seed-json: a JSON array of fare/airport/carrier rows (the :representative seed,
+  //   or :authoritative rows produced by the member/operator ingest fetch leg).
+  // returns: JSON {"routes":[...],"carriers":[...]} — per-route carrier concentration
+  //   (HHI + competition reading) + cheapest/greenest/fastest. Mirror of
+  //   methods/analyze.cljc `analyze`. NEVER a paid ranking, NEVER a target-list.
+  analyze: func(seed-json: string) -> string;
+
+  // returns: JSON {"by_region":[...],"airports_have":n,...} — the coverage gap worklist.
+  coverage: func(seed-json: string) -> string;
+
+  // A deterministic, honest one-paragraph template digest (the Murakumo path stays on
+  // the host — the component has no network). source is always "template" here.
+  digest: func(seed-json: string) -> string;
+}
+
+world tsubasa {
+  export compute;
+  // NB: no `import wasi:sockets`, no `import wasi:clocks`, no `import wasi:random`.
+  // The absence is the guarantee (G1 no-inflow / G5 no-tracking / G6 no external call).
+}

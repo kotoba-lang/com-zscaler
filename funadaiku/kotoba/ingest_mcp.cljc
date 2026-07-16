@@ -1,0 +1,134 @@
+#!/usr/bin/env bb
+;; funadaiku 船大工 — ingest seed.edn into a live kotoba node (cljc port of ingest_mcp.py).
+;; ADR-2606013400.
+;;
+;; Reads seed.edn, counts entities + datom estimate, prints a summary.
+;; Dry-run by default (no writes, no network I/O). Live path requires KOTOBA_TOKEN
+;; (operator AT-session JWT, no-server-key posture, G12/G13).
+;;
+;; Usage:
+;;   bb 20-actors/funadaiku/kotoba/ingest_mcp.cljc
+;;   bb 20-actors/funadaiku/kotoba/ingest_mcp.cljc --url http://127.0.0.1:8077 --graph com.etzhayyim.funadaiku
+(ns funadaiku.kotoba.ingest-mcp
+  "funadaiku 船大工 — MCP seed-ingest scaffold (dry-run default, live path placeholder).
+  ADR-2606013400.
+
+  This is the canonical thin-ingest-scaffold pattern shared by all Tier-B actors whose
+  kotoba ingest is still at R0 (seed.edn present, MCP wiring not yet provisioned).
+  The template differs per-actor only in ns name + :graph default + seed path."
+  (:require [clojure.string :as str]
+            #?(:clj [clojure.java.io :as io])))
+
+;; ─── defaults ────────────────────────────────────────────────────────────────
+
+(def default-url   "http://127.0.0.1:8077")
+(def default-graph "com.etzhayyim.funadaiku")
+
+#?(:clj
+   (def seed-path
+     (str (-> (io/file *file*) .getParentFile .getAbsolutePath)
+          "/seed.edn")))
+
+;; ─── minimal EDN entity counter (pure, no deps) ───────────────────────────────
+
+(defn strip-comments
+  "Remove EDN ; … \\n line comments without disturbing string literals."
+  ^String [^String s]
+  (let [sb (StringBuilder.)]
+    (loop [i 0 in-str? false]
+      (if (>= i (count s))
+        (str sb)
+        (let [c (.charAt s i)]
+          (cond
+            in-str?
+            (do (.append sb c)
+                (recur (inc i) (if (= c \") false in-str?)))
+            (= c \")
+            (do (.append sb c) (recur (inc i) true))
+            (= c \;)
+            ;; skip to next newline
+            (recur (inc (or (some (fn [j] (when (= (.charAt s j) \newline) j))
+                                  (range i (count s)))
+                            (count s)))
+                   false)
+            :else
+            (do (.append sb c) (recur (inc i) false))))))))
+
+(defn count-top-level-entities
+  "Count top-level {...} map literals inside the outer [ … ] vector of an EDN seed."
+  [^String s]
+  (let [s (strip-comments s)
+        start (.indexOf s (int \[))]
+    (if (< start 0)
+      0
+      (loop [i (inc start) depth 0 count 0 in-str? false]
+        (if (>= i (count s))
+          count
+          (let [c (.charAt s i)]
+            (cond
+              in-str?
+              (recur (inc i) depth count (if (= c \") false in-str?))
+              (= c \")
+              (recur (inc i) depth count true)
+              (= c \{)
+              (recur (inc i) (inc depth) count false)
+              (= c \})
+              (let [new-depth (dec depth)]
+                (recur (inc i) new-depth (if (zero? new-depth) (inc count) count) false))
+              :else
+              (recur (inc i) depth count false))))))))
+
+(defn estimate-datoms
+  "Heuristic: count ` :` keyword occurrences + leading `{:` in each top-level entity.
+  Same formula as ingest_mcp.py."
+  ^long [^String s]
+  (let [s (strip-comments s)]
+    ;; count \" :\" occurrences (each is roughly one attr) plus leading {: per entity
+    (+ (count (re-seq #" :" s))
+       (count (re-seq #"\{:" s)))))
+
+;; ─── main ────────────────────────────────────────────────────────────────────
+
+#?(:clj
+   (defn run
+     "Parse seed.edn, count entities and datoms, print summary. Options:
+      :url   — kotoba node URL (default http://127.0.0.1:8077)
+      :graph — target graph (default com.etzhayyim.funadaiku)
+      :dry-run — if true (or KOTOBA_TOKEN unset), skip live path."
+     [{:keys [url graph dry-run?]
+       :or   {url      default-url
+              graph    default-graph
+              dry-run? false}}]
+     (let [raw      (slurp seed-path)
+           n-ents   (count-top-level-entities raw)
+           n-datoms (estimate-datoms raw)
+           live?    (and (not dry-run?) (seq (System/getenv "KOTOBA_TOKEN")))]
+       (println (str "   parsed " n-ents " entities (~" n-datoms " datoms) from seed.edn → " graph))
+       (if live?
+         (do
+           (println "   live ingest requested — implement MCP kotoba_datom_create wiring before use (G13).")
+           {:status :live-placeholder :entities n-ents :datoms n-datoms})
+         (do
+           (println "   DRY RUN — no writes. Set KOTOBA_TOKEN (operator AT-session JWT) to ingest.")
+           {:status :dry-run :entities n-ents :datoms n-datoms})))))
+
+#?(:clj
+   (defn -main [& args]
+     (let [argv  (vec args)
+           url   (or (some #(when (= % "--url") %) argv)
+                     default-url)
+           url   (if (seq (filter #(= "--url" %) argv))
+                   (get argv (inc (.indexOf argv "--url")))
+                   default-url)
+           graph (if (seq (filter #(= "--graph" %) argv))
+                   (get argv (inc (.indexOf argv "--graph")))
+                   default-graph)
+           dry?  (boolean (some #(= "--dry-run" %) argv))]
+       (run {:url url :graph graph :dry-run? dry?})
+       nil)))
+
+;; ─── script entry (bb direct execution) ──────────────────────────────────────
+
+#?(:clj
+   (when (= *file* (System/getProperty "babashka.file"))
+     (-main)))

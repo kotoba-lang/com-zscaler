@@ -1,0 +1,61 @@
+;; atsurae 誂え — actor manifest (clj-native, kotoba-Datom-native)
+;; Product Line Engineering (PLE) feature-model engine. The product-FAMILY layer beneath
+;; uchiwake 内訳 (per-product BOM) + open-kyber 開 (ERP). A COMMONS spec, never a license key;
+;; SPEC + DERIVATION only — atsurae never builds. ADR-2606212010 (R0).
+{:actor/id        "atsurae"
+ :actor/glyph     "誂"
+ :actor/tier      :tier-b
+ :actor/integrates ["funadaiku" "hataori" "kiyome" "sanae" "sarutahiko" "sumitsubo" "uchiwake"]
+ :actor/domain    "atsurae.etzhayyim.com"
+ :actor/kind      :product-line-engineering-feature-model
+ :actor/purpose   "The Product Line Engineering (PLE) feature-model engine the roster lacked. open-kyber 開 (ADR-2606037200) covers ERP and uchiwake 内訳 (ADR-2606081800) covers per-product BOM, but neither manages a FAMILY of products derived from one model with shared commonality and bounded variability. atsurae is that layer: a feature model (mandatory / optional / xor-alternative / or groups + requires/excludes cross-tree constraints), from which valid VARIANTS are derived (誂え = bespoke, configured-to-order), each variant's BOM composed from the parts its selected features bind — handed off to uchiwake (BOM KG) + open-kyber (ERP) + the manufacturing actors. It computes commonality (the common platform vs. variation points), the bounded variant space, and constraint-valid configurations. A feature model is a COMMONS spec, never a vendor license key (G1: no license-lock / drm). SPEC + DERIVATION only — atsurae never manufactures (G2: sanae 早苗 / giemon / sarutahiko 猿田彦 / funadaiku 船大工 build, under Council gate). Validity is STRUCTURAL constraint satisfaction, not a good/bad product verdict (G3, non-adjudicating)."
+ :actor/status    :r0
+ :actor/adr       "2606212010"
+ :actor/related   ["2606037200" "2606081800" "2606032100" "2606013400" "2606010030" "2605262130"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "commons-spec-not-license-key" :gate/rule "A feature model is an OPEN commons spec; :atsurae/license-lock + :atsurae/drm unrepresentable (test-enforced). No vendor lock-in / entitlement gating."}
+  {:gate/id "G2" :gate/name "spec-only-never-manufactures" :gate/rule "Spec + derivation only; :atsurae/manufacture unrepresentable; the manufacturing actors (sanae/giemon/sarutahiko/funadaiku) build under Council Lv7+ gate, never atsurae"}
+  {:gate/id "G3" :gate/name "structural-not-adjudicating" :gate/rule "Validity is STRUCTURAL constraint satisfaction; :atsurae.product/verdict unrepresentable — atsurae never judges a product good/bad"}
+  {:gate/id "G4" :gate/name "no-person-data" :gate/rule "Product-line specs only; no person/customer data (member configuration is member-principal, held elsewhere)"}
+  {:gate/id "G5" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms; analysis datoms flagged :atsurae/derived + :atsurae/sourcing"}
+  {:gate/id "G6" :gate/name "no-server-key" :gate/rule "Holds no key, no network I/O; live product-line ingest + manufacture are operator/Council steps"}
+  {:gate/id "G7" :gate/name "synthetic-seed" :gate/rule "R0 seed is :synthetic; real product-line modelling is an operator/Council step"}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "Never manufactures/builds a variant (R0 spec + derivation; live build is the manufacturing actors + Council)"}
+  {:n/id "N2" :n/rule "Not a proprietary configurator / vendor PLM lock — feature models are an open commons (G1)"}
+  {:n/id "N3" :n/rule "Not a product-quality / safety adjudicator — validity is structural only (G3)"}
+  {:n/id "N4" :n/rule "Not the per-product BOM KG (uchiwake 内訳) nor the ERP (open-kyber 開) — atsurae derives, they hold"}
+  {:n/id "N5" :n/rule "R0 enumerates a bounded variant space; very large feature models (>16-wide or-groups) need staged/SAT enumeration (R1)"}]
+
+ :actor/methods
+ [{:method/id "feature_model" :method/file "methods/feature_model.cljc" :method/role "load + valid-config? + variants + commonality + variation-points + derive-bom + report (+ bb CLI)"}
+  {:method/id "emit"          :method/file "methods/emit.cljc"          :method/role "amime-style EAVT ledger datoms (per-feature commonality + line summary)"}
+  {:method/id "kotoba"        :method/file "methods/kotoba.cljc"        :method/role "content-addressed append-only PRODUCT-LINE LEDGER (tx-cid/make-tx/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun"       :method/file "methods/autorun.cljc"       :method/role "deterministic, idempotent-by-content heartbeat — analyze → append ONLY on change (+ bb CLI)"}]
+
+ :actor/lex
+ [{:lex/id "featureModel"}
+  {:lex/id "variantDerivation"}]
+
+ :actor/ledger
+ {:ledger/file "data/persisted/atsurae.line.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/note "Generated product-line ledger of feature-model analyses; tamper-evident (verify-chain); no-server-key; a commons spec record, never a license key."}
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.atsurae.edn"
+  :seed/sourcing :synthetic
+  :seed/shape "15-feature OSS-robotics mobility-base line → 176 valid variants"}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/atsurae/run_tests.sh"
+  :suites ["methods/test_feature_model.cljc" "methods/test_autorun.cljc"]}}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- kaname 要 — production heartbeat LaunchAgent (ADR-2606172100; deploy 実運用).
+     Generated from this template by install.sh (@REPO@ → the repo root). Runs the heartbeat
+     hourly at :53 (matching the cell-runner cron registration), against the LOCAL kotoba engine. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.etzhayyim.kaname.heartbeat</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>@REPO@/20-actors/kaname/deploy/run-heartbeat.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>KANAME_REPO</key>
+    <string>@REPO@</string>
+    <key>KANAME_BB</key>
+    <string>@BB@</string>
+  </dict>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Minute</key>
+    <integer>53</integer>
+  </dict>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>StandardOutPath</key>
+  <string>@HOME@/Library/Logs/kaname-heartbeat.log</string>
+  <key>StandardErrorPath</key>
+  <string>@HOME@/Library/Logs/kaname-heartbeat.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

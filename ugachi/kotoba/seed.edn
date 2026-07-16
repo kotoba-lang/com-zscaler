@@ -1,0 +1,62 @@
+;; ugachi 穿ち — seed of PROPOSED extraction projects (ALL SYNTHETIC, :sourcing :synthetic).
+;; Illustrative of the §2(l) gate's decision shape — NOT real projects, NOT a target-list.
+;; Real-project assessment is an operator/Council step (G7/G9).
+;; factors: irreversibility/remediation/descendant-benefit ∈ 0..1;
+;;   carbon ∈ {:net-negative :net-neutral :net-positive};
+;;   monopoly-effect ∈ {:entrench :neutral :diversify};
+;;   recovery-alternative ∈ {:none :partial :viable}; consent/transparent ∈ bool.
+;;
+;; Datomic/Datascript tx-data: one entity per project, namespace :ugachi.project/*
+;; (per the ontology's own documented namespace, kotoba/ontology.ugachi.edn
+;; "Attribute namespaces" comment). Loaders normalize this back to legacy bare-keyed
+;; rows transparently — see methods/ugachi_edn.cljc `normalize-rows`.
+[
+ ;; — passes the gate → :propose-r0 (reversible, remediated, consented, transparent, diversifying) —
+ {:db/id -1 :ugachi.project/type :project :ugachi.project/id "agg-river-a" :ugachi.project/name "Aggregate quarry (riverbed, restorable)" :ugachi.project/resource "aggregate" :ugachi.project/method "open-pit-small" :ugachi.project/jurisdiction :synthetic-1
+  :ugachi.project/irreversibility 0.25 :ugachi.project/remediation 0.85 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :none :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.7}
+ {:db/id -2 :ugachi.project/type :project :ugachi.project/id "cu-diversify-b" :ugachi.project/name "Copper mine (supply-diversifying, full remediation)" :ugachi.project/resource "copper" :ugachi.project/method "open-pit" :ugachi.project/jurisdiction :synthetic-2
+  :ugachi.project/irreversibility 0.4 :ugachi.project/remediation 0.8 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :diversify
+  :ugachi.project/recovery-alternative :partial :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.75}
+ {:db/id -3 :ugachi.project/type :project :ugachi.project/id "w-diversify-c" :ugachi.project/name "Tungsten mine (breaks single-country chokepoint)" :ugachi.project/resource "tungsten" :ugachi.project/method "underground" :ugachi.project/jurisdiction :synthetic-3
+  :ugachi.project/irreversibility 0.35 :ugachi.project/remediation 0.8 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :diversify
+  :ugachi.project/recovery-alternative :partial :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.8}
+
+ ;; — hard refusals —
+ {:db/id -4 :ugachi.project/type :project :ugachi.project/id "deepsea-nodule-d" :ugachi.project/name "Deep-sea polymetallic nodule mining" :ugachi.project/resource "polymetallic-nodule" :ugachi.project/method "deep-sea-dredge" :ugachi.project/jurisdiction :synthetic-ocean
+  :ugachi.project/irreversibility 0.95 :ugachi.project/remediation 0.1 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :partial :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.4
+  :ugachi.project/note "Irreversible abyssal-habitat loss → refuse (kanayama N7 echo)."}
+ {:db/id -5 :ugachi.project/type :project :ugachi.project/id "coal-new-e" :ugachi.project/name "New thermal-coal mine" :ugachi.project/resource "coal" :ugachi.project/method "open-pit" :ugachi.project/jurisdiction :synthetic-4
+  :ugachi.project/irreversibility 0.7 :ugachi.project/remediation 0.3 :ugachi.project/carbon :net-positive :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :none :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.2
+  :ugachi.project/note "Fossil→combusted net-positive CO₂e → refuse (§2(d)); transition routed to kamado."}
+ {:db/id -6 :ugachi.project/type :project :ugachi.project/id "ree-entrench-f" :ugachi.project/name "Rare-earth mine handing share to the dominant controller" :ugachi.project/resource "rare-earth" :ugachi.project/method "ionic-clay-leach" :ugachi.project/jurisdiction :synthetic-5
+  :ugachi.project/irreversibility 0.5 :ugachi.project/remediation 0.5 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :entrench
+  :ugachi.project/recovery-alternative :partial :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.4
+  :ugachi.project/note "Entrenches a resource monopoly → refuse (§1.12); contrast w-diversify-c."}
+ {:db/id -7 :ugachi.project/type :project :ugachi.project/id "agg-noconsent-g" :ugachi.project/name "Quarry without community consent" :ugachi.project/resource "aggregate" :ugachi.project/method "open-pit-small" :ugachi.project/jurisdiction :synthetic-6
+  :ugachi.project/irreversibility 0.3 :ugachi.project/remediation 0.8 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :none :ugachi.project/consent false :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.6
+  :ugachi.project/note "No Tree-of-Life land-sovereignty / community consent → refuse (G5)."}
+ {:db/id -8 :ugachi.project/type :project :ugachi.project/id "au-cyanide-h" :ugachi.project/name "Gold mine, weak tailings (irreversible contamination)" :ugachi.project/resource "gold" :ugachi.project/method "cyanide-heap-leach" :ugachi.project/jurisdiction :synthetic-7
+  :ugachi.project/irreversibility 0.8 :ugachi.project/remediation 0.2 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :viable :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.3
+  :ugachi.project/note "High net-irreversibility → refuse before recovery routing even applies."}
+
+ ;; — route to recovery (a viable lower-risk path exists; gate prefers it) —
+ {:db/id -9 :ugachi.project/type :project :ugachi.project/id "au-urban-i" :ugachi.project/name "Gold extraction where e-waste recovery is viable" :ugachi.project/resource "gold" :ugachi.project/method "open-pit" :ugachi.project/jurisdiction :synthetic-8
+  :ugachi.project/irreversibility 0.4 :ugachi.project/remediation 0.7 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :viable :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.6
+  :ugachi.project/note "Urban-mining substitute viable → route to kanayama (recovery-first preference)."}
+
+ ;; — insufficient / borderline —
+ {:db/id -10 :ugachi.project/type :project :ugachi.project/id "oil-ccs-j" :ugachi.project/name "Oil well with closed-loop CCS (net-neutral claim)" :ugachi.project/resource "crude-oil" :ugachi.project/method "drill-ccs" :ugachi.project/jurisdiction :synthetic-9
+  :ugachi.project/irreversibility 0.55 :ugachi.project/remediation 0.5 :ugachi.project/carbon :net-neutral :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :none :ugachi.project/consent true :ugachi.project/transparent true :ugachi.project/descendant-benefit 0.4
+  :ugachi.project/note "Net-neutral carbon claim but borderline irreversibility + weak descendant-benefit → insufficient-evidence."}
+ {:db/id -11 :ugachi.project/type :project :ugachi.project/id "u-mine-k" :ugachi.project/name "Uranium mine, strong remediation, no transparency commitment" :ugachi.project/resource "uranium" :ugachi.project/method "in-situ-leach" :ugachi.project/jurisdiction :synthetic-10
+  :ugachi.project/irreversibility 0.5 :ugachi.project/remediation 0.75 :ugachi.project/carbon :net-negative :ugachi.project/monopoly-effect :neutral
+  :ugachi.project/recovery-alternative :none :ugachi.project/consent true :ugachi.project/transparent false :ugachi.project/descendant-benefit 0.5
+  :ugachi.project/note "Passes hard gates but no Transparent-Force commitment → insufficient-evidence (not R0)."}
+]

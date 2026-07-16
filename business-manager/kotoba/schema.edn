@@ -1,0 +1,38 @@
+;; business-manager — kotoba EAVT schema
+;; ADR-2606072000
+;; Internal ERP, append-only double-entry on the Datom log. NO :*/tenant or :*/customer
+;; attribute (G1 internal-only); :journal/approved + :po/approved are DERIVED (G6), never
+;; caller-set; all postings are append-only (G7 — no retract). No RW/SQL/Cypher (G3).
+
+[;; ───────────────────────────── :journal/* — double-entry journal entry ─────────────────────────────
+ {:db/ident :journal/id          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :journal/fiscal-year :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "JP FY label, e.g. FY2026 (Apr 1 2026 - Mar 31 2027)"}
+ {:db/ident :journal/description :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :journal/amount-minor :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/doc "Σdebit (JPY minor); drives approval (G6)"}
+ {:db/ident :journal/approved    :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc "DERIVED (G6): :auto-approved | :approval-required"}
+ {:db/ident :journal/posted-by   :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "member DID (G4)"}
+ {:db/ident :journal/posted-sig  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "member signature ref; server sig refused (G4)"}
+ {:db/ident :journal/line        :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many :db/doc "≥2 balanced lines (G2)"}
+
+ ;; ───────────────────────────── :line/* — a journal line (debit XOR credit) ─────────────────────────────
+ {:db/ident :line/account        :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "chart-of-accounts code"}
+ {:db/ident :line/debit-minor    :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :line/credit-minor   :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :po/* — purchase order ─────────────────────────────
+ {:db/ident :po/id               :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :po/vendor           :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "prefer internal okaimono Ring-1 source"}
+ {:db/ident :po/amount-minor     :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :po/approved         :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc "DERIVED (G6): >5M JPY ⇒ :approval-required"}
+ {:db/ident :po/posted-by        :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "member DID (G4)"}
+
+ ;; ───────────────────────────── :budget/* — budget allocation ─────────────────────────────
+ {:db/ident :budget/id           :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :budget/fiscal-year  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :budget/account      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :budget/amount-minor :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :employee/* — HR record (identity encrypted, G5) ─────────────────────────────
+ {:db/ident :employee/id         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :employee/actor      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "producing actor the role belongs to"}
+ {:db/ident :employee/pii-ref    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "com.etzhayyim.encrypted.* envelope ref — NO plaintext PII (G5)"}]

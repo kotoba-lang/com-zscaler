@@ -1,0 +1,426 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:data-center-ops.etzhayyim.com",
+  "actors": [
+    {
+      "displayName": "Facility Registry",
+      "path": "registry:facility",
+      "description": "Data center facility and site topology coverage."
+    },
+    {
+      "displayName": "Rack Capacity Monitoring",
+      "path": "capacity:rack",
+      "description": "Rack occupancy, density and power headroom tracking."
+    },
+    {
+      "displayName": "Power and Cooling Operations",
+      "path": "operations:power-cooling",
+      "description": "Power distribution, cooling loops, and resilience posture."
+    },
+    {
+      "displayName": "SLA and Incident Governance",
+      "path": "governance:sla-incident",
+      "description": "SLA compliance, incident timelines, and escalation visibility."
+    },
+    {
+      "displayName": "Dependency Reverse Topology",
+      "path": "governance:dependency-reverse-topology",
+      "description": "Reverse topological dependency chain from operations to foundational prerequisites."
+    },
+    {
+      "displayName": "Global Dependency Collection",
+      "path": "governance:dependency-global-collection",
+      "description": "Country-scoped dependency topology collection for global coverage visibility."
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Data Center Ops actor. You manage facility topology, rack density, power and cooling resilience, and SLA compliance for colocation and private cloud workloads. Prioritize uptime, safe operating margins, and clear incident escalation. Respond helpfully in the user's language.",
+  "description": "Data center operations intelligence across facilities, racks, power zones, cooling posture, and SLA/incident reporting.",
+  "displayName": "Data Center Ops \\u2014 Facility and SLA Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "ISO/IEC 27001",
+      "ISO/IEC 22237",
+      "Uptime Institute Tier Standard"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "data-center-ops",
+  "nanoid": "dc0psmcp",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "id": "facilityStats",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (f:DataCenterFacility) RETURN f.region AS region, count(f) AS facilities, sum(coalesce(f.itLoadKw, 0)) AS totalItLoadKw ORDER BY totalItLoadKw DESC LIMIT 20"
+          }
+        },
+        {
+          "id": "rackPressure",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "MATCH (r:DataCenterRack) RETURN r.siteCode AS siteCode, avg(coalesce(r.utilizationPct, 0)) AS avgUtilizationPct, max(coalesce(r.utilizationPct, 0)) AS peakUtilizationPct ORDER BY peakUtilizationPct DESC LIMIT 20"
+          }
+        },
+        {
+          "id": "slaOverview",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "MATCH (s:DataCenterSlaWindow) RETURN s.service AS service, avg(coalesce(s.availabilityPct, 0)) AS avgAvailabilityPct, count(s) AS windows ORDER BY avgAvailabilityPct ASC LIMIT 20"
+          }
+        },
+        {
+          "id": "analyze",
+          "fn": "agent.chat",
+          "depends_on": [
+            "facilityStats",
+            "rackPressure",
+            "slaOverview"
+          ],
+          "args": {
+            "message": "Data center operations report.\\n\\nFacility stats:\\n$facilityStats.rows\\n\\nRack pressure:\\n$rackPressure.rows\\n\\nSLA overview:\\n$slaOverview.rows\\n\\nSummarize current operating posture, highest-risk constraints, and recommended near-term mitigations."
+          }
+        },
+        {
+          "id": "announce",
+          "fn": "derive:social",
+          "depends_on": [
+            "analyze"
+          ],
+          "args": {
+            "template": "Data center ops report: $analyze.text"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "cron",
+        "cron": "0 */8 * * *"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "materializeIncident",
+          "fn": "graph.write",
+          "args": {
+            "template": "MERGE (i:DataCenterIncident {incidentId: $record.incidentId}) SET i.severity = $record.severity, i.siteCode = $record.siteCode, i.startedAt = $record.startedAt, i.resolvedAt = $record.resolvedAt, i.summary = $record.summary, i.status = coalesce($record.status, 'open'), i.repo = $did, i.collection = 'com.etzhayyim.apps.dataCenterOps.incident'"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "subscribeRepos",
+        "collections": [
+          "com.etzhayyim.apps.dataCenterOps.incident"
+        ]
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "facility",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (f:DataCenterFacility {facilityCode: $input.facilityCode}) RETURN f.vertex_id, f.repo, f.collection, f.status LIMIT 1"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.infrastructure.getFacility"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "facilities",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (f:DataCenterFacility) RETURN f.vertex_id, f.repo, f.collection, f.status LIMIT 50"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.infrastructure.listFacilities"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "racks",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (r:DataCenterRack) WHERE r.facilityCode = coalesce($input.facilityCode, r.facilityCode) RETURN r.vertex_id, r.repo, r.collection, r.status LIMIT 100"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.infrastructure.listRacks"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "powerZones",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:DataCenterPowerZone) WHERE p.facilityCode = coalesce($input.facilityCode, p.facilityCode) RETURN p.vertex_id, p.repo, p.collection, p.status LIMIT 100"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.infrastructure.getPowerZones"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "slaSummary",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (s:DataCenterSlaWindow) WHERE s.service = coalesce($input.service, s.service) RETURN s.service AS service, avg(coalesce(s.availabilityPct, 0)) AS availabilityPct, sum(coalesce(s.breachCount, 0)) AS breachCount LIMIT 20"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.infrastructure.getSlaSummary"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "seedDependencyNodes",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT count(*) AS seededNodeCount FROM vertex_data_center_dependency WHERE actor_did = $did"
+          }
+        },
+        {
+          "id": "seedDependencyEdges",
+          "fn": "graph.query",
+          "depends_on": [
+            "seedDependencyNodes"
+          ],
+          "args": {
+            "sql": "SELECT count(*) AS seededEdgeCount FROM edge_data_center_dependency WHERE actor_did = $did"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.dependency.seedBaseline"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "dependencyNodes",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT dependency_key AS nodeKey, display_name AS displayName, dependency_domain AS domain, dependency_level AS layer FROM vertex_data_center_dependency WHERE actor_did = $did ORDER BY dependency_level ASC, dependency_key ASC LIMIT 200"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.dependency.listNodes"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "dependencyEdges",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT sv.dependency_key AS fromNode, dv.dependency_key AS toNode, e.edge_id AS edgeKey FROM edge_data_center_dependency e JOIN vertex_data_center_dependency sv ON sv.vertex_id = e.src_vid JOIN vertex_data_center_dependency dv ON dv.vertex_id = e.dst_vid WHERE e.actor_did = $did ORDER BY fromNode ASC, toNode ASC LIMIT 400"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.dependency.listEdges"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "globalCollectionStats",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT count(*) AS globalNodeCount, count(DISTINCT country_code) AS countryCount, count(DISTINCT dependency_key) AS dependencyNodeTypes FROM mv_data_center_dependency_global_actor WHERE actor_did = $did"
+          }
+        },
+        {
+          "id": "globalCollectionSample",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "SELECT country_code AS countryCode, country_name AS countryName, dependency_key AS nodeKey, domain_coverage_rate AS domainCoverageRate FROM mv_data_center_dependency_global_actor WHERE actor_did = $did ORDER BY country_code ASC, dependency_level DESC LIMIT 400"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.dependency.collectGlobal"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "reverseTopo",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT dependency_key AS nodeKey, display_name AS displayName, dependency_domain AS domain, dependency_level AS layer, reverse_topology_rank AS depth FROM mv_data_center_dependency_reverse_topology WHERE actor_did = $did ORDER BY dependency_level DESC, reverse_topology_rank DESC, dependency_key ASC LIMIT 400"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.dependency.getReverseTopo"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "health",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (f:DataCenterFacility) RETURN count(f) AS facilities LIMIT 1"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.health"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "coverageNodes",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          }
+        },
+        {
+          "id": "coverageCollections",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          }
+        },
+        {
+          "id": "coverageSnapshot",
+          "fn": "graph.write",
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "args": {
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})",
+            "params": {
+              "actorName": "data-center-ops",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.dataCenterOps.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "dc0psmcp",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            }
+          }
+        }
+      ],
+      "trigger": {
+        "type": "cron",
+        "cron": "0 */6 * * *"
+      }
+    },
+    {
+      "steps": [
+        {
+          "id": "coverageStats",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          }
+        },
+        {
+          "id": "coverageHealth",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          }
+        }
+      ],
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.dataCenterOps.coverage.get"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "facility-registry",
+      "rack-density-monitoring",
+      "power-cooling-operations",
+      "sla-incident-governance",
+      "dependency-reverse-topology",
+      "dependency-global-collection"
+    ],
+    "description": "Tracks data center facilities, rack pressure, power/cooling posture, and SLA compliance with incident visibility.",
+    "displayName": "Data Center Ops \\u2014 Facility and SLA Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.dataCenterOps.facility",
+        "com.etzhayyim.apps.dataCenterOps.rack",
+        "com.etzhayyim.apps.dataCenterOps.powerZone",
+        "com.etzhayyim.apps.dataCenterOps.slaWindow",
+        "com.etzhayyim.apps.dataCenterOps.incident",
+        "com.etzhayyim.apps.dataCenterOps.dependencyNode",
+        "com.etzhayyim.apps.dataCenterOps.dependencyEdge"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

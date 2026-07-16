@@ -1,0 +1,80 @@
+;; funadaiku 船大工 — Nagi 凪 class reference vessel (kotoba EAVT)
+;; ADR-2606013400 · zero-emission autonomous coastal cargo carrier
+;;
+;; CONSTITUTIONAL (G13 / N5): the powertrain below contains NO fossil main or auxiliary
+;;   engine. Prime mover = PEM hydrogen fuel cell (green-H2, G14) feeding electric azimuth
+;;   pods, assisted by wind (rotor/wing sail) + solar deck, buffered by an LFP battery.
+;;
+;; HONEST: R0 design-only. Coastal / short-sea scale (G12 caps: <=5000 DWT / <=14 kn /
+;;   MASS <= Degree 3). All values :representative; no hull built. Energy shares are
+;;   computed by methods/voyage_energy.py, not asserted here.
+
+[;; ── vessel identity ──
+ {:vessel/id "funadaiku.nagi-0001" :vessel/class "Nagi 凪" :vessel/actor "actor:funadaiku"
+  :vessel/adr "2606013400" :vessel/type :coastal-cargo :vessel/zero-emission true
+  :vessel/dwt 3000 :vessel/loa-m 90.0 :vessel/beam-m 15.0 :vessel/draft-m 5.2
+  :vessel/depth-m 7.6 :vessel/service-speed-kn 10.0 :vessel/max-speed-kn 12.0
+  :vessel/hull-material :marine-steel-eh36 :vessel/cargo-type :general-dry-cargo
+  :vessel/hull-form :single-screw-bulbous-bow :vessel/block-coefficient 0.72
+  :vessel/eol-route :hodoki+kanayama :vessel/sourcing :representative
+  :vessel/note "honest coastal/short-sea scale; ocean VLCC scale is out of R0-R3 (G12)"}
+
+ ;; ── autonomy (reuses kami-autodrive ShipHydro GNC) ──
+ {:autonomy/id "funadaiku.nagi.gnc" :autonomy/vessel "funadaiku.nagi-0001"
+  :autonomy/mass-degree 3 :autonomy/mass-degree-name "remote-controlled, no crew on board"
+  :autonomy/sae-equiv "L4 ceiling (G7)" :autonomy/degree-4-gate "Council Lv6+ (N10)"
+  :autonomy/gnc-engine "kami-autodrive VehicleClass::Ship dynamics::ShipHydro (ADR-2606010600)"
+  :autonomy/stack ["perception (LiDAR+radar+AIS occupancy)" "planner (A* + COLREG layer)"
+                   "control (PurePursuit heading + rudder/pod PID speed)"]
+  :autonomy/colreg true :autonomy/sonar-db-cap 180 :autonomy/sonar-cap-ref "NMFS cetacean Level A (G8)"
+  :autonomy/inference "Murakumo no-VKE mesh only (G10)" :autonomy/firmware-license :apache-2.0+rider}
+
+ ;; ── powertrain: wind-assist (primary fuel-saver) ──
+ {:propulsion/id "funadaiku.nagi.wind" :propulsion/vessel "funadaiku.nagi-0001"
+  :propulsion/kind :wind-assist :propulsion/role :primary-fuel-saver
+  :windassist/device :rotor-sail :windassist/units 2 :windassist/height-m 24.0
+  :windassist/diameter-m 4.0 :windassist/alt-device :rigid-wing-sail
+  :windassist/control :route-and-weather-optimized
+  :windassist/thrust-coeff-curve "function of apparent-wind angle/speed; see voyage_energy.py"
+  :windassist/note "adds thrust; NEVER the sole prime mover (wind-dependent)"
+  :propulsion/sourcing :representative}
+
+ ;; ── powertrain: solar deck ──
+ {:propulsion/id "funadaiku.nagi.solar" :propulsion/vessel "funadaiku.nagi-0001"
+  :propulsion/kind :solar-pv :propulsion/role :auxiliary+battery-topup
+  :solar/deck-area-m2 800.0 :solar/peak-kwp 160.0 :solar/module "hikari solar-pv-400w"
+  :solar/maker-actor "hikari" :solar/placement [:weather-deck :hatch-covers]
+  :solar/note "serves hotel/aux load + battery top-up; insufficient as sole main propulsion"
+  :propulsion/sourcing :representative}
+
+ ;; ── powertrain: hydrogen PEM fuel cell (electrical prime mover) ──
+ {:propulsion/id "funadaiku.nagi.h2fc" :propulsion/vessel "funadaiku.nagi-0001"
+  :propulsion/kind :hydrogen-fuelcell :propulsion/role :electrical-prime-mover
+  :hydrogen/cell-type :pem :hydrogen/stacks 2 :hydrogen/stack-kw 1200 :hydrogen/total-kw 2400
+  :hydrogen/efficiency-lhv 0.52 :hydrogen/storage :compressed-350bar
+  :hydrogen/alt-storage :liquid-h2 :hydrogen/store-kg 4000
+  :hydrogen/green-coc-required true :hydrogen/green-coc-ref "G14 well-to-wake chain-of-custody"
+  :hydrogen/bunkering-gate "Council + operator (G11)"
+  :hydrogen/note "a ship burning H2 made from fossil power is NOT zero-emission (G14)"
+  :propulsion/sourcing :representative}
+
+ ;; ── powertrain: LFP battery buffer ──
+ {:propulsion/id "funadaiku.nagi.battery" :propulsion/vessel "funadaiku.nagi-0001"
+  :propulsion/kind :lfp-battery :propulsion/role :peak-shave+harbour-zero-emission
+  :battery/chemistry :lfp :battery/capacity-kwh 2000 :battery/module "hikari storage-5kwh"
+  :battery/maker-actor "hikari" :battery/functions [:peak-shaving :harbour-manoeuvre :wind-solar-smoothing]
+  :propulsion/sourcing :representative}
+
+ ;; ── powertrain: electric drive ──
+ {:propulsion/id "funadaiku.nagi.drive" :propulsion/vessel "funadaiku.nagi-0001"
+  :propulsion/kind :electric-azimuth-pod :propulsion/role :drive
+  :drive/units 2 :drive/pod-kw 1500 :drive/total-kw 3000 :drive/type :podded-azimuth
+  :drive/bus :dc-link :propulsion/sourcing :representative}
+
+ ;; ── decarbonization target ──
+ {:decarb/id "funadaiku.nagi.decarb" :decarb/vessel "funadaiku.nagi-0001"
+  :decarb/scope :well-to-wake :decarb/fossil-engine false
+  :decarb/standards ["MARPOL Annex VI" "EEXI" "CII" "IMO GHG Strategy"]
+  :decarb/audit-cell "funadaiku.cells.decarbonization_audit"
+  :decarb/note "tank-to-wake CO2 = 0 by construction (no fossil fuel); well-to-wake depends on green-H2 CoC"
+  :decarb/sourcing :representative}]

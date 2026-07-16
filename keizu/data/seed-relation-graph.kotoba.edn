@@ -1,0 +1,116 @@
+;; seed-relation-graph.kotoba.edn — 系図 (keizu) :representative global seed (ADR-2606066000)
+;;
+;; HONESTY (G11): every record is :representative — illustrative public roles/organs and
+;; bounded, rounded figures, NOT a live authoritative capture. Nodes are PUBLIC SEATS /
+;; ORGANS (G1) — committee seats, ministries, agencies, party roles — never named private
+;; individuals. Edges are FACTUAL ties (G2, no verdict). Live full-universe ingest (官報 /
+;; 政治資金収支報告書 / 調達ポータル / Federal Register / USAspending / TED / OECD) is G8-gated.
+;;
+;; The seed is shaped to exercise the analyzer: a seat that sits on two committees
+;; (cross-committee co-membership), a committee drawing members from several organs
+;; (cross-organ concentration), per-payee award share (money HHI), and a revolving-door chain.
+
+{:graph {:name "keizu-relations-v1" :visibility :public}
+
+ ;; ── nodes: public organs + committee seats (G1) ─────────────────────────────
+ :nodes
+ [;; JP organs
+  {:node/id "jp-mof"  :node/scope :public-org :node/label "財務省 (MOF)" :node/jurisdiction "jp" :node/organ "財務省"
+   :node/sourcing :representative :node/sources ["https://www.mof.go.jp/"]}
+  {:node/id "jp-meti" :node/scope :public-org :node/label "経済産業省 (METI)" :node/jurisdiction "jp" :node/organ "経済産業省"
+   :node/sourcing :representative :node/sources ["https://www.meti.go.jp/"]}
+  {:node/id "jp-cas"  :node/scope :public-org :node/label "内閣官房 (Cabinet Secretariat)" :node/jurisdiction "jp" :node/organ "内閣官房"
+   :node/sourcing :representative :node/sources ["https://www.cas.go.jp/"]}
+  ;; JP committee seats (public roles)
+  {:node/id "jp-fsc-chair"      :node/scope :public-role :node/label "財政制度等審議会 会長 (seat)" :node/jurisdiction "jp" :node/organ "財務省"
+   :node/sourcing :representative :node/sources ["https://www.mof.go.jp/about_mof/councils/"]}
+  {:node/id "jp-fsc-acad-1"     :node/scope :public-role :node/label "財政制度等審議会 学識委員 (seat)" :node/jurisdiction "jp" :node/organ "(academia)"
+   :node/sourcing :representative :node/sources ["https://www.mof.go.jp/about_mof/councils/"]}
+  {:node/id "jp-fsc-biz-1"      :node/scope :public-role :node/label "財政制度等審議会 産業界委員 (seat)" :node/jurisdiction "jp" :node/organ "(industry)"
+   :node/sourcing :representative :node/sources ["https://www.mof.go.jp/about_mof/councils/"]}
+  {:node/id "jp-rrc-chair"      :node/scope :public-role :node/label "規制改革推進会議 議長 (seat)" :node/jurisdiction "jp" :node/organ "内閣府"
+   :node/sourcing :representative :node/sources ["https://www8.cao.go.jp/kisei-kaikaku/"]}
+  {:node/id "jp-rrc-biz-1"      :node/scope :public-role :node/label "規制改革推進会議 産業界委員 (seat)" :node/jurisdiction "jp" :node/organ "(industry)"
+   :node/sourcing :representative :node/sources ["https://www8.cao.go.jp/kisei-kaikaku/"]}
+  {:node/id "jp-party-a"        :node/scope :public-role :node/label "国政政党A 政策部会 (role)" :node/jurisdiction "jp" :node/organ "(party)"
+   :node/sourcing :representative :node/sources ["https://www.soumu.go.jp/senkyo/seiji_s/"]}
+  {:node/id "jp-vendor-x"       :node/scope :public-role :node/label "政府調達 受注事業者X (awardee role)" :node/jurisdiction "jp" :node/organ "(vendor)"
+   :node/sourcing :representative :node/sources ["https://www.p-portal.go.jp/"]}
+
+  ;; US organs + seats
+  {:node/id "us-treasury" :node/scope :public-org :node/label "US Department of the Treasury" :node/jurisdiction "us" :node/organ "Treasury"
+   :node/sourcing :representative :node/sources ["https://home.treasury.gov/"]}
+  {:node/id "us-gsa"      :node/scope :public-org :node/label "US General Services Administration" :node/jurisdiction "us" :node/organ "GSA"
+   :node/sourcing :representative :node/sources ["https://www.gsa.gov/"]}
+  {:node/id "us-faca-chair"   :node/scope :public-role :node/label "Federal Advisory Committee chair (seat)" :node/jurisdiction "us" :node/organ "Treasury"
+   :node/sourcing :representative :node/sources ["https://www.federalregister.gov/"]}
+  {:node/id "us-faca-ind-1"   :node/scope :public-role :node/label "Federal Advisory Committee industry member (seat)" :node/jurisdiction "us" :node/organ "(industry)"
+   :node/sourcing :representative :node/sources ["https://www.federalregister.gov/"]}
+  {:node/id "us-vendor-y"     :node/scope :public-role :node/label "Federal contract awardee (role)" :node/jurisdiction "us" :node/organ "(vendor)"
+   :node/sourcing :representative :node/sources ["https://www.usaspending.gov/"]}
+
+  ;; EU + OECD
+  {:node/id "ec-digit"       :node/scope :public-org :node/label "European Commission DG (representative)" :node/jurisdiction "eu" :node/organ "European Commission"
+   :node/sourcing :representative :node/sources ["https://commission.europa.eu/"]}
+  {:node/id "ec-eg-ind-1"    :node/scope :public-role :node/label "Commission expert group industry member (seat)" :node/jurisdiction "eu" :node/organ "(industry)"
+   :node/sourcing :representative :node/sources ["https://ec.europa.eu/transparency/expert-groups-register/"]}
+  {:node/id "oecd-fiscal"    :node/scope :public-committee :node/label "OECD fiscal committee (representative)" :node/jurisdiction "oecd" :node/organ "OECD Secretariat"
+   :node/sourcing :representative :node/sources ["https://www.oecd.org/"]}]
+
+ ;; ── committees: composition snapshots (G10 as-of) ───────────────────────────
+ :committees
+ [{:committee/id "jp-fiscal-system-council" :committee/label "財政制度等審議会"
+   :committee/jurisdiction "jp" :committee/organ "財務省"
+   :committee/members ["jp-fsc-chair" "jp-fsc-acad-1" "jp-fsc-biz-1"]
+   :committee/term-from 20250401 :committee/sourcing :representative
+   :committee/sources ["https://www.mof.go.jp/about_mof/councils/"]}
+  {:committee/id "jp-regulatory-reform-council" :committee/label "規制改革推進会議"
+   :committee/jurisdiction "jp" :committee/organ "内閣府"
+   :committee/members ["jp-rrc-chair" "jp-rrc-biz-1" "jp-fsc-biz-1"]
+   :committee/term-from 20250401 :committee/sourcing :representative
+   :committee/sources ["https://www8.cao.go.jp/kisei-kaikaku/"]}
+  {:committee/id "us-fiscal-advisory" :committee/label "US Treasury Federal Advisory Committee (representative)"
+   :committee/jurisdiction "us" :committee/organ "Treasury"
+   :committee/members ["us-faca-chair" "us-faca-ind-1"]
+   :committee/term-from 20250101 :committee/sourcing :representative
+   :committee/sources ["https://www.federalregister.gov/"]}]
+
+ ;; ── relations: observed FACTUAL ties (G2), edge-primary (G4), ≥2 sources (G3) ──
+ :rels
+ [;; committee membership
+  {:rel/id "r-fsc-chair" :rel/source "jp-fsc-chair" :rel/target "jp-fiscal-system-council" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250401 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.mof.go.jp/about_mof/councils/" "https://www.mof.go.jp/"]}
+  {:rel/id "r-fsc-acad" :rel/source "jp-fsc-acad-1" :rel/target "jp-fiscal-system-council" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250401 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.mof.go.jp/about_mof/councils/" "https://www.mof.go.jp/"]}
+  {:rel/id "r-fsc-biz" :rel/source "jp-fsc-biz-1" :rel/target "jp-fiscal-system-council" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250401 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.mof.go.jp/about_mof/councils/" "https://www.mof.go.jp/"]}
+  {:rel/id "r-rrc-chair" :rel/source "jp-rrc-chair" :rel/target "jp-regulatory-reform-council" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250401 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www8.cao.go.jp/kisei-kaikaku/" "https://www.cas.go.jp/"]}
+  {:rel/id "r-rrc-biz" :rel/source "jp-rrc-biz-1" :rel/target "jp-regulatory-reform-council" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250401 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www8.cao.go.jp/kisei-kaikaku/" "https://www.cas.go.jp/"]}
+  ;; the cross-committee seat: jp-fsc-biz-1 ALSO sits on the regulatory-reform council
+  {:rel/id "r-rrc-biz2" :rel/source "jp-fsc-biz-1" :rel/target "jp-regulatory-reform-council" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250401 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www8.cao.go.jp/kisei-kaikaku/" "https://www.mof.go.jp/about_mof/councils/"]}
+  {:rel/id "r-us-faca-chair" :rel/source "us-faca-chair" :rel/target "us-fiscal-advisory" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250101 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.federalregister.gov/" "https://home.treasury.gov/"]}
+  {:rel/id "r-us-faca-ind" :rel/source "us-faca-ind-1" :rel/target "us-fiscal-advisory" :rel/kind :committee-membership :rel/weight 1.0 :rel/as-of 20250101 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.federalregister.gov/" "https://home.treasury.gov/"]}
+  ;; appointment / advisory
+  {:rel/id "r-appt-fsc-chair" :rel/source "jp-mof" :rel/target "jp-fsc-chair" :rel/kind :appointment :rel/weight 1.0 :rel/as-of 20250401 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.mof.go.jp/about_mof/councils/" "https://www.mof.go.jp/"]}
+  {:rel/id "r-adv-ec" :rel/source "ec-eg-ind-1" :rel/target "ec-digit" :rel/kind :advisory-role :rel/weight 1.0 :rel/as-of 20250301 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://ec.europa.eu/transparency/expert-groups-register/" "https://commission.europa.eu/"]}
+  ;; revolving-door chain: a former METI organ role now an industry committee seat
+  {:rel/id "r-revolving-1" :rel/source "jp-meti" :rel/target "jp-rrc-biz-1" :rel/kind :revolving-door :rel/weight 1.0 :rel/as-of 20241001 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.meti.go.jp/" "https://www8.cao.go.jp/kisei-kaikaku/"]}
+  ;; funding ties (political donation, disclosed)
+  {:rel/id "r-fund-1" :rel/source "jp-vendor-x" :rel/target "jp-party-a" :rel/kind :funding-tie :rel/weight 1.0 :rel/as-of 20241231 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.soumu.go.jp/senkyo/seiji_s/" "https://www.p-portal.go.jp/"]}
+  ;; procurement-award ties
+  {:rel/id "r-award-jp" :rel/source "jp-meti" :rel/target "jp-vendor-x" :rel/kind :procurement-award :rel/weight 1.0 :rel/as-of 20250215 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.p-portal.go.jp/" "https://www.meti.go.jp/"]}
+  {:rel/id "r-award-us" :rel/source "us-gsa" :rel/target "us-vendor-y" :rel/kind :procurement-award :rel/weight 1.0 :rel/as-of 20250120 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://www.usaspending.gov/" "https://www.gsa.gov/"]}
+  ;; statement attribution
+  {:rel/id "r-stmt-1" :rel/source "jp-fsc-chair" :rel/target "s-fiscal-stance-1" :rel/kind :statement-attribution :rel/weight 1.0 :rel/as-of 20250410 :rel/non-adjudicating-notice true :rel/sourcing :representative :rel/sources ["https://kokkai.ndl.go.jp/" "https://www.mof.go.jp/"]}]
+
+ ;; ── money: FACTUAL public flows (G2), ≥2 sources (G3) ───────────────────────
+ :money
+ [{:money/id "m-award-jp-1" :money/payer "jp-meti" :money/payee "jp-vendor-x" :money/kind :procurement-award :money/amount 1.2e9 :money/currency "JPY" :money/as-of 20250215 :money/sourcing :representative :money/sources ["https://www.p-portal.go.jp/" "https://www.meti.go.jp/"]}
+  {:money/id "m-award-jp-2" :money/payer "jp-meti" :money/payee "jp-vendor-x" :money/kind :procurement-award :money/amount 8.0e8 :money/currency "JPY" :money/as-of 20250520 :money/sourcing :representative :money/sources ["https://www.p-portal.go.jp/" "https://www.meti.go.jp/"]}
+  {:money/id "m-subsidy-jp-1" :money/payer "jp-meti" :money/payee "jp-vendor-x" :money/kind :subsidy :money/amount 3.0e8 :money/currency "JPY" :money/as-of 20250310 :money/sourcing :representative :money/sources ["https://www.meti.go.jp/" "https://www.mof.go.jp/"]}
+  {:money/id "m-donation-jp-1" :money/payer "jp-vendor-x" :money/payee "jp-party-a" :money/kind :political-donation :money/amount 5.0e6 :money/currency "JPY" :money/as-of 20241231 :money/sourcing :representative :money/sources ["https://www.soumu.go.jp/senkyo/seiji_s/" "https://www.p-portal.go.jp/"]}
+  {:money/id "m-award-us-1" :money/payer "us-gsa" :money/payee "us-vendor-y" :money/kind :procurement-award :money/amount 4.0e7 :money/currency "USD" :money/as-of 20250120 :money/sourcing :representative :money/sources ["https://www.usaspending.gov/" "https://www.gsa.gov/"]}
+  {:money/id "m-grant-eu-1" :money/payer "ec-digit" :money/payee "ec-eg-ind-1" :money/kind :grant :money/amount 2.0e6 :money/currency "EUR" :money/as-of 20250301 :money/sourcing :representative :money/sources ["https://commission.europa.eu/" "https://ec.europa.eu/transparency/expert-groups-register/"]}]
+
+ ;; ── statements: public utterances attributed to public roles (G2) ───────────
+ :statements
+ [{:statement/id "s-fiscal-stance-1" :statement/speaker "jp-fsc-chair" :statement/topic "中期財政フレーム / fiscal consolidation" :statement/venue "国会会議録 (representative)" :statement/as-of 20250410 :statement/sourcing :representative :statement/sources ["https://kokkai.ndl.go.jp/" "https://www.mof.go.jp/"]}
+  {:statement/id "s-reg-reform-1" :statement/speaker "jp-rrc-chair" :statement/topic "規制改革 / deregulation agenda" :statement/venue "会議資料 (representative)" :statement/as-of 20250228 :statement/sourcing :representative :statement/sources ["https://www8.cao.go.jp/kisei-kaikaku/" "https://www.cas.go.jp/"]}
+  {:statement/id "s-us-fiscal-1" :statement/speaker "us-faca-chair" :statement/topic "advisory recommendation (representative)" :statement/venue "Federal Register notice" :statement/as-of 20250115 :statement/sourcing :representative :statement/sources ["https://www.federalregister.gov/" "https://home.treasury.gov/"]}]}

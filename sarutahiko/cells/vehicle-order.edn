@@ -1,0 +1,12 @@
+;; sarutahiko 猿田彦 — vehicle-order cell (datalog, kotoba runtime)
+;; ADR-2605252500 · Gen-3 deepen
+{:cell/id "vehicle-order"
+ :cell/glyph "猿田彦"
+ :cell/kind :datalog
+ :cell/runtime :kotoba
+ :cell/doc "Member vehicle-order book on kotoba Datom. SBT-gated intake (member = purchasing principal, no external inflow)."
+ :cell/gates ["G15" "G16" "G17" "G18"]
+ :cell/kotoba
+ {:reads [:sbt/holder-did :sbt/active]
+  :writes [:vehicle-order/id :vehicle-order/buyer-did :vehicle-order/specs
+           :vehicle-order/state :vehicle-order/settlement]}}

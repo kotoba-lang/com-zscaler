@@ -1,0 +1,2 @@
+{"DEU.income" {:currency "EUR" :source "EStG zone formula, marginal approximation (:representative)"
+  :brackets [[0 0.0] [10908 0.14] [15999 0.24] [62809 0.42] [277826 0.45]]}}

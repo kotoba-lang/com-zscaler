@@ -1,0 +1,28 @@
+// mimamori 見守り — kotoba pywasm actor world (ADR-2606112300 / 2606014500 / 2606014600).
+// Pure-stdlib methods (bond / match / shakai / kotoba) compile to a WASM Component via
+// componentize-py. No network, no filesystem at runtime: the SYNTHETIC seed is embedded
+// read-only (build step) and the component is STATELESS — heartbeat returns the
+// content-addressed transaction; the HOST appends it to its own log and verifies the
+// chain. The gates hold in WASM by construction: the component cannot denounce (G1),
+// score (G2), or enumerate persons (G5) because those surfaces do not exist in it.
+
+package etzhayyim:mimamori@0.1.0;
+
+world mimamori-actor {
+  /// One deterministic heartbeat over the embedded synthetic seed: replay → §D4
+  /// offer-matching → keeper-side social-capital mint (moyai invariants) → aggregate
+  /// coverage → ONE content-addressed transaction. Returns JSON:
+  ///   { "cid", "txEdn", "summary": {counts only — never a DID} }
+  /// The host appends txEdn to its append-only log; `prev` threads the chain.
+  export heartbeat: func(cycle: u32, prev: string) -> string;
+
+  /// Aggregate-only coverage report (markdown) — counts, never names (G5).
+  export coverage: func() -> string;
+
+  /// Own-DID-only bond query (G4 symmetric visibility / G5 no-throne): returns ONLY
+  /// the bonds in which `did` is a party. A non-party receives an empty list.
+  export bonds-of: func(did: string) -> string;
+
+  /// The shomer vow (ADR-2606112300 §D5 liturgy seed) — each line IS a gate.
+  export vow: func() -> string;
+}

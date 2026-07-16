@@ -1,0 +1,36 @@
+;; tsumugi 紡ぎ — INGEST fixture: public INSTITUTIONAL atproto accounts + follow 縁
+;; ADR-2606011800 · §D7.1 of ADR-2606011000 (atproto follow/deps ingester)
+;;
+;; SCOPE GUARD (G1/§D9): institutions / orgs ONLY (media, agencies, platforms) — NO
+;; private persons. Each is a LATENT organism (:organism/claimed? false,
+;; :organism/standing :latent) minted from a public handle; it becomes :member only on
+;; the §D5 covenant claim. Follow edges carry a LOW :en/grasping-load (attention/reach
+;; lock-in), far below ownership/supply 取.
+;;
+;; SOURCING: :representative — handles are real public institutional accounts, but the
+;; follow edges here are an ILLUSTRATIVE fixture (no live fetch; live ingest is G11-gated).
+;; ingest.py --live (operator-gated) replaces these with real app.bsky.graph.getFollows.
+
+[;; ── latent institutional organisms (atproto-handle-minted) ──
+ {:organism/id "org.media.nytimes" :organism/kind :institutional :organism/subkind :media :organism/label "The New York Times" :organism/handle "nytimes.com" :organism/claimed? false :organism/standing :latent :organism/sourcing :representative :tsumugi/sector :media}
+ {:organism/id "org.media.reuters" :organism/kind :institutional :organism/subkind :media :organism/label "Reuters" :organism/handle "reuters.com" :organism/claimed? false :organism/standing :latent :organism/sourcing :representative :tsumugi/sector :media}
+ {:organism/id "org.media.guardian" :organism/kind :institutional :organism/subkind :media :organism/label "The Guardian" :organism/handle "theguardian.com" :organism/claimed? false :organism/standing :latent :organism/sourcing :representative :tsumugi/sector :media}
+ {:organism/id "org.media.apnews" :organism/kind :institutional :organism/subkind :media :organism/label "AP News" :organism/handle "apnews.com" :organism/claimed? false :organism/standing :latent :organism/sourcing :representative :tsumugi/sector :media}
+ {:organism/id "org.agency.nasa" :organism/kind :institutional :organism/subkind :agency :organism/label "NASA" :organism/handle "nasa.gov" :organism/claimed? false :organism/standing :latent :organism/sourcing :representative :tsumugi/sector :gov}
+ {:organism/id "org.platform.bsky" :organism/kind :institutional :organism/subkind :corp :organism/label "Bluesky" :organism/handle "bsky.app" :organism/claimed? false :organism/standing :latent :organism/sourcing :representative :tsumugi/sector :platform}
+ {:organism/id "org.media.theverge" :organism/kind :institutional :organism/subkind :media :organism/label "The Verge" :organism/handle "theverge.com" :organism/claimed? false :organism/standing :latent :organism/sourcing :representative :tsumugi/sector :media}
+
+ ;; ── follow 縁 (attention/reach 取; :en/source :atproto-follow) ──
+ ;; among institutions
+ {:en/id "en.nytimes.follow.reuters"  :en/kind :follows :en/from "org.media.nytimes" :en/to "org.media.reuters"  :en/grasping-load 0.18 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.guardian.follow.reuters" :en/kind :follows :en/from "org.media.guardian" :en/to "org.media.reuters" :en/grasping-load 0.17 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.theverge.follow.nytimes" :en/kind :follows :en/from "org.media.theverge" :en/to "org.media.nytimes" :en/grasping-load 0.15 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.apnews.follow.reuters"   :en/kind :follows :en/from "org.media.apnews" :en/to "org.media.reuters"   :en/grasping-load 0.16 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.nasa.follow.bsky"        :en/kind :follows :en/from "org.agency.nasa" :en/to "org.platform.bsky"    :en/grasping-load 0.12 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.theverge.follow.bsky"    :en/kind :follows :en/from "org.media.theverge" :en/to "org.platform.bsky" :en/grasping-load 0.14 :en/source :atproto-follow :en/sourcing :representative}
+ ;; cross-edges weaving the press component into the corp/power component
+ {:en/id "en.theverge.follow.openai"  :en/kind :follows :en/from "org.media.theverge" :en/to "org.corp.us.openai"   :en/grasping-load 0.20 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.nytimes.follow.openai"   :en/kind :follows :en/from "org.media.nytimes" :en/to "org.corp.us.openai"    :en/grasping-load 0.19 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.theverge.follow.nvidia"  :en/kind :follows :en/from "org.media.theverge" :en/to "org.corp.us.nvidia"   :en/grasping-load 0.17 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.reuters.follow.tsmc"     :en/kind :follows :en/from "org.media.reuters" :en/to "org.corp.tw.tsmc"      :en/grasping-load 0.15 :en/source :atproto-follow :en/sourcing :representative}
+ {:en/id "en.nasa.follow.nvidia"      :en/kind :follows :en/from "org.agency.nasa" :en/to "org.corp.us.nvidia"      :en/grasping-load 0.13 :en/source :atproto-follow :en/sourcing :representative}]

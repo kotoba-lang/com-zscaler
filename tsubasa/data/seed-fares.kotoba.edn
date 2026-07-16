@@ -1,0 +1,88 @@
+;; tsubasa 翼 — seed flight-route / fare commons (ADR-2606072800)
+;; ============================================================================
+;; A BOUNDED, :representative illustrative seed — NOT exhaustive coverage. Every row
+;; is :representative (G8): public-knowledge approximations illustrating the route /
+;; fare / emissions / competition SHAPE, NOT live GDS telemetry. Live GDS/airline
+;; ingest is Council Lv7+ + operator gated (G8). Absence of a route means "not yet
+;; ingested", never "does not exist".
+;;
+;; :fare/co2-kg is present on EVERY fare (G4 — emissions surfaced). There is NO
+;; :fare/commission / :fare/affiliate-link (G1) and NO :searcher/* (G5) row anywhere
+;; — those are STRUCTURALLY UNREPRESENTABLE (see ontology header; enforced by tests).
+;; Minor units are USD cents. book-url is the airline's OWN page (affiliate-stripped).
+;; ============================================================================
+
+[;; ── airports (coverage nodes; region drives the coverage report) ─────────────
+ {:type :airport :airport/iata "JFK" :airport/name "New York JFK"   :airport/country "US" :airport/region :north-america}
+ {:type :airport :airport/iata "GRU" :airport/name "São Paulo GRU"  :airport/country "BR" :airport/region :south-america}
+ {:type :airport :airport/iata "LHR" :airport/name "London Heathrow":airport/country "GB" :airport/region :europe}
+ {:type :airport :airport/iata "CDG" :airport/name "Paris CDG"      :airport/country "FR" :airport/region :europe}
+ {:type :airport :airport/iata "DXB" :airport/name "Dubai Intl"     :airport/country "AE" :airport/region :middle-east}
+ {:type :airport :airport/iata "NRT" :airport/name "Tokyo Narita"   :airport/country "JP" :airport/region :east-asia}
+ {:type :airport :airport/iata "HND" :airport/name "Tokyo Haneda"   :airport/country "JP" :airport/region :east-asia}
+ {:type :airport :airport/iata "HKG" :airport/name "Hong Kong Intl" :airport/country "HK" :airport/region :east-asia}
+ {:type :airport :airport/iata "SIN" :airport/name "Singapore Changi":airport/country "SG" :airport/region :southeast-asia}
+ {:type :airport :airport/iata "BOM" :airport/name "Mumbai BOM"     :airport/country "IN" :airport/region :south-asia}
+ {:type :airport :airport/iata "SYD" :airport/name "Sydney Kingsford":airport/country "AU" :airport/region :oceania}
+ {:type :airport :airport/iata "AKL" :airport/name "Auckland Intl"  :airport/country "NZ" :airport/region :oceania}
+ {:type :airport :airport/iata "JNB" :airport/name "Johannesburg OR Tambo" :airport/country "ZA" :airport/region :africa}
+
+ ;; ── carriers (airline coverage nodes) ───────────────────────────────────────
+ {:type :carrier :carrier/iata "AA" :carrier/name "American Airlines"}
+ {:type :carrier :carrier/iata "JL" :carrier/name "Japan Airlines"}
+ {:type :carrier :carrier/iata "NH" :carrier/name "All Nippon Airways"}
+ {:type :carrier :carrier/iata "BA" :carrier/name "British Airways"}
+ {:type :carrier :carrier/iata "VS" :carrier/name "Virgin Atlantic"}
+ {:type :carrier :carrier/iata "EK" :carrier/name "Emirates"}
+ {:type :carrier :carrier/iata "SQ" :carrier/name "Singapore Airlines"}
+ {:type :carrier :carrier/iata "QF" :carrier/name "Qantas"}
+ {:type :carrier :carrier/iata "CX" :carrier/name "Cathay Pacific"}
+ {:type :carrier :carrier/iata "AI" :carrier/name "Air India"}
+ {:type :carrier :carrier/iata "AF" :carrier/name "Air France"}
+ {:type :carrier :carrier/iata "LA" :carrier/name "LATAM Airlines"}
+ {:type :carrier :carrier/iata "NZ" :carrier/name "Air New Zealand"}
+
+ ;; ── fares (JFK–NRT, transpacific — competitive 3-carrier route) ──────────────
+ {:type :fare :fare/id "fare.jfk-nrt-aa-eco" :fare/origin "JFK" :fare/destination "NRT" :fare/carrier "AA" :fare/stops 0 :fare/duration-min 825 :fare/fare-minor 68000 :fare/baggage-minor 3500 :fare/currency "USD" :fare/co2-kg 1080.0 :fare/cabin :economy :fare/book-url "https://www.aa.com/booking?o=JFK&d=NRT" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.jfk-nrt-jl-eco" :fare/origin "JFK" :fare/destination "NRT" :fare/carrier "JL" :fare/stops 0 :fare/duration-min 815 :fare/fare-minor 72000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 980.0 :fare/cabin :economy :fare/book-url "https://www.jal.co.jp/book?o=JFK&d=NRT" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.jfk-nrt-nh-eco" :fare/origin "JFK" :fare/destination "NRT" :fare/carrier "NH" :fare/stops 0 :fare/duration-min 820 :fare/fare-minor 70500 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 1010.0 :fare/cabin :economy :fare/book-url "https://www.ana.co.jp/book?o=JFK&d=NRT" :fare/sourcing :representative}
+
+ ;; ── fares (JFK–LHR, transatlantic — competitive 3-carrier route) ─────────────
+ {:type :fare :fare/id "fare.jfk-lhr-aa-eco" :fare/origin "JFK" :fare/destination "LHR" :fare/carrier "AA" :fare/stops 0 :fare/duration-min 425 :fare/fare-minor 42000 :fare/baggage-minor 3500 :fare/currency "USD" :fare/co2-kg 620.0 :fare/cabin :economy :fare/book-url "https://www.aa.com/booking?o=JFK&d=LHR" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.jfk-lhr-ba-eco" :fare/origin "JFK" :fare/destination "LHR" :fare/carrier "BA" :fare/stops 0 :fare/duration-min 420 :fare/fare-minor 45000 :fare/baggage-minor 4000 :fare/currency "USD" :fare/co2-kg 640.0 :fare/cabin :economy :fare/book-url "https://www.britishairways.com/book?o=JFK&d=LHR" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.jfk-lhr-vs-eco" :fare/origin "JFK" :fare/destination "LHR" :fare/carrier "VS" :fare/stops 0 :fare/duration-min 430 :fare/fare-minor 41000 :fare/baggage-minor 4500 :fare/currency "USD" :fare/co2-kg 600.0 :fare/cabin :economy :fare/book-url "https://www.virginatlantic.com/book?o=JFK&d=LHR" :fare/sourcing :representative}
+
+ ;; ── fares (LHR–DXB — 2-carrier route) ────────────────────────────────────────
+ {:type :fare :fare/id "fare.lhr-dxb-ba-eco" :fare/origin "LHR" :fare/destination "DXB" :fare/carrier "BA" :fare/stops 0 :fare/duration-min 415 :fare/fare-minor 38000 :fare/baggage-minor 4000 :fare/currency "USD" :fare/co2-kg 590.0 :fare/cabin :economy :fare/book-url "https://www.britishairways.com/book?o=LHR&d=DXB" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.lhr-dxb-ek-eco" :fare/origin "LHR" :fare/destination "DXB" :fare/carrier "EK" :fare/stops 0 :fare/duration-min 410 :fare/fare-minor 36000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 560.0 :fare/cabin :economy :fare/book-url "https://www.emirates.com/book?o=LHR&d=DXB" :fare/sourcing :representative}
+
+ ;; ── fares (SIN–SYD — 2-carrier route) ────────────────────────────────────────
+ {:type :fare :fare/id "fare.sin-syd-sq-eco" :fare/origin "SIN" :fare/destination "SYD" :fare/carrier "SQ" :fare/stops 0 :fare/duration-min 480 :fare/fare-minor 40000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 700.0 :fare/cabin :economy :fare/book-url "https://www.singaporeair.com/book?o=SIN&d=SYD" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.sin-syd-qf-eco" :fare/origin "SIN" :fare/destination "SYD" :fare/carrier "QF" :fare/stops 0 :fare/duration-min 485 :fare/fare-minor 42000 :fare/baggage-minor 3000 :fare/currency "USD" :fare/co2-kg 720.0 :fare/cabin :economy :fare/book-url "https://www.qantas.com/book?o=SIN&d=SYD" :fare/sourcing :representative}
+
+ ;; ── fares (NRT–SIN — 2-carrier route) ────────────────────────────────────────
+ {:type :fare :fare/id "fare.nrt-sin-nh-eco" :fare/origin "NRT" :fare/destination "SIN" :fare/carrier "NH" :fare/stops 0 :fare/duration-min 430 :fare/fare-minor 39000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 610.0 :fare/cabin :economy :fare/book-url "https://www.ana.co.jp/book?o=NRT&d=SIN" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.nrt-sin-sq-eco" :fare/origin "NRT" :fare/destination "SIN" :fare/carrier "SQ" :fare/stops 0 :fare/duration-min 425 :fare/fare-minor 38000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 600.0 :fare/cabin :economy :fare/book-url "https://www.singaporeair.com/book?o=NRT&d=SIN" :fare/sourcing :representative}
+
+ ;; ── fares (HND–HKG — 2-carrier route) ────────────────────────────────────────
+ {:type :fare :fare/id "fare.hnd-hkg-nh-eco" :fare/origin "HND" :fare/destination "HKG" :fare/carrier "NH" :fare/stops 0 :fare/duration-min 300 :fare/fare-minor 30000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 410.0 :fare/cabin :economy :fare/book-url "https://www.ana.co.jp/book?o=HND&d=HKG" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.hnd-hkg-cx-eco" :fare/origin "HND" :fare/destination "HKG" :fare/carrier "CX" :fare/stops 0 :fare/duration-min 295 :fare/fare-minor 28000 :fare/baggage-minor 2500 :fare/currency "USD" :fare/co2-kg 400.0 :fare/cabin :economy :fare/book-url "https://www.cathaypacific.com/book?o=HND&d=HKG" :fare/sourcing :representative}
+
+ ;; ── fares (DXB–BOM — 2-carrier route) ────────────────────────────────────────
+ {:type :fare :fare/id "fare.dxb-bom-ek-eco" :fare/origin "DXB" :fare/destination "BOM" :fare/carrier "EK" :fare/stops 0 :fare/duration-min 195 :fare/fare-minor 22000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 280.0 :fare/cabin :economy :fare/book-url "https://www.emirates.com/book?o=DXB&d=BOM" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.dxb-bom-ai-eco" :fare/origin "DXB" :fare/destination "BOM" :fare/carrier "AI" :fare/stops 0 :fare/duration-min 200 :fare/fare-minor 20000 :fare/baggage-minor 2000 :fare/currency "USD" :fare/co2-kg 300.0 :fare/cabin :economy :fare/book-url "https://www.airindia.com/book?o=DXB&d=BOM" :fare/sourcing :representative}
+
+ ;; ── fares (LHR–CDG — short-haul 2-carrier route) ─────────────────────────────
+ {:type :fare :fare/id "fare.lhr-cdg-ba-eco" :fare/origin "LHR" :fare/destination "CDG" :fare/carrier "BA" :fare/stops 0 :fare/duration-min 80 :fare/fare-minor 12000 :fare/baggage-minor 3000 :fare/currency "USD" :fare/co2-kg 110.0 :fare/cabin :economy :fare/book-url "https://www.britishairways.com/book?o=LHR&d=CDG" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.lhr-cdg-af-eco" :fare/origin "LHR" :fare/destination "CDG" :fare/carrier "AF" :fare/stops 0 :fare/duration-min 85 :fare/fare-minor 11000 :fare/baggage-minor 3500 :fare/currency "USD" :fare/co2-kg 105.0 :fare/cabin :economy :fare/book-url "https://www.airfrance.com/book?o=LHR&d=CDG" :fare/sourcing :representative}
+
+ ;; ── fares (GRU–JFK — South America link, 2-carrier route) ────────────────────
+ {:type :fare :fare/id "fare.gru-jfk-la-eco" :fare/origin "GRU" :fare/destination "JFK" :fare/carrier "LA" :fare/stops 0 :fare/duration-min 600 :fare/fare-minor 58000 :fare/baggage-minor 3000 :fare/currency "USD" :fare/co2-kg 880.0 :fare/cabin :economy :fare/book-url "https://www.latamairlines.com/book?o=GRU&d=JFK" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.gru-jfk-aa-eco" :fare/origin "GRU" :fare/destination "JFK" :fare/carrier "AA" :fare/stops 0 :fare/duration-min 610 :fare/fare-minor 60000 :fare/baggage-minor 3500 :fare/currency "USD" :fare/co2-kg 900.0 :fare/cabin :economy :fare/book-url "https://www.aa.com/booking?o=GRU&d=JFK" :fare/sourcing :representative}
+
+ ;; ── fares (SYD–AKL — Oceania, 2-carrier route) ───────────────────────────────
+ {:type :fare :fare/id "fare.syd-akl-qf-eco" :fare/origin "SYD" :fare/destination "AKL" :fare/carrier "QF" :fare/stops 0 :fare/duration-min 200 :fare/fare-minor 25000 :fare/baggage-minor 3000 :fare/currency "USD" :fare/co2-kg 320.0 :fare/cabin :economy :fare/book-url "https://www.qantas.com/book?o=SYD&d=AKL" :fare/sourcing :representative}
+ {:type :fare :fare/id "fare.syd-akl-nz-eco" :fare/origin "SYD" :fare/destination "AKL" :fare/carrier "NZ" :fare/stops 0 :fare/duration-min 205 :fare/fare-minor 24000 :fare/baggage-minor 0 :fare/currency "USD" :fare/co2-kg 310.0 :fare/cabin :economy :fare/book-url "https://www.airnewzealand.com/book?o=SYD&d=AKL" :fare/sourcing :representative}
+
+ ;; ── fares (JNB–LHR — single-carrier route: a :monopoly competition reading → :opening) ──
+ {:type :fare :fare/id "fare.jnb-lhr-ba-eco" :fare/origin "JNB" :fare/destination "LHR" :fare/carrier "BA" :fare/stops 0 :fare/duration-min 660 :fare/fare-minor 75000 :fare/baggage-minor 4000 :fare/currency "USD" :fare/co2-kg 1180.0 :fare/cabin :economy :fare/book-url "https://www.britishairways.com/book?o=JNB&d=LHR" :fare/sourcing :representative}]

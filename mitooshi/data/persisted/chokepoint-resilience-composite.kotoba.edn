@@ -1,0 +1,14 @@
+;; chokepoint-resilience-composite.kotoba.edn — cross-actor (watari+watatsuna+mitooshi).
+;; ONE maritime resilience picture per chokepoint: live transit + cable load +
+;; forecast. attention = 0.7*norm(cable) + 0.3*norm(transit). A RESILIENCE map,
+;; NEVER a target-list (routed to redundancy/repair, never interdiction).
+;; DERIVED :representative. Live promotion G10-gated. ADR-2606012600.
+
+[
+ {:choke/id :malacca :choke/transit 3.0 :choke/cable-load-tbps 490.16 :choke/forecast-cable-mean 640.16 :choke/attention 1.0 :choke/sourcing :representative}
+ {:choke/id :luzon-strait :choke/transit 1.0 :choke/cable-load-tbps 454.56 :choke/forecast-cable-mean 529.8933 :choke/attention 0.7492 :choke/sourcing :representative}
+ {:choke/id :gibraltar :choke/transit nil :choke/cable-load-tbps 324.0 :choke/forecast-cable-mean 324.0 :choke/attention 0.4627 :choke/sourcing :representative}
+ {:choke/id :suez-red-sea :choke/transit 1.0 :choke/cable-load-tbps 249.6 :choke/forecast-cable-mean 282.9333 :choke/attention 0.4565 :choke/sourcing :representative}
+ {:choke/id :south-china-sea :choke/transit nil :choke/cable-load-tbps 190.56 :choke/forecast-cable-mean 190.56 :choke/attention 0.2721 :choke/sourcing :representative}
+ {:choke/id :hormuz :choke/transit 1.0 :choke/cable-load-tbps nil :choke/forecast-cable-mean nil :choke/attention 0.1 :choke/sourcing :representative}
+]

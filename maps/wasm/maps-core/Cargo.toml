@@ -1,0 +1,23 @@
+# maps 地図 — onsen (温泉) discovery + おすすめ ranking as a compact T1 WASM actor
+# (ADR-2606015200 pattern; same raw-CID browser-local ABI as tsumugi/kanae/shionome-core).
+# The executable read-side face of the maps onsen recommender (20-actors/maps/methods/onsen.cljc):
+# embeds a bounded :representative seed of famous onsen and computes the transparent
+# place-quality ranking. Empty [workspace] keeps it standalone.
+[workspace]
+
+[package]
+name = "maps-core"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "maps 地図 onsen おすすめ ranking as a WASM actor (place-not-person; ADR-2606064500)"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

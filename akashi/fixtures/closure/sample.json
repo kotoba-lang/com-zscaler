@@ -1,0 +1,53 @@
+{
+  "fixtureId": "akashi-closure-sample-r1",
+  "createdAt": "2026-06-02T00:00:00Z",
+  "records": {
+    "adDisclosureLink": [
+      {
+        "createdAt": "2026-06-02T00:00:00Z",
+        "linkType": "same-landing-domain",
+        "leftCid": "cid:akashi:creative:left",
+        "rightCid": "cid:akashi:creative:right",
+        "evidenceCids": ["cid:akashi:landing:domain-match"],
+        "methodNoteCid": "cid:akashi:method-note:closure",
+        "confidence": "domain-match",
+        "nonAdjudicatingNotice": true,
+        "attestingDid": "did:web:akashi.etzhayyim.com"
+      }
+    ],
+    "adTransparencyReport": [
+      {
+        "createdAt": "2026-06-02T00:00:00Z",
+        "periodStart": "2026-05-01T00:00:00Z",
+        "periodEnd": "2026-05-31T23:59:59Z",
+        "sourcePolicyCids": ["cid:akashi:source-policy:regulator"],
+        "aggregateStats": [
+          {
+            "label": "fixture records parsed",
+            "count": 1,
+            "platform": "multi-platform",
+            "jurisdiction": "EU"
+          }
+        ],
+        "methodNoteCids": ["cid:akashi:method-note:closure"],
+        "nonAdjudicatingNotice": true,
+        "attestingDid": "did:web:akashi.etzhayyim.com"
+      }
+    ],
+    "malakEvidenceCandidate": [
+      {
+        "createdAt": "2026-06-02T00:00:00Z",
+        "candidateType": "public-ioc-domain-match",
+        "sourceCids": [
+          "cid:akashi:landing:domain-match",
+          "cid:public-ioc:domain:example"
+        ],
+        "publicIndicatorCid": "cid:public-ioc:domain:example",
+        "methodNoteCid": "cid:akashi:method-note:closure",
+        "reviewStatus": "candidate-only",
+        "nonAdjudicatingNotice": true,
+        "attestingDid": "did:web:akashi.etzhayyim.com"
+      }
+    ]
+  }
+}

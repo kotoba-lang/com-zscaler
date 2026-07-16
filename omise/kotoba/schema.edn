@@ -1,0 +1,116 @@
+;; omise 御店 — kotoba EAVT schema
+;; ADR-2606071400
+;; Seller-side storefront commons. :listing/* is intentionally a SUPERSET-compatible
+;; projection of okaimono :product/* with :product/ring :internal (G11): the same maker
+;; / price / durability / repairability / labor / carbon / lifecycle axes, so an omise
+;; listing is an okaimono Ring-1 product with no glue. NO :*/commission, :*/take-rate,
+;; or :*/sponsored attribute exists anywhere in this schema (G2/G4). All state is
+;; kotoba Datoms (no RW/SQL/Kysely; G6 — corrects the legacy JSON-LD manifest).
+
+[;; ───────────────────────────── :storefront/* — a gated seller's shop ─────────────────────────────
+ {:db/ident :storefront/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "stable storefront key, e.g. omise.mitsuho"}
+ {:db/ident :storefront/seller-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "producing-actor DID or active Adherent SBT member DID (G3)"}
+ {:db/ident :storefront/seller-kind
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":producing-actor | :sbt-member (external open onboarding = Council Lv7+, not representable at R0)"}
+ {:db/ident :storefront/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :listing/* — okaimono Ring-1-coherent listing ─────────────────────────────
+ {:db/ident :listing/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :listing/storefront
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "owning :storefront/id"}
+ {:db/ident :listing/title
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :listing/maker-actor
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "producing etzhayyim actor (maps to okaimono :product/maker-actor)"}
+ {:db/ident :listing/price-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC 6-dp minor; NO take-rate added (G2)"}
+ {:db/ident :listing/inventory
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "honest on-hand count; no false scarcity (G5)"}
+ {:db/ident :listing/durability-years
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :listing/repairability
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "0..10 iFixit-style; routes to hodoki (G5/G13)"}
+ {:db/ident :listing/labor-provenance
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":etzhayyim-dignity | :verified-fair | :disclosed (G8)"}
+ {:db/ident :listing/carbon-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :listing/lifecycle-route
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":hodoki | :kanayama | :haraedo | :wakai | :commons-return"}
+ {:db/ident :listing/fulfilment-actor
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "etzhayyim logistics actor (todoke/sarutahiko/haraedo); no gig (G8)"}
+
+ ;; ───────────────────────────── :order/* — Ring-1 SBT↔SBT order ─────────────────────────────
+ {:db/ident :order/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :order/listing
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :order/buyer-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "active Adherent SBT buyer (G3); identity via encrypted envelope (G9)"}
+ {:db/ident :order/qty
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :order/consent-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "DID-signed consent reference (G1)"}
+ {:db/ident :order/subtotal-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :order/commission-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "INVARIANT 0 — the platform takes nothing (G2). Present only to assert the zero on-chain."}
+ {:db/ident :order/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split (G7)"}
+ {:db/ident :order/seller-net-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "subtotal − tithe; to seller directly (no platform cut)"}
+ {:db/ident :order/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":cart :placed :settle-intent :fulfilling :delivered :in-use (caps at :in-use, never terminal; G13)"}
+ {:db/ident :order/settlement-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "warifu settlement ref (buyer-signed; intent-only at R0, G7/G12)"}]

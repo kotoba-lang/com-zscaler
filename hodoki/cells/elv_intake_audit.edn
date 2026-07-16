@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_intake_audit cell (L1a)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_intake_audit"
+  :cell/glyph "🔍"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G5" "G9" "G10"]
+  :cell/state-graph "{:nodes [{:id \"parse-vin\", :type \"llm-prompt\", :prompt \"Extract and validate VIN from intake form.\"} {:id \"scan-charter\", :type \"function\", :func \"scan_charter_compliance\"} {:id \"record-intake\", :type \"function\", :func \"record_intake\"} {:id \"end\", :type \"return\"}], :entry \"parse-vin\", :edges [{:from \"parse-vin\", :to \"scan-charter\"} {:from \"scan-charter\", :to \"record-intake\"} {:from \"record-intake\", :to \"end\"}]}"
+  :cell/doc "L1a: ELV intake audit — VIN + title + consent + Charter scan (G5)."
+  :cell/kotoba "{:reads [:elv-intake/vin :elv-intake/title-doc :elv-intake/owner-consent :elv-intake/charter-scan-status :elv-intake/data-wipe-request], :writes [:elv-intake/vin :elv-intake/title-doc :elv-intake/owner-consent :elv-intake/arrival-timestamp :elv-intake/charter-scan-status]}"}]

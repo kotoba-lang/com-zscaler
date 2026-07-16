@@ -1,0 +1,198 @@
+;; mitsuho 瑞穂 — kotoba EAVT schema
+;; ADR-2605261015 · R0 scaffold
+;; Food & Agriculture actor: parcel baseline, crop plan, harvest, food lot, and
+;; preservation attestations. All state is kotoba Datoms — replaces legacy graph paths (G6).
+
+[;; ───────────────────────────── :parcel/* — agricultural parcel baseline ─────────────────────────────
+ {:db/ident :parcel/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique identifier for the agricultural parcel"}
+ {:db/ident :parcel/location-geohash
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Geohash of the parcel's central location"}
+ {:db/ident :parcel/soil-health-score
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Score reflecting soil organic matter, microbial activity, nutrient levels"}
+ {:db/ident :parcel/water-quality-score
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Score reflecting water purity and suitability for agriculture"}
+ {:db/ident :parcel/climate-zone
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Climate zone classification (e.g. Köppen)"}
+ {:db/ident :parcel/biodiversity-impact
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Assessment of local biodiversity impact (no-harm / positive-impact)"}
+
+ ;; ───────────────────────────── :crop-plan/* — seasonal crop plan ─────────────────────────────
+ {:db/ident :crop-plan/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique identifier for the crop plan"}
+ {:db/ident :crop-plan/parcel
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :parcel where crop will be cultivated"}
+ {:db/ident :crop-plan/season
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Agricultural season (e.g. Spring 2026)"}
+ {:db/ident :crop-plan/varietals
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Varietals to be planted (G7: open-source seed banks only)"}
+ {:db/ident :crop-plan/seed-source
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Seed source attestation (Svalbard / NAVDANYA / national gene bank; G7 rejects patented lines)"}
+ {:db/ident :crop-plan/pesticide-manifest
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Pesticides to be used (G9: rejects neonicotinoid / glyphosate / paraquat / organochlorine)"}
+ {:db/ident :crop-plan/organic-certification
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if organically certified"}
+ {:db/ident :crop-plan/gmo-attestation-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "CID reference to Council Lv6+ ≥3 sig attestation for GMO varietals (G10)"}
+ {:db/ident :crop-plan/rotation-plan
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Planned crop rotation for soil health"}
+
+ ;; ───────────────────────────── :harvest/* — harvest attestation ─────────────────────────────
+ {:db/ident :harvest/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique identifier for the harvest event"}
+ {:db/ident :harvest/crop-plan
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :crop-plan that led to this harvest"}
+ {:db/ident :harvest/date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 date-time of harvest"}
+ {:db/ident :harvest/yield-quantity-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Total yield quantity in kilograms"}
+ {:db/ident :harvest/quality-grade
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Quality grade of harvested produce"}
+ {:db/ident :harvest/harvest-method
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Harvest method (manual / robotic)"}
+ {:db/ident :harvest/witness-sigs
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "DIDs of witnesses who attested to harvest"}
+ {:db/ident :harvest/ipfs-photo-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS Content ID of photographic evidence"}
+ {:db/ident :harvest/soil-carbon-delta-tons-co2eq
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Change in soil carbon (tons CO2 equivalent) post-harvest; negative → Council review (G8)"}
+
+ ;; ───────────────────────────── :food-lot/* — preserved food lot attestation ─────────────────────────────
+ {:db/ident :food-lot/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique identifier for the processed food lot"}
+ {:db/ident :food-lot/harvest
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "ref → :harvest from which this lot originated"}
+ {:db/ident :food-lot/processing-date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 date-time of processing"}
+ {:db/ident :food-lot/kilojoules-per-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Energy content in kJ/kg"}
+ {:db/ident :food-lot/protein-g-per-100g
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Protein macronutrient (g per 100g)"}
+ {:db/ident :food-lot/carbohydrate-g-per-100g
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Carbohydrate macronutrient (g per 100g)"}
+ {:db/ident :food-lot/fat-g-per-100g
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "Fat macronutrient (g per 100g)"}
+ {:db/ident :food-lot/shelf-life-days
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Estimated shelf life in days"}
+ {:db/ident :food-lot/handling-instructions
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Storage and handling instructions"}
+ {:db/ident :food-lot/packaging-type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Type of packaging used"}
+
+ ;; ───────────────────────────── :sbt/* — Adherent SBT eligibility (§3 / G2) ─────────────────────────────
+ {:db/ident :sbt/holder-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "DID of an Adherent SBT holder"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Active Adherent SBT? required for internal SBT↔SBT settlement (§3 / G2)"}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter intent (NOT executed; G3/G5) ─────────────────────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique identifier for settlement"}
+ {:db/ident :settlement/rail
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":usdc-base-l2 (ERC-4337 smart-account); no fiat / no Stripe (G3)"}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC minor (6-dp) gross value"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split → Public Fund (G3)"}
+ {:db/ident :settlement/producer-payout-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Net to food producer (gross − tithe), USDC minor"}
+ {:db/ident :settlement/tithe-router
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "TitheRouter contract ref (50-infra/etzhayyim-tithe-router)"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (computed, NOT broadcast) | :executed (member-signed + operator-broadcast, G5)"}
+ {:db/ident :settlement/buyer-sig-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Member passkey/smart-account signature ref; platform holds no key. absent ⇒ stays :intent (G4)"}]

@@ -1,0 +1,193 @@
+;; tatekata 建方 — kotoba EAVT schema
+;; ADR-2605250715 · R0 scaffold
+;; Construction project phase coordination over kotoba Datoms: site survey, material batches,
+;; phase-boundary progress records (IPFS-pinned photos/depths, robot witness), safety incidents,
+;; and on-chain settlement intent. All state is kotoba Datoms (G14).
+
+[;; ───────────────────────────── :project/* — project metadata ─────────────────────────────
+ {:db/ident :project/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "project DID (did:web:tatekata.etzhayyim.com/project/...)"}
+ {:db/ident :project/owner-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "project owner (land/building owner DID; member, G2)"}
+ {:db/ident :project/location
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "site address or coordinates"}
+ {:db/ident :project/scope
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "project scope (civil + MEP phases)"}
+ {:db/ident :project/stories
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "number of stories (KPI cap ≤2, G11)"}
+ {:db/ident :project/footprint-m2
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "building footprint in m² (KPI cap ≤5000, G11)"}
+ {:db/ident :project/phase
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":foundation | :structural | :mep | :finishing | :commissioning"}
+
+ ;; ───────────────────────────── :site/* — site survey attestation ─────────────────────────────
+ {:db/ident :site/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :site/project
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :site/survey-date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 survey date"}
+ {:db/ident :site/soil-class
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "USCS soil classification"}
+ {:db/ident :site/utilities
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "existing utilities (electric, gas, water, sewer, telecom)"}
+ {:db/ident :site/hazards
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "identified site hazards"}
+ {:db/ident :site/ipfs-pin-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of survey photos + depth maps (G2)"}
+
+ ;; ───────────────────────────── :material/* — material batch attestation ─────────────────────────────
+ {:db/ident :material/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :material/project
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :material/type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "steel / concrete / lumber / etc."}
+ {:db/ident :material/batch-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :material/arrival-date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 arrival timestamp"}
+ {:db/ident :material/certification
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Mill/source certification ref"}
+ {:db/ident :material/weight-kg
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :material/analysis
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "chemical/structural analysis results"}
+
+ ;; ───────────────────────────── :progress/* — phase-boundary progress records (G17) ─────────────────────────────
+ {:db/ident :progress/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :progress/project
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :progress/phase
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":foundation | :structural | :mep | :finishing | :commissioning"}
+ {:db/ident :progress/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 phase-boundary timestamp (passed in; no wall-clock)"}
+ {:db/ident :progress/photo-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of site photos at phase boundary (G2)"}
+ {:db/ident :progress/depth-map-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of depth maps"}
+ {:db/ident :progress/robot-dids
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "witness robot DIDs (≥2 distinct, G3)"}
+ {:db/ident :progress/anomalies
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "any detected anomalies"}
+
+ ;; ───────────────────────────── :safety/* — safety incident reports ─────────────────────────────
+ {:db/ident :safety/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :safety/project
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :safety/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 incident timestamp"}
+ {:db/ident :safety/type
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":near-miss | :injury | :equipment-damage"}
+ {:db/ident :safety/description
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :safety/witnesses
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "witness DIDs (robot/personnel)"}
+ {:db/ident :safety/correction-required
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter intent (NOT executed; G15/G17) ─────────────────────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :settlement/project
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :settlement/rail
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":usdc-base-l2 (ERC-4337 smart-account via warifu, ADR-2605302000); no fiat (G15)"}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC minor (6-dp) gross project value"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split → Public Fund (G15)"}
+ {:db/ident :settlement/owner-payout-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "net to project owner (gross − tithe), USDC minor"}
+ {:db/ident :settlement/tithe-router
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "TitheRouter contract ref (50-infra/etzhayyim-tithe-router)"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (computed, NOT broadcast) | :executed (owner-signed + operator-broadcast, G17). R0 stops at :intent"}
+ {:db/ident :settlement/owner-sig-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "owner passkey/smart-account signature ref; platform holds no key (G16). absent ⇒ stays :intent"}]

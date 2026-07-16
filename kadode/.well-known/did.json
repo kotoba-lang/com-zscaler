@@ -1,0 +1,14 @@
+{
+  "@context" : [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1" ],
+  "id" : "did:web:etzhayyim.com:actor:kadode",
+  "alsoKnownAs" : [ "at://kadode.etzhayyim.com", "https://github.com/etzhayyim/com-etzhayyim-kadode", "rad:bafkreiav672ova3qomej4my5jm7pdzkuvaqs3fvnsxmihuq7yl2bmzpzhu", "did:web:etzhayyim.github.io:com-etzhayyim-kadode" ],
+  "service" : [ {
+    "id" : "did:web:etzhayyim.com:actor:kadode#atproto_pds",
+    "type" : "AtprotoPersonalDataServer",
+    "serviceEndpoint" : "https://pds.etzhayyim.com"
+  }, {
+    "id" : "did:web:etzhayyim.com:actor:kadode#aozora",
+    "type" : "AozoraAppView",
+    "serviceEndpoint" : "https://aozora.app"
+  } ]
+}

@@ -1,0 +1,86 @@
+;; uzu 渦 — actor manifest (clj-native, kotoba-Datom-native)
+;; A dissipative information-energy organism + a measured real-world energy field.
+;; ADR-2606211500 (R0). Design-only; live ingest is G7 (operator step).
+{:actor/id        "uzu"
+ :actor/glyph     "渦"
+ :actor/tier      :tier-b
+ :actor/integrates ["busshi" "hikari" "ibuki" "kanjo" "kasa" "shionome"]
+ :actor/domain    "uzu.etzhayyim.com"
+ :actor/kind      :thermodynamic-organism
+ :actor/purpose   "An artificial organism built on the information-energy coupled view: a Markov-blanketed active-inference agent that draws finite free energy, forms a generative model (the 'vortex') as a fold over the append-only kotoba Datom log, and chooses actions by minimizing expected free energy — paying a metabolic cost for each, and dying when the conserved energy balance hits zero (self-maintenance is EARNED, not assumed). Two ledgers are kept deliberately distinct: ENERGY (conserved, depleting) and INFORMATION (copyable, append-only). The same organism engine GROUNDS the 'energy' idea in MEASURED real-world flows — physical power (W), the economy (USD/yr), information (bit/s), and human attention/meaning (index) — treated as one open, coupled, dissipative system and VISUALIZED on one canvas, with the four incommensurable units NEVER summed across classes (the honest do-not-equate-info-and-energy boundary), and meaning explicitly subject-dependent (no joules-per-meaning). Sibling of ibuki (organism autonomy) + the observatory lineage (kasa compute/energy, kanjō financials, shionome flows, hikari grid, busshi commodities, spirit-in-physics 霊性)."
+ :actor/status    :r0
+ :actor/adr       "2606211500"
+ :actor/related   ["2605262130" "2605312345" "2606101800" "2606011501" "2606072002" "2606032000" "2606072201"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "two-ledgers-never-conflated" :gate/rule "Energy (conserved) and information/free-energy (copyable, append-only) are SEPARATE ledgers; no code sums them in one unit (test-enforced)"}
+  {:gate/id "G2" :gate/name "never-equate-units" :gate/rule "Measured flows live in 4 incommensurable unit classes; totals are computed only WITHIN a class — no cross-class grand total exists (test-enforced)"}
+  {:gate/id "G3" :gate/name "no-joules-per-meaning" :gate/rule "Experiential (attention/affect/meaning) flows have NO physical/joule conversion; the conversion factor is explicitly nil (test-enforced) — meaning is subject-dependent"}
+  {:gate/id "G4" :gate/name "reference-only-conversions" :gate/rule "Cross-class visual magnitudes are flagged :uzu.flow/reference-only (energy intensity of money, J/bit) — layout placement, NEVER a claim that units are identical"}
+  {:gate/id "G5" :gate/name "self-maintenance-earned" :gate/rule "Mortality is real: an organism whose meaning (C) misreads the world spends without drawing and dies — no immortality is assumed"}
+  {:gate/id "G6" :gate/name "deterministic-no-randomness" :gate/rule "The tape IS the world; no Math/random, no wall clock — content-addressed + resume-safe"}
+  {:gate/id "G7" :gate/name "no-server-key-no-live-ingest" :gate/rule "The loop holds no key and does NO network I/O; live ingest from observatory siblings is a Council/operator step"}
+  {:gate/id "G8" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms on an append-only commit-DAG (verify-chain tamper-evident); organism datoms :uzu/sourcing :synthetic, flows :representative"}
+  {:gate/id "G9" :gate/name "no-person-data" :gate/rule "Aggregate/representative figures only; experiential flows are population indices, never per-person affect (Wellbecoming §1.13)"}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "Not a claim that information IS energy — they are coupled but never the same unit (the whole point)"}
+  {:n/id "N2" :n/rule "Not a market/trade/forecast signal — measured flows are sizes, never positions (shionome/kasa boundary)"}
+  {:n/id "N3" :n/rule "Not a score-of-soul — experiential/meaning is edge-primary intensity, subject-dependent (spirit-in-physics ADR-2606011501)"}
+  {:n/id "N4" :n/rule "Not a live actuator — design + simulation only; no physical organism, no live data ingest at R0"}
+  {:n/id "N5" :n/rule "Not a per-person attention/affect tracker — population aggregates only"}]
+
+ :actor/methods
+ [{:method/id "uzu_edn"    :method/file "methods/uzu_edn.cljc"    :method/role "seed loader + classify (tape / organisms / flows / edges)"}
+  {:method/id "model"      :method/file "methods/model.cljc"      :method/role "generative model: belief update (VFE), expected-free-energy action choice; INFORMATION (nats)"}
+  {:method/id "ledger"     :method/file "methods/ledger.cljc"     :method/role "metabolic energy ledger: intake/cost/hazard/affordability; ENERGY (conserved)"}
+  {:method/id "metabolism" :method/file "methods/metabolism.cljc" :method/role "the dissipative loop: perceive→infer→plan→act→metabolize→live-or-die; multi-epoch seasons (live-epochs); EAVT datoms"}
+  {:method/id "measure"    :method/file "methods/measure.cljc"    :method/role "real-world energy-flow measurement in 4 honest separate units; never cross-summed; EAVT datoms"}
+  {:method/id "world"      :method/file "methods/world.cljc"      :method/role "deterministic world-tape generator (niches): abundant/scarce/mixed presets + richness — proves a good model needs a net-positive niche (+ bb CLI)"}
+  {:method/id "landscape"  :method/file "methods/landscape.cljc"  :method/role "viability ENVELOPE: sweep meaning × niche → survival matrix; fitness is joint (a pathology is harmless in a niche that never punishes it) → report + :uzu.landscape/* datoms (+ bb CLI)"}
+  {:method/id "validate"   :method/file "methods/validate.cljc"   :method/role "seed↔ontology integrity validator (self-validating substrate; defends I1–I5 invariants; + bb CLI)"}
+  {:method/id "digest"     :method/file "methods/digest.cljc"     :method/role "colony SELF-REFLECTION: who self-maintained, which meanings fit, energy economy, field dissipation → report + :uzu.digest/* datoms (+ bb CLI; Murakumo narration is the gated step)"}
+  {:method/id "scorecard"  :method/file "methods/scorecard.cljc"  :method/role "maturity SELF-AUDIT: tally inventory + verify every declared method/suite/lexicon file exists (manifest↔fs drift) → report + :uzu.scorecard/* datoms (+ bb CLI)"}
+  {:method/id "viz"        :method/file "methods/viz.cljc"        :method/role "self-contained data-driven HTML canvas of the coupled energy field + organism trajectories (+ bb CLI)"}
+  {:method/id "kotoba"     :method/file "methods/kotoba.cljc"     :method/role "content-addressed append-only INFORMATION log (tx-cid/make-tx/append-tx/read-log/verify-chain)"}
+  {:method/id "query"      :method/file "methods/query.cljc"      :method/role "log READ path: fold EAVT datoms → entity views + AS-OF time-travel (the log is queryable, not write-only) (+ bb CLI)"}
+  {:method/id "autorun"    :method/file "methods/autorun.cljc"    :method/role "deterministic heartbeat: live organisms + measure field + SELF-REFLECT (digest) → append datoms to the log (+ bb CLI)"}]
+
+ :actor/lex
+ [{:lex/id "organismBeat"}
+  {:lex/id "energyFlow"}]
+
+ :actor/ledger
+ {:ledger/file "data/persisted/uzu.information.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/note "Generated INFORMATION log of organism beats + measured flows; tamper-evident (verify-chain); copyable + non-conserved (the energy ledger is the conserved twin); no-server-key."}
+
+ :actor/viz
+ {:viz/file "out/energy-field.html"
+  :viz/kind :self-contained-canvas
+  :viz/generated true
+  :viz/cmd "bb --classpath 20-actors 20-actors/uzu/methods/viz.cljc"
+  :viz/note "Generated from the seed (nothing hand-copied): four incommensurable unit-class lanes + circulation loop + organism energy trajectories."}
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.uzu.edn"
+  :seed/sourcing :mixed
+  :seed/tape-steps 12
+  :seed/organisms ["kurage" "meial" "gyoja"]
+  :seed/flows 11
+  :seed/circulation-edges 15}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/uzu/run_tests.sh"
+  :suites ["methods/test_model.cljc" "methods/test_ledger.cljc" "methods/test_metabolism.cljc" "methods/test_epochs.cljc" "methods/test_world.cljc" "methods/test_landscape.cljc"
+           "methods/test_measure.cljc" "methods/test_validate.cljc" "methods/test_lexicons.cljc"
+           "methods/test_digest.cljc" "methods/test_robustness.cljc" "methods/test_properties.cljc" "methods/test_scorecard.cljc"
+           "methods/test_kotoba.cljc" "methods/test_query.cljc" "methods/test_autorun.cljc" "methods/test_viz.cljc"]
+  :status "106 tests / 240 assertions green (babashka)"}}

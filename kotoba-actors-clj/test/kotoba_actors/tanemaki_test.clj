@@ -1,0 +1,39 @@
+(ns kotoba-actors.tanemaki-test
+  "RED spec for the tanemaki 種蒔き refactor. Asserts the EXACT seed counts +
+  the closure invariant against the (currently stubbed) analysis fns, plus ONE
+  direct 2-clause d/q join sanity check that exercises ONLY the engine (so the
+  engine assertion stays GREEN while the stub assertions are RED).
+
+  Exact numbers were measured from the seed:
+    instruments 3 · screens 6 · criteria 8 · sources 7 · orgs 8 · milestones 2
+    total 縁 edge rows 77 · dangling endpoints {} (closure holds)."
+  (:require [clojure.test :refer [deftest is testing]]
+            [kotoba-actors.tanemaki :as t]
+            [kotoba-actors.datomic :as d]))
+
+(deftest node-type-counts
+  (testing "exact node counts per :fs/kind (via stubs — RED until implemented)"
+    (is (= 3 (t/count-instruments)))
+    (is (= 6 (t/count-screens)))
+    (is (= 8 (t/count-criteria)))
+    (is (= 7 (t/count-sources)))
+    (is (= 8 (t/count-orgs)))
+    (is (= 2 (t/count-milestones)))))
+
+(deftest edge-count
+  (testing "exact total 縁 edge-row count (via stub — RED until implemented)"
+    (is (= 77 (t/count-edges)))))
+
+(deftest closure-invariant
+  (testing "no dangling edge endpoints — closure holds (via stub — RED)"
+    (is (= #{} (t/dangling-edges)))))
+
+(deftest engine-q-join-sanity
+  (testing "engine-only 2-clause join: every :screen node also has a :screen/code"
+    (let [db (d/db-from-seed
+              "/Users/junkawasaki/github/com-junkawasaki/orgs/etzhayyim/root/20-actors/tanemaki/data/seed-stewardship-graph.kotoba.edn")
+          screens (d/q '{:find [?e ?code]
+                         :where [[?e :fs/kind :screen]
+                                 [?e :screen/code ?code]]}
+                       db)]
+      (is (= 6 (count screens))))))

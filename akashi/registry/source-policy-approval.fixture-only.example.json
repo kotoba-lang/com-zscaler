@@ -1,0 +1,24 @@
+{
+  "txId": "akashi-source-policy-regulator-fixture-only-r1",
+  "createdAt": "2026-06-02T00:00:00Z",
+  "adr": "etzhayyim:adr:2606022300",
+  "sourceId": "regulator-ad-repositories",
+  "decision": "fixture-only",
+  "runtime": "fixture-only",
+  "approvedAccessModes": ["public-bulk-export"],
+  "evidence": {
+    "termsReviewCid": "cid:akashi:review:terms:reserved",
+    "robotsOrApiPolicyCid": "cid:akashi:review:api-policy:reserved",
+    "publicAccessProofCid": "cid:akashi:review:public-access:reserved",
+    "fixtureParserCid": "cid:akashi:fixture-parser:regulator-bulk",
+    "methodNoteCid": "cid:akashi:method-note:dry-run",
+    "rateLimitReviewCid": "cid:akashi:review:rate-limit:reserved",
+    "licenseReviewCid": "cid:akashi:review:license:reserved"
+  },
+  "reviewerDid": "did:web:council.etzhayyim.com",
+  "attestingDid": "did:web:akashi.etzhayyim.com",
+  "rollback": {
+    "disableTxRequired": true,
+    "defaultRuntimeAfterRollback": "disabled"
+  }
+}

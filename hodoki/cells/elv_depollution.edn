@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_depollution cell (L1b)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_depollution"
+  :cell/glyph "⚗️"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G6" "G9" "G10"]
+  :cell/state-graph "{:nodes [{:id \"drain-fluids\", :type \"function\", :func \"drain_fluids\"} {:id \"capture-fgas\", :type \"function\", :func \"capture_fgas\"} {:id \"disarm-airbags\", :type \"function\", :func \"disarm_airbags\"} {:id \"attest\", :type \"function\", :func \"attest_depollution\"} {:id \"end\", :type \"return\"}], :entry \"drain-fluids\", :edges [{:from \"drain-fluids\", :to \"capture-fgas\"} {:from \"capture-fgas\", :to \"disarm-airbags\"} {:from \"disarm-airbags\", :to \"attest\"} {:from \"attest\", :to \"end\"}]}"
+  :cell/doc "L1b: Depollution — fluid drain + F-gas capture + airbag disarm (G6/G7/G10)."
+  :cell/kotoba "{:reads [:elv-intake/vin :depollution/vin :depollution/fluid-drain-status :depollution/f-gas-capture-status :depollution/airbag-disarmed], :writes [:depollution/record-id :depollution/vin :depollution/fluid-drain-status :depollution/f-gas-capture-status :depollution/airbag-disarmed :depollution/battery-disconnected :depollution/attestation-timestamp]}"}]

@@ -1,0 +1,12 @@
+;; sarutahiko 猿田彦 — production-ledger cell (datalog, kotoba runtime)
+;; ADR-2605252500 · Gen-3 deepen
+{:cell/id "production-ledger"
+ :cell/glyph "猿田彦"
+ :cell/kind :datalog
+ :cell/runtime :kotoba
+ :cell/doc "Settlement ledger: vehicle-order 決済 (USDC Base L2 + ERC-4337 + warifu) + TitheRouter 10% auto-split. member signs (G15); no fiat (G18); stops at :intent."
+ :cell/gates ["G15" "G16" "G17" "G18"]
+ :cell/kotoba
+ {:reads [:vehicle-order/id :vehicle-order/buyer-did]
+  :writes [:settlement/id :settlement/order :settlement/gross-minor :settlement/tithe-minor
+           :settlement/factory-payout-minor :settlement/state :settlement/buyer-sig-ref]}}

@@ -1,0 +1,53 @@
+;; manabi 学び — actor manifest (Gen-3 kotoba-native)
+;; Education — open-curriculum literacy + numeracy + civics/charter + vocational + lifelong inquiry
+;; ADR-2605261045 (R0 scaffold, 2026-05-26) · parent ADR-2605261000 (Liberation Ladder)
+;; Migration plan: 90-docs/260602-manabi-kotoba-native-migration-plan.md (Phase 2 scaffold)
+{:actor/id        "manabi"
+ :actor/glyph     "学"
+ :actor/display-name "学び — Education"
+ :actor/tier      :tier-b
+ :actor/domain    "manabi.etzhayyim.com"
+ :actor/purpose   "Open-curriculum education (literacy + numeracy + civics/charter + vocational + lifelong inquiry). Anti-credentialism (no degrees/transcripts, only skillAttestation). Anti-addiction UX (no streaks/rewards/leaderboards). Minor privacy (aggregate-only attestations, 30-day rotating pseudonym DID). Comparative-religion mandatory. Content-distribution heavy, compute-light. Murakumo-only, kotoba-EAVT-native."
+ :actor/status    :r0
+ :actor/adr       "2605261045"
+ :actor/related   ["2605261000" "2605181200" "2605192200" "2605192100"]
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "open-source-curriculum"       :gate/rule "All curriculum content Apache 2.0 + Charter Rider on IPFS; no proprietary closed-source curriculum"}
+  {:gate/id "G2"  :gate/name "no-advertising"               :gate/rule "No sponsored content, commercial-product placement, or co-branded content in any module"}
+  {:gate/id "G3"  :gate/name "no-addiction-ux"              :gate/rule "Forbidden: streaks, daily-login rewards, variable-reward schedules, FOMO, leaderboards, badges-as-status. Permitted: progress meters, self-pacing, bookmarks, learner-initiated resumption"}
+  {:gate/id "G4"  :gate/name "charter-alignment-review"     :gate/rule "Every curriculum module requires Council Lv6+ ≥3 attestation: multi-gen priority + anti-individualism + Wellbecoming + non-eschatology + Charter Rider §2 scan"}
+  {:gate/id "G5"  :gate/name "multilingual"                 :gate/rule "Minimum EN + JA; expand at ≥10-adherent-per-language threshold; Google Translate prohibited"}
+  {:gate/id "G6"  :gate/name "minor-privacy-aggregate-only"  :gate/rule "Under-18 learner: 30-day rotating pseudonym DID + aggregate-only attestations (sessionDuration, moduleId, completionFraction); forbidden: per-learner performance, error logs, time-on-task"}
+  {:gate/id "G7"  :gate/name "anti-credentialism"           :gate/rule "No degrees, transcripts, GPA-equivalent; only skillAttestation (replayable subject-specific demonstration). Liberation Ladder L5+ gates on skillAttestation, never credential"}
+  {:gate/id "G8"  :gate/name "no-proprietary-curriculum"    :gate/rule "CC-BY-SA or Apache 2.0 + Rider only; no Copyrighted 3rd-party textbooks without full community licensing"}
+  {:gate/id "G9"  :gate/name "tithe-non-fiat"               :gate/rule "決済は USDC Base L2 + ERC-4337 + warifu のみ; TitheRouter 10% auto-split; Stripe/fiat 非前提"}
+  {:gate/id "G10" :gate/name "no-examination-coercion"      :gate/rule "Self-paced skill demonstration; no proctoring; no ID-gating; no high-stakes testing"}
+  {:gate/id "G11" :gate/name "lifelong-access"              :gate/rule "No age-out, no age-floor except minor privacy (G6). Active Adherent SBT eligible for life."}
+  {:gate/id "G12" :gate/name "no-political-indoctrination"  :gate/rule "Comparative governance only; no electoral mobilization; no political-party content"}
+  {:gate/id "G13" :gate/name "inquiry-pedagogy"             :gate/rule "≥30% learner-led per module; discovery over authority"}
+  {:gate/id "G14" :gate/name "family-transmission-primary"  :gate/rule "manabi ≠ replacement for family/cultural/religious-of-origin learning. Comparative-religion mandated (including etzhayyim's own charter)"}]
+
+ :actor/cells
+ [{:cell/id "literacy"            :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "numeracy"            :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "civics_charter"      :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "vocational"          :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "lifelong_inquiry"    :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "learner-session"     :cell/kind :datalog   :cell/runtime :kotoba}]
+
+ :actor/lex
+ [{:lex/id "curriculumAttestation"}
+  {:lex/id "learningSessionAttestation"}
+  {:lex/id "charterUnderstandingAttestation"}
+  {:lex/id "skillAttestation"}]
+
+ ;; legacy (gen-1) artifacts pending decommission per migration plan Phase 3/5
+ ;; (manifest.jsonld retired — this manifest.edn is now the sole manifest)
+ :actor/legacy
+ {:cells-python ["cells/literacy" "cells/numeracy" "cells/civics_charter" "cells/vocational" "cells/lifelong_inquiry" "cells/cert_prep"]
+  :note "Python cell deprecation synchronized with kotodama atomic rename wave (ADR-2605214000 §3) after legal registration."}}

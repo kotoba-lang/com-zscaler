@@ -1,0 +1,22 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.routingPlan"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "The decomposition of an allocation into IN-KIND delivery rails over the existing producing actors / commons. The honest answer to 'maintainers need to live': needs are met in kind; the irreducible external fiat residual is routed ONLY as MEMBER-PRINCIPAL 0% warifu liquidity — 扶持 is never the creditor or the payer (G3, §1.3 holds without amendment)."
+   :record
+   {:type "object"
+    :required ["allocId" "kind" "providerActor" "imputedUsdMicrosYr" "memberPrincipal"]
+    :properties
+    {:allocId            {:type "string"}
+     :kind               {:type "string"
+                          :enum ["housing-commons" "food-mitsuho" "energy-hikari"
+                                 "compute-murakumo" "tooling-okaimono" "care-iyashi"
+                                 "liquidity-warifu"]
+                          :description "G3 INVARIANT — cash-disbursement is NOT an enum member; every rail is in-kind OR member-principal 0% liquidity."}
+     :providerActor      {:type "string"
+                          :description "the producing actor / commons that delivers (mitsuho / hikari / commons-land / okaimono / warifu …)"}
+     :imputedUsdMicrosYr {:type "integer" :minimum 0}
+     :memberPrincipal    {:type "boolean"
+                          :description "G3b — true only for liquidity-warifu: the MEMBER is the borrower/payer (qard ḥasan 0%); 扶持 never holds, lends, or pays."}}}}}}

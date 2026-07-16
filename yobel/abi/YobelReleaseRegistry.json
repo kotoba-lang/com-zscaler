@@ -1,0 +1,644 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "riteRegistry",
+          "type": "address",
+          "internalType": "contract YobelRiteRegistry"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "RITE_REGISTRY",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "contract YobelRiteRegistry"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "allReleaseIds",
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "debtCaps",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "principalMicroUsdc",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "accruedMicroUsdc",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "totalReleasedMicroUsdc",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "registrar",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "registeredAt",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getDebtCap",
+      "inputs": [
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct YobelReleaseRegistry.DebtCap",
+          "components": [
+            {
+              "name": "principalMicroUsdc",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "accruedMicroUsdc",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "totalReleasedMicroUsdc",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "registrar",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "registeredAt",
+              "type": "uint64",
+              "internalType": "uint64"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getRelease",
+      "inputs": [
+        {
+          "name": "releaseId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct YobelReleaseRegistry.Release",
+          "components": [
+            {
+              "name": "releaseId",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "riteId",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "debtIdHash",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "debtorDidHash",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "creditorDidHash",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "releasedMicroUsdc",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "releaseMethod",
+              "type": "uint8",
+              "internalType": "enum YobelReleaseRegistry.ReleaseMethod"
+            },
+            {
+              "name": "baseL2TxHashCrossRef",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "releasedAt",
+              "type": "uint64",
+              "internalType": "uint64"
+            },
+            {
+              "name": "recorder",
+              "type": "address",
+              "internalType": "address"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "recordRelease",
+      "inputs": [
+        {
+          "name": "releaseId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtorDidHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "creditorDidHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "releasedMicroUsdc",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "releaseMethod",
+          "type": "uint8",
+          "internalType": "enum YobelReleaseRegistry.ReleaseMethod"
+        },
+        {
+          "name": "baseL2TxHashCrossRef",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "registerDebtCap",
+      "inputs": [
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "principalMicroUsdc",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "accruedMicroUsdc",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "releaseCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "releaseCountByDebtor",
+      "inputs": [
+        {
+          "name": "debtorDidHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "releaseCountByRite",
+      "inputs": [
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "releases",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "releaseId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtorDidHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "creditorDidHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "releasedMicroUsdc",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "releaseMethod",
+          "type": "uint8",
+          "internalType": "enum YobelReleaseRegistry.ReleaseMethod"
+        },
+        {
+          "name": "baseL2TxHashCrossRef",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "releasedAt",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "recorder",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "releasesByDebtor",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "releasesByRite",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "DebtCapRegistered",
+      "inputs": [
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "principalMicroUsdc",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "accruedMicroUsdc",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "registrar",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "registeredAt",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ReleaseRecorded",
+      "inputs": [
+        {
+          "name": "releaseId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "debtorDidHash",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "creditorDidHash",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "releasedMicroUsdc",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "releaseMethod",
+          "type": "uint8",
+          "indexed": false,
+          "internalType": "enum YobelReleaseRegistry.ReleaseMethod"
+        },
+        {
+          "name": "baseL2TxHashCrossRef",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "recorder",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "releasedAt",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "DebtCapAlreadyRegistered",
+      "inputs": [
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "DebtCapNotRegistered",
+      "inputs": [
+        {
+          "name": "debtIdHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "EmptyReleaseId",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InvalidReleaseMethod",
+      "inputs": [
+        {
+          "name": "method",
+          "type": "uint8",
+          "internalType": "uint8"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OneWayViolation",
+      "inputs": [
+        {
+          "name": "released",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "cap",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ReleaseAlreadyRecorded",
+      "inputs": [
+        {
+          "name": "releaseId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "RiteNotActive",
+      "inputs": [
+        {
+          "name": "riteId",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ZeroAmount",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ZeroDebtCap",
+      "inputs": []
+    }
+  ],
+  "bytecode": "0x60a034607457601f6110c738819003918201601f19168301916001600160401b03831184841017607857808492602094604052833981010312607457516001600160a01b038116810360745760805260405161103a908161008d823960805181818161072401528181610bad0152610c550152f35b5f80fd5b634e487b7160e01b5f52604160045260245ffdfe6080806040526004361015610012575f80fd5b5f3560e01c908163042c0e6514610bd1575080633cc77f2614610b63578063454d12581461066757806374d6f5c5146106385780637f698e92146104b9578063841ef4ce1461042757806386f75a77146103df5780638934d5ca146102e9578063b8d08db2146102ae578063c4483ffc14610266578063e0af48e914610228578063eb08d028146101835763f491a84c146100ab575f80fd5b3461017f5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f576004355f525f60205261014060405f2073ffffffffffffffffffffffffffffffffffffffff81549160018101549061015d60028201546003830154600484015460058501549160ff6006870154169360086007880154970154976040519a8b5260208b015260408a01526060890152608088015260a087015260c0860190610ea2565b60e084015267ffffffffffffffff811661010084015260401c16610120820152f35b5f80fd5b3461017f5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f5760043560015481101561017f576001548110156101fb5760015f527fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf60154604051908152602090f35b7f4e487b71000000000000000000000000000000000000000000000000000000005f52603260045260245ffd5b3461017f5761023636610e59565b905f52600360205260405f20805482101561017f5760209161025791610e8d565b90549060031b1c604051908152f35b3461017f5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f576004355f526003602052602060405f2054604051908152f35b3461017f575f7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f576020600154604051908152f35b3461017f5760407ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f575f608060405161032781610eaf565b828152826020820152826040820152826060820152015261034c602435600435610fde565b5f52600260205260a060405f2067ffffffffffffffff6040519161036f83610eaf565b73ffffffffffffffffffffffffffffffffffffffff81549384815260018301549260208201938452600360028201549160408401928352015493856080606085019486881686520195891c1685526040519687525160208701525160408601525116606084015251166080820152f35b3461017f5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f576004355f526004602052602060405f2054604051908152f35b3461017f5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f576004355f52600260205260a060405f2067ffffffffffffffff81549160018101549060036002820154910154916040519485526020850152604084015273ffffffffffffffffffffffffffffffffffffffff81166060840152831c166080820152f35b3461017f5760207ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f575f6101206040516104f881610ecb565b8281528260208201528260408201528260608201528260808201528260a08201528260c08201528260e08201528261010082015201526004355f525f60205261014060405f2073ffffffffffffffffffffffffffffffffffffffff61012067ffffffffffffffff604051809461056d82610ecb565b805482526106206001820154602084019081526002830154604085019081526003840154606086019081526004850154906080870191825260058601549260a0880193845260ff600688015416946105c960c08a019687610f7b565b8b600860078a01549960e08c019a8b5201549b8a8c6101008f9d019c168c52019b60401c168b526040519c518d525160208d01525160408c01525160608b01525160808a01525160a08901525160c0880190610ea2565b5160e086015251166101008401525116610120820152f35b3461017f5761064636610e59565b905f52600460205260405f20805482101561017f5760209161025791610e8d565b3461017f576101007ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f5760443560243560043560a43560843560643560c435600581101561017f5760e4358515610b3b57855f525f60205267ffffffffffffffff600860405f20015416610b0f576040517f5c36901c00000000000000000000000000000000000000000000000000000000815287600482015260208160248173ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000165afa908115610b04575f91610ad5575b5015610aa95760ff821660048111610a7e57506107718888610fde565b5f52600260205260405f2067ffffffffffffffff600382015460a01c1615610a525760026107a58254600184015490610f41565b91016107b2878254610f41565b91808311610a2357505567ffffffffffffffff4216916040516107d481610ecb565b8781528760208201918a8352604081018c81526060820191888352608081018a815260a08201908c825260c083019461080d8987610f7b565b60e08401948a86526101008501988c8a52610120860198338a525f525f60205260405f20955186555160018601555160028501555160038401555160048301555160058201556006810192519160058310156109f65767ffffffffffffffff9360089360ff7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff008354169116179055516007820155019251167fffffffff000000000000000000000000000000000000000000000000000000007bffffffffffffffffffffffffffffffffffffffff00000000000000008454935160401b1692161717905560015490680100000000000000008210156109c9577fceaaa283fbdb9062670006b616bf5a38e1fad1f41b23678699cd95fbf900e7169660e0966109408460016109b696016001556001610e8d565b81549060031b907fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8d831b921b19161790558a5f5260036020526109878a60405f20610f87565b865f52600460205261099c8a60405f20610f87565b604051968752602087015260408601526060850190610ea2565b60808301523360a083015260c0820152a4005b7f4e487b71000000000000000000000000000000000000000000000000000000005f52604160045260245ffd5b7f4e487b71000000000000000000000000000000000000000000000000000000005f52602160045260245ffd5b827fd9fb0e36000000000000000000000000000000000000000000000000000000005f5260045260245260445ffd5b887f15ede0b6000000000000000000000000000000000000000000000000000000005f5260045260245ffd5b7fffbb5bad000000000000000000000000000000000000000000000000000000005f5260045260245ffd5b867fcf5841b3000000000000000000000000000000000000000000000000000000005f5260045260245ffd5b610af7915060203d602011610afd575b610aef8183610ee8565b810190610f29565b89610754565b503d610ae5565b6040513d5f823e3d90fd5b857ff2a489a2000000000000000000000000000000000000000000000000000000005f5260045260245ffd5b7f72c4882c000000000000000000000000000000000000000000000000000000005f5260045ffd5b3461017f575f7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f57602060405173ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000168152f35b3461017f5760807ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc36011261017f576004356024359060443592606435907f5c36901c00000000000000000000000000000000000000000000000000000000815282600482015260208160248173ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000165afa908115610b04575f91610e3a575b5015610e0e57610c958185610f41565b15610de657610ca48383610fde565b90815f52600260205267ffffffffffffffff600360405f20015460a01c16610dba576040514267ffffffffffffffff1692610cde82610eaf565b86825273ffffffffffffffffffffffffffffffffffffffff60036020840193858552604081015f8152606082019533875260808301958987525f52600260205260405f2092518355516001830155516002820155019251167fffffffff000000000000000000000000000000000000000000000000000000007bffffffffffffffff00000000000000000000000000000000000000008454935160a01b16921617179055604051948552602085015260408401527f45968268e8c8f967b3d437e5553a260a178ec8814b062e54a9ddceec56b4835660603394a4005b837f6ee7f530000000000000000000000000000000000000000000000000000000005f5260045260245ffd5b7f20167d0a000000000000000000000000000000000000000000000000000000005f5260045ffd5b507fcf5841b3000000000000000000000000000000000000000000000000000000005f5260045260245ffd5b610e53915060203d602011610afd57610aef8183610ee8565b85610c85565b7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc604091011261017f576004359060243590565b80548210156101fb575f5260205f2001905f90565b9060058210156109f65752565b60a0810190811067ffffffffffffffff8211176109c957604052565b610140810190811067ffffffffffffffff8211176109c957604052565b90601f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0910116810190811067ffffffffffffffff8211176109c957604052565b9081602091031261017f5751801515810361017f5790565b91908201809211610f4e57565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b60058210156109f65752565b8054680100000000000000008110156109c957610fa991600182018155610e8d565b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff829392549160031b92831b921b1916179055565b906040519060208201928352604082015260408152610ffe606082610ee8565b5190209056fea264697066735822122019f0801c37e7377987413f3947567d0bc8fc4017cb1c0e3868e23d7104a6524664736f6c634300081b0033"
+}

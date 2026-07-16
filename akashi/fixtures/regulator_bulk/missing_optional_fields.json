@@ -1,0 +1,21 @@
+{
+  "fixtureId": "akashi-regulator-bulk-missing-optional-r1",
+  "capturedAt": "2026-06-02T00:00:00Z",
+  "source": {
+    "id": "regulator-ad-repositories",
+    "platform": "multi-platform",
+    "sourceUrl": "https://example.test/public-ad-disclosure-bulk-minimal.json",
+    "jurisdiction": "EU"
+  },
+  "records": [
+    {
+      "sourceRecordId": "reg-2026-0002",
+      "sourceUrl": "https://example.test/public-ad-disclosure/ads/reg-2026-0002",
+      "advertiser": {
+        "displayName": "Minimal Public Disclosure Sponsor"
+      },
+      "creativeText": "A public disclosure record with optional delivery fields omitted.",
+      "landingUrl": "https://minimal.example.org/notice"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+[project]
+name = "organisms"
+version = "0.1.0"
+description = "Ecosystem Organism Runtimes (Koke, Kabi, etc.)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []

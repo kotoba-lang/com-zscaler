@@ -1,0 +1,60 @@
+;; torifune 鳥船 — seed Ama 天-class launch-vehicle graph (representative engineering estimates)
+;; ADR-2606162355 · vocabulary: launch-vehicle-ontology (00-contracts/schemas/launch-vehicle-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - torifune is CIVILIAN LAUNCH ONLY, NEVER a weapon-delivery / ballistic-strike vehicle.
+;;     :traj/class here is ONLY :orbit-insertion; :payload/class is ONLY a civilian class. No
+;;     :depressed-strike / :suborbital-strike / :fobs / :munition / :kinetic appears, by design.
+;;   - G2 zero-net-carbon: propellants are :hydrolox-green-h2 / :methalox-synthetic-net0 (net≤0);
+;;     a :disfavored-fossil node is included ONLY to show the analyzer flags it (not used by Ama).
+;;   - G5 debris-responsibility: the mission carries TWO disposal plans (stage recovery + upper-
+;;     stage controlled re-entry); a mission with no disposal plan is refused by disposal_plan.py.
+;;
+;; SOURCING: all engineering numbers are :representative estimates (G8), NOT measured flight data
+;; (no Ama flight campaign exists — that is Council-gated). Standards/agency rules would be
+;; :authoritative once cited.
+
+[;; ───────────────────────────── vehicle ─────────────────────────────────────
+ {:db/id -1 :organism/id "lv.vehicle.ama" :organism/kind :vehicle :organism/label "Ama 天 (reusable two-stage hydrolox)" :vehicle/class "Ama 天" :vehicle/reusable true :vehicle/stages 2 :organism/sourcing :representative}
+
+ ;; ───────────────────────────── stages ──────────────────────────────────────
+ {:db/id -2 :organism/id "lv.stage.ama-s1" :organism/kind :stage :organism/label "Ama S1 booster" :stage/index 1 :stage/dry-mass-kg 30000 :stage/prop-mass-kg 400000 :stage/recovery :propulsive-landing :organism/sourcing :representative}
+ {:db/id -3 :organism/id "lv.stage.ama-s2" :organism/kind :stage :organism/label "Ama S2 upper" :stage/index 2 :stage/dry-mass-kg 4000 :stage/prop-mass-kg 90000 :stage/recovery :downrange-recovery :organism/sourcing :representative}
+
+ ;; ───────────────────────────── engines ─────────────────────────────────────
+ {:db/id -4 :organism/id "lv.engine.honoo" :organism/kind :engine :organism/label "Honoo 炎 (booster, full-flow staged combustion)" :engine/cycle :full-flow-staged-combustion :engine/isp-s 380 :engine/thrust-kn 2200 :organism/sourcing :representative}
+ {:db/id -5 :organism/id "lv.engine.kazashi" :organism/kind :engine :organism/label "Kazashi 風 (upper, expander)" :engine/cycle :expander :engine/isp-s 450 :engine/thrust-kn 280 :organism/sourcing :representative}
+
+ ;; ───────────────────────────── propellants (G2 — zero net carbon) ───────────
+ {:db/id -6 :organism/id "lv.prop.hydrolox-green" :organism/kind :propellant :organism/label "green-H₂ hydrolox (LH₂/LOX, renewable electrolysis)" :propellant/kind :hydrolox-green-h2 :propellant/carbon-balance 0.0 :organism/sourcing :representative}
+ {:db/id -7 :organism/id "lv.prop.methalox-syn" :organism/kind :propellant :organism/label "kamado synthetic methalox (net≤0 closed-carbon)" :propellant/kind :methalox-synthetic-net0 :propellant/carbon-balance 0.0 :organism/sourcing :representative}
+ {:db/id -8 :organism/id "lv.prop.rp1-fossil" :organism/kind :propellant :organism/label "RP-1 (fossil — DISFAVORED, not used by Ama)" :propellant/kind :disfavored-fossil :propellant/carbon-balance 3.0 :organism/sourcing :representative}
+
+ ;; ───────────────────────────── plant cells (the factory) ───────────────────
+ {:db/id -9 :organism/id "lv.plant.tank-fab" :organism/kind :plant-cell :organism/label "tank fabrication" :plant-cell/kind :tank-fab :organism/sourcing :representative}
+ {:db/id -10 :organism/id "lv.plant.engine-asm" :organism/kind :plant-cell :organism/label "engine assembly" :plant-cell/kind :engine-assembly :organism/sourcing :representative}
+ {:db/id -11 :organism/id "lv.plant.integration" :organism/kind :plant-cell :organism/label "vehicle integration" :plant-cell/kind :integration :organism/sourcing :representative}
+ {:db/id -12 :organism/id "lv.plant.test-stand" :organism/kind :plant-cell :organism/label "static-fire test stand" :plant-cell/kind :test-stand :organism/sourcing :representative}
+ {:db/id -13 :organism/id "lv.plant.recovery-refurb" :organism/kind :plant-cell :organism/label "stage recovery + refurbishment" :plant-cell/kind :recovery-refurb :organism/sourcing :representative}
+
+ ;; ───────────────────────────── mission + payload + trajectory + disposal ────
+ {:db/id -14 :organism/id "lv.mission.subaru-deploy" :organism/kind :mission :organism/label "Ama-1: subaru LEO connectivity deployment" :mission/payload-to-orbit-kg 15000 :mission/target-regime :leo-low :organism/sourcing :representative}
+ {:db/id -15 :organism/id "lv.payload.subaru-sat" :organism/kind :payload :organism/label "subaru 昴 connectivity satellites (batch)" :payload/class :connectivity-sat :organism/sourcing :representative}
+ {:db/id -16 :organism/id "lv.traj.insertion-leo" :organism/kind :trajectory :organism/label "LEO orbit insertion" :traj/class :orbit-insertion :organism/sourcing :representative}
+ {:db/id -17 :organism/id "lv.disposal.s1-recovery" :organism/kind :disposal-plan :organism/label "S1 propulsive recovery (reused)" :disposal/method :stage-recovery :disposal/deorbit-debt 0.0 :organism/sourcing :representative}
+ {:db/id -18 :organism/id "lv.disposal.s2-reentry" :organism/kind :disposal-plan :organism/label "S2 controlled re-entry (passivated)" :disposal/method :controlled-reentry :disposal/deorbit-debt 0.0 :organism/sourcing :representative}
+
+ ;; ───────────────────────────── edges (縁) ──────────────────────────────────
+ {:db/id -19 :en/from "lv.prop.hydrolox-green" :en/to "lv.engine.honoo" :en/kind :fuels :organism/sourcing :representative}
+ {:db/id -20 :en/from "lv.prop.hydrolox-green" :en/to "lv.engine.kazashi" :en/kind :fuels :organism/sourcing :representative}
+ {:db/id -21 :en/from "lv.engine.honoo" :en/to "lv.stage.ama-s1" :en/kind :powers :organism/sourcing :representative}
+ {:db/id -22 :en/from "lv.engine.kazashi" :en/to "lv.stage.ama-s2" :en/kind :powers :organism/sourcing :representative}
+ {:db/id -23 :en/from "lv.stage.ama-s1" :en/to "lv.stage.ama-s2" :en/kind :stages-to :en/dv-contribution 5000 :organism/sourcing :representative}
+ {:db/id -24 :en/from "lv.plant.tank-fab" :en/to "lv.stage.ama-s1" :en/kind :builds :organism/sourcing :representative}
+ {:db/id -25 :en/from "lv.plant.engine-asm" :en/to "lv.engine.honoo" :en/kind :builds :organism/sourcing :representative}
+ {:db/id -26 :en/from "lv.plant.integration" :en/to "lv.vehicle.ama" :en/kind :builds :organism/sourcing :representative}
+ {:db/id -27 :en/from "lv.vehicle.ama" :en/to "lv.mission.subaru-deploy" :en/kind :lofts :organism/sourcing :representative}
+ {:db/id -28 :en/from "lv.mission.subaru-deploy" :en/to "lv.payload.subaru-sat" :en/kind :carries :organism/sourcing :representative}
+ {:db/id -29 :en/from "lv.mission.subaru-deploy" :en/to "lv.traj.insertion-leo" :en/kind :flies :organism/sourcing :representative}
+ {:db/id -30 :en/from "lv.mission.subaru-deploy" :en/to "lv.disposal.s1-recovery" :en/kind :disposes :organism/sourcing :representative}
+ {:db/id -31 :en/from "lv.mission.subaru-deploy" :en/to "lv.disposal.s2-reentry" :en/kind :disposes :organism/sourcing :representative}]

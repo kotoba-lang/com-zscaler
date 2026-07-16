@@ -1,0 +1,18 @@
+{:lexicon 1
+ :id "com.etzhayyim.noroshi.opticalLinkBudget"
+ :defs
+ {:main
+  {:type "record"
+   :key "budgetId"
+   :record
+   {:type "object"
+    :required ["budgetId" "deviceId" "receivedDbm" "totalLossDb" "marginDb" "closes" "energyPjPerBit"]
+    :properties
+    {:budgetId {:type "string"}
+     :deviceId {:type "string" :description "the photonicDevice this budget is computed for"}
+     :receivedDbm {:type "number" :description "received optical power (dBm) = launch − total loss"}
+     :totalLossDb {:type "number" :description "summed dB ledger (modulator IL + couplers + waveguide + fibre + connector)"}
+     :marginDb {:type "number" :description "received − receiver sensitivity; link closes when ≥ 0"}
+     :closes {:type "boolean" :description "whether the link closes with positive margin"}
+     :energyPjPerBit {:type "number" :description "tx + rx electrical + amortised laser wall-plug energy per bit"}
+     :computedBy {:type "string" :const "methods/link_budget.py" :description "deterministic arithmetic; not a measured device (G10)"}}}}}}

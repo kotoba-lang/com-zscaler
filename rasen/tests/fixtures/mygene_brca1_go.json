@@ -1,0 +1,19 @@
+{
+  "symbol": "BRCA1",
+  "name": "BRCA1 DNA repair associated",
+  "ensembl": {"gene": "ENSG00000012048"},
+  "map_location": "17q21.31",
+  "taxid": 9606,
+  "go": {
+    "BP": [
+      {"id": "GO:0006281", "term": "DNA repair", "evidence": "IEA", "qualifier": "involved_in"},
+      {"id": "GO:0006281", "term": "DNA repair", "evidence": "IDA", "qualifier": "involved_in", "pubmed": [17349954]},
+      {"id": "GO:0000724", "term": "double-strand break repair via homologous recombination", "evidence": "IBA", "qualifier": "involved_in"},
+      {"id": "GO:0000724", "term": "double-strand break repair via homologous recombination", "evidence": "IDA", "qualifier": "involved_in"},
+      {"id": "GO:0006978", "term": "DNA damage response, signal transduction by p53 class mediator resulting in transcription of p21 class mediator", "evidence": "TAS", "qualifier": "involved_in"},
+      {"id": "GO:0070512", "term": "positive regulation of histone H4-K20 methylation", "evidence": "IMP", "qualifier": "involved_in"},
+      {"id": "GO:0085020", "term": "protein K6-linked ubiquitination", "evidence": "IDA", "qualifier": "involved_in"},
+      {"id": "GO:0031572", "term": "G2/M transition DNA damage checkpoint signaling", "evidence": "IEA", "qualifier": "involved_in"}
+    ]
+  }
+}

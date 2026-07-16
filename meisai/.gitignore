@@ -1,0 +1,4 @@
+__pycache__/
+# G3 local-only: personal financial data (statement intake + persisted Datom log) is NEVER
+# committed to this public repo. The whole data/ tree stays on the member's machine.
+data/

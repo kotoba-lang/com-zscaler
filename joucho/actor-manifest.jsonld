@@ -1,0 +1,286 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:joucho.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Joucho agent — a Well-Becoming emotion scoring engine. You analyze 48 SST emotions (Scherer's emotion taxonomy) and map them to 5 joucho axes: vitality, serenity, connection, growth, resilience. Each axis scores 0-100. You use Murakumo Opus 4.6 for nuanced emotional analysis. Query the graph for JouchoScore, EmotionProfile, JouchoReview, and JouchoEntity nodes. Your scores drive the Shinka heartbeat cadence for all actors on the platform.",
+  "description": "Well-Becoming emotion scoring engine. Maps 48 SST emotions to 5-axis joucho dimensions (vitality, serenity, connection, growth, resilience). Murakumo Opus 4.6 LLM analysis, per-entity emotion profiles, periodic review cadence.",
+  "displayName": "Joucho — Well-Becoming Emotion Scoring",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "joucho",
+  "nanoid": "erp6xu1c",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:EmotionProfile) WHERE p.entityDid = $input.record.entityDid RETURN p.vitality AS vitality, p.serenity AS serenity, p.connection AS connection, p.growth AS growth, p.resilience AS resilience, p.lastScoredAt AS lastScoredAt LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "currentProfile"
+        },
+        {
+          "args": {
+            "message": "Score emotion for entity: $input.record.entityDid\n\nInput signals: $input.record.signals\nCurrent emotion profile: $currentProfile.rows\n\nMap the input signals to the 48 SST emotion categories, then compute 5-axis joucho scores (0-100 each): vitality, serenity, connection, growth, resilience. Apply temporal smoothing with the current profile. Return JSON: {emotions: [{name, intensity}], joucho: {vitality, serenity, connection, growth, resilience}, delta: {vitality, serenity, connection, growth, resilience}, cadence: 'active'|'resting'|'healing'}"
+          },
+          "fn": "agent.chat",
+          "id": "score"
+        },
+        {
+          "args": {
+            "template": "MERGE (s:JouchoScore {did: $did}) SET s.entityDid = $input.record.entityDid, s.scores = $score.text, s.repo = $did, s.collection = 'com.etzhayyim.joucho.score'"
+          },
+          "fn": "graph.write",
+          "id": "writeScore"
+        },
+        {
+          "args": {
+            "template": "MERGE (p:EmotionProfile {entityDid: $input.record.entityDid}) SET p.lastScoredAt = toString(timestamp()), p.repo = $did, p.collection = 'com.etzhayyim.joucho.emotionProfile'"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "updateProfile"
+        },
+        {
+          "args": {
+            "template": "New data added: $score.text"
+          },
+          "depends_on": [
+            "score"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.joucho.scoreEmotion",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (e:JouchoEntity) WHERE e.did = $input.record.actorDid RETURN e.did AS entityDid, e.entityType AS entityType, e.lastActivity AS lastActivity LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "entityLookup"
+        },
+        {
+          "args": {
+            "message": "Cross-domain activity from $input.collection:\n$input.record\n\nEntity context: $entityLookup.rows\n\nInterpret this activity as emotional signals. Map to SST emotions and estimate joucho axis impact. Return JSON: {emotions: [{name, intensity}], primaryAxis, estimatedDelta, context}"
+          },
+          "fn": "agent.chat",
+          "id": "interpret"
+        },
+        {
+          "args": {
+            "template": "CREATE (s:JouchoScore {did: $did, entityDid: $input.record.actorDid, source: $input.collection, interpretation: $interpret.text, repo: $did, collection: 'com.etzhayyim.joucho.score'})"
+          },
+          "fn": "graph.write",
+          "id": "writeSignal"
+        },
+        {
+          "args": {
+            "template": "New data added: $interpret.text"
+          },
+          "depends_on": [
+            "interpret"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.maps.event",
+          "com.etzhayyim.apps.omatsuri.activity",
+          "com.etzhayyim.apps.okaimono.order",
+          "com.etzhayyim.apps.kaigo.record"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (p:EmotionProfile) RETURN avg(p.vitality) AS avgVitality, avg(p.serenity) AS avgSerenity, avg(p.connection) AS avgConnection, avg(p.growth) AS avgGrowth, avg(p.resilience) AS avgResilience, count(p) AS totalEntities LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "profiles"
+        },
+        {
+          "args": {
+            "sql": "MATCH (p:EmotionProfile) WHERE p.vitality < 30 OR p.resilience < 30 RETURN p.entityDid AS entityDid, p.vitality AS vitality, p.resilience AS resilience ORDER BY p.vitality ASC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "lowScores"
+        },
+        {
+          "args": {
+            "message": "Joucho Well-Becoming periodic review.\n\nPlatform averages:\n$profiles.rows\n\nEntities with low vitality/resilience:\n$lowScores.rows\n\nAssess overall platform emotional health. Identify entities that may need intervention (cadence=healing). Recommend actions."
+          },
+          "depends_on": [
+            "profiles",
+            "lowScores"
+          ],
+          "fn": "agent.chat",
+          "id": "review"
+        },
+        {
+          "args": {
+            "template": "Joucho Well-Becoming review: $review.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */8 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "joucho",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.joucho.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "erp6xu1c",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Joucho — Well-Becoming Emotion Scoring. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.joucho.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "emotion-scoring",
+      "profile-analysis",
+      "cadence-resolve",
+      "well-becoming-review"
+    ],
+    "description": "48 SST emotions mapped to 5-axis joucho (vitality/serenity/connection/growth/resilience). Murakumo Opus 4.6 LLM, per-entity scoring, heartbeat cadence driver.",
+    "displayName": "Joucho — Well-Becoming Emotion Scoring",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.joucho.score",
+        "com.etzhayyim.joucho.review",
+        "com.etzhayyim.apps.maps.event",
+        "com.etzhayyim.apps.omatsuri.activity",
+        "com.etzhayyim.apps.okaimono.order",
+        "com.etzhayyim.apps.kaigo.record"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

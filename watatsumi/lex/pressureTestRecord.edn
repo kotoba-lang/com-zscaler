@@ -1,0 +1,15 @@
+{:lexicon 1
+ :id "com.etzhayyim.watatsumi.pressureTestRecord"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["tid" "depthTestedM" "durationH" "acousticLogCid" "testPass"]
+    :properties
+    {:tid {:type "string" :description "Transaction ID"}
+     :depthTestedM {:type "string" :description "Depth tested (meters, ≤6500m)"}
+     :durationH {:type "string" :description "Test duration (hours)"}
+     :acousticLogCid {:type "string" :description "IPFS CID of acoustic emission log"}
+     :testPass {:type "string" :description "Hydrotest 1.25× design depth pass"}}}}}}

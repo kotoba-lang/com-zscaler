@@ -1,0 +1,18 @@
+;; com.etzhayyim.kuniumi.constructionRecord — lexicon
+;; ADR-2605201400 · construction orchestration output
+{:lexicon 1
+ :id "com.etzhayyim.kuniumi.constructionRecord"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["constructionId" "deploymentIntentId" "progressLog" "state"]
+    :properties
+    {:constructionId      {:type "string" :description "unique construction record ID"}
+     :deploymentIntentId  {:type "string" :description "ref to :deploymentIntent"}
+     :progressLog         {:type "string" :description "task-by-task progress (simulated in R0, real in R1+)"}
+     :robotWitnessSigs    {:type "string" :description ">=2 robot-DID signatures (constitutional, G8); N=1 rejected"}
+     :state               {:type "string" :description ":in-progress | :ready-qc | :failed"}
+     :timestamp           {:type "string" :description "ISO-8601 completion time"}}}}}}

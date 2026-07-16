@@ -1,0 +1,50 @@
+;; ugachi 穿ち — ontology (kotoba EAVT schema, ADR-2606161800)
+;; The §2(l) extraction RISK-GATE actor: 採掘・採油は一律禁止ではない (ADR-2606161700).
+;; A proposed extraction PROJECT is authorized ONLY by passing the multi-generational
+;; (子・孫) × wellbecoming risk gate. ASSESSMENT + R0 DESIGN ONLY — ugachi never digs
+;; (live actuation is unrepresentable here; it is Council Lv7+ gated elsewhere).
+;;
+;; Verdict ∈ {:refuse :route-to-recovery :propose-r0 :insufficient-evidence}
+;;   :refuse              — hard fail (no consent / fossil net-positive carbon / monopoly
+;;                          entrenchment / irreversible multi-gen harm)
+;;   :route-to-recovery   — a viable lower-risk recovery path exists → kanayama (urban mining)
+;;   :propose-r0          — passes the gate → design-only R0 (Transparent-Force + consent),
+;;                          live actuation still Council Lv7+ gated
+;;   :insufficient-evidence — not enough to decide
+;;
+;; Attribute namespaces:
+;;   :ugachi.project/*  — disclosed project facts (resource, method, jurisdiction)
+;;   :ugachi.gate/*     — DERIVED gate factors + verdict + reason + route
+;;   :ugachi/derived    — true on every derived datom
+;;   :ugachi/sourcing   — ":authoritative" | ":representative" | ":synthetic"
+;;
+;; Datomic/Datascript tx-data: single entity, :db/id -1. :ontology/id, :ontology/version,
+;; :ontology/adr were already namespaced; the remaining bare keys (:node-kinds, :enums,
+;; :refuse-reasons, :unrepresentable) are promoted into the same :ontology/* namespace
+;; (this file's own namespace, not re-derived). :node-kinds and :enums are non-scalar
+;; (nested map / vector-of-maps) so are pr-str'd blobs (read back with edn/read-string);
+;; :refuse-reasons (set of keywords) and :unrepresentable (vector of strings) stay live —
+;; no info loss, this is a pure key-promotion + blob-wrap, not a content edit.
+
+[{:db/id -1
+  :ontology/id "ugachi"
+  :ontology/version "0.1.0"
+  :ontology/adr ["2606161800" "2606161700" "2605262130" "2605192245" "2606051500"]
+
+  :ontology/node-kinds
+  "[{:kind :project, :doc \"A proposed extraction project (mine / well / quarry / brine field) under §2(l) assessment.\", :keys [:id :name :resource :method :jurisdiction :irreversibility :remediation :carbon :monopoly-effect :recovery-alternative :consent :transparent :descendant-benefit :note]}]"
+
+  :ontology/enums
+  "{:carbon #{:net-negative :net-neutral :net-positive}, :monopoly-effect #{:entrench :neutral :diversify}, :recovery-alternative #{:none :partial :viable}, :verdict #{:refuse :route-to-recovery :propose-r0 :insufficient-evidence}}"
+
+  :ontology/refuse-reasons
+  #{:no-consent              ;; G5 — Tree of Life land sovereignty + community consent absent
+    :carbon-positive         ;; G6 / §2(d) — fossil→combusted net-positive CO₂e
+    :monopoly-entrenchment   ;; G3 / §1.12 — entrenches a resource monopoly / chokepoint
+    :irreversible-multigen-harm} ;; G3 / §2(d) — irreversible harm to persons ≥25yr hence
+
+  ;; negative space — structurally absent (enforced by tests)
+  :ontology/unrepresentable
+  [":ugachi/actuate"        ;; G1 — ugachi never digs (assessment + R0 design only)
+   ":ugachi/extract"        ;; G1 — no live extraction op
+   ":ugachi.gate/by-industry-name"]}] ;; G2 — never a by-name ban; the rule is the harm-to-子孫 assessment

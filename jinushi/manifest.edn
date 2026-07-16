@@ -1,0 +1,18 @@
+;; jinushi — actor manifest (created to declare :substrate.datasets for the
+;; actor data-ownership model, ADR-2607010001. Owner should enrich the other
+;; fields — cells, gates, lexicons — from CLAUDE.md + kotoba.app.edn metadata.)
+{:actor/glyph "地主"
+ :actor/display-name "地主 — World Land-Ownership Acquisition Mirror"
+ :actor/adr "2606162000"
+ :actor/tier :tier-b
+ :actor/integrates ["inochi" "kabuto" "kanae" "kanjo" "keizu" "tsumugi" "uchiwake"]
+ :actor/status :r0-design-only
+ :actor/id "jinushi"
+ :substrate {:datasets [{:dataset-id "jinushi-land-wdqs-r2"
+                         :layer :repo
+                         :source "world land/building ownership (Wikidata/PLUTO/DVF/GLEIF/OSM, ADR-2606162000)"
+                         :cidv1 "bafybeihrzixhxseapey37hjlmkhvzgdfg5b3iiw5miqto2dje6kpl5dvai"
+                         :freshness-days 0
+                         :retrieved "2026-06-16"
+                         :counts-toward-world-coverage true
+                         :provenance "80-data/jinushi-land/ingest-provenance.json"}]}}

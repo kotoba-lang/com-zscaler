@@ -1,0 +1,28 @@
+;; organizer — kotoba EAVT schema
+;; ADR-2606072400
+;; Auto-organize file commons. :item/id is content-addressed (G4); every item/classification/
+;; collection carries :*/vault for isolation (G3); NO :*/profile, :*/ad-signal, :*/public-share
+;; attribute exists (G2); blob is an encrypted ref (G5). No RW/SQL (G8).
+
+[;; ── :item/* — content-addressed, vault-isolated ──
+ {:db/ident :item/id          :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity :db/doc "cid.{blake3-prefix} (G4)"}
+ {:db/ident :item/vault       :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "owner vault DID (G3)"}
+ {:db/ident :item/blake3      :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "content identity (dedup, G4)"}
+ {:db/ident :item/blob-ref    :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "com.etzhayyim.encrypted.* envelope — no plaintext (G5)"}
+ {:db/ident :item/filename    :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :item/content-type :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :item/size-bytes  :db/valueType :db.type/long   :db/cardinality :db.cardinality/one}
+ {:db/ident :item/posted-by   :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "member DID (G6)"}
+
+ ;; ── :classification/* — owner-only ──
+ {:db/ident :classification/item     :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :classification/vault    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "same vault as item (G3)"}
+ {:db/ident :classification/category :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :classification/label    :db/valueType :db.type/string  :db/cardinality :db.cardinality/many :db/doc "owner-facing labels only — no behavioral/ad profile (G2)"}
+ {:db/ident :classification/source   :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":rule | :murakumo (G7)"}
+
+ ;; ── :collection/* — auto-organize bucket ──
+ {:db/ident :collection/id     :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :collection/vault  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "owner vault (G3)"}
+ {:db/ident :collection/name   :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :collection/member :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc ":item/id members (auto-organize)"}]

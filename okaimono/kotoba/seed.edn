@@ -1,0 +1,73 @@
+;; okaimono 御買物 — kotoba seed data (representative, R0)
+;; ADR-2606012100  ·  :sourcing :representative
+;; A small worked example across all three rings: one member need ("warm bedding for
+;; the household this winter") resolved commons-first, with internal + external
+;; candidates, a basket, a provision record per ring, and a lifecycle entry.
+;; Prices: internal = USDC minor (6-dp); external = JPY minor. NOT authoritative.
+
+[;; ════════════ Ring 0 — commons (the best purchase is no purchase) ════════════
+ {:product/id "commons.makura.repair-pillow" :product/title "枕 修理 (re-fill + re-cover)"
+  :product/ring :commons :product/commons-mode :repair :product/unspsc "52121600"
+  :product/source :internal-actor :product/maker-actor "hodoki"
+  :product/price-minor 0 :product/currency "USDC"
+  :product/durability-years 4.0 :product/repairability 9 :product/labor-provenance :etzhayyim-dignity
+  :product/lifecycle-route :hodoki :product/sourcing :representative}
+ {:product/id "commons.surplus.blanket-wool" :product/title "毛布 (donation-in-kind surplus)"
+  :product/ring :commons :product/commons-mode :surplus :product/unspsc "52121500"
+  :product/source :internal-actor :product/maker-actor "unspsc-organism"
+  :product/price-minor 0 :product/currency "USDC"
+  :product/durability-years 8.0 :product/repairability 6 :product/labor-provenance :disclosed
+  :product/lifecycle-route :wakai :product/sourcing :representative}
+
+ ;; ════════════ Ring 1 — internal economy (SBT↔SBT, §3 carve-out) ════════════
+ {:product/id "int.makura.foam-pillow" :product/title "makura フォーム枕 (PU foam + shred-fill)"
+  :product/ring :internal :product/maker-actor "makura" :product/unspsc "52121600"
+  :product/source :internal-actor :product/price-minor 18000000 :product/currency "USDC"
+  :product/durability-years 5.0 :product/repairability 8 :product/labor-provenance :etzhayyim-dignity
+  :product/carbon-kg 3.2 :product/lifecycle-route :hodoki :product/sourcing :representative}
+ {:product/id "int.mitsuho.buckwheat-husk" :product/title "mitsuho そば殻 (pillow fill, food-actor byproduct)"
+  :product/ring :internal :product/maker-actor "mitsuho" :product/unspsc "10151600"
+  :product/source :internal-actor :product/price-minor 6000000 :product/currency "USDC"
+  :product/durability-years 3.0 :product/repairability 10 :product/labor-provenance :etzhayyim-dignity
+  :product/carbon-kg 0.8 :product/lifecycle-route :kanayama :product/sourcing :representative}
+
+ ;; ════════════ Ring 2 — external world catalog (data-only; affiliate stripped, G3) ════════════
+ {:product/id "ext.gtin.04901234567894" :product/title "down comforter (external retailer)"
+  :product/ring :external :product/gtin "04901234567894" :product/unspsc "52121500"
+  :product/source :api-data-only :product/price-minor 1290000 :product/currency "JPY"
+  :product/durability-years 7.0 :product/repairability 4 :product/labor-provenance :unknown
+  :product/carbon-kg 14.0 :product/lifecycle-route :haraedo :product/sourcing :representative}
+
+ ;; ════════════ member need (PII envelope; detail encrypted at rest, G9) ════════════
+ {:need/id "need.000001" :need/member-did "did:plc:representative-member"
+  :need/text "warm bedding for the household this winter"
+  :need/household-scope :multi-generational :need/resolved-ring :commons}
+
+ ;; ════════════ basket + lines (multi-source landed cost incl tithe) ════════════
+ {:basket/id "basket.000001" :basket/need "need.000001"
+  :basket/line ["bl.0001" "bl.0002"]
+  :basket/landed-minor 24000000}
+ {:db/id "bl.0001" :basket-line/product "int.makura.foam-pillow" :basket-line/qty 1
+  :basket-line/shipping-minor 0 :basket-line/tariff-minor 0}
+ {:db/id "bl.0002" :basket-line/product "int.mitsuho.buckwheat-husk" :basket-line/qty 1
+  :basket-line/shipping-minor 0 :basket-line/tariff-minor 0}
+
+ ;; ════════════ provision records — one per ring (illustrating settlement modes) ════════════
+ ;; Ring 0: commons, no transaction
+ {:provision/id "prov.commons.0001" :provision/ring :commons
+  :provision/settlement :commons-none :provision/tithe-minor 0}
+ ;; Ring 1: internal SBT↔SBT, USDC+warifu, 10% tithe auto-split (G7)
+ {:provision/id "prov.internal.0001" :provision/basket "basket.000001" :provision/ring :internal
+  :provision/settlement :usdc-warifu :provision/tithe-minor 2400000}
+ ;; Ring 2 R0: external self-checkout handoff (member pays externally; NO affiliate tag, G3)
+ {:provision/id "prov.external.0001" :provision/ring :external
+  :provision/settlement :self-checkout-handoff
+  :provision/handoff-uri "https://retailer.example/cart?gtin=04901234567894"
+  :provision/tithe-minor 0}
+ ;; Ring 2 R3: 代理-purchase — refused at R0 (no :provision/gate-ref ⇒ G11 blocks)
+ {:provision/id "prov.external.proxy.0001" :provision/ring :external
+  :provision/settlement :proxy-gated :provision/tithe-minor 0}
+
+ ;; ════════════ lifecycle (Wellbecoming as-of trajectory; no final state, G13) ════════════
+ {:lifecycle/id "lc.0001" :lifecycle/product "int.makura.foam-pillow"
+  :lifecycle/stage :in-use :lifecycle/route-actor :hodoki}]

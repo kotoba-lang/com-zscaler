@@ -1,0 +1,5 @@
+;; 20-actors/hinagata/schema.edn — Datomic/Datascript-compatible schema for this actor's
+;; datomized .edn files (auto-generated, Phase 4 fan-out). :db/ident attribute defs only,
+;; no Datomic-specific keys (:db.install/_attribute etc). Hand-edit forbidden — regenerate.
+
+[#:db{:ident :ingest/adr, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ingest/discipline, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ingest/gate, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ingest/sources, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :kotoba.app/components, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :kotoba.app/name, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :kotoba.app/placement, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :kotoba.app/version, :valueType :db.type/string, :cardinality :db.cardinality/one}]

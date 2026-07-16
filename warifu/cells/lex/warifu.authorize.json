@@ -1,0 +1,48 @@
+{
+  "lexicon": 1,
+  "id": "warifu.authorize",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Authorize a card transaction (debit hold / credit reserve). Zero fee; credit is 0% interest. Enforces the payment-purpose allow-list.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["cardToken", "amountUsdc", "funding", "purpose", "merchantDid", "idempotencyKey"],
+          "properties": {
+            "cardToken": { "type": "string", "description": "network token (no raw PAN; self TSP)" },
+            "amountUsdc": { "type": "integer", "description": "USDC minor units (6dp)", "minimum": 1 },
+            "funding": { "type": "string", "enum": ["debit", "credit"] },
+            "purpose": {
+              "type": "string",
+              "description": "Phase 1 allow-list: internal-purchase | internal-subscription | internal-promo | escrow-refund. purchase/subscription are GATED (Council Lv7+).",
+              "enum": ["internal-purchase", "internal-subscription", "internal-promo", "escrow-refund", "purchase", "subscription"]
+            },
+            "merchantDid": { "type": "string", "format": "did" },
+            "idempotencyKey": { "type": "string" },
+            "surface": { "type": "string", "enum": ["rest", "iso8583", "nfc"], "default": "rest" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["decision"],
+          "properties": {
+            "decision": { "type": "string", "enum": ["approve", "decline", "gated"] },
+            "authId": { "type": "string" },
+            "reason": { "type": "string" },
+            "feeUsdc": { "type": "integer", "const": 0 }
+          }
+        }
+      },
+      "errors": [
+        { "name": "PurposeGated", "description": "Phase 2 purpose disabled until Council Lv7+ amendment (ADR-2605192115)" },
+        { "name": "InsufficientFunds" },
+        { "name": "CardNotFound" }
+      ]
+    }
+  }
+}

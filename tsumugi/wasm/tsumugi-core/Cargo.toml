@@ -1,0 +1,26 @@
+# tsumugi-core — the tsumugi actor as a content-addressed WASM component.
+# Per ADR-2606014500 (one-Worker WASM-actor model). The compiled
+# wasm32-unknown-unknown artifact is published to IPFS; its CID is carried in
+# the actor's DID document (service type EtzhayyimWasmComponent) and the
+# browser (ameno) / donated mesh node fetches + executes it locally. NO server.
+#
+# Empty [workspace] table makes this crate standalone so it is never captured
+# by a parent Cargo workspace.
+[workspace]
+
+[package]
+name = "tsumugi-core"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "tsumugi 紡ぎ edge-karma aggregation (取-concentration) as a WASM actor"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

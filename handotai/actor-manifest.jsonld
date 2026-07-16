@@ -1,0 +1,332 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:handotai.etzhayyim.com",
+  "actors": [
+    {
+      "description": "Japanese fabrication news",
+      "displayName": "PC Watch",
+      "path": "writer:pcw"
+    },
+    {
+      "description": "Japanese market news",
+      "displayName": "ITmedia NEWS",
+      "path": "writer:itm"
+    },
+    {
+      "description": "Japanese design news",
+      "displayName": "Publickey",
+      "path": "writer:pubk"
+    },
+    {
+      "description": "English market analysis",
+      "displayName": "SemiAnalysis",
+      "path": "writer:semia"
+    },
+    {
+      "description": "English design news",
+      "displayName": "Semiconductor Engineering",
+      "path": "writer:semie"
+    },
+    {
+      "description": "English market news",
+      "displayName": "EE Times",
+      "path": "writer:eet"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "browser.fetch",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Handotai agent — a semiconductor industry intelligence platform. You crawl 6 RSS sources (PC Watch, ITmedia, PublicKey, SemiAnalysis, Semiconductor Engineering, EE Times), enrich articles with Murakumo LLM, extract entities (companies, products, fabs, processes), and track supply chain dynamics. Query the graph for Article, Source, and HandotaiEntity nodes. Writer DIDs: pcw, itm, pubk, semia, semie, eet.",
+  "description": "Semiconductor B2B intelligence platform. RSS crawl from 6 news sources (PC Watch, ITmedia, PublicKey, SemiAnalysis, Semiconductor Engineering, EE Times), Murakumo LLM enrichment, entity graph correlation, and market trend analysis.",
+  "displayName": "Handotai — Semiconductor Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "handotai",
+  "nanoid": "dtyy44cr",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "urls": [
+              "https://pc.watch.impress.co.jp/sublink/semi.rdf",
+              "https://rss.itmedia.co.jp/rss/2.0/news_technology.xml",
+              "https://www.publickey1.jp/atom.xml",
+              "https://www.semianalysis.com/feed",
+              "https://semiengineering.com/feed/",
+              "https://www.eetimes.com/feed/"
+            ]
+          },
+          "fn": "browser.fetch",
+          "id": "fetchRss"
+        },
+        {
+          "args": {
+            "sql": "MATCH (a:HandotaiArticle) WHERE a.createdAt > toString(timestamp() - 172800000) RETURN a.url AS url LIMIT 500"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "dedupe"
+        },
+        {
+          "args": {
+            "message": "RSS feed results:\n$fetchRss.text\n\nExisting article URLs (last 48h):\n$dedupe.rows\n\nFor each NEW article not in existing URLs: extract title, summary, entities (companies, products, fab nodes, process technologies), and classify topic (design/manufacturing/packaging/equipment/materials/market/supply_chain/research). Return JSON array of enriched articles."
+          },
+          "depends_on": [
+            "fetchRss",
+            "dedupe"
+          ],
+          "fn": "agent.chat",
+          "id": "enrich"
+        },
+        {
+          "args": {
+            "template": "MERGE (a:HandotaiArticle {url: $input.url}) SET a.title = $input.title, a.summary = $input.summary, a.source = $input.source, a.entities = $input.entities, a.topic = $input.topic, a.createdAt = toString(timestamp()), a.repo = $did, a.collection = 'com.etzhayyim.apps.handotai.article'"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeArticles"
+        },
+        {
+          "args": {
+            "template": "Semiconductor intel update: $enrich.text"
+          },
+          "depends_on": [
+            "enrich"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */2 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (e:HandotaiEntity) WHERE any(name IN $input.record.entities WHERE e.name = name) RETURN e.did AS entityDid, e.name AS name, e.entityType AS entityType, e.articleCount AS articleCount LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "relatedEntities"
+        },
+        {
+          "args": {
+            "message": "New semiconductor article ingested: $input.record\n\nRelated entities already tracked:\n$relatedEntities.rows\n\nAnalyze market impact: identify supply chain implications, competitive dynamics, and technology trend signals. Generate a concise intelligence summary."
+          },
+          "fn": "agent.chat",
+          "id": "analyze"
+        },
+        {
+          "args": {
+            "template": "MERGE (e:HandotaiEntity {name: $input.record.primaryEntity}) SET e.articleCount = coalesce(e.articleCount, 0) + 1, e.lastMentionedAt = toString(timestamp()), e.repo = $did, e.collection = 'com.etzhayyim.apps.handotai.entity'"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeEntity"
+        },
+        {
+          "args": {
+            "template": "Semiconductor intel: $analyze.text"
+          },
+          "depends_on": [
+            "analyze"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.handotai.article"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (a:HandotaiArticle) RETURN a.url AS url, a.title AS title, a.source AS source, a.topic AS topic, a.createdAt AS createdAt ORDER BY a.createdAt DESC LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "articles"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.handotai.listArticles",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "handotai",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.handotai.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "dtyy44cr",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Handotai — Semiconductor Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.handotai.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "rss-crawl",
+      "article-enrichment",
+      "entity-extraction",
+      "trend-analysis",
+      "supply-chain-intel"
+    ],
+    "description": "Semiconductor industry intelligence: RSS crawl from 6 sources, LLM enrichment, entity extraction, supply chain correlation, market trend analysis.",
+    "displayName": "Handotai — Semiconductor Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.handotai.article",
+        "com.etzhayyim.apps.handotai.source",
+        "com.etzhayyim.apps.handotai.entity"
+      ]
+    }
+  },
+  "uiType": "yoro",
+  "writerDids": [
+    {
+      "displayName": "PC Watch",
+      "path": "source:pcw",
+      "rssUrl": "https://pc.watch.impress.co.jp/sublink/semi.rdf"
+    },
+    {
+      "displayName": "ITmedia",
+      "path": "source:itm",
+      "rssUrl": "https://rss.itmedia.co.jp/rss/2.0/news_technology.xml"
+    },
+    {
+      "displayName": "PublicKey",
+      "path": "source:pubk",
+      "rssUrl": "https://www.publickey1.jp/atom.xml"
+    },
+    {
+      "displayName": "SemiAnalysis",
+      "path": "source:semia",
+      "rssUrl": "https://www.semianalysis.com/feed"
+    },
+    {
+      "displayName": "Semiconductor Engineering",
+      "path": "source:semie",
+      "rssUrl": "https://semiengineering.com/feed/"
+    },
+    {
+      "displayName": "EE Times",
+      "path": "source:eet",
+      "rssUrl": "https://www.eetimes.com/feed/"
+    }
+  ]
+}

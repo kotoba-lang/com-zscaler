@@ -1,0 +1,93 @@
+;; infra-utility-connect — kotoba seed data (representative, R0)
+;; ADR-2605250900 · :sourcing :representative (NOT authoritative; G1)
+;; Tokyo Shibuya 渋谷 example: tatekata construction site → MEP signoff → water/gas/electric/telecom
+;; service requests → provider approvals → meter installations → activation test → settlement intent
+;; (USDC minor, 10% tithe). NOT a live commercial offer.
+
+[;; ════════════ Site (construction project) ════════════
+ {:site/id "site.demo.shibuya.001"
+  :site/address "Shibuya Ward, Tokyo (PII encrypted)" :site/coordinates "35.6595,139.7004"}
+
+ ;; ════════════ MEP Signoff (from tatekata construction) ════════════
+ {:mep-signoff/site "site.demo.shibuya.001"
+  :mep-signoff/water true :mep-signoff/gas true :mep-signoff/electric true :mep-signoff/telecom true
+  :mep-signoff/timestamp "2026-06-01T18:00:00Z"}
+
+ ;; ════════════ Service Requests (4 providers) ════════════
+ {:service-request/id "req.water.001" :service-request/provider :water
+  :service-request/site "site.demo.shibuya.001" :service-request/state :submitted
+  :service-request/timestamp "2026-06-02T00:00:00Z"
+  :service-request/provider-api-url "https://api.tokyo-water-bureau.go.jp/v1/connect"}
+ {:service-request/id "req.gas.001" :service-request/provider :gas
+  :service-request/site "site.demo.shibuya.001" :service-request/state :submitted
+  :service-request/timestamp "2026-06-02T00:05:00Z"
+  :service-request/provider-api-url "https://api.tokyo-gas.co.jp/v1/connect"}
+ {:service-request/id "req.electric.001" :service-request/provider :electric
+  :service-request/site "site.demo.shibuya.001" :service-request/state :submitted
+  :service-request/timestamp "2026-06-02T00:10:00Z"
+  :service-request/provider-api-url "https://api.tepco-epower.co.jp/v1/connect"}
+ {:service-request/id "req.telecom.001" :service-request/provider :telecom
+  :service-request/site "site.demo.shibuya.001" :service-request/state :submitted
+  :service-request/timestamp "2026-06-02T00:15:00Z"
+  :service-request/provider-api-url "https://api.ntt-east.co.jp/v1/flet-connect"}
+
+ ;; ════════════ Provider Approvals ════════════
+ {:provider-approval/id "appr.water.001" :provider-approval/request "req.water.001"
+  :provider-approval/sig "did:web:tokyo-water-bureau.go.jp/authority/2026-06-02"
+  :provider-approval/approval-code "TWB-2026-06-02-001" :provider-approval/sla-date "2026-06-05"
+  :provider-approval/status :approved}
+ {:provider-approval/id "appr.gas.001" :provider-approval/request "req.gas.001"
+  :provider-approval/sig "did:web:tokyo-gas.co.jp/authority/2026-06-02"
+  :provider-approval/approval-code "TG-2026-06-02-001" :provider-approval/sla-date "2026-06-05"
+  :provider-approval/status :approved}
+ {:provider-approval/id "appr.electric.001" :provider-approval/request "req.electric.001"
+  :provider-approval/sig "did:web:tepco-epower.co.jp/authority/2026-06-02"
+  :provider-approval/approval-code "TEPCO-2026-06-02-001" :provider-approval/sla-date "2026-06-05"
+  :provider-approval/status :approved}
+ {:provider-approval/id "appr.telecom.001" :provider-approval/request "req.telecom.001"
+  :provider-approval/sig "did:web:ntt-east.co.jp/authority/2026-06-02"
+  :provider-approval/approval-code "NTT-2026-06-02-001" :provider-approval/sla-date "2026-06-05"
+  :provider-approval/status :approved}
+
+ ;; ════════════ Meter Installations ════════════
+ {:meter-installation/id "meter.water.001" :meter-installation/approval "appr.water.001"
+  :meter-installation/meter-type :water :meter-installation/serial "WM-JP-2026-001"
+  :meter-installation/calibration-date "2026-06-03T09:30:00Z"
+  :meter-installation/ipfs-cert-cid "QmWaterMeterCertCid123"
+  :meter-installation/provider-attest "did:web:tokyo-water-bureau.go.jp/meter-cert/2026-06-03"
+  :meter-installation/status :calibrated}
+ {:meter-installation/id "meter.gas.001" :meter-installation/approval "appr.gas.001"
+  :meter-installation/meter-type :gas :meter-installation/serial "GM-JP-2026-001"
+  :meter-installation/calibration-date "2026-06-03T10:15:00Z"
+  :meter-installation/ipfs-cert-cid "QmGasMeterCertCid456"
+  :meter-installation/provider-attest "did:web:tokyo-gas.co.jp/meter-cert/2026-06-03"
+  :meter-installation/status :calibrated}
+ {:meter-installation/id "meter.electric.001" :meter-installation/approval "appr.electric.001"
+  :meter-installation/meter-type :electric :meter-installation/serial "EM-JP-2026-001"
+  :meter-installation/calibration-date "2026-06-03T11:00:00Z"
+  :meter-installation/ipfs-cert-cid "QmElectricMeterCertCid789"
+  :meter-installation/provider-attest "did:web:tepco-epower.co.jp/meter-cert/2026-06-03"
+  :meter-installation/status :calibrated}
+ {:meter-installation/id "meter.telecom.001" :meter-installation/approval "appr.telecom.001"
+  :meter-installation/meter-type :telecom :meter-installation/serial "TM-JP-2026-001"
+  :meter-installation/calibration-date "2026-06-03T11:45:00Z"
+  :meter-installation/ipfs-cert-cid "QmTelecomMeterCertCidAbc"
+  :meter-installation/provider-attest "did:web:ntt-east.co.jp/meter-cert/2026-06-03"
+  :meter-installation/status :calibrated}
+
+ ;; ════════════ Settlement Intent (coordination fee, 10% tithe) ════════════
+ {:settlement/id "settle.infra.001"
+  :settlement/rail :usdc-base-l2
+  :settlement/gross-minor 100000000 :settlement/tithe-minor 10000000
+  :settlement/coordinator-payout-minor 90000000
+  :settlement/tithe-router "50-infra/etzhayyim-tithe-router"
+  :settlement/state :intent}
+
+ ;; ════════════ Utility Activation (all 4 services live) ════════════
+ {:utility-activation/id "act.demo.shibuya.001"
+  :utility-activation/site "site.demo.shibuya.001"
+  :utility-activation/result :pass
+  :utility-activation/water-live true :utility-activation/gas-live true
+  :utility-activation/electric-live true :utility-activation/telecom-live true
+  :utility-activation/settlement "settle.infra.001"
+  :utility-activation/timestamp "2026-06-03T12:30:00Z"}]

@@ -1,0 +1,26 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.meisai.source",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A worldwide card-company / payment-service coverage source (:meisai.source/*) from sources/world-card-issuers.edn. PUBLIC metadata only (company name, public portal root, accepted networks) — it carries NO statement, row, credential, or card number, so unlike the statement record this MAY be committed/published.",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": ["id", "name", "kind", "status"],
+        "properties": {
+          "id": { "type": "string", "description": "source id keyword, e.g. ':sumitclub'" },
+          "name": { "type": "string" },
+          "kind": { "type": "string", "enum": [":network", ":issuer", ":psp", ":bnpl", ":wallet"] },
+          "country": { "type": "string", "description": "ISO-ish country keyword, or ':global'" },
+          "region": { "type": "string", "enum": [":global", ":apac", ":namer", ":emea", ":latam", ":mea"] },
+          "currency": { "type": "string", "description": "native currency keyword, or ':multi'" },
+          "status": { "type": "string", "enum": [":supported", ":registry-only"], "description": "':supported' = a fetch-leg adapter exists; ':registry-only' = on the ingest worklist" },
+          "portal": { "type": "string", "format": "uri" },
+          "networks": { "type": "array", "items": { "type": "string" }, "description": "accepted card networks, e.g. [':visa' ':mastercard']" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+;; niyaku 荷役 — actor manifest (Gen-3 kotoba-native)
+;; Automated port cargo handling — ship↔shore container loading/unloading robotics
+;; ADR-2606082000 (R0 scaffold) · 2026-06-08
+{:actor/id        "niyaku"
+ :actor/glyph     "荷役"
+ :actor/tier      :tier-b
+ :actor/integrates ["funadaiku" "port" "watari"]
+ :actor/domain    "niyaku.etzhayyim.com"
+ :actor/purpose   "Automated port cargo handling — 9 Pregel cells implementing berth allocation, stowage planning, spreader engagement, ship-to-shore (STS) hoist, anti-sway trolley traverse, yard transfer, lashing/twistlock, per-move manifest attestation, and electric-crane emissions audit. The defining problem — anti-sway control of a 20-40 t container suspended on cables while the trolley traverses ship↔shore — is the cart+hanging-load topology, verified end-to-end through the clean-room isaacsim.core.api (kotodama.nv_compat) Cartpole. Operator-side counterpart of funadaiku (船大工, builds the ships); consumer of port (registry) + watari (live position)."
+ :actor/status    :r0
+ :actor/adr       "2606082000"
+ :actor/related   ["2606013400" "2606012600" "2606041827" "2605261800" "2606010600"]
+
+ :actor/charter-rider
+ {:rider/version "3.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "open-source-control"      :gate/rule "All crane/AGV/spreader control + anti-sway firmware open-source (Apache 2.0 + Charter Rider v3.0)"}
+  {:gate/id "G2"  :gate/name "vendor-free-sim-only"     :gate/rule "Simulation via clean-room isaacsim.core.api (kotodama.nv_compat); NO NVIDIA Isaac Sim binary/header/library linked (ADR-2605261800)"}
+  {:gate/id "G3"  :gate/name "witness-quorum-robots"    :gate/rule "Witness quorum ≥2 distinct robots per lift (spreader engage + landing canonical)"}
+  {:gate/id "G4"  :gate/name "anti-sway-safety-envelope" :gate/rule "Trolley accel/velocity inside the comfort+safety envelope; residual sway gated before landing (no bang-bang over personnel)"}
+  {:gate/id "G5"  :gate/name "murakumo-only"            :gate/rule "Inference is Murakumo-only (LiteLLM 127.0.0.1:4000); external LLM prohibited (ADR-2605215000)"}
+  {:gate/id "G6"  :gate/name "kotoba-eavt-native"       :gate/rule "State is kotoba EAVT Datoms (:niyaku.* / :niyaku.sim.*); no SQL/RisingWave/Cypher"}
+  {:gate/id "G7"  :gate/name "tithe-non-fiat"           :gate/rule "Payments are USDC Base L2 + ERC-4337 + TitheRouter 10% (no Stripe/fiat)"}
+  {:gate/id "G8"  :gate/name "zero-emission-handling"   :gate/rule "Electric cranes/AGVs only; regenerative hoist-lowering credited (no diesel RTG)"}
+  {:gate/id "G9"  :gate/name "imdg-segregation"         :gate/rule "IMDG dangerous-goods segregation + weight-on-top + port-rotation enforced by stow_plan (no infeasible stack)"}
+  {:gate/id "G10" :gate/name "no-cargo-class-filter"    :gate/rule "Weapons-transport / military-materiel handling is N-excluded (Charter Rider §2(a)); cargo provenance gated"}
+  {:gate/id "G11" :gate/name "kpi-caps"                 :gate/rule "Anti-sway settle before landing; productivity KPI is moves/hour, never a worker-pace ranking (§1.13)"}
+  {:gate/id "G12" :gate/name "no-server-key"            :gate/rule "Platform holds no key; operator/robot signs. Methods are pure compute, move no real crane"}
+  {:gate/id "G13" :gate/name "consent-bound"            :gate/rule "Real outward actions stay gated (compute-only R0; settlement stops at 'intent')"}
+  {:gate/id "G14" :gate/name "no-person-tracking"       :gate/rule "No worker/longshoreman biometric or pace surveillance; PII encrypted (privacy-by-construction)"}]
+
+ :actor/cells
+ [{:cell/id "berth_allocation"      :cell/kind :langgraph :cell/runtime :wasm :cell/layer "L0"}
+  {:cell/id "stowage_planning"      :cell/kind :langgraph :cell/runtime :wasm :cell/layer "L1"}
+  {:cell/id "spreader_engagement"   :cell/kind :langgraph :cell/runtime :wasm :cell/layer "L2"}
+  {:cell/id "sts_hoist_cycle"       :cell/kind :langgraph :cell/runtime :wasm :cell/layer "L3"}
+  {:cell/id "trolley_traverse"      :cell/kind :langgraph :cell/runtime :wasm :cell/layer "L4"}
+  {:cell/id "yard_transfer"         :cell/kind :langgraph :cell/runtime :wasm :cell/layer "L5"}
+  {:cell/id "lashing_twistlock"     :cell/kind :langgraph :cell/runtime :wasm :cell/layer "L6"}
+  {:cell/id "manifest_attestation"  :cell/kind :langgraph :cell/runtime :wasm :cell/layer "terminal"}
+  {:cell/id "emissions_audit"       :cell/kind :langgraph :cell/runtime :wasm :cell/layer "cross-cutting"}]
+
+ :actor/methods
+ [{:method/id "crane_dynamics"  :method/lang :python :method/pure true  :method/desc "Gantry/STS anti-sway pendulum model + state-feedback controller + ZV input shaper + cycle-time"}
+  {:method/id "stow_plan"       :method/lang :python :method/pure true  :method/desc "Bay/row/tier slotting under weight/rotation/reefer/hazmat + no-rehandle discharge sequencing"}
+  {:method/id "isaac_sway_sim"  :method/lang :python :method/pure true  :method/desc "Anti-sway transfer driven through clean-room isaacsim.core.api: STS=Cartpole (trolley+hanging-load) + boom/luffing-jib=DoublePendulum (small-angle envelope, honest about underactuation)"}
+  {:method/id "agv_transfer"    :method/lang :python :method/pure true  :method/desc "AGV horizontal transport: trapezoidal/triangular travel-time profile + lane-segment conflict check + LPT makespan dispatch (backs yard_transfer)"}
+  {:method/id "terminal_cycle"  :method/lang :python :method/pure true  :method/desc "End-to-end discharge orchestration: stow_plan + crane_dynamics + agv_transfer (+optional Isaac crane leg) → pipelined discharge time, moves/hour, worst residual sway, per-box ledger"}]
+
+ :actor/reference-equipment
+ {:crane/class "ship-to-shore (STS) gantry"
+  :crane/outreach-m 65
+  :crane/lift-t 65
+  :crane/cable-length-m 30
+  :yard/handler "automated stacking crane (ASC) + battery AGV"
+  :terminal/ref "JPYOK-T1 (Yokohama, reference)"}}

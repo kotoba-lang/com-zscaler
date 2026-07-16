@@ -1,0 +1,265 @@
+;; watatsumi 綿津見 — kotoba EAVT schema
+;; ADR-2605252200 — Civilian submersible manufacturing state machine
+;; All manufacturing state (material → hull → section → weld → system → trial → certification)
+;; recorded as kotoba Datoms; replaces legacy Cypher/RisingWave paths (G16).
+
+[;; ───────────────────────────── :material/* — raw material tracking ─────────────────────────────
+ {:db/ident :material/designation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Material grade (HSLA-80, Ti-6Al-4V ELI, etc.)"}
+ {:db/ident :material/ndt-result
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Non-Destructive Testing pass/fail"}
+ {:db/ident :material/roundness
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Roundness check <0.5% Ø"}
+
+ ;; ───────────────────────────── :hull-ring/* — pressure hull rings ─────────────────────────────
+ {:db/ident :hull-ring/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Hull ring identifier"}
+ {:db/ident :hull-ring/material
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :hull-ring/roundness
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :hull-ring/attestation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :penetrator/* — pressure penetrators ─────────────────────────────
+ {:db/ident :penetrator/type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Penetrator type (power/data/fluid only; no weapon mounts per G12)"}
+ {:db/ident :penetrator/is-civilian-only
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :section/* — assembled hull sections ─────────────────────────────
+ {:db/ident :section/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :section/rings
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many}
+ {:db/ident :section/penetrators
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many}
+ {:db/ident :section/attestation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :weld-inspection/* — NDT inspection results ─────────────────────────────
+ {:db/ident :weld-inspection/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :weld-inspection/results
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :weld-inspection/ipfs-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID for NDT photos + video (G3)"}
+ {:db/ident :weld-inspection/pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :propulsion/* — propulsion system ─────────────────────────────
+ {:db/ident :propulsion/type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "LFP / H₂ / NH₃ / methanol fuel-cell only (no nuclear N2, no diesel)"}
+ {:db/ident :propulsion/is-clean-fuel
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :sonar/* — acoustic systems ─────────────────────────────
+ {:db/ident :sonar/db-threshold
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "≤180 dB re 1µPa @1m (cetacean protection, G8)"}
+ {:db/ident :sonar/is-passive
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :system/* — integrated subsystems ─────────────────────────────
+ {:db/ident :system/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :system/propulsion
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :system/life-support
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :system/sensors
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :system/attestation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :ndt-result/* — test results ─────────────────────────────
+ {:db/ident :ndt-result/type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "RT (Radiography) / UT (Ultrasonic) / PT (Penetrant)"}
+ {:db/ident :ndt-result/pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :section-join/* — final ring-to-ring weld ─────────────────────────────
+ {:db/ident :section-join/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :section-join/passes
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :section-join/rt-passes
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :section-join/pwht-temp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :section-join/attestation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :design-depth/* — hull design specs ─────────────────────────────
+ {:db/ident :design-depth-m
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Design depth meters (≤6500m, G12)"}
+
+ ;; ───────────────────────────── :acoustic-emission/* — pressure test monitoring ─────────────────────────────
+ {:db/ident :acoustic-emission/db
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Acoustic emission dB level during hydrotest"}
+
+ ;; ───────────────────────────── :pressure-test/* — hydrotest record ─────────────────────────────
+ {:db/ident :pressure-test/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :pressure-test/depth-tested
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :pressure-test/duration-h
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :pressure-test/acoustic-log
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :pressure-test/pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :crew-count / :submerged-duration / :emissions ─────────────────────────────
+ {:db/ident :crew-count
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Max crew 3 (G12)"}
+ {:db/ident :submerged-duration-h
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Max submerged 72h (G12)"}
+ {:db/ident :emissions-compliance
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "MARPOL + BWMC + biofouling compliance"}
+
+ ;; ───────────────────────────── :sea-trial/* — progressive sea trials ─────────────────────────────
+ {:db/ident :sea-trial/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :sea-trial/dock-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :sea-trial/harbor-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :sea-trial/deep-water-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :sea-trial/attestation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :ballast-water/* / :biofouling-survey/* — environmental ─────────────────────────────
+ {:db/ident :ballast-water/origin
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Ballast water origin port (BWMC compliance)"}
+ {:db/ident :biofouling-survey/date
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :emissions-audit/* — MARPOL/BWMC/biofouling record ─────────────────────────────
+ {:db/ident :emissions-audit/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :emissions-audit/marpol-status
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :emissions-audit/ballast-status
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :emissions-audit/biofouling-status
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :emissions-audit/compliant
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :class-cert/* — final certification ─────────────────────────────
+ {:db/ident :class-cert/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :class-cert/craft-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Submersible's DID (did:web:watatsumi.etzhayyim.com/...)"}
+ {:db/ident :class-cert/kotoba-datomic-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "KotobaDatomic anchor CID (G2)"}
+ {:db/ident :class-cert/all-stages-complete
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── Settlement intent (USDC Base L2) ─────────────────────────────
+ {:db/ident :settlement/rail
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "usdc-base-l2 (G17)"}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Gross amount in USDC minor units (6 decimals)"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% tithe → Public Fund"}
+ {:db/ident :settlement/payout-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Net payout to contractor"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (R0 compute-only) | :executed (member-signed via passkey/smart-account)"}]

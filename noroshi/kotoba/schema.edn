@@ -1,0 +1,72 @@
+;; noroshi (烽) kotoba EAVT schema — photonics-electronics convergence comms chip + ISAC + packaging (R0)
+;; Canonical state in the kotoba Datom log (ADR-2605312345); every device/budget/waveform/estimate/job
+;; is a Datom (G9 audit; as-of, replayable; 非終末論). CIVILIAN-only by construction (G3/G4/N1/N2).
+[;; ── photonic device (the chip face — PIC / CPO component) ─────────────────────
+ {:db/ident :pdev/id              :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :pdev/kind            :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :modulator :grating-coupler :photodetector :laser :waveguide :pic-link :cpo-module
+ {:db/ident :pdev/platform        :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :silicon-photonics
+ {:db/ident :pdev/force-class     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :civilian-comms (N1: no :weaponizable)
+ {:db/ident :pdev/line-rate-gbps  :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :pdev/energy-pj-bit   :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :pdev/process         :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :open-pdk (G1; never NDA foundry PDK)
+ {:db/ident :pdev/eda             :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :gdsfactory :meep :klayout :openlane (G1 open-source EPDA)
+ {:db/ident :pdev/representative  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G10
+
+ ;; ── optical link budget ──────────────────────────────────────────────────────
+ {:db/ident :budget/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :budget/device        :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :budget/received-dbm  :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :budget/total-loss-db :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :budget/margin-db     :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :budget/closes        :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :budget/energy-pj-bit :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+
+ ;; ── ISAC / JCAS waveform (the isac face — one waveform, two functions) ─────────
+ {:db/ident :wave/id              :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :wave/n-sub           :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :wave/n-sym           :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :wave/bandwidth-mhz   :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :wave/range-res-m     :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :wave/vel-res-mps     :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :wave/power-split     :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}   ;; ρ ∈ [0,1] comms fraction
+ {:db/ident :wave/capacity-gbps   :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :wave/civilian        :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G3/N1 const true
+
+ ;; ── ISAC sense estimate (an OBJECT, never a person — G4/N2) ───────────────────
+ {:db/ident :sense/id             :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :sense/wave           :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :sense/target-class   :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :object ONLY (no :person field is representable)
+ {:db/ident :sense/range-m        :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :sense/velocity-mps   :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :sense/range-bin      :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :sense/doppler-bin    :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+
+ ;; ── packaging robot (the packaging face — fab fleet; G2 dividend-coupled) ──────
+ {:db/ident :probot/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :probot/role          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :fibre-aligner :wire-bonder :inspector
+ {:db/ident :probot/force-class   :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :fab-process-laser (N1: no :weaponizable)
+ {:db/ident :probot/laser-class   :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; IEC 60825 class
+ {:db/ident :probot/edge-envelope :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :probot/dividend-cohort-ref :db/valueType :db.type/string :db/cardinality :db.cardinality/one}  ;; G2 (ADR-2606032130)
+ {:db/ident :probot/representative :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}  ;; G10
+
+ ;; ── packaging job (active-align / wire-bond; laser-safety + no-server-key) ─────
+ {:db/ident :pkg/id               :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :pkg/robot            :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :pkg/op               :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :active-align :wire-bond :inspect
+ {:db/ident :pkg/use              :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :alignment :soldering :inspection (G3 civilian)
+ {:db/ident :pkg/laser-class      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; IEC 60825
+ {:db/ident :pkg/interlock        :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G5 enclosure interlock
+ {:db/ident :pkg/attestation-ref  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; G5 safety attestation
+ {:db/ident :pkg/coupling-loss-db :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :pkg/member-sig       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; G7 member/operator signs
+ {:db/ident :pkg/server-held-key  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G7 false
+ {:db/ident :pkg/dry-run          :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G8 R0 always true
+
+ ;; ── reliability qualification (packaging face — Telcordia GR-468 SHAPE only) ──
+ {:db/ident :qual/id              :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :qual/device          :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :qual/suite           :db/valueType :db.type/keyword :db/cardinality :db.cardinality/many}  ;; :thermal-cycling :damp-heat :mechanical-shock :fibre-pull
+ {:db/ident :qual/acceptance      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :pass :fail
+ {:db/ident :qual/dry-run         :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G8 R0 always true — no live chamber
+ {:db/ident :qual/representative  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}]  ;; G10 — representative GR-468-SHAPE thresholds, not verified citations

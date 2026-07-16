@@ -1,0 +1,24 @@
+{
+  "source": "submarinecablemap.com (TeleGeography) — public dataset, ODbL-licensed. BOUNDED ILLUSTRATIVE SAMPLE shaped like the real feed; not the full export.",
+  "fetchedAt": "2026-06-01T00:00:00Z",
+  "cables": [
+    {"id": "echo", "name": "Echo", "length_km": 17184, "owners": ["Google", "Meta", "XL Axiata"], "rfs": 2024, "design_capacity_tbps": 160, "landing_point_ids": ["lp.eureka-us", "lp.changi-sg", "lp.jakarta-id"]},
+    {"id": "apricot", "name": "Apricot", "length_km": 12000, "owners": ["Google", "Meta", "NTT", "PLDT", "Chunghwa Telecom"], "rfs": 2025, "design_capacity_tbps": 190, "landing_point_ids": ["lp.maruyama-jp", "lp.toucheng-tw", "lp.baler-ph", "lp.changi-sg"]},
+    {"id": "sea-me-we-6", "name": "SEA-ME-WE 6", "length_km": 19200, "owners": ["consortium-smw6"], "rfs": 2025, "design_capacity_tbps": 100, "landing_point_ids": ["lp.tuas-sg", "lp.ras-ghareb-eg", "lp.port-said-eg", "lp.marseille-fr"]},
+    {"id": "jga-s", "name": "Japan-Guam-Australia South (JGA-S)", "length_km": 9500, "owners": ["RTI", "AARNet", "Google"], "rfs": 2020, "design_capacity_tbps": 36, "landing_point_ids": ["lp.maruyama-jp", "lp.guam", "lp.sydney-au"]}
+  ],
+  "landing_points": [
+    {"id": "lp.eureka-us", "name": "Eureka, CA", "country": "US", "lat": 40.80, "lon": -124.16},
+    {"id": "lp.changi-sg", "name": "Changi", "country": "SG", "lat": 1.39, "lon": 103.99, "chokepoints": ["malacca"]},
+    {"id": "lp.jakarta-id", "name": "Jakarta", "country": "ID", "lat": -6.12, "lon": 106.77},
+    {"id": "lp.maruyama-jp", "name": "Maruyama", "country": "JP", "lat": 34.97, "lon": 139.98, "chokepoints": ["luzon-strait"]},
+    {"id": "lp.toucheng-tw", "name": "Toucheng", "country": "TW", "lat": 24.86, "lon": 121.82, "chokepoints": ["luzon-strait"]},
+    {"id": "lp.baler-ph", "name": "Baler", "country": "PH", "lat": 15.76, "lon": 121.56, "chokepoints": ["luzon-strait"]},
+    {"id": "lp.tuas-sg", "name": "Tuas", "country": "SG", "lat": 1.32, "lon": 103.64, "chokepoints": ["malacca"]},
+    {"id": "lp.ras-ghareb-eg", "name": "Ras Ghareb", "country": "EG", "lat": 28.35, "lon": 33.08, "chokepoints": ["suez-red-sea"]},
+    {"id": "lp.port-said-eg", "name": "Port Said", "country": "EG", "lat": 31.26, "lon": 32.30, "chokepoints": ["suez-red-sea"]},
+    {"id": "lp.marseille-fr", "name": "Marseille", "country": "FR", "lat": 43.30, "lon": 5.37},
+    {"id": "lp.guam", "name": "Piti, Guam", "country": "GU", "lat": 13.46, "lon": 144.70},
+    {"id": "lp.sydney-au", "name": "Sydney", "country": "AU", "lat": -33.87, "lon": 151.21}
+  ]
+}

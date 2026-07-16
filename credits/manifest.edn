@@ -1,0 +1,34 @@
+;; credits — actor manifest (constitutional gates for the credit ledger + public-fund
+;; routing substrate). Companion to the legacy `actor-manifest.jsonld` (pre-substrate-
+;; boundary k8s-langserver shape, still pending the MIGRATION-TODO.md codemod) — this
+;; file is the mizuho/toritate/hikari-style `:actor/gates` declaration the charter-gate
+;; test suite (methods/test_charter_gates.cljc) checks against. Derived from CLAUDE.md
+;; § Purchase / Allocation Policy + § Anti-Fraud + MIGRATION-TODO.md substrate-boundary
+;; remediation list — no policy invented here, only what those two docs already state.
+{:actor/id "credits"
+ :actor/display-name "Credits — Credit Ledger & Public Fund Routing"
+ :actor/purpose "yoro.etzhayyim.com human-participation credit ledger. Earn (HC tasks / Murakumo compute) -> Purchase (fixed 30% platform fee) -> Spend (fixed 10% public-fund allocation). Anti-fraud rate limiting + reputation gate. NOT a bank, NOT a payment processor, NOT a credit-scoring / credit-history bureau (see non-goals)."
+ :actor/tier :tier-b
+ :actor/integrates ["hc" "shomei"]
+ :actor/adr ["2605192100" "2605192115" "2605192200"]
+ :actor/status :r0-first-slice
+ :actor/gates
+ [#:gate{:id "G1" :rule "Purchase platform fee is a fixed 30% (3000 bps) of gross_amount -- not user- or admin-adjustable per-transaction"}
+  #:gate{:id "G2" :rule "Spend public-fund allocation is a fixed 10% (1000 bps) of every spend amount"}
+  #:gate{:id "G3" :rule "Allocation destination MUST be one of the declared public-fund destinations; an unset preference resolves to the declared default (public-fund:common)"}
+  #:gate{:id "G4" :rule "Anti-fraud rate limits are enforced: spend <=60/hour, earn <=30/hour per user_id"}
+  #:gate{:id "G5" :rule "A single earn transaction >50 credits is rejected (high-value-earn reject) regardless of source"}
+  #:gate{:id "G6" :rule "HC-sourced reward requires approval_rate >=50% (reputation gate); below threshold is rejected"}
+  #:gate{:id "G7" :rule "Duplicate reward for the same task_id or session_id is rejected -- no double-reward"}
+  #:gate{:id "G8" :rule "The ledger's native asset is the internal 'credit' unit only -- no fiat currency (USD/JPY/EUR/GBP/CNY) is a representable settlement asset (MIGRATION-TODO Stripe/PayPal -> USDC boundary)"}
+  #:gate{:id "G9" :rule "No commercial payment-processor / ads-analytics vendor integration (Stripe, PayPal, Google Analytics/GA4, Meta Pixel PROHIBITED per MIGRATION-TODO substrate-boundary remediation list)"}
+  #:gate{:id "G10" :rule "A subject_did MUST be shomei-verified at Identity Assurance Level >=1 (self-attested) -- via shomei.methods.aggregate/aggregate, never reimplemented -- before PurchaseCredits/SpendCredits proceed (MIGRATION-TODO DID-bind authentication item)"}]
+ :actor/non-goals
+ {"description" "explicitly excluded scopes for this R0 first-slice"
+  "goals" {"N1" "NOT a credit-scoring / credit-history bureau (out of scope this slice)"
+           "N2" "NOT a bank / NOT a money-transmitter"
+           "N3" "NOT a live payment gateway (no real Stripe/PayPal/USDC transaction execution this slice -- pure computation only)"
+           "N4" "NOT the GCC Ethereum token contract layer (wallet/minter/treasury -- separate component)"
+           "N5" "NOT wired to a live ledger/database (in-memory pure functions only; kotoba-datomic wiring is later R1 work)"}}
+ :actor/cells []
+ :actor/lexicons []}

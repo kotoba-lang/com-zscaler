@@ -1,0 +1,18 @@
+{
+  "actor": "matsurigoto",
+  "module": "tax-assess",
+  "artifact": "tax-assess.wasm",
+  "built_with": "componentize-py 0.24.0",
+  "wit_world": "tax-assess",
+  "wit_package": "matsurigoto:egov@0.1.0",
+  "format": "wasm-component (WASI Preview 2)",
+  "cid_v1": "bafybeic4ri43wpe5qw3zksud53apa3l34siedqjszerelxpqawe2vcfvyu",
+  "cid_codec": "dag-pb (multi-block UnixFS)",
+  "size_bytes": 18415072,
+  "exec_tier": "T2 donated-mesh",
+  "browser_local": false,
+  "note": "Python component bundles CPython (~17.6MB) -> dag-pb CID, same watatsuna-precedent boundary (ADR-2606014600): not verifiable by the apex raw-CID gateway nor loadable by the browser-local ameno loader. Runs via jco transpile (node/mesh) or a full IPFS-node host.",
+  "spec_basis": "JP 所得税法 / 国税庁 速算表 (:representative brackets)",
+  "verified_output": "assess-income(5,000,000 JPY, JPN.income) -> liability 572,500 JPY, effective_rate 0.1145 (matches the published JP quick-calc table); receipt.proof unsigned (G1)",
+  "signing": "none — SERVER_HELD_AUTHORITY=false; a filing receipt is returned unsigned (G1 no-operator-master-key)"
+}

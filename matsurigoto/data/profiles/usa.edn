@@ -1,0 +1,20 @@
+;; Country profile — USA United States (principal B). ADR-2606062300. sourcing :representative.
+;; HONEST federalism note: the US has NO national residence registry and NO federal corporate
+;; registry — residency is unregistered and incorporation is per-STATE. Those services bind to
+;; the closest real organ (SSA / a state Secretary of State) and are flagged in :notes.
+{:country-profile/iso3 "USA" :country-profile/name "United States"
+ :country-profile/operated-by ":adopting-government"
+ :country-profile/authority-mode ":supplied-to-state"
+ :country-profile/sourcing ":representative"
+ :country-profile/notes "No national residence registry (residency.move-in N/A — state/local only). No federal corp registry (corp.* is per-state; Delaware shown as exemplar)."
+ :country-profile/bindings
+ [{:bind/service "tax.income.file"             :bind/agency "Internal Revenue Service (IRS)"        :bind/legal-basis "Internal Revenue Code (26 U.S.C.)" :bind/national-spec "IRS Modernized e-File (MeF)" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:treasury:irs"}
+  {:bind/service "tax.corporate.file"          :bind/agency "Internal Revenue Service (IRS)"        :bind/legal-basis "26 U.S.C. (Subtitle A)"           :bind/national-spec "IRS MeF (1120 series)" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:treasury:irs"}
+  {:bind/service "tax.payment"                 :bind/agency "IRS / Bureau of the Fiscal Service"    :bind/legal-basis "26 U.S.C. 6302"                   :bind/national-spec "EFTPS (Electronic Federal Tax Payment System)" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:treasury:irs"}
+  {:bind/service "corp.incorporation.register" :bind/agency "State Secretary of State (e.g. Delaware Div. of Corporations)" :bind/legal-basis "State corporation law (e.g. Delaware General Corporation Law)" :bind/national-spec "State online filing + GLEIF LEI" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:state:delaware:corp"}
+  {:bind/service "passport.issue"              :bind/agency "U.S. Dept of State, Bureau of Consular Affairs" :bind/legal-basis "22 U.S.C. (Passport Act)"  :bind/national-spec "ICAO Doc 9303 ePassport / online renewal" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:state:consular"}
+  {:bind/service "id.national.issue"           :bind/agency "Social Security Administration (SSA)"  :bind/legal-basis "Social Security Act"              :bind/national-spec "SSN / my Social Security (no national ID card)" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:ssa"}
+  {:bind/service "benefit.pension.claim"       :bind/agency "Social Security Administration (SSA)"  :bind/legal-basis "Social Security Act (OASDI)"      :bind/national-spec "my Social Security" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:ssa"}
+  {:bind/service "benefit.unemployment.claim"  :bind/agency "State workforce agency (federal-state UI)" :bind/legal-basis "Social Security Act Title III + state UI law" :bind/national-spec "State UI portal" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:dol"}
+  {:bind/service "civil.birth.register"        :bind/agency "State vital records office (e.g. NYC DOHMH)" :bind/legal-basis "State law (no federal registry; model: Model State Vital Statistics Act)" :bind/national-spec "State vital records (CDC/NCHS standard)" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:state:vital-records"}
+  {:bind/service "civil.death.register"        :bind/agency "State vital records office" :bind/legal-basis "State law (Model State Vital Statistics Act)" :bind/national-spec "State vital records / EDRS (CDC/NCHS standard)" :bind/atlas-did "did:web:etzhayyim.com:gov:usa:state:vital-records"}]}

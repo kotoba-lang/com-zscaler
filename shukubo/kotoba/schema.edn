@@ -1,0 +1,41 @@
+;; shukubo 宿坊 — kotoba EAVT schema
+;; ADR-2606071600
+;; Pilgrim-lodging commons. NO :*/commission, :*/surge, :*/dynamic-price, or :*/guest-score /
+;; :*/host-rating attribute exists (G2/G12/G13) — only the SPACE's :stay/habitability is
+;; attested. :stay/no-surveil is an invariant true (G14). All state is kotoba Datoms (G6).
+
+[;; ───────────────────────────── :stay/* — a lodging offer ─────────────────────────────
+ {:db/ident :stay/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :stay/ring          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":commons | :internal | :external"}
+ {:db/ident :stay/kind          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":pilgrim-shukubo | :member-room | :mutual-aid-shelter | :actor-operated | :external-mirror"}
+ {:db/ident :stay/host-did      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :stay/title         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :stay/capacity      :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :stay/cost-mode     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":free | :cost-share | :fixed — never demand-priced (G13)"}
+ {:db/ident :stay/cost-minor    :db/valueType :db.type/long    :db/cardinality :db.cardinality/one :db/doc "flat; USDC minor (internal); 0 for free"}
+ {:db/ident :stay/habitability  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "the SPACE is attested (water/heat/egress/accessibility), never the person (G12)"}
+ {:db/ident :stay/no-surveil    :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one :db/doc "INVARIANT true — no in-stay cameras/biometrics (G14)"}
+ {:db/ident :stay/operator-url  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "external ring only: operator's OWN booking page (member self-books)"}
+ {:db/ident :stay/availability  :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":available | :unavailable | :unknown (:representative honesty, G10)"}
+ {:db/ident :stay/sourcing      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":authoritative | :representative | :synthesized (G10)"}
+
+ ;; ───────────────────────────── :booking/* — a reservation ─────────────────────────────
+ {:db/ident :booking/id         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :booking/stay       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :booking/guest-did  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "identity via encrypted envelope (G9)"}
+ {:db/ident :booking/ring       :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :booking/check-in   :db/valueType :db.type/instant :db/cardinality :db.cardinality/one}
+ {:db/ident :booking/check-out  :db/valueType :db.type/instant :db/cardinality :db.cardinality/one}
+ {:db/ident :booking/consent-ref :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "DID-signed consent (G1)"}
+ {:db/ident :booking/tithe-minor :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/doc "Ring-1: 10% TitheRouter (G7); 0 for commons/external"}
+ {:db/ident :booking/handoff-url :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "Ring-2 only: operator self-book URL; shukubo never charges (G2)"}
+ {:db/ident :booking/state      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":requested :consented :confirmed :self-book-handoff :settle-intent :completed :cancelled"}
+
+ ;; ───────────────────────────── :settle/* — Ring-1 settlement ─────────────────────────────
+ {:db/ident :settle/id          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :settle/booking     :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :settle/gross-minor :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :settle/commission-minor :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/doc "INVARIANT 0 — shukubo takes nothing (G2)"}
+ {:db/ident :settle/tithe-minor :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :settle/host-net-minor :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/doc "gross − tithe; to host directly (no platform cut)"}
+ {:db/ident :settle/signed      :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one :db/doc "member/host-signed (G8 no-server-key)"}]

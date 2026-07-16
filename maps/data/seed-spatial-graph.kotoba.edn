@@ -1,0 +1,53 @@
+;; maps — seed static-feature graph (ADR-2606064500)
+;; ============================================================================
+;; A BOUNDED, :representative illustrative seed — NOT full coverage. Every feature is
+;; tagged :representative (G3). Coordinates are real but rounded; this is a demonstration
+;; of the kotoba-native :feature/* model around the Tokyo Station anchor (the same anchor
+;; the maps-3d walkable streamer uses), NOT a planet-scale ingest.
+;;
+;; Absence of a feature means "not yet ingested", never "not present in the world" (G3).
+;;
+;; H3 CELLS ARE NOT IN THE SEED ON PURPOSE. The owning H3 cell at each resolution
+;; (:feature.cell/r2 … r12) is an INGEST-TIME derived index, stamped from the centroid by
+;; the TS adapter (src/kotoba-spatial.ts, h3-js) or by methods/ingest.py when an `h3` python
+;; package is present (ADR-2606064500 §2/§3). The seed carries the centroid (:feature/lat
+;; :feature/lon); the cell stamp is reproducible from it, so committing the cells would just
+;; duplicate derived state. analyze.py reports coverage off the centroids.
+;;
+;; Features are PUBLIC / OPEN geographic data (OSM ODbL-shaped). A feature is a PLACED THING,
+;; never a person (G9).
+;; ============================================================================
+
+[;; ───────────────────────────── ADMIN AREAS (region backbone) ─────────────────────────────
+ {:feature/id "feature.admin-area.jp"            :feature/label :admin-area :feature/name "Japan"        :feature/lat 36.2048 :feature/lon 138.2529 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+ {:feature/id "feature.admin-area.jp-13"         :feature/label :admin-area :feature/name "Tokyo"        :feature/lat 35.6895 :feature/lon 139.6917 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+ {:feature/id "feature.admin-area.jp-13-chiyoda" :feature/label :admin-area :feature/name "Chiyoda-ku"   :feature/lat 35.6940 :feature/lon 139.7536 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+
+ ;; ───────────────────────────── PLACES / STATIONS (Tokyo Station anchor) ─────────────────────────────
+ {:feature/id "feature.station.tokyo"            :feature/label :station :feature/name "Tokyo Station"    :feature/category "railway_station" :feature/lat 35.6812 :feature/lon 139.7671 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+ {:feature/id "feature.place.marunouchi"         :feature/label :place   :feature/name "Marunouchi"       :feature/category "district"        :feature/lat 35.6810 :feature/lon 139.7630 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+ {:feature/id "feature.place.kitte"              :feature/label :place   :feature/name "KITTE Marunouchi"  :feature/category "shopping"        :feature/lat 35.6796 :feature/lon 139.7647 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+
+ ;; ───────────────────────────── BUILDINGS (3D extrusion; height/levels first-class) ─────────────────────────────
+ {:feature/id "feature.building.marunouchi-bldg" :feature/label :building :feature/name "Marunouchi Building" :feature/lat 35.6809 :feature/lon 139.7644 :feature/height-m 179.0 :feature/levels 37 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+ {:feature/id "feature.building.shin-marunouchi" :feature/label :building :feature/name "Shin-Marunouchi Building" :feature/lat 35.6820 :feature/lon 139.7639 :feature/height-m 198.0 :feature/levels 38 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+ {:feature/id "feature.building.tokyo-st-marunouchi" :feature/label :building :feature/name "Tokyo Station Marunouchi Building" :feature/lat 35.6814 :feature/lon 139.7664 :feature/height-m 31.0 :feature/levels 3 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+
+ ;; ───────────────────────────── ROADS / RAIL ─────────────────────────────
+ {:feature/id "feature.road.eitai-dori"          :feature/label :road    :feature/name "Eitai-dori"        :feature/category "primary"  :feature/lat 35.6805 :feature/lon 139.7700 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+ {:feature/id "feature.railway.tokaido-shinkansen" :feature/label :railway :feature/name "Tōkaidō Shinkansen" :feature/category "high_speed" :feature/lat 35.6790 :feature/lon 139.7665 :feature/source :osm :feature/source-did "did:web:maps.etzhayyim.com:registry:osm" :feature/sourcing :representative}
+
+ ;; ───────────────────────────── TRANSIT (GTFS-shaped) + PORT/AIRPORT (registry breadth) ─────────────────────────────
+ {:feature/id "feature.airport.haneda"           :feature/label :airport :feature/name "Tokyo Haneda (HND/RJTT)" :feature/lat 35.5494 :feature/lon 139.7798 :feature/source :openflights :feature/source-did "did:web:maps.etzhayyim.com:registry:openflights" :feature/sourcing :representative}
+ {:feature/id "feature.port.tokyo"               :feature/label :port    :feature/name "Port of Tokyo"      :feature/lat 35.6178 :feature/lon 139.7795 :feature/source :ferry :feature/source-did "did:web:maps.etzhayyim.com:registry:osm:ferry" :feature/sourcing :representative}
+
+ ;; ───────────────────────────── LEGAL ENTITY + REGISTRY (the registry slice) ─────────────────────────────
+ {:feature/id "feature.legal-entity.mitsubishi-estate" :feature/label :legal-entity :feature/name "Mitsubishi Estate Co." :feature/category "corporation" :feature/lat 35.6809 :feature/lon 139.7644 :feature/source :gleif :feature/source-did "did:web:maps.etzhayyim.com:registry:gleif" :feature/sourcing :representative}
+
+ ;; ───────────────────────────── RELATIONS (topology — VAET-traversable) ─────────────────────────────
+ {:feature.rel/id "rel.owns.mitsubishi-marunouchi-bldg" :feature.rel/kind :owns-property :feature.rel/from "feature.legal-entity.mitsubishi-estate" :feature.rel/to "feature.building.marunouchi-bldg" :feature.rel/sourcing :representative}
+ {:feature.rel/id "rel.in-region.tokyo-st-chiyoda"      :feature.rel/kind :in-region     :feature.rel/from "feature.station.tokyo"                :feature.rel/to "feature.admin-area.jp-13-chiyoda" :feature.rel/sourcing :representative}
+
+ ;; ───────────────────────────── GEO ALIAS (multi-scheme region identity) ─────────────────────────────
+ {:geo.alias/id "alias.iso3166-1.jp"   :geo.alias/scheme :iso3166-1 :geo.alias/code "JP"    :geo.alias/canonical "feature.admin-area.jp"    :geo.alias/sourcing :representative}
+ {:geo.alias/id "alias.iso3166-2.jp-13" :geo.alias/scheme :iso3166-2 :geo.alias/code "JP-13" :geo.alias/canonical "feature.admin-area.jp-13" :geo.alias/sourcing :representative}]

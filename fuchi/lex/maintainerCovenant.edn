@@ -1,0 +1,25 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.maintainerCovenant"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A 信者 maintainer's covenant attestation — the eligibility gate for sustenance. NOT an investor agreement: no equity, no return, no ownership of payoff (G4/G5). Member-signed (no-server-key, G9)."
+   :record
+   {:type "object"
+    :required ["maintainerDid" "covenant" "tenureMonths" "hazardPermille" "ownsPayoff" "serverHeldKey"]
+    :properties
+    {:maintainerDid  {:type "string" :description "G4 — SBT-bound member DID. Required."}
+     :covenant       {:type "string" :enum ["outreach" "vowed"]
+                      :description "G4 INVARIANT — only outreach | vowed. anon / server are NOT enum members (conversion-gated §1.16, no-server-key)."}
+     :tenureMonths   {:type "integer" :description "勤続 months of mission service → :maintainer/tenure-months"}
+     :hazardPermille {:type "integer" :minimum 1000 :maximum 2000
+                      :description "[1000,2000] → 1.0..2.0 toil-hazard multiplier"}
+     :maintains      {:type "array" :items {:type "string"}
+                      :description "actor handles this maintainer keeps alive"}
+     :priorImputedUsdMicrosYr {:type "integer"
+                      :description "in-kind valuation of prior sustenance only; NEVER cash"}
+     :ownsPayoff     {:type "boolean" :const false
+                      :description "G5 INVARIANT — only false. The maintainer's work product is commons (payoff帰属 = etzhayyim)."}
+     :serverHeldKey  {:type "boolean" :const false
+                      :description "G9 / no-server-key INVARIANT — only false (ADR-2605231525)."}}}}}}

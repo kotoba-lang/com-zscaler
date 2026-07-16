@@ -1,0 +1,11 @@
+;; 20-actors/shukubo/schema.edn — Datomic/Datascript compatible schema
+;; definitions for this actor's lex/*.edn files (auto-accumulated by the Phase 4
+;; edn-datomize fan-out, adapted from manifest/edn-datomize.cljs wrap-map!).
+;; :db/ident attribute list. Datomic-specific keys (:db.install/_attribute etc.) unused.
+;; manifest.edn is EXCLUDED from this pass (5 shared cross-cutting consumer tools
+;; under 70-tools/src/etzhayyim/ need a tolerant-read patch first; see commit msg).
+;; kotoba/schema.edn is NOT accumulated here: it is already a proper Datomic schema
+;; tx-data vector (each entry a {:db/ident ...} attribute def) -- the canonical
+;; "already queryable" shape, left untouched.
+
+[#:db{:ident :lex.booking/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.booking/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.booking/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex.host/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.host/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.host/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex.stay/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.stay/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.stay/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

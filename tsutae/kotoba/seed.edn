@@ -1,0 +1,11 @@
+;; tsutae 伝え — kotoba seed datoms (ADR-2605261300 R0 scaffold)
+;; One representative device order + an SBT-holder, so the actor has a non-empty
+;; Datom log to query in R0. NOT a real order; no settlement broadcast (G11/G13).
+
+[{:sbt/holder-did "did:web:member.example.etzhayyim.com" :sbt/active true}
+
+ {:device-order/id "do.seed.0001"
+  :device-order/buyer-did "did:web:member.example.etzhayyim.com"
+  :device-order/specs "伝え handheld R1 — ≤200g, open RISC-V, 6.1in LCD, removable LTE, LFP 3000mAh"
+  :device-order/soc "StarFive-JH7110"
+  :device-order/state :draft}]

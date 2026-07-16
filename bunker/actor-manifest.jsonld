@@ -1,0 +1,332 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:bunker.etzhayyim.com",
+  "actors": [
+    {
+      "description": "Very Low Sulphur Fuel Oil (0.50% S) — IMO 2020 compliant",
+      "displayName": "VLSFO Supply",
+      "path": "fuel:vlsfo"
+    },
+    {
+      "description": "LNG fuel supply — zero SOx, 25% less CO₂",
+      "displayName": "LNG Bunkering",
+      "path": "fuel:lng"
+    },
+    {
+      "description": "Methanol, ammonia, hydrogen, biofuel bunkering",
+      "displayName": "Alternative Fuels",
+      "path": "fuel:alternative"
+    },
+    {
+      "description": "Annex VI sulphur cap monitoring, ECA zone enforcement",
+      "displayName": "MARPOL Compliance",
+      "path": "compliance:marpol"
+    },
+    {
+      "description": "CO₂/SOx/NOx per voyage, CII rating, EU MRV reporting",
+      "displayName": "Emissions Tracker",
+      "path": "emissions:tracker"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Bunker Supply agent. You manage marine fuel procurement, BDN documentation, fuel quality testing, MARPOL sulphur compliance, and vessel fuel consumption/emission tracking. The global sulphur cap is 0.50% (0.10% in ECAs). Track deliveries at ports, test results (sulphur, vanadium, cat fines), and calculate CO₂ emissions per voyage.",
+  "description": "Marine fuel procurement, Bunker Delivery Note (BDN) management, fuel sample testing, MARPOL sulphur compliance, vessel consumption tracking, CO₂ emission calculation.",
+  "displayName": "Bunker Supply & MARPOL Compliance",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "MARPOL Annex VI",
+      "IMO 2020 Sulphur Cap",
+      "IMO GHG Strategy",
+      "EU MRV",
+      "IMO DCS"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "bunker",
+  "nanoid": "bnkr0001",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:BunkerDelivery) RETURN d.fuelType AS fuel, sum(d.quantityMt) AS totalMt, avg(d.sulphurContentPct) AS avgSulphur, count(d) AS deliveries ORDER BY totalMt DESC LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "deliveryStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (fs:FuelSample {sampleStatus: 'failed'}) RETURN fs.deliveryId AS delivery, fs.sulphurPct AS sulphur, fs.catFinesPpm AS catFines, fs.labName AS lab LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "failedSamples"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:VesselFuelConsumption) RETURN c.vesselImo AS vessel, sum(c.consumedMt) AS totalFuel, sum(c.co2EmissionTonnes) AS totalCo2 LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "emissions"
+        },
+        {
+          "args": {
+            "message": "Bunker & emissions report.\n\nDeliveries by fuel type:\n$deliveryStats.rows\n\nFailed fuel samples:\n$failedSamples.rows\n\nEmissions by vessel:\n$emissions.rows\n\nAssess MARPOL compliance status, flag quality concerns, and summarize fleet emissions."
+          },
+          "depends_on": [
+            "deliveryStats",
+            "failedSamples",
+            "emissions"
+          ],
+          "fn": "agent.chat",
+          "id": "analyze"
+        },
+        {
+          "args": {
+            "template": "Bunker report: $analyze.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */12 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:BunkerDelivery {deliveryId: $input.record.deliveryId}) RETURN d.sulphurContentPct AS sulphur, d.vesselImo AS vessel, d.portLocode AS port LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "checkCompliance"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.bunker.fuelSample"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:BunkerDelivery {deliveryId: $input.deliveryId}) RETURN d.vertex_id, d.rkey, d.repo, d.did, d.status, d.props, d._seq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "delivery"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunker.supply.getDelivery",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:BunkerDelivery) RETURN d.vertex_id, d.rkey, d.repo, d.did, d.status, d.props, d._seq ORDER BY d.deliveryDate DESC LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "deliveries"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunker.supply.listDeliveries",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (fs:FuelSample {deliveryId: $input.deliveryId}) RETURN fs.vertex_id, fs.rkey, fs.repo, fs.did, fs.status, fs.props, fs._seq LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "samples"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunker.supply.listSamples",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:VesselFuelConsumption {vesselImo: $input.vesselImo}) RETURN c.vertex_id, c.rkey, c.repo, c.did, c.status, c.props, c._seq ORDER BY c.periodStart DESC LIMIT 30"
+          },
+          "fn": "graph.query",
+          "id": "consumption"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunker.supply.getConsumption",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:BunkerDelivery {vesselImo: $input.vesselImo}) RETURN d.sulphurContentPct AS sulphur, d.fuelType AS fuel, d.portLocode AS port, d.deliveryDate AS date ORDER BY d.deliveryDate DESC LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "deliveries"
+        },
+        {
+          "args": {
+            "sql": "MATCH (fs:FuelSample)-[:TESTED_FROM]->(d:BunkerDelivery {vesselImo: $input.vesselImo}) WHERE fs.sampleStatus = 'failed' RETURN fs.vertex_id, fs.rkey, fs.repo, fs.did, fs.status, fs.props, fs._seq LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "samples"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunker.supply.checkMarpolCompliance",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:BunkerDelivery) RETURN count(d) AS deliveries LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "stats"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunker.health",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "bunker",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.bunker.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "bnkr0001",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.bunker.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "bunker-delivery",
+      "fuel-testing",
+      "marpol-compliance",
+      "emission-tracking"
+    ],
+    "description": "Marine fuel management — bunker delivery documentation (BDN), fuel quality testing (sulphur/vanadium/cat fines), MARPOL Annex VI sulphur cap compliance (0.50% global, 0.10% ECA), vessel consumption tracking, CO₂ emission calculation per voyage.",
+    "displayName": "Bunker Supply & MARPOL Compliance",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.bunker.delivery",
+        "com.etzhayyim.apps.bunker.fuelSample",
+        "com.etzhayyim.apps.bunker.consumption",
+        "com.etzhayyim.apps.vessel.voyage",
+        "com.etzhayyim.apps.vessel.portCall"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

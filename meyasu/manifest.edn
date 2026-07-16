@@ -1,0 +1,18 @@
+;; meyasu 目安 — unified arbitrage / supply-demand intel orchestrator manifest
+{:actor/id "meyasu"
+ :actor/glyph "目安"
+ :actor/did "did:web:meyasu.etzhayyim.com"
+ :actor/role "統合 arbitrage アクター — fuses kakaku price-spread + mitooshi forecast + ossekai-style aggregate publication into one public-good buyer-transparency + supply-resilience intel surface"
+ :actor/tier "B"
+ :actor/integrates ["kakaku" "mitooshi" "ossekai" "okaimono" "danjo"]
+ :actor/cells
+ [{:cell/id "fuse"    :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "publish" :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "persist" :cell/kind :datalog   :cell/runtime :kotoba}]
+ :actor/gates
+ {"G1" "non-speculative — buyer-transparency + supply-resilience, never a trade/price target"
+  "G2" "distribution-respecting — a consumed forecast must be a distribution (point_asserted false) with a resilience use"
+  "G3" "aggregate-first — published intel is anonymized aggregate"
+  "G4" "non-adjudicating — attention cards routed to a planner (okaimono buyers / danjo resilience); meyasu states, the planner decides"
+  "G5" "Murakumo-only inference (kotoba llm host binding)"
+  "G6" "no-server-key — live publication operator-gated"}}

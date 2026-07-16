@@ -1,0 +1,27 @@
+;; kotoba.app.edn — actor:matsurigoto KOTOBA Mesh application manifest (observatory on-kse, ADR-2606230001 §4).
+{:kotoba.app/name    "matsurigoto"
+ :kotoba.app/version "0.1.0"
+ :kotoba.app/components
+ [{:name     "matsurigoto"
+   :src      "methods/mesh.clj"                  ; Clojure default → run + on-kse
+   :scale    1
+   :triggers [{:type :kse :topic "etzhayyim/actor/matsurigoto"}]
+   :requires #{:cap/kqe}}
+  ;; self-publication: the actor periodically drafts its OWN statecraft HISTORY (executed
+  ;; service slices — tax-collect 源泉徴収納付 runs, civil-registry issuance batches) +
+  ;; PROCEDURES (the COFOG-classed service standards it implements, each with its official
+  ;; public spec-basis) as AUTHORITY-BEARING DRY-RUN social posts, and — once it holds its own
+  ;; mesh-runtime key (self-custodied, no-operator-master-key, ADR-2605231525) under a member
+  ;; CACAO leash — signs + emits them itself. This publishes the Kingdom's OWN statecraft (神の
+  ;; 王国 統治機構, Charter §0.1) + the portable COFOG standard, transparently (§1.12, 1 SBT=1
+  ;; vote, on-chain) — NOT a 'NOT the government' disclaimer. Live broadcast stays Council Lv6+
+  ;; + operator + external-authority-signature gated (§1.12/G11); R0 = dry-run. Authority is
+  ;; ALWAYS the Council multisig or the adopting state's keys, never a platform/operator key
+  ;; (G1 no-operator-master-key). ADR-2606272355.
+  {:name     "matsurigoto-social"
+   :src      "methods/social.cljc"
+   :scale    1
+   :triggers [{:type :tick :cron "0 */6 * * *"}                 ; every 6h: self-publish backlog
+              {:type :kse  :topic "etzhayyim/actor/matsurigoto/publish"}]
+   :requires #{:cap/kqe :cap/atproto}}]
+ :kotoba.app/placement {:spread :zone :require {:tier "edge"}}}

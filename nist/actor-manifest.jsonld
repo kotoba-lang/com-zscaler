@@ -1,0 +1,298 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:nist.etzhayyim.com",
+  "actors": [
+    {
+      "description": "GV.OC/RM/RR/PO/OV/SC — 31 subcategories",
+      "displayName": "Govern (GV)",
+      "path": "csf:govern"
+    },
+    {
+      "description": "ID.AM/RA/IM — 22 subcategories",
+      "displayName": "Identify (ID)",
+      "path": "csf:identify"
+    },
+    {
+      "description": "PR.AA/AT/DS/PS/IR — 28 subcategories",
+      "displayName": "Protect (PR)",
+      "path": "csf:protect"
+    },
+    {
+      "description": "DE.CM/AE — 17 subcategories",
+      "displayName": "Detect (DE)",
+      "path": "csf:detect"
+    },
+    {
+      "description": "RS.MA/AN/CO/MI — 18 subcategories",
+      "displayName": "Respond (RS)",
+      "path": "csf:respond"
+    },
+    {
+      "description": "RC.RP/CO — 10 subcategories",
+      "displayName": "Recover (RC)",
+      "path": "csf:recover"
+    },
+    {
+      "description": "Tier 3→4 gap per subcategory × 6 dimensions",
+      "displayName": "Tier Gap Analyzer",
+      "path": "tier:gap"
+    },
+    {
+      "description": "SP 800-171 r2, 14 families, 110 practices",
+      "displayName": "CMMC L2",
+      "path": "cmmc:level2"
+    },
+    {
+      "description": "Sector-specific profile templates",
+      "displayName": "SP 1302 Community Profiles",
+      "path": "sp:communityProfile"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the NIST CSF agent. You manage NIST Cybersecurity Framework 2.0 with 6 Functions (Govern/Identify/Protect/Detect/Respond/Recover), 106 subcategories, Tier 3→4 gap analysis, and CMMC Level 2 cross-mapping. Query the graph for CSF subcategories, tier gaps, and CMMC practices. Post compliance insights.",
+  "description": "NIST Cybersecurity Framework 2.0 — 6 Function logical actors (GV/ID/PR/DE/RS/RC), 106 subcategories, Tier Gap analysis, CMMC L2 cross-mapping, SP 1302 Community Profiles.",
+  "displayName": "NIST CSF 2.0 Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "NIST CSF 2.0",
+      "CMMC L2"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "nist",
+  "nanoid": "n1st0csf",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (g:NistTierGap) RETURN g.dimension AS dimension, count(g) AS total, sum(CASE WHEN g.tier3State <> g.tier4State THEN 1 ELSE 0 END) AS gaps LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "gapStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (m:NistCmmcCsfMapping) WHERE m.gap = true RETURN m.cmmcFamily AS family, count(m) AS uncovered LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "cmmcGaps"
+        },
+        {
+          "args": {
+            "message": "Analyze NIST CSF tier gap status and CMMC coverage gaps.\n\nTier 3→4 gaps by dimension:\n$gapStats.rows\n\nCMMC L2 uncovered subcategories by family:\n$cmmcGaps.rows\n\nProvide a concise security posture summary with top 3 priority recommendations."
+          },
+          "depends_on": [
+            "gapStats",
+            "cmmcGaps"
+          ],
+          "fn": "agent.chat",
+          "id": "analyze"
+        },
+        {
+          "args": {
+            "template": "NIST CSF 2.0 posture update: $analyze.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 0/12 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (a:NistCsfAssessment)-[:ASSESSES]->(s:NistCsfSubcategory) WHERE a.assessedAt > datetime() - duration('P7D') RETURN s.code AS subcategory, a.score AS score, s.name AS name LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "assessment"
+        },
+        {
+          "args": {
+            "message": "New CSF assessment submitted: $input.record\n\nRecent assessments:\n$assessment.rows\n\nIdentify any subcategories scoring below threshold and recommend remediation actions."
+          },
+          "fn": "agent.chat",
+          "id": "evaluate"
+        },
+        {
+          "args": {
+            "template": "MERGE (i:NistInsight {did: $did}) SET i.analysis = $evaluate.text, i.repo = $did, i.collection = 'com.etzhayyim.apps.nist.insight'"
+          },
+          "fn": "graph.write",
+          "id": "writeInsight"
+        },
+        {
+          "args": {
+            "template": "New data added: $evaluate.text"
+          },
+          "depends_on": [
+            "evaluate"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.nist.csfAssessment"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (s:NistCsfSubcategory) RETURN count(s) AS subcategories LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "stats"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.nist.health",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "nist",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.nist.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "n1st0csf",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are NIST CSF 2.0 Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.nist.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "csf-assessment",
+      "tier-gap-analysis",
+      "cmmc-mapping",
+      "compliance-evaluation"
+    ],
+    "description": "NIST Cybersecurity Framework 2.0 — 6 Function actors, 106 subcategories, Tier 3→4 gap analysis, CMMC L2 mapping, cross-framework compliance.",
+    "displayName": "NIST CSF 2.0 Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.nist.csfAssessment",
+        "com.etzhayyim.apps.completer.evaluation"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

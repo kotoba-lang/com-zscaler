@@ -1,0 +1,25 @@
+{:lexicon 1
+ :id "com.etzhayyim.shionome.capitalFlowObservation"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A FACTUAL OBSERVATION of capital movement between public capital buckets (asset-class / sector / region / theme), traced from public market data (exchange data / fund-flow reports / central-bank releases / index providers). OBSERVATION only (G2, トレードはしない): buy / sell / long / short / recommend / target-price are NOT enum members and the flow is never a trade instruction. Sourced (G3): ≥2 public-source citations. NON-advisory: records where capital MOVED, never what to do."
+   :record
+   {:type "object"
+    :required ["flowId" "source" "target" "kind" "magnitude" "unit" "noTradeNotice" "sources" "sourcing"]
+    :properties
+    {:flowId   {:type "string" :description "→ :flow/id"}
+     :source   {:type "string" :description "→ :bucket/id money left (or 'external' for a pure inflow)"}
+     :target   {:type "string" :description "→ :bucket/id money went to (or 'external' for a pure outflow)"}
+     :kind     {:type "string"
+                :enum ["rotation" "fund-inflow" "fund-outflow" "price-move" "cross-correlation" "volume-shift" "yield-shift" "fx-flow"]
+                :description "G2 INVARIANT — FACTUAL observation kinds only. buy / sell / long / short / recommend / overweight / target-price are NOT enum members (トレードはしない)."}
+     :magnitude {:type "number" :description "observed magnitude in :unit; non-negative."}
+     :unit     {:type "string" :description "usd-bn / pct / bps / zscore"}
+     :asOf     {:type "integer" :description "G10 — observed-at; append-only."}
+     :noTradeNotice {:type "boolean" :const true
+                     :description "G2 INVARIANT — only true. An observation, never a trade instruction."}
+     :sources  {:type "array" :items {:type "string"} :minLength 2
+                :description "G3 INVARIANT — ≥2 public-source URLs/CIDs (exchange / fund-flow report / central bank / index provider)."}
+     :sourcing {:type "string" :enum ["representative" "authoritative"]}}}}}}

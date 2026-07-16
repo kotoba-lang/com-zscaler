@@ -1,0 +1,65 @@
+;; ugachi 穿ち — actor manifest (clj-native, kotoba-Datom-native)
+;; The §2(l) extraction RISK-GATE: 採掘・採油は一律禁止ではない (ADR-2606161700).
+;; ASSESSMENT + R0 DESIGN ONLY — ugachi never digs. ADR-2606161800 (R0).
+{:actor/id        "ugachi"
+ :actor/glyph     "穿"
+ :actor/tier      :tier-b
+ :actor/integrates ["abaki" "busshi" "inochi" "kamado" "kanayama"]
+ :actor/domain    "ugachi.etzhayyim.com"
+ :actor/kind      :extraction-risk-gate
+ :actor/purpose   "The §2(l) multi-generational (子・孫) × wellbecoming extraction RISK-GATE. A proposed extraction project (mine/well/quarry/brine) is authorized ONLY by passing the risk gate (ADR-2606161700): refuse on no-consent / fossil net-positive carbon / monopoly entrenchment / irreversible multi-gen harm; route to recovery (kanayama) when a viable lower-risk path exists; else propose-r0 (design-only, Transparent-Force + consent). ASSESSMENT + R0 DESIGN ONLY — ugachi never digs (採掘しない); live actuation is Council Lv7+ gated. Counterpart of kanayama (recovery); consumes busshi/rare-earth-coverage concentration; routes to kamado (carbon transition) / abaki (de-monopolization) / inochi (restoration)."
+ :actor/status    :r0
+ :actor/adr       "2606161800"
+ :actor/related   ["2606161700" "2606161730" "2605252400" "2606051500" "2605192245" "2606073100"]
+
+ :actor/charter-rider
+ {:rider/version "3.2"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "assessment-r0-only-never-digs" :gate/rule "Assessment + R0 design only; no actuation/extraction method; :ugachi/actuate + :ugachi/extract unrepresentable (test-enforced)"}
+  {:gate/id "G2" :gate/name "risk-axis-sole-basis" :gate/rule "§2(l) multi-gen 子・孫 × wellbecoming assessment is the sole authorization basis; :ugachi.gate/by-industry-name unrepresentable"}
+  {:gate/id "G3" :gate/name "refuse-monopoly-or-irreversible" :gate/rule "Refuse on monopoly entrenchment (§1.12) OR irreversible multi-gen harm (§2(d)); a diversifying project is favorable"}
+  {:gate/id "G4" :gate/name "transparent-force-conditions" :gate/rule "Permitted projects require on-chain monitor + open-source + 1 SBT=1 vote (§1.12.B)"}
+  {:gate/id "G5" :gate/name "land-sovereignty-consent" :gate/rule "Tree of Life land sovereignty + community consent required (ADR-2605192245); no consent → refuse"}
+  {:gate/id "G6" :gate/name "carbon-balance-2d" :gate/rule "Fossil→combusted net-positive carbon → refuse (§2(d); kamado measured instance)"}
+  {:gate/id "G7" :gate/name "no-server-key-no-actuation" :gate/rule "Platform holds no key; live actuation is Council Lv7+ gated, never by ugachi"}
+  {:gate/id "G8" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms; verdict datoms flagged :ugachi/derived + :ugachi/sourcing"}
+  {:gate/id "G9" :gate/name "synthetic-seed" :gate/rule "R0 seed is :synthetic; real-project assessment is an operator/Council step"}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "Never actually extracts/digs/drills (R0 assessment + design; live actuation unrepresentable)"}
+  {:n/id "N2" :n/rule "Not a by-name mining ban AND not a rubber stamp — a real risk gate (refuses AND permits-design)"}
+  {:n/id "N3" :n/rule "Conflict/weapons-mineral sourcing without attestation is out of scope (kanayama N3/N8 echo)"}
+  {:n/id "N4" :n/rule "Irreversible-biosphere / deep-sea-habitat projects auto-refuse (kanayama N7 echo)"}
+  {:n/id "N5" :n/rule "No person-level data; aggregate/project-level only"}]
+
+ :actor/methods
+ [{:method/id "ugachi_edn" :method/file "methods/ugachi_edn.cljc" :method/role "seed loader + classify"}
+  {:method/id "gate"       :method/file "methods/gate.cljc"       :method/role "verdict → assess → render-datoms → render-report (+ bb CLI)"}
+  {:method/id "bridge"     :method/file "methods/bridge.cljc"     :method/role "Wave 2 (ADR-2606161830): ground monopoly-effect in busshi 物資 concentration → ground-and-assess (+ bb CLI)"}
+  {:method/id "kotoba"     :method/file "methods/kotoba.cljc"     :method/role "Wave 2 (ADR-2606170900): content-addressed append-only STEWARDSHIP LEDGER (tx-cid/make-tx/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun"    :method/file "methods/autorun.cljc"    :method/role "Wave 2 (ADR-2606170900): deterministic heartbeat — assess → append verdict datoms to the ledger (+ bb CLI)"}
+  {:method/id "ie_flow"    :method/file "methods/ie_flow.cljc"    :method/role "SoS score (ADR-2606212200): embeds shared etzhayyim.ie-flow.metrics — assessment → measured flow events (multigen-risk rectified into stewardship verdicts) → order-index/score in the SoS scoreboard; record-flow! to 80-data/ie-flow/ugachi/ (gitignored)"}]
+
+ :actor/lex
+ [{:lex/id "extractionVerdict"}
+  {:lex/id "stewardshipGate"}]
+
+ :actor/ledger
+ {:ledger/file "data/persisted/ugachi.stewardship.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/note "Generated stewardship ledger of §2(l) gate verdicts; tamper-evident (verify-chain); no-server-key; a record of DECISIONS, never a target-list."}
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.ugachi.edn"
+  :seed/sourcing :synthetic
+  :seed/verdicts [:refuse :route-to-recovery :propose-r0 :insufficient-evidence]}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/ugachi/run_tests.sh"
+  :suites ["methods/test_ugachi_edn.cljc" "methods/test_gate.cljc" "methods/test_bridge.cljc"
+           "methods/test_kotoba.cljc" "methods/test_autorun.cljc"]}}

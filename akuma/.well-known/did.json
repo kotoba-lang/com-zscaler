@@ -1,0 +1,14 @@
+{
+  "@context" : [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1" ],
+  "id" : "did:web:etzhayyim.com:actor:akuma",
+  "alsoKnownAs" : [ "at://akuma.etzhayyim.com", "https://github.com/etzhayyim/com-etzhayyim-akuma", "rad:bafkreihlnpzkoz5sxib6k5fke5ihmvlwyynbef3xte6qtwlxxiedjqmfju", "did:web:etzhayyim.github.io:com-etzhayyim-akuma" ],
+  "service" : [ {
+    "id" : "did:web:etzhayyim.com:actor:akuma#atproto_pds",
+    "type" : "AtprotoPersonalDataServer",
+    "serviceEndpoint" : "https://pds.etzhayyim.com"
+  }, {
+    "id" : "did:web:etzhayyim.com:actor:akuma#aozora",
+    "type" : "AozoraAppView",
+    "serviceEndpoint" : "https://aozora.app"
+  } ]
+}

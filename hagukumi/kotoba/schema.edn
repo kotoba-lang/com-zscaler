@@ -1,0 +1,148 @@
+;; hagukumi 育み — kotoba EAVT schema
+;; ADR-2605261030 · R0 scaffold
+;; Defines the schema for care session data (encrypted attestations, consent, caregiver registry).
+
+[;; ───────────────────────────── :caregiverAttestation/* ─────────────────────────────
+ {:db/ident :caregiverAttestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for caregiver attestation (Council-vetted)"}
+ {:db/ident :caregiverAttestation/caregiverDid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Caregiver DID"}
+ {:db/ident :caregiverAttestation/trainingCertification
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Training program completion + certificate hash"}
+ {:db/ident :caregiverAttestation/backgroundCheckCid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of background check attestation"}
+ {:db/ident :caregiverAttestation/councilApprovalDate
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 8601 Council approval date"}
+ {:db/ident :caregiverAttestation/specializations
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Caregiver specialization (child-infancy, dementia, post-stroke, etc.)"}
+
+ ;; ───────────────────────────── :careSessionAttestation/* ─────────────────────────────
+ {:db/ident :careSessionAttestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for care session attestation"}
+ {:db/ident :careSessionAttestation/careRecipientPseudonymDid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "30-day rotating pseudonym DID of care recipient"}
+ {:db/ident :careSessionAttestation/caregiverDid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Caregiver DID (Council-vetted)"}
+ {:db/ident :careSessionAttestation/sessionStartTime
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 8601 session start timestamp"}
+ {:db/ident :careSessionAttestation/sessionEndTime
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 8601 session end timestamp (optional)"}
+ {:db/ident :careSessionAttestation/encryptedPayloadCid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of XChaCha20-Poly1305 encrypted session detail (REQUIRED)"}
+ {:db/ident :careSessionAttestation/consentRecordCid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of consent record (REQUIRED per G1/G3)"}
+ {:db/ident :careSessionAttestation/careType
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Care type (child-daily-care, elder-companionship, chronic-continuity, respite-support, meal-coordination)"}
+ {:db/ident :careSessionAttestation/aggregateSessionDurationMinutes
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Aggregate public field: session duration in minutes"}
+ {:db/ident :careSessionAttestation/aggregateActivityCategory
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Aggregate public field: activity category (play, companionship, meal, etc.)"}
+ {:db/ident :careSessionAttestation/emergencyTriggered
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Aggregate public field: whether mitate emergency was triggered"}
+ {:db/ident :careSessionAttestation/mitateCareEscalationLevel
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Aggregate public field: mitate escalation level (0 = routine, 1 = caregiver-contact, 2 = emergency)"}
+ {:db/ident :careSessionAttestation/humanCaregiverCoAttestedEvery30Min
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Robotics gate (G9): human caregiver co-attestation every 30 min"}
+
+ ;; ───────────────────────────── :consentRecord/* ─────────────────────────────
+ {:db/ident :consentRecord/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for consent record"}
+ {:db/ident :consentRecord/careRecipientPseudonymDid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "30-day rotating pseudonym DID of care recipient"}
+ {:db/ident :consentRecord/guardianDidIfUnder14
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Parent/legal-guardian DID if care-recipient <14 (REQUIRED per G17)"}
+ {:db/ident :consentRecord/consentType
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Consent scope (daily-care, companionship, chronic-continuity, respite, remote-robotics, emergency-escalation-mitate)"}
+ {:db/ident :consentRecord/consentTimestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 8601 when consent was signed (on-chain)"}
+ {:db/ident :consentRecord/revokedAt
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 8601 when consent was revoked (null if active)"}
+ {:db/ident :consentRecord/humanReadableSummary
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Natural-language consent scope summary"}
+
+ ;; ───────────────────────────── :silenCareReview/* ─────────────────────────────
+ {:db/ident :silenCareReview/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for Silen Care Review (Council quarterly audit)"}
+ {:db/ident :silenCareReview/reviewPeriodStart
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 8601 audit period start (quarterly)"}
+ {:db/ident :silenCareReview/reviewPeriodEnd
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO 8601 audit period end"}
+ {:db/ident :silenCareReview/councilAttestation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Council 5-of-7 Safe attestation (Lv6+ required)"}
+ {:db/ident :silenCareReview/cohortRatioChildElderMultiGen
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Balance ratio: child : elder : multi-generational sessions"}
+ {:db/ident :silenCareReview/privacyFindingsCid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of Council privacy audit findings (if any)"}
+ {:db/ident :silenCareReview/wellbecomingViolations
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "Session IDs flagged for Wellbecoming concern"}
+ ]

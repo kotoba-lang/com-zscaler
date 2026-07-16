@@ -1,0 +1,25 @@
+{:lexicon 1
+ :id "com.etzhayyim.shionome.networkPost"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A DRY-RUN social post narrating an AGGREGATE capital-flow finding (net flow / rotation pair / cross-asset regime). Mirror-stance (G5): opens with the observation disclaimer, never a trade signal, never financial advice. NO-TRADE (G2, トレードはしない): noTradeNotice true AND the body is scanned for trade/advisory tokens. Member-signed (G7): the server never signs. Outward-gated (G8): status is dry-run only at R0."
+   :record
+   {:type "object"
+    :required ["postId" "subject" "body" "status" "isMirror" "noTradeNotice" "serverHeldKey" "sources"]
+    :properties
+    {:postId  {:type "string" :description "→ :post/id"}
+     :subject {:type "string" :description "the aggregate finding (netflow / rotation / regime), not a security/ticker"}
+     :body    {:type "string" :description "the narration; opens with the observation + no-trade disclaimer; scanned for trade tokens"}
+     :status  {:type "string" :const "dry-run"
+               :description "G8 INVARIANT — only 'dry-run' at R0. 'published' is not a valid value; live posting needs Council Lv6+ + operator + member signature."}
+     :isMirror {:type "boolean" :const true
+                :description "G5 INVARIANT — only true. An observational mirror, never a trade signal."}
+     :noTradeNotice {:type "boolean" :const true
+                     :description "G2 INVARIANT — only true (トレードはしない)."}
+     :serverHeldKey {:type "boolean" :const false
+                     :description "G7 / no-server-key INVARIANT — only false. The member signs; the server never does (ADR-2605231525)."}
+     :author  {:type "string" :description "SBT-bound member DID (required for any gated live post)"}
+     :sources {:type "array" :items {:type "string"} :minLength 2
+               :description "G3 — the post carries the same ≥2 public-source citations as the finding."}}}}}}

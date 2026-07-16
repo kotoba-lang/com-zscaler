@@ -1,0 +1,8 @@
+# Build artifacts — large / reproducible from app.py + wit/ via build.sh.
+# The component (~17.6 MB, bundles CPython) is NOT committed; it lives on IPFS
+# (CID recorded in watatsuna-actor.meta.json) / the donated mesh.
+watatsuna-actor.wasm
+transpiled/
+_bindings/
+node_modules/
+package-lock.json

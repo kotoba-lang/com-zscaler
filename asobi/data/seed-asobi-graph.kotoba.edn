@@ -1,0 +1,101 @@
+;; asobi 遊び — seed play/expression graph (real, PUBLIC cultural commons + enclosures)
+;; ADR-2606073200 · vocabulary: asobi-ontology (00-contracts/schemas/asobi-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - asobi is a PARTICIPATION / ACCESS map of the freed-time telos, NEVER an engagement /
+;;     attention / popularity ranking. NO retention metric, NO recommend-for-time, NO
+;;     per-work popularity score. Addictive/spectacle design is unrepresentable (§1.13).
+;;   - The lens is PARTICIPATION-openness (who can take part) vs ENCLOSURE (paywall /
+;;     attention-platform / lock), routed to OPENING. karma lives ONLY on edges
+;;     (:en/access-load; N1).
+;;
+;; SOURCING: license / public-record facts (public-domain status, open licenses, free public
+;;   institutions) are :authoritative; the SAMPLE is a bounded illustrative seed
+;;   (:representative coverage), NOT exhaustive. No fabricated coverage. Access categories
+;;   are DISCLOSED facts, never asobi adjudications (N3).
+
+[;; ───────────────────────────── works (nodes) ───────────────────────────────
+ {:organism/id "play.work.beethoven-9" :organism/kind :work :organism/label "Beethoven — Symphony No. 9" :work/medium :music :work/access :public-domain :organism/sourcing :authoritative :db/id -1}
+ {:organism/id "play.work.shakespeare" :organism/kind :work :organism/label "Shakespeare — collected plays" :work/medium :text :work/access :public-domain :organism/sourcing :authoritative :db/id -2}
+ {:organism/id "play.work.gutenberg-corpus" :organism/kind :work :organism/label "Project Gutenberg corpus" :work/medium :text :work/access :public-domain :organism/sourcing :authoritative :db/id -3}
+ {:organism/id "play.work.wikipedia" :organism/kind :work :organism/label "Wikipedia" :work/medium :text :work/access :open-license :organism/sourcing :authoritative :db/id -4}
+ {:organism/id "play.work.0ad" :organism/kind :work :organism/label "0 A.D. (FOSS RTS game)" :work/medium :game :work/access :open-license :organism/sourcing :authoritative :db/id -5}
+ {:organism/id "play.work.supertuxkart" :organism/kind :work :organism/label "SuperTuxKart (FOSS racing game)" :work/medium :game :work/access :open-license :organism/sourcing :authoritative :db/id -6}
+ {:organism/id "play.work.imslp-scores" :organism/kind :work :organism/label "IMSLP free sheet-music library" :work/medium :music :work/access :public-domain :organism/sourcing :authoritative :db/id -7}
+ {:organism/id "play.work.blockbuster-film" :organism/kind :work :organism/label "Major studio film (representative)" :work/medium :film :work/access :paywalled :organism/sourcing :representative :db/id -8}
+ {:organism/id "play.work.streaming-series" :organism/kind :work :organism/label "Streaming-exclusive series (representative)" :work/medium :film :work/access :proprietary :organism/sourcing :representative :db/id -9}
+
+ ;; ───────────────────────────── practices (sport / art forms one DOES) ───────
+ {:organism/id "play.practice.football" :organism/kind :practice :organism/label "Association football (kickabout)" :practice/domain :sport :practice/body? true :organism/sourcing :authoritative :db/id -10}
+ {:organism/id "play.practice.athletics" :organism/kind :practice :organism/label "Running / athletics" :practice/domain :sport :practice/body? true :organism/sourcing :authoritative :db/id -11}
+ {:organism/id "play.practice.bouldering" :organism/kind :practice :organism/label "Bouldering / climbing" :practice/domain :sport :practice/body? true :organism/sourcing :authoritative :db/id -12}
+ {:organism/id "play.practice.choral" :organism/kind :practice :organism/label "Choral / community singing" :practice/domain :music :practice/body? true :organism/sourcing :authoritative :db/id -13}
+ {:organism/id "play.practice.folk-dance" :organism/kind :practice :organism/label "Folk dance (Awa Odori lineage)" :practice/domain :dance :practice/body? true :organism/sourcing :authoritative :db/id -14}
+ {:organism/id "play.practice.theatre" :organism/kind :practice :organism/label "Community theatre" :practice/domain :stage :practice/body? true :organism/sourcing :representative :db/id -15}
+ {:organism/id "play.practice.go" :organism/kind :practice :organism/label "Go (囲碁)" :practice/domain :game :practice/body? false :organism/sourcing :authoritative :db/id -16}
+ {:organism/id "play.practice.gardening" :organism/kind :practice :organism/label "Community gardening" :practice/domain :craft :practice/body? true :organism/sourcing :representative :db/id -17}
+ {:organism/id "play.practice.poetry" :organism/kind :practice :organism/label "Poetry / letters" :practice/domain :letters :practice/body? false :organism/sourcing :representative :db/id -18}
+
+ ;; ───────────────────────────── events ──────────────────────────────────────
+ {:organism/id "play.event.olympics" :organism/kind :event :organism/label "Olympic Games" :organism/sourcing :authoritative :db/id -19}
+ {:organism/id "play.event.community-marathon" :organism/kind :event :organism/label "Community open marathon" :organism/sourcing :representative :db/id -20}
+ {:organism/id "play.event.free-museum-day" :organism/kind :event :organism/label "Free museum day" :organism/sourcing :authoritative :db/id -21}
+ {:organism/id "play.event.awa-odori" :organism/kind :event :organism/label "Awa Odori festival (阿波踊り)" :organism/sourcing :authoritative :db/id -22}
+ {:organism/id "play.event.open-air-concert" :organism/kind :event :organism/label "Open-air public concert" :organism/sourcing :representative :db/id -23}
+ {:organism/id "play.event.library-storytime" :organism/kind :event :organism/label "Public library story-time" :organism/sourcing :representative :db/id -24}
+
+ ;; ───────────────────────────── venues ──────────────────────────────────────
+ {:organism/id "play.venue.public-library" :organism/kind :venue :organism/label "Public library" :venue/kind :public-library :venue/open? true :organism/sourcing :authoritative :db/id -25}
+ {:organism/id "play.venue.public-park" :organism/kind :venue :organism/label "Public park" :venue/kind :public-park :venue/open? true :organism/sourcing :authoritative :db/id -26}
+ {:organism/id "play.venue.free-museum" :organism/kind :venue :organism/label "Free-admission museum" :venue/kind :museum :venue/open? true :organism/sourcing :authoritative :db/id -27}
+ {:organism/id "play.venue.community-field" :organism/kind :venue :organism/label "Community sports field" :venue/kind :field :venue/open? true :organism/sourcing :representative :db/id -28}
+ {:organism/id "play.venue.makerspace" :organism/kind :venue :organism/label "Community makerspace" :venue/kind :makerspace :venue/open? true :organism/sourcing :representative :db/id -29}
+ {:organism/id "play.venue.wikimedia-commons" :organism/kind :venue :organism/label "Wikimedia Commons (online commons)" :venue/kind :online-commons :venue/open? true :organism/sourcing :authoritative :db/id -30}
+ {:organism/id "play.venue.paywalled-stadium" :organism/kind :venue :organism/label "Ticket-locked stadium (representative)" :venue/kind :enclosed-venue :venue/open? false :organism/sourcing :representative :db/id -31}
+
+ ;; ───────────────────────────── enclosures (取-holders) ─────────────────────
+ {:organism/id "play.enclosure.streaming-paywall" :organism/kind :enclosure :organism/label "Streaming paywall" :enclosure/kind :paywall :organism/sourcing :authoritative :db/id -32}
+ {:organism/id "play.enclosure.attention-feed" :organism/kind :enclosure :organism/label "Attention-maximizing feed" :enclosure/kind :attention-platform :organism/sourcing :authoritative :db/id -33}
+ {:organism/id "play.enclosure.ticketing-lock" :organism/kind :enclosure :organism/label "Ticketing monopoly lock" :enclosure/kind :ticketing-lock :organism/sourcing :authoritative :db/id -34}
+ {:organism/id "play.enclosure.copyright-lock" :organism/kind :enclosure :organism/label "Perpetual copyright lock" :enclosure/kind :copyright-lock :organism/sourcing :authoritative :db/id -35}
+
+ ;; ───────────────────────────── 縁 (edges) ──────────────────────────────────
+ ;; (A) OPENING 縁 — :open-access / :teaches / :participates / :hosts (access-load = affordance)
+ {:en/from "play.venue.wikimedia-commons" :en/to "play.work.wikipedia" :en/kind :open-access :en/access-load 0.95 :en/sourcing :authoritative :db/id -36}
+ {:en/from "play.venue.public-library" :en/to "play.work.gutenberg-corpus" :en/kind :open-access :en/access-load 0.90 :en/sourcing :authoritative :db/id -37}
+ {:en/from "play.venue.public-library" :en/to "play.work.shakespeare" :en/kind :open-access :en/access-load 0.85 :en/sourcing :authoritative :db/id -38}
+ {:en/from "play.venue.wikimedia-commons" :en/to "play.work.imslp-scores" :en/kind :open-access :en/access-load 0.90 :en/sourcing :authoritative :db/id -39}
+ {:en/from "play.venue.makerspace" :en/to "play.work.0ad" :en/kind :open-access :en/access-load 0.70 :en/sourcing :representative :db/id -40}
+ {:en/from "play.venue.makerspace" :en/to "play.work.supertuxkart" :en/kind :open-access :en/access-load 0.70 :en/sourcing :representative :db/id -41}
+ {:en/from "play.venue.free-museum" :en/to "play.event.free-museum-day" :en/kind :hosts :en/access-load 0.85 :en/sourcing :authoritative :db/id -42}
+ {:en/from "play.venue.public-park" :en/to "play.event.open-air-concert" :en/kind :hosts :en/access-load 0.80 :en/sourcing :representative :db/id -43}
+ {:en/from "play.venue.public-park" :en/to "play.event.awa-odori" :en/kind :hosts :en/access-load 0.85 :en/sourcing :authoritative :db/id -44}
+ {:en/from "play.venue.community-field" :en/to "play.event.community-marathon" :en/kind :hosts :en/access-load 0.80 :en/sourcing :representative :db/id -45}
+ {:en/from "play.venue.public-library" :en/to "play.event.library-storytime" :en/kind :hosts :en/access-load 0.85 :en/sourcing :representative :db/id -46}
+
+ ;; practices taught / participated openly
+ {:en/from "play.practice.football" :en/to "play.venue.community-field" :en/kind :teaches :en/access-load 0.80 :en/sourcing :representative :db/id -47}
+ {:en/from "play.practice.athletics" :en/to "play.event.community-marathon" :en/kind :participates :en/access-load 0.85 :en/sourcing :representative :db/id -48}
+ {:en/from "play.practice.bouldering" :en/to "play.venue.public-park" :en/kind :teaches :en/access-load 0.55 :en/sourcing :representative :db/id -49}
+ {:en/from "play.practice.choral" :en/to "play.work.beethoven-9" :en/kind :performs :en/access-load 0.70 :en/sourcing :representative :db/id -50}
+ {:en/from "play.practice.choral" :en/to "play.event.open-air-concert" :en/kind :participates :en/access-load 0.75 :en/sourcing :representative :db/id -51}
+ {:en/from "play.practice.folk-dance" :en/to "play.event.awa-odori" :en/kind :participates :en/access-load 0.90 :en/sourcing :authoritative :db/id -52}
+ {:en/from "play.practice.theatre" :en/to "play.work.shakespeare" :en/kind :performs :en/access-load 0.70 :en/sourcing :representative :db/id -53}
+ {:en/from "play.practice.go" :en/to "play.venue.makerspace" :en/kind :teaches :en/access-load 0.60 :en/sourcing :representative :db/id -54}
+ {:en/from "play.practice.gardening" :en/to "play.venue.public-park" :en/kind :teaches :en/access-load 0.65 :en/sourcing :representative :db/id -55}
+ {:en/from "play.practice.poetry" :en/to "play.venue.public-library" :en/kind :teaches :en/access-load 0.60 :en/sourcing :representative :db/id -56}
+ {:en/from "play.practice.football" :en/to "play.event.olympics" :en/kind :participates :en/access-load 0.40 :en/sourcing :authoritative :db/id -57}
+ {:en/from "play.practice.athletics" :en/to "play.event.olympics" :en/kind :participates :en/access-load 0.40 :en/sourcing :authoritative :db/id -58}
+
+ ;; tradition lineage (the descent of a practice)
+ {:en/from "play.practice.folk-dance" :en/to "play.practice.theatre" :en/kind :descends-from :en/access-load 0.30 :en/sourcing :representative :db/id -59}
+
+ ;; (B) ENCLOSURE 縁 — :encloses (the 取-holder gates participation; routed to OPENING)
+ {:en/from "play.enclosure.streaming-paywall" :en/to "play.work.streaming-series" :en/kind :encloses :en/access-load 0.90 :en/sourcing :authoritative :db/id -60}
+ {:en/from "play.enclosure.streaming-paywall" :en/to "play.work.blockbuster-film" :en/kind :encloses :en/access-load 0.70 :en/sourcing :authoritative :db/id -61}
+ {:en/from "play.enclosure.copyright-lock" :en/to "play.work.blockbuster-film" :en/kind :encloses :en/access-load 0.60 :en/sourcing :authoritative :db/id -62}
+ {:en/from "play.enclosure.copyright-lock" :en/to "play.work.streaming-series" :en/kind :encloses :en/access-load 0.55 :en/sourcing :authoritative :db/id -63}
+ {:en/from "play.enclosure.ticketing-lock" :en/to "play.event.olympics" :en/kind :encloses :en/access-load 0.65 :en/sourcing :authoritative :db/id -64}
+ {:en/from "play.enclosure.ticketing-lock" :en/to "play.venue.paywalled-stadium" :en/kind :encloses :en/access-load 0.80 :en/sourcing :representative :db/id -65}
+ {:en/from "play.enclosure.attention-feed" :en/to "play.work.streaming-series" :en/kind :encloses :en/access-load 0.50 :en/sourcing :representative :db/id -66}
+ {:en/from "play.enclosure.attention-feed" :en/to "play.work.blockbuster-film" :en/kind :encloses :en/access-load 0.45 :en/sourcing :representative :db/id -67}]

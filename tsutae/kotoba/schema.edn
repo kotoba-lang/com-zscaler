@@ -1,0 +1,114 @@
+;; tsutae 伝え — kotoba EAVT schema
+;; ADR-2605261300 · R0 scaffold
+;; Handheld communication device manufacturing schema: device order, 8-stage
+;; production progress, QC, on-chain settlement intent, per-stage attestations,
+;; and the final per-device record. All state is kotoba Datoms (G17).
+
+[;; ───────────── :device-order/* — main order entity ─────────────
+ {:db/ident :device-order/id
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "Unique identifier for the device order"}
+ {:db/ident :device-order/buyer-did
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/doc "DID of the member placing the order (SBT↔SBT internal only, N9)"}
+ {:db/ident :device-order/specs
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/doc "Device specs (display tier, battery, cellular-module presence)"}
+ {:db/ident :device-order/soc
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/doc "Selected open SoC (G9: StarFive/SiFive/Allwinner/iwakura; proprietary rejected N1)"}
+ {:db/ident :device-order/state
+  :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+  :db/doc ":draft | :placed | :in-production | :qc | :ready | :shipped | :cancelled"}
+ {:db/ident :device-order/settlement
+  :db/valueType :db.type/ref :db/cardinality :db.cardinality/one
+  :db/doc "Refers to the settlement intent for this order"}
+
+ ;; ───────────── :production-progress/* — 8-stage assembly ─────────────
+ {:db/ident :production-progress/id
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "Unique id for a production progress record"}
+ {:db/ident :production-progress/order
+  :db/valueType :db.type/ref :db/cardinality :db.cardinality/one
+  :db/doc "Refers to the device order"}
+ {:db/ident :production-progress/stage
+  :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+  :db/doc ":pcb-smt | :chassis-assembly | :display-attachment | :firmware-load | :final-qc | :packaging | :device-attestation | :recycling-intake"}
+ {:db/ident :production-progress/timestamp
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 datetime of the progress update"}
+ {:db/ident :production-progress/note
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/doc "Optional notes on the progress"}
+
+ ;; ───────────── :quality/* — QC / RF / functional results ─────────────
+ {:db/ident :quality/id
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "Unique id for a quality inspection record"}
+ {:db/ident :quality/order
+  :db/valueType :db.type/ref :db/cardinality :db.cardinality/one :db/doc "Refers to the device order"}
+ {:db/ident :quality/result
+  :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":pass | :fail | :rework"}
+ {:db/ident :quality/defects
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc "Defects found (if any)"}
+ {:db/ident :quality/inspector-did
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "DID of the inspector"}
+ {:db/ident :quality/timestamp
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "ISO-8601 datetime"}
+
+ ;; ───────────── :settlement/* — USDC + TitheRouter intent ─────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "Unique id for a settlement record"}
+ {:db/ident :settlement/order
+  :db/valueType :db.type/ref :db/cardinality :db.cardinality/one :db/doc "Refers to the device order"}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/doc "Gross USDC minor units (6-dp)"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/doc "Tithe USDC minor units (10%)"}
+ {:db/ident :settlement/factory-payout-minor
+  :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/doc "Net payout USDC minor units"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":intent | :executed"}
+ {:db/ident :settlement/buyer-sig-ref
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "Buyer signature ref (G15)"}
+
+ ;; ───────────── :sbt/* — Adherent SBT eligibility ─────────────
+ {:db/ident :sbt/holder-did
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "DID of an Adherent SBT holder (member buyer)"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one
+  :db/doc "active Adherent SBT? required for internal SBT↔SBT settlement (N9)"}
+
+ ;; ───────────── :attestation/* — per-stage manufacturing evidence ─────────────
+ {:db/ident :attestation/id
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "Unique id for an attestation record"}
+ {:db/ident :attestation/order
+  :db/valueType :db.type/ref :db/cardinality :db.cardinality/one :db/doc "Refers to the device order"}
+ {:db/ident :attestation/type
+  :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one
+  :db/doc "stage keyword (one of the 8 production stages)"}
+ {:db/ident :attestation/cid
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "IPFS CID of pinned evidence (G14)"}
+ {:db/ident :attestation/timestamp
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "ISO-8601 datetime"}
+ {:db/ident :attestation/details
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "Additional details"}
+
+ ;; ───────────── :device/* — final per-device record ─────────────
+ {:db/ident :device/serial
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "Open device serial"}
+ {:db/ident :device/order
+  :db/valueType :db.type/ref :db/cardinality :db.cardinality/one :db/doc "Refers to the device order"}
+ {:db/ident :device/did
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity :db/doc "Per-device DID (did:web:etzhayyim.com:tsutae:device:<serial>) (G14)"}
+ {:db/ident :device/bom-lineage
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc "BoM lineage CIDs (pcb/chassis/display/fw/qc)"}
+ {:db/ident :device/signers
+  :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc "Robot signer DIDs (G4 ≥2 quorum)"}
+ {:db/ident :device/repair-event-ready
+  :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one :db/doc "Accepts repairEvent records over lifecycle (G14)"}]

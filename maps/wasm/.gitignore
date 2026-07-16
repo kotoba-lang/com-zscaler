@@ -1,0 +1,6 @@
+# T1 Rust build artifacts — reproducible via build.clj; the CID (maps-core.meta.json
+# + the did-web registry) is the durable record, not the bytes (ADR-2606015200 +
+# repo "大容量バイナリを git に入れない" rule). The .wasm lives on IPFS / donated mesh.
+maps-core/target/
+dist/
+node_modules/

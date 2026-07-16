@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_battery_handling cell (L2)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_battery_handling"
+  :cell/glyph "🔋"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G7" "G9"]
+  :cell/state-graph "{:nodes [{:id \"measure-soh\", :type \"function\", :func \"measure_soh\"} {:id \"route-battery\", :type \"llm-prompt\", :prompt \"Determine battery routing: hikari second-life, cell-recycle, or kanayama.\"} {:id \"attest\", :type \"function\", :func \"attest_battery_handling\"} {:id \"end\", :type \"return\"}], :entry \"measure-soh\", :edges [{:from \"measure-soh\", :to \"route-battery\"} {:from \"route-battery\", :to \"attest\"} {:from \"attest\", :to \"end\"}]}"
+  :cell/doc "L2: Battery handling — SoH measurement + routing (hikari/kanayama/recycle)."
+  :cell/kotoba "{:reads [:battery-handling/vin :battery-handling/battery-type :battery-handling/soh :battery-handling/routing-decision], :writes [:battery-handling/record-id :battery-handling/vin :battery-handling/battery-type :battery-handling/soh :battery-handling/routing-decision :battery-handling/timestamp]}"}]

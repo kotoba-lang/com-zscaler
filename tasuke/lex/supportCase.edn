@@ -1,0 +1,22 @@
+{:lexicon 1
+ :id "com.etzhayyim.tasuke.supportCase"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "The aggregate case folder: a victim intake + the documents generated + the FREE public windows pointed to. The end-to-end membrane view. Free by construction (G1), consent-gated (G7), and never routes to a paid counsel (G5)."
+   :record
+   {:type "object"
+    :required ["caseId" "subject" "scamKind" "supportCostJpy" "paidReferral"]
+    :properties
+    {:caseId        {:type "string" :description "→ :case/id"}
+     :subject       {:type "string" :description "victim member DID"}
+     :scamKind      {:type "string" :description "classified KIND (G4)"}
+     :severity      {:type "string" :enum ["info" "elevated" "urgent" "critical"]}
+     :documents     {:type "array" :items {:type "string"} :description "generated doc ids (all member-authored, G3)"}
+     :referrals     {:type "array" :items {:type "string"}
+                     :description "FREE public windows (#9110 / 188 / NCCC / フィッシング対策協議会 / JPCERT / 銀行 / プラットフォーム / 振り込め詐欺救済法)"}
+     :supportCostJpy {:type "integer" :const 0
+                      :description "G1 全て無料 INVARIANT — the whole case costs the victim 0; only 0."}
+     :paidReferral  {:type "boolean" :const false
+                     :description "G5 INVARIANT — 助 never routes to a PAID counsel (弁護士へつながない); only false. Free public windows only."}}}}}}

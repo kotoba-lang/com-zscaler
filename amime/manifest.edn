@@ -1,0 +1,68 @@
+;; amime 網目 — actor manifest (clj-native, kotoba-Datom-native)
+;; Multi-site energy MESH flow-network solver. The SoS energy-flow layer of the Energy Order
+;; suite (ADR-2606211200). A COMMONS mesh, never a market. SIM ONLY — hikari actuates.
+;; ADR-2606212020 (R0).
+{:actor/id        "amime"
+ :actor/glyph     "網"
+ :actor/tier      :tier-b
+ :actor/integrates ["hikari" "kaname" "mio" "okibi" "tawami" "toi"]
+ :actor/domain    "amime.etzhayyim.com"
+ :actor/kind      :energy-mesh-flow-network
+ :actor/purpose   "The multi-site energy-FLOW NETWORK the Energy Order suite (mio/tawami/okibi/toi/yudane/hikari, ADR-2606211200) lacked. hikari 光 designs ONE site; mio 澪 verifies the org's aggregate Flowrate; amime models how ORDERED energy flows BETWEEN sites across a mesh of capacity-bounded, lossy links — solving site-to-site transportation, transmission loss, curtailment, N-1 contingency (the critical chokepoint), and per-site import-dependence (SPOF). A COMMONS mesh, never a market (no price / no trade; rewards ORDERED FLOW, never consumed energy — the mio PoUF stance). A resilience MAP, never a target-list. ASSESSMENT + SIM ONLY — amime never dispatches; hikari actuates under Council gate. Emits a kaname-facing :energy domain mirror (ADR-2606212000): the energy-flow 取 lifted into the cross-domain system-of-systems multiplex. Feeds mio (Flowrate) + kaname (:energy leverage); chokepoints route to hikari multi-site mesh redundancy (ADR-2606091800)."
+ :actor/status    :r0
+ :actor/adr       "2606212020"
+ :actor/related   ["2606211200" "2606091800" "2606172100" "2606212000" "2605261100" "2605265600"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "commons-not-market" :gate/rule "A COMMONS mesh; :amime/price + :amime/trade unrepresentable (test-enforced). No bid/ask/position/clearing."}
+  {:gate/id "G2" :gate/name "ordered-flow-not-consumed" :gate/rule "Rewards ORDERED FLOW (delivered useful energy), never CONSUMED energy — the mio 澪 PoUF stance (ADR-2606211200 G1)"}
+  {:gate/id "G3" :gate/name "resilience-map-never-target-list" :gate/rule "Chokepoints/SPOFs are a redundancy MAP routed to strengthening, never a target-list; report says so in words"}
+  {:gate/id "G4" :gate/name "sim-only-never-dispatches" :gate/rule "Assessment + simulation only; :amime/dispatch unrepresentable; hikari actuates under Council Lv7+ gate, never amime"}
+  {:gate/id "G5" :gate/name "aggregate-no-person-metering" :gate/rule "Aggregate site flows only; :amime.site/person unrepresentable (no per-person/per-household metering)"}
+  {:gate/id "G6" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms; solve datoms flagged :amime/derived + :amime/sourcing"}
+  {:gate/id "G7" :gate/name "no-server-key" :gate/rule "Holds no key, no network I/O; live-site modelling + dispatch are operator/Council steps"}
+  {:gate/id "G8" :gate/name "synthetic-seed" :gate/rule "R0 seed is :synthetic; real-grid modelling is an operator/Council step"}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "Never dispatches/curtails/switches real equipment (R0 sim + design; live actuation is hikari + Council)"}
+  {:n/id "N2" :n/rule "Not an energy market / exchange / trading venue — no price, bid, clearing (G1)"}
+  {:n/id "N3" :n/rule "Not a person/household metering or surveillance tool (aggregate site flows only)"}
+  {:n/id "N4" :n/rule "Not a forecast — solves the GIVEN mesh state; forecasting is mitooshi 見通し"}
+  {:n/id "N5" :n/rule "R0 single-hop transportation; multi-hop routing + AC power-flow are R1+"}]
+
+ :actor/methods
+ [{:method/id "mesh"    :method/file "methods/mesh.cljc"    :method/role "load + solve (transportation flow) + N-1 contingency + import-dependence + report (+ bb CLI)"}
+  {:method/id "emit"    :method/file "methods/emit.cljc"    :method/role "amime-native ledger EAVT datoms + kaname-facing :energy mirror forms (writes out/energy-sos.kotoba.edn)"}
+  {:method/id "kotoba"  :method/file "methods/kotoba.cljc"  :method/role "content-addressed append-only MESH-RESILIENCE LEDGER (tx-cid/make-tx/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun" :method/file "methods/autorun.cljc" :method/role "deterministic, idempotent-by-content heartbeat — solve → append ONLY on change (+ bb CLI)"}]
+
+ :actor/lex
+ [{:lex/id "meshFlow"}
+  {:lex/id "contingencyMap"}]
+
+ :actor/ledger
+ {:ledger/file "data/persisted/amime.mesh.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/note "Generated mesh-resilience ledger of energy-flow solves; tamper-evident (verify-chain); no-server-key; a resilience record, never a target-list."}
+
+ :actor/exports
+ {:export/file "out/energy-sos.kotoba.edn"
+  :export/kind :kaname-energy-mirror
+  :export/committed true
+  :export/note "kaname-facing :energy domain mirror graph (forms); JOINed by kaname 要 via the :amime adapter (ADR-2606212000). Committed so the join leg has a durable upstream output."}
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.amime.edn"
+  :seed/sourcing :synthetic
+  :seed/shape "6 sites (4 surplus / 2 deficit) × 7 links"}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/amime/run_tests.sh"
+  :suites ["methods/test_mesh.cljc" "methods/test_autorun.cljc"]}}

@@ -1,0 +1,55 @@
+;; funadaiku 船大工 — Nagi 凪 class vessel SBOM (kotoba EAVT → CycloneDX → kg/claim/part/*)
+;; ADR-2606013400 · giemon part-graph pattern (ADR-2605312330): per-part product /
+;;   manufacturer / procurement-trading-house / country-of-origin / material composition.
+;;
+;; HONEST: R0 design-only. Suppliers are :representative (sourcing honesty); some parts are
+;;   produced by internal etzhayyim actors (hikari PV + LFP), others are world-catalog COTS
+;;   routed data-only (no affiliate) per okaimono Ring-2 conventions.
+
+[{:bom/id "funadaiku.nagi.bom" :bom/vessel "funadaiku.nagi-0001" :bom/format :cyclonedx
+  :bom/adr "2606013400" :bom/sourcing :representative}
+
+ ;; ── A. hull + structure ──
+ {:part/id "nagi.hull-steel" :part/group :A-structure :part/name "Marine steel EH36 plate + sections"
+  :part/qty-t 1100 :part/material "EH36 hull steel" :part/origin :representative
+  :part/procurement :cots :part/eol-route :kanayama :part/note "recyclable; EOL via hodoki+kanayama (N8)"}
+ {:part/id "nagi.bulbous-bow" :part/group :A-structure :part/name "Bulbous bow casting"
+  :part/qty 1 :part/material "cast steel" :part/procurement :custom-fab :part/origin :representative}
+
+ ;; ── B. wind-assist ──
+ {:part/id "nagi.rotor-sail" :part/group :B-windassist :part/name "Rotor (Flettner) sail unit, 24 m"
+  :part/qty 2 :part/material "CFRP cylinder + electric drive" :part/procurement :cots
+  :part/maker :representative :part/origin :representative
+  :part/note "primary fuel-saver; alt = rigid wing sail (same mounting interface)"}
+
+ ;; ── C. solar (internal actor: hikari) ──
+ {:part/id "nagi.solar-pv" :part/group :C-solar :part/name "Solar PV array 160 kWp (400 W modules)"
+  :part/qty 400 :part/material "mono-Si glass-glass" :part/procurement :internal-actor
+  :part/maker-actor "hikari" :part/product "int.hikari.solar-pv-400w" :part/origin :etzhayyim}
+
+ ;; ── D. hydrogen ──
+ {:part/id "nagi.h2-fuelcell" :part/group :D-hydrogen :part/name "PEM fuel-cell stack 1.2 MW"
+  :part/qty 2 :part/material "PEM stack + balance-of-plant" :part/procurement :cots
+  :part/maker :representative :part/origin :representative}
+ {:part/id "nagi.h2-storage" :part/group :D-hydrogen :part/name "Compressed H2 store 350 bar (~4000 kg)"
+  :part/qty 1 :part/material "Type-IV composite cylinders" :part/procurement :cots
+  :part/origin :representative :part/note "green-H2 only; CoC required (G14); ATEX handling (G11)"}
+
+ ;; ── E. battery (internal actor: hikari) ──
+ {:part/id "nagi.lfp-battery" :part/group :E-battery :part/name "LFP marine battery 2 MWh"
+  :part/qty 400 :part/material "LFP cells (5 kWh modules)" :part/procurement :internal-actor
+  :part/maker-actor "hikari" :part/product "int.hikari.storage-5kwh" :part/origin :etzhayyim}
+
+ ;; ── F. electric drive ──
+ {:part/id "nagi.azimuth-pod" :part/group :F-drive :part/name "Electric azimuth pod 1.5 MW"
+  :part/qty 2 :part/material "PM motor + pod housing + CPP" :part/procurement :cots :part/origin :representative}
+ {:part/id "nagi.power-electronics" :part/group :F-drive :part/name "DC-link drive + converters"
+  :part/qty 1 :part/material "SiC inverters + DC bus" :part/procurement :cots :part/origin :representative}
+
+ ;; ── G. autonomy / GNC (open-source firmware, G1) ──
+ {:part/id "nagi.gnc-compute" :part/group :G-autonomy :part/name "GNC compute + sensor fusion"
+  :part/qty 1 :part/material "edge compute + IMU/GNSS" :part/procurement :cots :part/origin :representative
+  :part/firmware "kami-autodrive ShipHydro (Apache-2.0 + Rider, G1)"}
+ {:part/id "nagi.nav-sensors" :part/group :G-autonomy :part/name "LiDAR + radar + AIS + nav-sonar suite"
+  :part/qty 1 :part/material "marine sensor suite" :part/procurement :cots :part/origin :representative
+  :part/note "nav-sonar <=180 dB (G8)"}]

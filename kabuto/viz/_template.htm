@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>kabuto 兜 — global public-company supply-chain map</title>
+<!--
+  kabuto 兜 supply-chain viewer (ADR-2606022000). A redundancy / accountability
+  surface, NEVER a target-list (kabuto G2). Public-record companies + disclosed
+  supplier edges only.
+
+  BROWSER-NATIVE (ADR-2606013600, kabuto G6): when reachable, this page loads the
+  in-browser kotoba-wasm KotobaNode, hydrates the supply graph via loadDatoms()
+  from the inlined Datom contract, and DRIVES the render + search through
+  datomicQ() — the kotoba read engine (EAVT/AEVT/AVET/VAET) runs client-side with
+  ZERO server round-trip. The wasm bundle is fetched from `/kotoba/kotoba_wasm.js`
+  (override with `?kotoba=<base>/`). When the bundle is absent (e.g. opened via
+  file://), the page falls back to the inlined static payload — same data, no
+  query engine. The status badge in the header shows which path is live.
+-->
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; background:#0b0e14; color:#cdd6f4; font:13px/1.5 ui-sans-serif,system-ui,sans-serif; }
+  header { padding:10px 14px; border-bottom:1px solid #1e2330; }
+  h1 { font-size:15px; margin:0 0 2px; }
+  .sub { color:#7f8aa3; font-size:11px; }
+  #bar { display:flex; gap:8px; align-items:center; margin-top:6px; }
+  #q { flex:0 0 280px; background:#11151f; border:1px solid #1e2330; color:#cdd6f4;
+       border-radius:6px; padding:4px 8px; font:12px ui-sans-serif,system-ui,sans-serif; }
+  #q:focus { outline:none; border-color:#89b4fa; }
+  #engine { font-size:11px; padding:2px 8px; border-radius:8px; background:#1e2330; }
+  #engine.live { background:#1c3a2a; color:#a6e3a1; }
+  #engine.static { background:#3a2a1c; color:#fab387; }
+  #engine .dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+                 background:currentColor; margin-right:5px; vertical-align:middle; }
+  #wrap { display:flex; height:calc(100vh - 84px); }
+  canvas { flex:1; display:block; cursor:grab; }
+  #side { width:300px; border-left:1px solid #1e2330; padding:12px; overflow:auto; }
+  #side h2 { font-size:13px; margin:0 0 6px; }
+  .kv { margin:2px 0; } .k { color:#7f8aa3; }
+  .pill { display:inline-block; padding:1px 6px; border-radius:8px; background:#1e2330; margin:1px 2px 1px 0; font-size:11px; }
+  table { width:100%; border-collapse:collapse; font-size:11px; }
+  td { padding:2px 4px; border-bottom:1px solid #161b26; }
+  a { color:#89b4fa; }
+  #results { margin-top:4px; }
+  #results .row { padding:2px 0; cursor:pointer; border-bottom:1px solid #161b26; }
+  #results .row:hover { color:#89b4fa; }
+</style>
+</head>
+<body>
+<header>
+  <h1>kabuto 兜 — global public-company supply-chain map</h1>
+  <div class="sub">aggregate-first · resilience + transparency, NEVER a target-list (G2) · sourcing <span class="pill">:representative</span> · ADR-2606022000</div>
+  <div id="bar">
+    <input id="q" type="search" placeholder="search company / ticker / sector / country …" autocomplete="off"/>
+    <span id="engine"><span class="dot"></span><span id="engine-label">loading…</span></span>
+  </div>
+</header>
+<div id="wrap">
+  <canvas id="cv"></canvas>
+  <div id="side">
+    <h2>Top supplier jurisdictions</h2>
+    <table id="jur"></table>
+    <h2 style="margin-top:14px">Selected</h2>
+    <div id="sel" class="sub">click a company node</div>
+  </div>
+</div>
+<script id="data" type="application/json">__KABUTO_DATA__</script>
+<script id="datoms" type="application/json">__KABUTO_DATOMS__</script>
+<script type="module">
+const DATA   = JSON.parse(document.getElementById('data').textContent);
+const DATOMS = JSON.parse(document.getElementById('datoms').textContent);
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const SECTOR_COLORS = {
+  semiconductors:'#89b4fa', electronics:'#94e2d5', automotive:'#f9e2af', energy:'#fab387',
+  materials:'#a6adc8', industrials:'#cba6f7', pharma:'#f5c2e7', shipping:'#74c7ec',
+  consumer:'#a6e3a1', software:'#b4befe', telecom:'#eba0ac', financials:'#f2cdcd'
+};
+function color(s){ return SECTOR_COLORS[(s||'').replace(/^:/,'')] || '#9399b2'; }
+
+// ─── kotoba-wasm read engine (ADR-2606013600) ──────────────────────────────
+// Strip surrounding quotes from an EDN scalar cell returned by datomicQ
+// (Text → "…", keyword → :kw, number → bare). Keep keywords/numbers as-is.
+const unq = s => (typeof s === 'string' && s.length>1 && s[0]==='"' && s.endsWith('"'))
+  ? s.slice(1,-1) : s;
+const KOTOBA_BASE = (new URLSearchParams(location.search).get('kotoba') || '/kotoba/');
+
+// Run a datomicQ and return rows as arrays of unquoted scalars.
+function qrows(node, query){ return JSON.parse(node.datomicQ(query, '[]')).rows_edn.map(r=>r.map(unq)); }
+
+// Build the {companies, edges, jurisdictions} view by querying the live node.
+function buildFromKotoba(node){
+  const merge = (query, key) => { for(const [e,v] of qrows(node, query)){
+    (rec[e] || (rec[e]={}))[key] = v; } };
+  const rec = {};
+  merge('{:find [?e ?v] :where [[?e :company/id ?v]]}',                'id');
+  merge('{:find [?e ?v] :where [[?e :company/name ?v]]}',              'name');
+  merge('{:find [?e ?v] :where [[?e :company/ticker ?v]]}',            'ticker');
+  merge('{:find [?e ?v] :where [[?e :company/sector ?v]]}',            'sector');
+  merge('{:find [?e ?v] :where [[?e :company/country ?v]]}',           'country');
+  merge('{:find [?e ?v] :where [[?e :company/out ?v]]}',               'out');
+  merge('{:find [?e ?v] :where [[?e :company.address/street ?v]]}',    'street');
+  merge('{:find [?e ?v] :where [[?e :company.address/city ?v]]}',      'city');
+  merge('{:find [?e ?v] :where [[?e :company.address/country ?v]]}',   'acountry');
+  merge('{:find [?e ?v] :where [[?e :company.contact/website ?v]]}',   'website');
+  const companies = Object.values(rec).filter(r=>r.id).map(r=>({
+    id:r.id, name:r.name||r.id, ticker:r.ticker, sector:r.sector, country:r.country,
+    out:parseInt(r.out||'0',10)||0,
+    address:{street:r.street, city:r.city, country:r.acountry},
+    contact:{website:r.website} }));
+  const edges = qrows(node,
+    '{:find [?f ?t ?crit ?comm] :where [[?e :supply.edge/from ?f]'+
+    '[?e :supply.edge/to ?t][?e :supply.edge/criticality ?crit]'+
+    '[?e :supply.edge/commodity ?comm]]}'
+  ).map(([f,t,crit,comm])=>({from:f, to:t, criticality:parseFloat(crit)||0, commodity:(comm||'').replace(/^:/,'')}));
+  return { companies, edges, jurisdictions: DATA.jurisdictions };
+}
+
+async function loadEngine(){
+  try {
+    const mod = await import(KOTOBA_BASE + 'kotoba_wasm.js');
+    await mod.default();                       // fetches kotoba_wasm_bg.wasm beside the js module
+    const node = new mod.KotobaNode();
+    const n = node.loadDatoms(JSON.stringify(DATOMS));
+    const view = buildFromKotoba(node);
+    return { view, label: 'kotoba-wasm live · ' + n + ' datoms · ' + view.companies.length + ' companies', live:true };
+  } catch (err) {
+    console.warn('[kabuto] kotoba-wasm unavailable, static fallback:', err && err.message || err);
+    return { view: DATA, label: 'static fallback (kotoba-wasm not loaded)', live:false };
+  }
+}
+
+// ─── render (driven by whichever source loadEngine resolved) ────────────────
+let nodes=[], links=[], idx=new Map(), SEL=null, MATCH=null;
+
+function buildScene(view){
+  nodes = view.companies.map((c,i)=>({ id:c.id, name:c.name, sector:c.sector, country:c.country,
+    ticker:c.ticker, addr:c.address, contact:c.contact, out:c.out||0,
+    x: Math.cos(i)*300 + (innerWidth*0.5-150), y: Math.sin(i*1.7)*250 + innerHeight*0.45,
+    vx:0, vy:0 }));
+  idx = new Map(nodes.map(n=>[n.id,n]));
+  links = view.edges.map(e=>({ s:idx.get(e.from), t:idx.get(e.to), w:e.criticality||0.3, c:e.commodity })).filter(l=>l.s&&l.t);
+  const jur = document.getElementById('jur'); jur.innerHTML='';
+  (view.jurisdictions||[]).slice(0,12).forEach(j=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td>'+j.country+'</td><td style="text-align:right">'+(j.load||0).toFixed(2)+'</td>'; jur.appendChild(tr);
+  });
+}
+
+function resize(){ cv.width = cv.clientWidth; cv.height = cv.clientHeight; }
+window.addEventListener('resize', resize); resize();
+
+function step(){
+  for(let i=0;i<nodes.length;i++){ for(let j=i+1;j<nodes.length;j++){
+    const a=nodes[i],b=nodes[j]; let dx=a.x-b.x,dy=a.y-b.y; let d2=dx*dx+dy*dy+0.01;
+    const f=900/d2; const d=Math.sqrt(d2); dx/=d;dy/=d; a.vx+=dx*f;a.vy+=dy*f;b.vx-=dx*f;b.vy-=dy*f;
+  }}
+  for(const l of links){ let dx=l.t.x-l.s.x,dy=l.t.y-l.s.y; const d=Math.sqrt(dx*dx+dy*dy)+0.01;
+    const f=(d-120)*0.01*(0.5+l.w); dx/=d;dy/=d; l.s.vx+=dx*f;l.s.vy+=dy*f;l.t.vx-=dx*f;l.t.vy-=dy*f; }
+  for(const n of nodes){ n.vx+=(cv.width/2-n.x)*0.0008; n.vy+=(cv.height/2-n.y)*0.0008;
+    n.x+=n.vx*=0.85; n.y+=n.vy*=0.85; }
+}
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(const l of links){ ctx.strokeStyle='rgba(120,130,160,'+(0.12+l.w*0.4)+')'; ctx.lineWidth=0.4+l.w*2.2;
+    ctx.beginPath(); ctx.moveTo(l.s.x,l.s.y); ctx.lineTo(l.t.x,l.t.y); ctx.stroke(); }
+  for(const n of nodes){ const r=4+Math.sqrt(n.out)*2.2; const hit = MATCH && MATCH.has(n.id);
+    ctx.fillStyle=color(n.sector);
+    ctx.globalAlpha = (MATCH ? (hit?1:0.12) : (SEL && SEL!==n ? 0.5 : 1));
+    ctx.beginPath(); ctx.arc(n.x,n.y,r,0,7); ctx.fill();
+    if(hit){ ctx.strokeStyle='#f9e2af'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(n.x,n.y,r+2.5,0,7); ctx.stroke(); }
+    if(n.out>=3||n===SEL||hit){ ctx.globalAlpha=1; ctx.fillStyle='#cdd6f4'; ctx.font='10px sans-serif';
+      ctx.fillText(n.name.length>22?n.name.slice(0,20)+'…':n.name, n.x+r+2, n.y+3); }
+    ctx.globalAlpha=1; }
+}
+function loop(){ step(); draw(); requestAnimationFrame(loop); }
+
+function showSelected(best){
+  SEL=best; const a=best.addr||{}, c=best.contact||{};
+  document.getElementById('sel').innerHTML =
+    '<div class="kv"><b>'+best.name+'</b></div>'+
+    '<div class="kv"><span class="k">ticker</span> '+(best.ticker||'—')+'</div>'+
+    '<div class="kv"><span class="k">sector</span> <span class="pill">'+(best.sector||'').replace(/^:/,'')+'</span></div>'+
+    '<div class="kv"><span class="k">HQ</span> '+([a.street,a.city,a.country].filter(Boolean).join(', ')||'—')+'</div>'+
+    '<div class="kv"><span class="k">supplies</span> '+best.out+' customer(s)</div>'+
+    (c.website?'<div class="kv"><a href="'+c.website+'" target="_blank" rel="noopener">'+c.website+'</a></div>':'');
+}
+cv.addEventListener('click', ev=>{
+  const r=cv.getBoundingClientRect(), mx=ev.clientX-r.left, my=ev.clientY-r.top;
+  let best=null,bd=1e9; for(const n of nodes){ const d=(n.x-mx)**2+(n.y-my)**2; if(d<bd){bd=d;best=n;} }
+  if(bd>400) return; showSelected(best);
+});
+
+// ─── search (over the engine-sourced node set) ─────────────────────────────
+const qbox = document.getElementById('q');
+qbox.addEventListener('input', ()=>{
+  const ql = qbox.value.trim().toLowerCase();
+  if(!ql){ MATCH=null; document.getElementById('sel').innerHTML='click a company node'; return; }
+  const hits = nodes.filter(n=>[n.name,n.ticker,n.sector,n.country,n.id]
+    .some(f=>(f||'').toLowerCase().includes(ql)));
+  MATCH = new Set(hits.map(n=>n.id));
+  const side = document.getElementById('sel');
+  side.innerHTML = '<div class="kv k">'+hits.length+' match(es)</div><div id="results"></div>';
+  const res = side.querySelector('#results');
+  hits.slice(0,40).forEach(n=>{ const d=document.createElement('div'); d.className='row';
+    d.innerHTML='<span style="color:'+color(n.sector)+'">●</span> '+n.name+
+      ' <span class="k">'+(n.ticker||'')+' · '+(n.country||'')+'</span>';
+    d.onclick=()=>showSelected(n); res.appendChild(d); });
+});
+
+// ─── boot ──────────────────────────────────────────────────────────────────
+const badge = document.getElementById('engine'), blabel = document.getElementById('engine-label');
+loadEngine().then(({view,label,live})=>{
+  buildScene(view);
+  badge.className = live ? 'live' : 'static';
+  blabel.textContent = label;
+  loop();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:jp-ashiba.etzhayyim.com",
+  "actors": [
+    {
+      "description": "現場条件→最適足場種別・数量の提案、価格算出",
+      "displayName": "見積 AI",
+      "path": "actor:estimator"
+    },
+    {
+      "description": "配送ルート最適化、作業班アサイン、天候考慮",
+      "displayName": "配送計画 AI",
+      "path": "actor:scheduler"
+    },
+    {
+      "description": "点検チェックリスト生成、写真 AI 解析、不良予測",
+      "displayName": "安全点検 AI",
+      "path": "actor:inspector"
+    },
+    {
+      "description": "在庫最適化、補充タイミング予測、稼働率分析",
+      "displayName": "在庫管理 AI",
+      "path": "actor:inventory"
+    },
+    {
+      "description": "問い合わせ対応、FAQ、エスカレーション判定",
+      "displayName": "顧客対応 AI",
+      "path": "actor:support"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the JP Ashiba agent — an AI that manages construction scaffold rental and subscription services. You handle scaffold catalog queries, rental contract lifecycle (quote→confirm→deliver→return), subscription tiers (starter/standard/enterprise), delivery scheduling, and safety inspections. Use graph queries for inventory and contracts. Post updates for contract confirmations and safety alerts.",
+  "description": "建設現場向け仮設足場のレンタル・サブスクリプション管理。足場資材カタログ、契約 lifecycle、配送スケジュール、安全点検を一元管理。",
+  "displayName": "JP Ashiba — 足場レンタル・サブスクリプション AI Agent",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "労働安全衛生法",
+      "JIS A 8951"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "jp-ashiba",
+  "nanoid": "a5h1ba8k",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:ScaffoldItem) RETURN n.vertex_id, n.rkey, n.repo, n.did, n.status, n.props, n._seq ORDER BY n.category SKIP $input.offset LIMIT $input.limit"
+          },
+          "fn": "graph.query",
+          "id": "catalog"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.jpAshiba.listCatalog",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:ScaffoldItem) WHERE n.category = $input.category AND n.condition = 'good' AND n.availableStock >= $input.quantity RETURN n.itemId AS itemId, n.spec AS spec, n.availableStock AS availableStock, n.unitPrice AS unitPrice LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "available"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.jpAshiba.checkAvailability",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:ScaffoldItem) WHERE n.itemId IN $input.itemIds RETURN n.itemId AS itemId, n.unitPrice AS unitPrice, n.availableStock AS stock LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "pricing"
+        },
+        {
+          "args": {
+            "message": "Create a scaffold rental quote.\n\nCustomer: $input.customerDid\nSite: $input.siteAddress\nItems requested: $input.items\nPricing data: $pricing.rows\n\nCalculate total amount, deposit (10%), and return as JSON: {contractId, items: [{itemId, quantity, days, unitPrice, lineTotal}], totalAmount, depositAmount}"
+          },
+          "fn": "agent.chat",
+          "id": "estimate"
+        },
+        {
+          "args": {
+            "template": "CREATE (c:RentalContract {did: $did, status: 'quote', estimate: $estimate.text, repo: $did, collection: 'com.etzhayyim.apps.jpAshiba.rentalContract'})"
+          },
+          "fn": "graph.write",
+          "id": "writeQuote"
+        },
+        {
+          "args": {
+            "message": "You are JP Ashiba — 足場レンタル・サブスクリプション AI Agent. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeQuote.text"
+          },
+          "depends_on": [
+            "writeQuote"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.jpAshiba.createQuote",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "message": "Rental contract event received: $input.record\n\nIf status is 'confirmed', generate a delivery schedule recommendation. If status is 'dismantling', notify about return logistics. Return JSON: {action, recommendation}"
+          },
+          "fn": "agent.chat",
+          "id": "checkStatus"
+        },
+        {
+          "args": {
+            "template": "レンタル契約更新: $checkStatus.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.jpAshiba.rentalContract"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "message": "Safety inspection result received: $input.record\n\nIf overallResult is 'fail', generate an urgent safety alert with recommended actions. If 'conditionalPass', note the conditions. Return JSON: {severity, alert, actions}"
+          },
+          "fn": "agent.chat",
+          "id": "checkResult"
+        },
+        {
+          "args": {
+            "template": "安全点検結果: $checkResult.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.jpAshiba.inspectionRecord"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:ScaffoldItem) RETURN n.category AS category, sum(n.totalStock) AS total, sum(n.availableStock) AS available, count(CASE WHEN n.condition = 'needsRepair' THEN 1 END) AS needsRepair LIMIT 10"
+          },
+          "fn": "graph.query",
+          "id": "inventory"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:RentalContract) WHERE c.status IN ['confirmed', 'inUse', 'delivered'] RETURN c.status AS status, count(c) AS cnt LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "contracts"
+        },
+        {
+          "args": {
+            "message": "Daily scaffold operations summary.\n\nInventory by category:\n$inventory.rows\n\nActive contracts:\n$contracts.rows\n\nProvide a concise morning briefing with key metrics and any items needing attention (low stock, repairs needed, expiring contracts)."
+          },
+          "depends_on": [
+            "inventory",
+            "contracts"
+          ],
+          "fn": "agent.chat",
+          "id": "summary"
+        },
+        {
+          "args": {
+            "template": "足場運営日報: $summary.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "jp-ashiba",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.jpashiba.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "a5h1ba8k",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are JP Ashiba — 足場レンタル・サブスクリプション AI Agent. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.jpashiba.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "scaffold-rental",
+      "subscription-management",
+      "delivery-scheduling",
+      "safety-inspection",
+      "inventory-management"
+    ],
+    "category": "service",
+    "country": "jpn",
+    "description": "建設現場向け仮設足場のレンタル・サブスクリプション管理。カタログ、契約、配送、安全点検を AI Agent が自律運営。",
+    "displayName": "JP Ashiba — 足場レンタル・サブスクリプション AI Agent",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.jpAshiba.rentalContract",
+        "com.etzhayyim.apps.jpAshiba.inspectionRecord",
+        "com.etzhayyim.apps.jpAshiba.subscriptionPlan"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

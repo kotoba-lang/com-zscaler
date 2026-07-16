@@ -1,0 +1,11 @@
+{
+  "name": "@etzhayyim/sdk-mock",
+  "version": "0.1.0",
+  "description": "In-memory Etzhayyim SDK mock for testing kotoba reference impls",
+  "type": "module",
+  "main": "src/index.ts",
+  "private": true,
+  "dependencies": {
+    "@etzhayyim/sdk": "workspace:*"
+  }
+}

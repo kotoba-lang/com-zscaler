@@ -1,0 +1,71 @@
+;; 樋 toi — actor manifest (clj-native, kotoba-Datom-native)
+;; Compute as Thermal Routing — Energy Order Protocol suite (submits to 澪 mio).
+;; OBSERVATION ONLY — a routing map, never a forced job-kill.
+{:actor/id        "toi"
+ :actor/glyph     "樋"
+ :actor/tier      :tier-b
+ :actor/integrates ["mio" "okibi" "tawami" "yudane"]
+ :actor/domain    "toi.etzhayyim.com"
+ :actor/kind      :observation-watcher
+ :actor/purpose   "Compute-as-Thermal-Routing — the compute leg of the Energy Order Protocol suite. Deferrable compute (batch inference / training / render / backup / indexing) is a movable load = an energy-flow valve; toi scores each SITE (Murakumo / donated-mesh / commercial-GPU) by carbon intensity, surplus-renewable availability, cooling efficiency, heat-demand-sink presence, and TRANSPARENCY (Murakumo default-preferred per Rider §2(i) / ADR-2606172359 — a net score, not a vendor ban), and routes each movable JOB to the best one. A non-movable job is never coerced (stays in-place). Routing avoids carbon vs a warm grid-average baseline; the placement's waste heat is offered to 燠 okibi (the theory's 'compute-as-heater', but only where a heat demand exists). A routed saving becomes a 澪 mio flow-improvement claim (R1). OBSERVATION ONLY — a routing map, NEVER a forced job-kill / load-shedding weapon (the Murakumo fleet + operator actuate). Compute leg of mio (verification backbone); couples kasa (compute-capacity) + okibi (waste heat)."
+ :actor/status    :r0
+ :actor/adr       "2606211200"
+ :actor/related   ["2606211200" "2606172359" "2606051500" "2606072002" "2605262130" "2605312345"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "map-not-job-kill" :gate/rule "A routing MAP, never a forced job-kill / load-shedding weapon. No :toi/dispatch or :toi.job/kill-order attribute exists (test-enforced); the Murakumo fleet + operator actuate. A non-movable job is never coerced."}
+  {:gate/id "G2" :gate/name "murakumo-default-preferred" :gate/rule "Transparency weight scores Murakumo / donated-mesh above commercial GPU (Rider §2(i) / ADR-2606172359 — a net score, NOT a vendor ban). A clean Murakumo site outscores commercial GPU, which is only a fallback (test-enforced: unused while clean capacity exists)."}
+  {:gate/id "G3" :gate/name "waste-heat-to-okibi" :gate/rule "A site's waste heat is offered to 燠 okibi (heat-demand-sink sites preferred); compute-as-heater only where a heat demand exists."}
+  {:gate/id "G4" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms on an append-only content-addressed commit-DAG; every derived datom :toi/derived + :toi/sourcing."}
+  {:gate/id "G5" :gate/name "verification-via-mio" :gate/rule "A routed saving's avoided carbon / kWh is verified by 澪 mio (§9 gates) before it earns; toi observes, mio verifies (R1)."}
+  {:gate/id "G6" :gate/name "murakumo-only-narration" :gate/rule "Any narration via the Murakumo no-VKE mesh, DEFAULT-PREFERRED (Rider v3.3 §2(i))"}
+  {:gate/id "G7" :gate/name "no-server-key" :gate/rule "Platform holds no key; live scheduler/carbon-intensity ingest is an operator step (R0 seed = :representative + folded :authoritative)."}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "NOT an actuator — toi maps routing; the Murakumo fleet + operator dispatch"}
+  {:n/id "N2" :n/rule "NOT a load-shedding / DoS weapon — no forced job-kill"}
+  {:n/id "N3" :n/rule "NOT a vendor ban — commercial GPU is scored, not forbidden (objective-function, ADR-2606172359)"}
+  {:n/id "N4" :n/rule "NOT a forecaster (mitooshi owns distributions)"}]
+
+ :actor/methods
+ [{:method/id "toi_edn"  :method/file "methods/toi_edn.cljc"  :method/role "seed loader + classify (jobs + sites)"}
+  {:method/id "analyze"  :method/file "methods/analyze.cljc"  :method/role "site-score → greedy routing → avoided-carbon → datoms → coverage → report (+ bb CLI)"}
+  {:method/id "kotoba"   :method/file "methods/kotoba.cljc"   :method/role "content-addressed append-only COMPUTE ROUTING LEDGER (tx-cid/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun"  :method/file "methods/autorun.cljc"  :method/role "deterministic idempotent-by-content heartbeat — route → append routings on change (+ bb CLI)"}
+  {:method/id "claim"    :method/file "methods/claim.cljc"    :method/role "R1 seam: each routing to a 澪 mio flow-improvement claim (routed compute kWh, scheduler+carbon audit)"}]
+
+ :actor/lex
+ [{:lex/id "computeJob"}
+  {:lex/id "computeSite"}
+  {:lex/id "routingPlan"}]
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.toi.edn"
+  :seed/sourcing :representative
+  :seed/job-classes [:batch-inference :training :render :backup :indexing]
+  :seed/site-classes [:murakumo :donated-mesh :commercial-gpu]}
+
+ :actor/ledger
+ {:ledger/file "data/persisted/toi.routings.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/idempotent-by-content true
+  :ledger/note "Generated compute-routing ledger; tamper-evident (verify-chain); no-server-key; appends only on change. A routing map, never a forced dispatch."}
+
+ :actor/suite
+ {:suite/name "Energy Order Protocol"
+  :suite/role :compute-routing
+  :suite/backbone "mio"
+  :suite/siblings ["mio" "tawami" "okibi" "yudane"]
+  :suite/note "toi routes compute to favourable energy/thermal sinks, offers waste heat to 燠 okibi, and submits routed savings to 澪 mio as flow-improvement claims; the Murakumo fleet actuates under operator gate."}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/toi/run_tests.sh"
+  :suites ["methods/test_toi_edn.cljc" "methods/test_analyze.cljc"
+           "methods/test_kotoba.cljc" "methods/test_autorun.cljc"]}}

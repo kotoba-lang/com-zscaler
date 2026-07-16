@@ -1,0 +1,21 @@
+{:lexicon 1
+ :id "com.etzhayyim.tasuke.recoveryPlan"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "An account-recovery procedure GENERATED for the victim to follow themselves: service-specific steps to reset credentials, restore email/2FA, and lock out an attacker after an account-takeover. Self-help (G2 :self-submit), member-driven (no-server-key), free (G1)."
+   :record
+   {:type "object"
+    :required ["docId" "case" "kind" "authoredBy" "supportRole" "supportCostJpy" "published"]
+    :properties
+    {:docId         {:type "string" :description "→ :doc/id"}
+     :case          {:type "string" :description "→ :doc/case"}
+     :kind          {:type "string" :const "recovery-plan"}
+     :service       {:type "string" :description "the affected service (Google / Apple / LINE / Yahoo / bank app / …)"}
+     :authoredBy    {:type "string" :const "member" :description "G3 — only 'member'."}
+     :supportRole   {:type "string" :enum ["guide" "draft-assist" "self-submit"]
+                     :description "G2 INVARIANT — 案内/起草補助/本人実行 のみ。represent / proxy-submit / agent-file は enum 外 (本人がアカウント復旧を実行)."}
+     :steps         {:type "array" :items {:type "string"} :description "ordered self-help recovery steps"}
+     :supportCostJpy {:type "integer" :const 0 :description "G1 — free; only 0."}
+     :published     {:type "boolean" :const false :description "G9 — draft-only at R0. Only false."}}}}}}

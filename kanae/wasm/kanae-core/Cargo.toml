@@ -1,0 +1,21 @@
+# kanae 鼎 — fiscal-flow aggregation as a compact T1 WASM actor (ADR-2606015200).
+# A second browser-local (raw-CID) actor after tsumugi, demonstrating the T1 path
+# generalizes. Empty [workspace] keeps it standalone.
+[workspace]
+
+[package]
+name = "kanae-core"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "kanae 鼎 government fiscal-flow aggregation (top recipients) as a WASM actor"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

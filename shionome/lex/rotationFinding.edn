@@ -1,0 +1,19 @@
+{:lexicon 1
+ :id "com.etzhayyim.shionome.rotationFinding"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "An AGGREGATE, edge-primary finding derived on read from the flow graph: a net-flow ranking (where money is going/leaving), a rotation pair (どこからどこへ), an inflow-concentration HHI, or a FACTUAL cross-asset regime descriptor (risk-on/off/mixed). Aggregate (G4): no per-bucket rating/signal/target/score. NON-advisory (G2, トレードはしない): describes capital movement, never recommends a trade."
+   :record
+   {:type "object"
+    :required ["findingId" "kind" "noTradeNotice"]
+    :properties
+    {:findingId {:type "string"}
+     :kind      {:type "string"
+                 :enum ["net-flow" "rotation-pair" "inflow-hhi" "by-asset-class" "by-region" "regime" "correlation-cluster"]
+                 :description "the aggregate metric this finding reports."}
+     :regime    {:type "string" :enum ["risk-on" "risk-off" "mixed" "indeterminate"]
+                 :description "for kind=regime — a FACTUAL descriptor, NOT advice."}
+     :noTradeNotice {:type "boolean" :const true :description "G2 INVARIANT — only true."}
+     :sources   {:type "array" :items {:type "string"} :description "the public sources behind the finding."}}}}}}

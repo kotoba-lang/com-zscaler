@@ -1,0 +1,4 @@
+[{:db/id -1
+  :battery-handling-record/lexicon 1
+  :battery-handling-record/id "com.etzhayyim.hodoki.batteryHandlingRecord"
+  :battery-handling-record/defs "{:main {:type \"record\", :key \"tid\", :record {:type \"object\", :required [\"tid\" \"vin\" \"batteryType\" \"soh\" \"routingDecision\" \"timestamp\"], :properties {:tid {:type \"string\", :description \"Transaction ID\"}, :vin {:type \"string\", :description \"Vehicle Identification Number\"}, :batteryType {:type \"string\", :description \"li-ion|lead-acid|ni-mh\"}, :soh {:type \"integer\", :description \"State of Health percentage (G7)\"}, :routingDecision {:type \"string\", :description \"hikari-second-life|cell-recycle|kanayama-reclaim\"}, :timestamp {:type \"string\", :description \"ISO-8601 handling time\"}}}}}"}]

@@ -1,0 +1,27 @@
+;; uzu 渦 — ontology (kotoba EAVT schema, ADR-2606211500)
+;; The dissipative information-energy organism + the measured real-world energy field.
+;;
+;; Two ledgers, deliberately distinct (the design's central caveat — info ≠ energy):
+;;   ENERGY  — conserved, depleting (the metabolic balance; :uzu.beat/energy)
+;;   INFORMATION — copyable, append-only, non-conserved (the belief + free energy;
+;;                 :uzu.beat/free-energy + the commit-DAG itself)
+;;
+;; Attribute namespaces (inside the :ontology/attributes blob below):
+;;   :uzu.organism/*  — a lived organism's outcome (survival, final energy, lifespan)
+;;   :uzu.beat/*      — one beat of the dissipative loop (action, energy, free-energy)
+;;   :uzu.flow/*      — a MEASURED real-world flow, in its NATIVE unit + class
+;;   :uzu/derived     — true on every derived datom
+;;   :uzu/sourcing    — ":synthetic" (organism) | ":representative" (measured flow)
+;;
+;; Datomic/Datascript tx-data shape (ADR-2607100000-series edn-datomize pass):
+;; this file's original top-level map has been wrapped into a single-entity
+;; tx-data vector `[{:db/id -1 :ontology/* ...}]`. Keys that were already
+;; namespaced (:ontology/id :ontology/version :ontology/adr) are unchanged;
+;; bare keys (:node-kinds :enums :unit-classes :invariants :attributes) were
+;; promoted under the :ontology/ namespace. Non-scalar values (nested maps /
+;; vectors-of-maps) are pr-str'd into string "blob" attributes — read them
+;; back with `(clojure.edn/read-string ...)`. Consumers use
+;; `uzu.methods.uzu-edn/load-ontology` (see methods/uzu_edn.cljc), which
+;; reconstitutes the original bare-keyed map so downstream lookups
+;; (`get-in ontology [:enums :regime]` etc.) are unchanged.
+[{:ontology/unit-classes "{:physical {:unit \"W\", :conserved true, :doc \"thermodynamic power; dissipates to heat\"}, :economic {:unit \"USD/yr\", :conserved false, :doc \"money as economic free energy; NOT joules\"}, :informational {:unit \"bit/s\", :conserved false, :doc \"information flux; free energy in nats; NOT joules\"}, :experiential {:unit \"index\", :conserved false, :doc \"attention/affect/meaning; subject-dependent; NOT joules\"}}", :ontology/id "uzu", :ontology/version "0.1.0", :ontology/enums "{:regime #{:hostile :benign :scarce :abundant}, :action #{:forage :explore :flee :rest}, :flow-class #{:experiential :physical :economic :informational}}", :ontology/invariants "[{:id \"I1\", :rule \"energy (conserved) and free-energy (information) are distinct attributes — never conflated\"} {:id \"I2\", :rule \"flow magnitudes are summed only WITHIN a unit class; no cross-class grand total exists\"} {:id \"I3\", :rule \"experiential flows have no joule conversion (meaning is subject-dependent)\"} {:id \"I4\", :rule \"cross-class visual magnitudes are flagged :uzu.flow/reference-only — layout, not unit identity\"} {:id \"I5\", :rule \"self-maintenance is earned: an organism whose meaning misreads the world dies (no immortality)\"}]", :ontology/attributes "{:uzu.flow/label {:type :string}, :uzu.flow/source {:type :string}, :uzu.beat/belief-of {:type :string, :note \"the regime the organism BELIEVED most likely\"}, :uzu.organism/id {:type :string}, :uzu/derived {:type :boolean}, :uzu.beat/alive {:type :boolean}, :uzu.beat/regime {:type :string, :note \"the TRUE (hidden) regime that beat\"}, :uzu.flow/id {:type :string}, :uzu.flow/class {:type :string, :enum :flow-class}, :uzu/sourcing {:type :string}, :uzu.organism/lifespan {:type :long}, :uzu.organism/final-energy {:type :double, :unit \"energy (conserved)\"}, :uzu.flow/unit {:type :string, :note \"the flow's NATIVE unit, never normalized away\"}, :uzu.organism/beats {:type :long}, :uzu.beat/age {:type :long}, :uzu.beat/of {:type :string}, :uzu.beat/gained {:type :double}, :uzu.beat/free-energy {:type :double, :unit \"nats (information)\"}, :uzu.beat/spent {:type :double}, :uzu.beat/energy {:type :double, :unit \"energy (conserved)\"}, :uzu.flow/reference-only {:type :boolean, :note \"true ⇒ the visual magnitude is layout, not a unit claim\"}, :uzu.flow/magnitude {:type :double}, :uzu.organism/alive {:type :boolean}, :uzu.beat/action {:type :string}, :uzu.flow/visual-log10-W {:type :double, :note \"log visual size; physical-equivalent for cross-class\"}, :uzu.organism/final-belief {:type :string}}", :ontology/node-kinds "[{:kind :organism, :doc \"A thermodynamic active-inference agent. :prefs (C) = what MATTERS to this subject (= meaning).\", :keys [:id :prefs :temp :energy0 :prior :note]} {:kind :world-step, :doc \"One step of the environment tape: hidden :regime + noisy :signal observation.\", :keys [:step :regime :signal]} {:kind :flow, :doc \"A measured real-world energy-like flow in one of four incommensurable unit classes.\", :keys [:id :label :class :magnitude :unit :efficiency :source]} {:kind :circulation, :doc \"A coupling edge of the open dissipative system (energy→economy→information→meaning→…).\", :keys [:from :to :coupling :cross-class]}]", :db/id -1, :ontology/adr ["2606211500" "2605262130" "2605312345" "2606011501" "2606101800"]}]

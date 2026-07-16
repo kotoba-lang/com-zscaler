@@ -1,0 +1,19 @@
+;; Country profile — KOR Republic of Korea (principal B). ADR-2606062300. sourcing :representative.
+;; Korea has a strong resident-registration system (주민등록) + a unified Gov24 portal — a
+;; high-maturity e-gov exemplar.
+{:country-profile/iso3 "KOR" :country-profile/name "대한민국"
+ :country-profile/operated-by ":adopting-government"
+ :country-profile/authority-mode ":supplied-to-state"
+ :country-profile/sourcing ":representative"
+ :country-profile/bindings
+ [{:bind/service "tax.income.file"             :bind/agency "국세청 (National Tax Service)" :bind/legal-basis "소득세법"             :bind/national-spec "홈택스 (Hometax)" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:nts"}
+  {:bind/service "tax.vat.file"                :bind/agency "국세청 (NTS)"                  :bind/legal-basis "부가가치세법"         :bind/national-spec "홈택스 + 전자세금계산서" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:nts"}
+  {:bind/service "residency.move-in"           :bind/agency "행정안전부 / 시군구 주민센터"  :bind/legal-basis "주민등록법"           :bind/national-spec "정부24 (Gov24) 전입신고" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:mois"}
+  {:bind/service "residency.certificate"       :bind/agency "행정안전부 / 주민센터"         :bind/legal-basis "주민등록법"           :bind/national-spec "정부24 주민등록등본" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:mois"}
+  {:bind/service "corp.incorporation.register" :bind/agency "대법원 등기소 (Court Registry)" :bind/legal-basis "상법 / 상업등기법"     :bind/national-spec "인터넷등기소 (IROS)" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:scourt:iros"}
+  {:bind/service "passport.issue"              :bind/agency "외교부 (MOFA)"                 :bind/legal-basis "여권법"               :bind/national-spec "ICAO Doc 9303 / 정부24" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:mofa"}
+  {:bind/service "id.national.issue"           :bind/agency "행정안전부 / 주민센터"         :bind/legal-basis "주민등록법"           :bind/national-spec "주민등록증 (Resident Registration Card)" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:mois"}
+  {:bind/service "benefit.pension.claim"       :bind/agency "국민연금공단 (NPS)"            :bind/legal-basis "국민연금법"           :bind/national-spec "내연금 (NPS online)" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:nps"}
+  {:bind/service "civil.birth.register"        :bind/agency "시군구청 (가족관계등록)"       :bind/legal-basis "가족관계의 등록 등에 관한 법률" :bind/national-spec "출생신고 / 전자가족관계등록시스템" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:scourt:family"}
+  {:bind/service "civil.death.register"        :bind/agency "시군구청 (가족관계등록)"       :bind/legal-basis "가족관계의 등록 등에 관한 법률" :bind/national-spec "사망신고 / 전자가족관계등록시스템" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:scourt:family"}
+  {:bind/service "civil.marriage.register"     :bind/agency "시군구청 (가족관계등록)"       :bind/legal-basis "가족관계의 등록 등에 관한 법률 / 민법" :bind/national-spec "혼인신고 / 전자가족관계등록시스템" :bind/atlas-did "did:web:etzhayyim.com:gov:kor:scourt:family"}]}

@@ -1,0 +1,160 @@
+;; makura 枕 — kotoba EAVT schema
+;; ADR-2605261115 · R0 scaffold
+;; Defines the schema for foam pillow manufacturing data.
+
+[;; ───────────────────────────── :foamBatchAttestation/* ─────────────────────────────
+ {:db/ident :foamBatchAttestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for foam batch attestation"}
+ {:db/ident :foamBatchAttestation/chemistry
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "L2 chemistry details for the foam batch"}
+ {:db/ident :foamBatchAttestation/density
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Density measurement of the foam batch"}
+ {:db/ident :foamBatchAttestation/cellStructure
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Cell structure details of the foam batch"}
+ {:db/ident :foamBatchAttestation/vocTest
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "VOC test results for the foam batch"}
+
+ ;; ───────────────────────────── :fabricAttestation/* ─────────────────────────────
+ {:db/ident :fabricAttestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for fabric attestation"}
+ {:db/ident :fabricAttestation/materialDisclosure
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Material disclosure details for the fabric"}
+ {:db/ident :fabricAttestation/charterScan
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Charter scan results for the fabric"}
+ {:db/ident :fabricAttestation/dyeSafety
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Dye safety attestation for the fabric"}
+
+ ;; ───────────────────────────── :pillowLotAttestation/* ─────────────────────────────
+ {:db/ident :pillowLotAttestation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for pillow lot attestation"}
+ {:db/ident :pillowLotAttestation/fillWeight
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Fill weight details for the pillow lot"}
+ {:db/ident :pillowLotAttestation/closureDetails
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Closure details for the pillow lot"}
+ {:db/ident :pillowLotAttestation/labelDetails
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Labeling details for the pillow lot"}
+ {:db/ident :pillowLotAttestation/lotDid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Pillow lot DID"}
+
+ ;; ───────────────────────────── :qcRecord/* ─────────────────────────────
+ {:db/ident :qcRecord/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for QC record"}
+ {:db/ident :qcRecord/dimensional
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Dimensional check results"}
+ {:db/ident :qcRecord/ild
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ILD test results"}
+ {:db/ident :qcRecord/visual
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Visual inspection results"}
+ {:db/ident :qcRecord/rejectPercentage
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reject percentage"}
+
+ ;; ───────────────────────────── :packagingRecord/* ─────────────────────────────
+ {:db/ident :packagingRecord/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for packaging record"}
+ {:db/ident :packagingRecord/vacuumCompression
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Vacuum compression details"}
+ {:db/ident :packagingRecord/carton
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Carton details"}
+ {:db/ident :packagingRecord/pallet
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Pallet details"}
+ {:db/ident :packagingRecord/takeBackQr
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Take-back QR information"}
+
+ ;; ───────────────────────────── :recyclingCertificate/* ─────────────────────────────
+ {:db/ident :recyclingCertificate/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for recycling certificate"}
+ {:db/ident :recyclingCertificate/takeBackChain
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Take-back chain information"}
+ {:db/ident :recyclingCertificate/recycledCrumbPercentage
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Recycled crumb percentage"}
+
+ ;; ───────────────────────────── :workerExposureRecord/* ─────────────────────────────
+ {:db/ident :workerExposureRecord/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for worker exposure record"}
+ {:db/ident :workerExposureRecord/isocyanateExposure
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Isocyanate exposure levels"}
+ {:db/ident :workerExposureRecord/vocExposure
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "VOC exposure levels"}
+ {:db/ident :workerExposureRecord/dustExposure
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Dust exposure levels"}
+
+ ;; ───────────────────────────── :silenComfortReview/* ─────────────────────────────
+ {:db/ident :silenComfortReview/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for Silen Comfort Review"}
+ {:db/ident :silenComfortReview/councilAttestation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Council 5-of-7 Safe attestation"}
+ ]

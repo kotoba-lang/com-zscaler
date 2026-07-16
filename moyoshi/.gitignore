@@ -1,0 +1,4 @@
+# moyoshi 催し — runtime state (NOT committed). The persisted kotoba commit-DAG log is
+# local runtime output of the convening heartbeat (autorun); the committed durable
+# artifacts are the seeds (data/seed-society.kotoba.edn, data/seed-kizuna.kotoba.edn).
+data/persisted/

@@ -1,0 +1,68 @@
+(ns yadori.methods.test-availability
+  "test_availability.py — tests for the yadori RDAP availability classifier (ADR-2606038400).
+  1:1 Clojure port of methods/test_availability.py (pytest -> clojure.test).
+
+  Run from 20-actors as the bb source root (see VERIFY in the task), or via -main."
+  (:require [clojure.test :refer [deftest is run-tests]]
+            [yadori.methods.availability :as a]))
+
+(deftest test-classify-status-mapping
+  (is (= (a/classify-status 404) a/STATUS-AVAILABLE))
+  (is (= (a/classify-status 200) a/STATUS-REGISTERED))
+  (is (= (a/classify-status 429) a/STATUS-RATE-LIMITED))
+  (is (= (a/classify-status 500) a/STATUS-UNKNOWN)))
+
+(deftest test-available-from-fixture
+  (let [r (a/check-availability "free-name.dev" :fixtures {"free-name.dev" 404})]
+    (is (= (get r "status") a/STATUS-AVAILABLE))
+    (is (= (get r "source") "fixture"))
+    (is (= (get r "rdap_url") "https://www.registry.google/rdap/domain/free-name.dev"))))
+
+(deftest test-registered-from-fixture
+  (let [r (a/check-availability "example.com" :fixtures {"example.com" 200})]
+    (is (= (get r "status") a/STATUS-REGISTERED))))
+
+(deftest test-unsupported-tld-degrades-honestly
+  (let [r (a/check-availability "name.quux" :fixtures {})]
+    (is (= (get r "status") a/STATUS-UNSUPPORTED-TLD))
+    (is (clojure.string/includes? (get r "note") "G8"))))
+
+(deftest test-invalid-domain-rejected
+  (is (= (get (a/check-availability "nodot" :fixtures {}) "status") a/STATUS-INVALID))
+  (is (= (get (a/check-availability "" :fixtures {}) "status") a/STATUS-INVALID))
+  (is (= (get (a/check-availability "a..b.com" :fixtures {}) "status") a/STATUS-INVALID)))
+
+(deftest test-idn-punycode-normalization
+  ;; café.com -> xn--caf-dma.com ; the classifier keys on the ascii form.
+  (is (= (a/normalize "café.com") "xn--caf-dma.com"))
+  (let [r (a/check-availability "café.com" :fixtures {"xn--caf-dma.com" 404})]
+    (is (= (get r "ascii_fqdn") "xn--caf-dma.com"))
+    (is (= (get r "status") a/STATUS-AVAILABLE))))
+
+(deftest test-normalize-strips-trailing-dot-and-case
+  (is (= (a/normalize "Example.COM.") "example.com")))
+
+(deftest test-tld-and-rdap-url
+  (is (= (a/tld-of "foo.bar.io") "io"))
+  (is (= (a/rdap-url "foo.io") "https://rdap.identitydigital.services/rdap/domain/foo.io"))
+  (is (nil? (a/rdap-url "foo.unknowntld"))))
+
+(deftest test-offline-without-fixture-is-unknown-not-a-lie
+  ;; G1/G7: with no fixture and live disabled, we must NOT claim available.
+  (let [r (a/check-availability "mystery.com" :fixtures {})]
+    (is (= (get r "status") a/STATUS-UNKNOWN))
+    (is (= (get r "source") "none"))
+    (is (some? (get r "rdap_url")))))  ; url is still constructible
+
+(deftest test-live-is-gated-by-default
+  ;; allow_live defaults False; a supported-TLD name with no fixture stays UNKNOWN (no network).
+  (let [r (a/check-availability "mystery.org")]
+    (is (= (get r "status") a/STATUS-UNKNOWN))))
+
+(deftest test-suggest-alternatives-fans-out-and-excludes-taken
+  (let [alts (a/suggest-alternatives "etzhayyim" :tlds ["com" "org" "dev"] :taken #{"etzhayyim.com"})]
+    (is (not (some #{"etzhayyim.com"} alts)))
+    (is (some #{"etzhayyim.org"} alts))
+    (is (some #{"etzhayyim.dev"} alts))))
+
+#?(:clj (defn -main [& _] (run-tests 'yadori.methods.test-availability)))

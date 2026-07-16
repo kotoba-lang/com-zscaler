@@ -1,0 +1,55 @@
+;; kudamori 管守 — actor manifest (Gen-3 kotoba-native, Clojure-first)
+;; Sewer / confined-space in-pipe cleaning robotics — atmosphere gate + nav + jetting
+;; ADR-2606142030 (R0 scaffold) · 2026-06-14
+{:actor/id        "kudamori"
+ :actor/glyph     "管守"
+ :actor/tier      :tier-b
+ :actor/integrates ["kuramori" "mizuho" "tazuna"]
+ :actor/domain    "kudamori.etzhayyim.com"
+ :actor/purpose   "Sewer / confined-space in-pipe cleaning robotics — removes the human from the confined space that ADR-2606073001 §4 named as a high-remote-value GAP (toxic-gas/confined-space death). It is the in-pipe cleaning counterpart that mizuho 水穂 (wastewater TREATMENT, ADR-2605263100) left open. An electric, tazuna-teleoperable in-pipe crawler: a confined-space atmosphere ENTRY GATE (O2/H2S/CH4/CO with purge-to-entry, ★ G5), diameter-fit-checked in-pipe navigation over a sewer-network graph (route-around blockages), and pressure-safe hydro-jetting (nozzle vs pipe-material rating, ★ G7) with debris-removal estimate + water-reuse balance (effluent → mizuho, G2). Displacement-Dividend-coupled (管路清掃作業員, ADR-2606032130); tazuna-teleoperable (ADR-2606042100). Clojure-first GAP-actor wave (sibling of kuramori, ADR-2606142000)."
+ :actor/status    :r0
+ :actor/adr       "2606142030"
+ :actor/related   ["2606073001" "2606032100" "2606032130" "2606042100" "2605215000" "2605312345" "2606142000" "2605263100"]
+
+ :actor/charter-rider
+ {:rider/version "3.1"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "design-sim-only"        :gate/rule "R0 = pure planning compute + sim; moves no real robot. Real actuation is Council Lv6+/operator-gated R1 (no-server-key)"}
+  {:gate/id "G2" :gate/name "water-reuse-eco"        :gate/rule "Track jetting water-reuse fraction; residual effluent is NEVER discharged untreated — handed off to mizuho 水穂 (ADR-2605263100). Electric crawler only"}
+  {:gate/id "G3" :gate/name "no-worker-surveillance" :gate/rule "KPI is metres-cleaned/hour (equipment metric), never a per-worker pace ranking or biometric (§1.13, mirrors kuramori G3/niyaku G11)"}
+  {:gate/id "G4" :gate/name "dividend-coupled"       :gate/rule "管路清掃 labour displacement is coupled to a funded Displacement-Dividend cohort (ADR-2606032130 G2); no live displacement without it"}
+  {:gate/id "G5" :gate/name "confined-space-atmosphere-gate" :gate/rule "★ entry-permitted? RAISES on ANY unsafe gas reading (O2 19.5–23.5%, H2S <10ppm, CH4 <10%LEL, CO <35ppm); entry without a passing/purged atmosphere is unrepresentable. Removes the human from the confined space"}
+  {:gate/id "G6" :gate/name "murakumo-only"          :gate/rule "Inference/narration is Murakumo-only (LiteLLM 127.0.0.1:4000); external LLM prohibited (ADR-2605215000)"}
+  {:gate/id "G7" :gate/name "no-pipe-over-pressure"  :gate/rule "★ jet-pressure-safe? RAISES when nozzle pressure exceeds the pipe material's rating (VCP/PVC/concrete/ductile-iron); over-pressure that would damage the pipe is unrepresentable (never clamp-and-proceed)"}
+  {:gate/id "G8" :gate/name "tazuna-operated"        :gate/rule "Remote operation/teleop is via tazuna 手綱 (ADR-2606042100); weaponizable use unrepresentable"}
+  {:gate/id "G9" :gate/name "handoff-provenance"     :gate/rule "Every cross-actor handoff 縁 (kudamori→mizuho effluent) names BOTH a source and a destination actor; assert-handoff! RAISES on an orphan handoff — no unattributed chain edge on the Datom log"}]
+
+ :actor/methods
+ [{:method/id "atmosphere"  :method/lang :clojure :method/pure true :method/desc "★ G5 confined-space entry gate: hazards/entry-permitted?/assert-entry! over O2/H2S/CH4/CO thresholds (raises on unsafe) + purge-to-entry forced-ventilation model"}
+  {:method/id "pipe_nav"    :method/lang :clojure :method/pure true :method/desc "In-pipe crawler navigation: diameter-fit check (raises on no-fit) + BFS shortest route over the pipe graph + route-around blocked segments + plan-nav to a target segment"}
+  {:method/id "jetting"     :method/lang :clojure :method/pure true :method/desc "★ G7 hydro-jetting: jet-pressure-safe? vs pipe-material rating (raises on over-pressure) + debris-removal volume estimate + water-reuse balance (G2; effluent → mizuho)"}
+  {:method/id "analyze"     :method/lang :clojure :method/pure true :method/desc "End-to-end R0 orchestrator: entry gate (purge if needed) → in-pipe nav → pressure-safe jetting → report map; downstream legs GATED when the atmosphere cannot be made safe"}
+  {:method/id "datom_emit"  :method/lang :clojure :method/pure true :method/desc "kotoba EAVT Datom-log emitter (:kuda.node/* :kuda.pipe/* :kuda.robot/* + :cleans 縁 GROUND; :bond/* DERIVED transient)"}
+  {:method/id "handoff"     :method/lang :clojure :method/pure true :method/desc "★ G9 cross-actor chain 縁: outbound effluent handoff (cleaned segment → mizuho 水穂 wastewater TREATMENT) with assert-handoff! provenance gate (raises on orphan) + :handoff/* EAVT emit"}
+  {:method/id "coverage"     :method/lang :clojure :method/pure true :method/desc "HONEST occupation sub-task coverage map (asobi/shiori coverage_report pattern, G5 sourcing-honesty): MEASURES which sewer/confined-space cleaning sub-tasks an existing method implements + NAMES the gaps (cctv-inspection/root-cutting/relining); partial by design"}
+  {:method/id "campaign"     :method/lang :clojure :method/pure true :method/desc "Network-wide multi-segment cleaning CAMPAIGN planning: prioritize segments (blockage-risk weighted + cleaning staleness) → top-N/risk-threshold select → nearest-neighbour tour over access manholes from the depot. EVERY stop carries :atmosphere-recheck-required true — a layer ABOVE the per-entry atmosphere gate (★ G5); the campaign batches the ROUTE, NEVER the gas gate"}
+  {:method/id "inspection"   :method/lang :clojure :method/pure true :method/desc "In-pipe CONDITION inspection survey + defect grading (PACP-like): grade-segment (observations → structural grade 1..5 = max severity + derived :blockage-risk 0..1 weighted toward flow-obstructing defect kinds) → survey (worst-first) → to-campaign-input (adapts to the {:segment-id :blockage-risk :last-cleaned-days :access} shape campaign/prioritize consumes — survey FEEDS the cleaning campaign). Pipes/infrastructure only, NO person/biometric data (G3)"}
+  {:method/id "rootcut"       :method/lang :clojure :method/pure true :method/desc "★ G7 mechanical root/obstruction cutting: plan-cut (root intrusion {:root-density :pipe-diameter-mm :pipe-material} + cutter → passes-needed (denser roots → more passes) + required cutting torque) with assert-cut-torque! (RAISES when required torque exceeds the pipe material's safe limit — over-torque would crack/collapse the pipe; never clamp-and-proceed, mirrors jetting over-pressure)"}
+  {:method/id "relining"      :method/lang :clojure :method/pure true :method/desc "Trenchless CIPP relining / spot repair: plan-reline ({:pipe-diameter-mm :defect-severity 1..5 :host-condition 1..5} → liner-thickness-mm (scales with diameter + severity) + cure-time-min) with assert-relinable! (RAISES when host-condition is collapse-grade 5 — no sound host to line, needs full replacement; honest refusal, never a liner that won't hold)"}]
+
+ :actor/cells
+ [{:cell/id "atmosphere_gate" :cell/kind :safety     :cell/runtime :wasm :cell/layer "L0" :cell/method "atmosphere"}
+  {:cell/id "purge"           :cell/kind :safety     :cell/runtime :wasm :cell/layer "L1" :cell/method "atmosphere"}
+  {:cell/id "pipe_nav"        :cell/kind :planning   :cell/runtime :wasm :cell/layer "L2" :cell/method "pipe_nav"}
+  {:cell/id "jetting"         :cell/kind :planning   :cell/runtime :wasm :cell/layer "L3" :cell/method "jetting"}
+  {:cell/id "datom_emit"      :cell/kind :projection :cell/runtime :wasm :cell/layer "terminal" :cell/method "datom_emit"}]
+
+ :actor/reference-equipment
+ {:crawler/class "electric in-pipe crawler (tracked/wheeled), tethered"
+  :crawler/od-mm 200
+  :gas-detector "4-gas (O2/H2S/CH4/CO) confined-space monitor"
+  :ventilation "forced-air blower (purge-to-entry)"
+  :jetting "hydro-jet nozzle, pressure-rated to pipe material"
+  :facility/ref "sewer-ref-01 (municipal foul-sewer reach, reference)"}}

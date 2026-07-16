@@ -1,0 +1,25 @@
+;; Country profile — JPN 日本 (principal B :nation-state-adopter). ADR-2606062300.
+;; Localizes the universal COFOG e-gov services onto Japan's agency + legal-basis +
+;; national spec. :atlas-did links the ooyake observation-atlas unit (who/where).
+;; sourcing :representative — NOT yet verified to ooyake :authoritative grade (G5).
+{:country-profile/iso3 "JPN" :country-profile/name "日本"
+ :country-profile/operated-by ":adopting-government"
+ :country-profile/authority-mode ":supplied-to-state"
+ :country-profile/sourcing ":representative"
+ :country-profile/bindings
+ [{:bind/service "tax.income.file"             :bind/agency "国税庁 (NTA)"                :bind/legal-basis "所得税法 / 国税通則法"   :bind/national-spec "e-Tax (国税電子申告・納税システム)" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:mof:nta"}
+  {:bind/service "tax.corporate.file"          :bind/agency "国税庁 (NTA)"                :bind/legal-basis "法人税法"                :bind/national-spec "e-Tax" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:mof:nta"}
+  {:bind/service "tax.vat.file"                :bind/agency "国税庁 (NTA)"                :bind/legal-basis "消費税法"                :bind/national-spec "e-Tax / 適格請求書 (インボイス)" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:mof:nta"}
+  {:bind/service "tax.payment"                 :bind/agency "国税庁 / 地方税共同機構"      :bind/legal-basis "国税通則法 / 地方税法"   :bind/national-spec "e-Tax / eLTAX" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:mof:nta"}
+  {:bind/service "tax.withholding.remit"       :bind/agency "国税庁 / 所轄税務署 (法人課税部門)" :bind/legal-basis "所得税法181-230条 / 復興財源確保法28条 / 国税通則法36・60・67条" :bind/national-spec "e-Tax (所得税徴収高計算書) / ダイレクト納付 / 納付書" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:mof:nta"}
+  {:bind/service "residency.move-in"           :bind/agency "市区町村"                     :bind/legal-basis "住民基本台帳法"          :bind/national-spec "マイナポータル / 住基ネット" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:soumu:juki"}
+  {:bind/service "residency.certificate"       :bind/agency "市区町村"                     :bind/legal-basis "住民基本台帳法"          :bind/national-spec "コンビニ交付 / マイナポータル" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:soumu:juki"}
+  {:bind/service "corp.incorporation.register" :bind/agency "法務局 (Legal Affairs Bureau)" :bind/legal-basis "商業登記法 / 会社法"      :bind/national-spec "登記・供託オンライン申請システム" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:moj:legal-affairs"}
+  {:bind/service "corp.certificate"            :bind/agency "法務局"                       :bind/legal-basis "商業登記法"              :bind/national-spec "登記情報提供サービス" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:moj:legal-affairs"}
+  {:bind/service "passport.issue"              :bind/agency "外務省 / 都道府県旅券事務所"  :bind/legal-basis "旅券法"                  :bind/national-spec "ICAO 9303 準拠 IC旅券 / 旅券申請オンライン" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:mofa:passport"}
+  {:bind/service "id.national.issue"           :bind/agency "市区町村 / J-LIS"            :bind/legal-basis "番号法 (マイナンバー法)"  :bind/national-spec "個人番号カード (マイナンバーカード)" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:soumu:jlis"}
+  {:bind/service "benefit.pension.claim"       :bind/agency "日本年金機構"                 :bind/legal-basis "国民年金法 / 厚生年金保険法" :bind/national-spec "ねんきんネット" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:mhlw:nenkin"}
+  {:bind/service "benefit.child.claim"         :bind/agency "市区町村 / こども家庭庁"      :bind/legal-basis "児童手当法"              :bind/national-spec "マイナポータル ぴったりサービス" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:cfa"}
+  {:bind/service "civil.birth.register"        :bind/agency "市区町村 (戸籍事務)"          :bind/legal-basis "戸籍法"                  :bind/national-spec "出生届 / 戸籍情報連携システム" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:moj:koseki"}
+  {:bind/service "civil.death.register"        :bind/agency "市区町村 (戸籍事務)"          :bind/legal-basis "戸籍法"                  :bind/national-spec "死亡届 / 戸籍情報連携システム" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:moj:koseki"}
+  {:bind/service "civil.marriage.register"     :bind/agency "市区町村 (戸籍事務)"          :bind/legal-basis "戸籍法 / 民法"            :bind/national-spec "婚姻届 / 戸籍情報連携システム" :bind/atlas-did "did:web:etzhayyim.com:gov:jpn:moj:koseki"}]}

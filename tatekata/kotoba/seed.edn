@@ -1,0 +1,63 @@
+;; tatekata 建方 — kotoba seed data (representative, R0)
+;; ADR-2605250715 · :sourcing :representative (NOT authoritative; R0 scaffold)
+;; A worked example: 1 construction project (2-story residential, 200m² footprint) with
+;; 5-phase lifecycle (foundation → structural → mep → finishing → commissioning) plus
+;; site survey, material batch, phase-progress records (IPFS-pinned photos/depths, robot
+;; witnesses), one safety incident, and a computed settlement intent (USDC minor, 10% tithe).
+;; Prices = USDC minor (6-dp). NOT a live commercial offer. R0 scaffold — no real execution.
+
+[;; ════════════ Project ════════════
+ {:project/id "did:web:tatekata.etzhayyim.com/project/demo-residential-01"
+  :project/owner-did "did:web:owner.example.etzhayyim.com"
+  :project/location "123 Sakura Lane, Shibuya Ward, Tokyo"
+  :project/scope "2-story residential + MEP (no hazmat, no rare-earth)"
+  :project/stories 2
+  :project/footprint-m2 200
+  :project/phase :foundation}
+
+ ;; ════════════ Site Survey ════════════
+ {:site/id "did:web:tatekata.etzhayyim.com/site/demo-01"
+  :site/project "did:web:tatekata.etzhayyim.com/project/demo-residential-01"
+  :site/survey-date "2026-06-02T09:00:00Z"
+  :site/soil-class "CH (inorganic clay, high plasticity)"
+  :site/utilities ["electric-220v" "gas-city" "water-city" "sewer-city" "telecom-fiber"]
+  :site/hazards ["site-slope-5-degrees" "underground-cable-7m-south"]
+  :site/ipfs-pin-cid "QmSitePhotosAndDepth123456789abcdefgh"}
+
+ ;; ════════════ Material Batch ════════════
+ {:material/id "did:web:tatekata.etzhayyim.com/material/structural-steel-01"
+  :material/project "did:web:tatekata.etzhayyim.com/project/demo-residential-01"
+  :material/type "structural-steel"
+  :material/batch-id "SS-DEMO-001"
+  :material/arrival-date "2026-06-02T14:30:00Z"
+  :material/certification "JIS G3101 certification + mill report"
+  :material/weight-kg 5000
+  :material/analysis "tensile 400 MPa, yield 250 MPa confirmed"}
+
+ ;; ════════════ Phase 1: Foundation (example progress boundary) ════════════
+ {:progress/id "did:web:tatekata.etzhayyim.com/progress/demo-foundation-01"
+  :progress/project "did:web:tatekata.etzhayyim.com/project/demo-residential-01"
+  :progress/phase :foundation
+  :progress/timestamp "2026-06-02T18:00:00Z"
+  :progress/photo-cid "QmFoundationPhotos123456789abcdefgh"
+  :progress/depth-map-cid "QmDepthMapFoundation123456789abcdef"
+  :progress/robot-dids ["did:web:giemon.kuni-umi.etzhayyim.com" "did:web:mimi.kuni-umi.etzhayyim.com"]
+  :progress/anomalies []}
+
+ ;; ════════════ Safety Incident (near-miss example) ════════════
+ {:safety/id "did:web:tatekata.etzhayyim.com/safety/incident-01"
+  :safety/project "did:web:tatekata.etzhayyim.com/project/demo-residential-01"
+  :safety/timestamp "2026-06-02T16:45:00Z"
+  :safety/type :near-miss
+  :safety/description "giemon arm proximity to human operator; automated retreat initiated; no contact"
+  :safety/witnesses ["did:web:giemon.kuni-umi.etzhayyim.com" "did:web:operator.example.etzhayyim.com"]
+  :safety/correction-required false}
+
+ ;; ════════════ Settlement Intent (computed, NOT broadcast; R0 stops at :intent) ════════════
+ {:settlement/id "settle.demo.tatekata.01"
+  :settlement/project "did:web:tatekata.etzhayyim.com/project/demo-residential-01"
+  :settlement/rail :usdc-base-l2
+  :settlement/gross-minor 100000000 :settlement/tithe-minor 10000000
+  :settlement/owner-payout-minor 90000000
+  :settlement/tithe-router "50-infra/etzhayyim-tithe-router"
+  :settlement/state :intent}]

@@ -1,0 +1,16 @@
+[package]
+name = "kami-bridge"
+description = "Golden-trace generator: cross-validates the Python :representative kinematics (kuni-umi/robotics) against the real kami-genesis Featherstone solver. Emits golden/kami_fk_ik_trace.json. Requires the 40-engine/kami-engine submodule to be checked out."
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+# Standalone crate (not part of the kami-engine workspace).
+[workspace]
+
+[dependencies]
+kami-genesis = { git = "https://github.com/etzhayyim/kami-engine.git", rev = "c1cff42cee8b9087bfad67931a916c5bfe087638" }
+kami-articulated = { git = "https://github.com/etzhayyim/kami-engine.git", rev = "c1cff42cee8b9087bfad67931a916c5bfe087638" }
+glam = { version = "0.33", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

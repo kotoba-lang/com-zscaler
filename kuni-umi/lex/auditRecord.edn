@@ -1,0 +1,18 @@
+;; com.etzhayyim.kuniumi.auditRecord — lexicon
+;; ADR-2605201400 · audit witness output
+{:lexicon 1
+ :id "com.etzhayyim.kuniumi.auditRecord"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["auditId" "commissioningRecordId" "anomalyLog" "state"]
+    :properties
+    {:auditId            {:type "string" :description "unique audit record ID"}
+     :commissioningRecordId {:type "string" :description "ref to :commissioningRecord"}
+     :anomalyLog         {:type "string" :description "safety anomalies detected (Murakumo LLM-flagged in R0, real sensor in R1+)"}
+     :robotWitnessSigs   {:type "string" :description ">=2 robot-DID signatures (constitutional, G8)"}
+     :state              {:type "string" :description ":in-progress (monitoring) | :complete (operational) | :alert (anomaly logged, escalated)"}
+     :timestamp          {:type "string" :description "ISO-8601 event time"}}}}}}

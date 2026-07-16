@@ -1,0 +1,24 @@
+{
+  "txId": "akashi-source-policy-public-page-scribe-r1",
+  "createdAt": "2026-07-10T00:00:00Z",
+  "adr": "etzhayyim:adr:2606022300",
+  "sourceId": "public-ad-transparency-pages",
+  "decision": "allowed",
+  "runtime": "live-adapter",
+  "approvedAccessModes": ["public-page"],
+  "evidence": {
+    "termsReviewCid": "cid:akashi:review:public-page-terms-20260710",
+    "robotsOrApiPolicyCid": "cid:akashi:review:public-page-robots-20260710",
+    "publicAccessProofCid": "cid:akashi:review:public-page-no-login-20260710",
+    "fixtureParserCid": "cid:akashi:public-page-scribe:r1",
+    "methodNoteCid": "cid:akashi:method-note:public-page-scribe-r1",
+    "rateLimitReviewCid": "cid:akashi:review:public-page-human-cadence-20260710",
+    "licenseReviewCid": "cid:akashi:review:public-page-source-disclosed-storage-20260710"
+  },
+  "reviewerDid": "did:web:akashi.etzhayyim.com",
+  "attestingDid": "did:web:akashi.etzhayyim.com",
+  "rollback": {
+    "disableTxRequired": true,
+    "defaultRuntimeAfterRollback": "disabled"
+  }
+}

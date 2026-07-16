@@ -1,0 +1,122 @@
+;; kumi 組 — SYNTHETIC, FICTIONAL seed of community/organization nodes + ties
+;; (ADR-2607101800-family). Every community below is invented for this seed;
+;; none names a real-world political party, religious denomination, sports
+;; federation, or historical/cultural organization. Domain-classes present:
+;; political, religious, sports, cultural, historical, civic-neighborhood,
+;; labor (>= one community per class, per the ADR).
+;;
+;; The shape is deliberately non-trivial so loop-classify / leverage-read have
+;; something to compute:
+;;   - cedar-creek-youth-football <-> maple-grove-neighborhood-assoc: mutual
+;;     :follows (declared, sourced) => a VIRTUOUS dyad
+;;   - lantern-district-arts-society <-> old-mill-heritage-society: mutual
+;;     :influences (co-occurrence, non-causal) => a NEUTRAL dyad
+;;   - harborview-civic-renewal-local -> dockworkers-mutual-aid-447 ->
+;;     riverside-fellowship-congregation -> harborview-civic-renewal-local:
+;;     one-directional :depends-on chain, no reciprocation => a VICIOUS triad
+;;   - founders-day-historical-committee -> elmwood-quilters-circle ->
+;;     old-mill-heritage-society -> founders-day-historical-committee, with
+;;     ONE partial reciprocation (elmwood-quilters-circle :follows->
+;;     founders-day-historical-committee) => a TRANSITIONING triad
+;;   - harborview-civic-renewal-local is the highest-versatility node (touches
+;;     political + labor + religious neighbors) => the expected leverage community
+{:communities
+ [{":id" "harborview-civic-renewal-local"
+   ":name" "Harborview Civic Renewal Party — Local Branch"
+   ":domain-class" ":political"
+   ":jurisdiction-or-locale" "Harborview City"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/harborview-civic-renewal-local"}
+
+  {":id" "riverside-fellowship-congregation"
+   ":name" "Riverside Fellowship Congregation"
+   ":domain-class" ":religious"
+   ":jurisdiction-or-locale" "Riverside District"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/riverside-fellowship"}
+
+  {":id" "cedar-creek-youth-football"
+   ":name" "Cedar Creek Youth Football Club"
+   ":domain-class" ":sports"
+   ":jurisdiction-or-locale" "Cedar Creek"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/cedar-creek-youth-football"}
+
+  {":id" "lantern-district-arts-society"
+   ":name" "Lantern District Arts & Crafts Society"
+   ":domain-class" ":cultural"
+   ":jurisdiction-or-locale" "Lantern District"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/lantern-district-arts"}
+
+  {":id" "old-mill-heritage-society"
+   ":name" "Old Mill Heritage Preservation Society"
+   ":domain-class" ":historical"
+   ":jurisdiction-or-locale" "Old Mill Valley"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/old-mill-heritage"}
+
+  {":id" "maple-grove-neighborhood-assoc"
+   ":name" "Maple Grove Neighborhood Association"
+   ":domain-class" ":civic-neighborhood"
+   ":jurisdiction-or-locale" "Maple Grove"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/maple-grove-neighborhood"}
+
+  {":id" "dockworkers-mutual-aid-447"
+   ":name" "Dockworkers Mutual Aid Local 447"
+   ":domain-class" ":labor"
+   ":jurisdiction-or-locale" "Harborview Docks"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/dockworkers-447"}
+
+  {":id" "founders-day-historical-committee"
+   ":name" "Founders Day Historical Committee"
+   ":domain-class" ":historical"
+   ":jurisdiction-or-locale" "Founders Square"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/founders-day-committee"}
+
+  {":id" "elmwood-quilters-circle"
+   ":name" "Elmwood Quilters Cultural Circle"
+   ":domain-class" ":cultural"
+   ":jurisdiction-or-locale" "Elmwood"
+   ":public-charter-or-registry-ref" "https://example-registry.invalid/elmwood-quilters"}]
+
+ :ties
+ [;; virtuous dyad — mutual, declared, sourced :follows
+  {":kumi/from" "cedar-creek-youth-football" ":kumi/to" "maple-grove-neighborhood-assoc"
+   ":kumi/kind" ":follows"}
+  {":kumi/from" "maple-grove-neighborhood-assoc" ":kumi/to" "cedar-creek-youth-football"
+   ":kumi/kind" ":follows"}
+
+  ;; neutral dyad — mutual, correlation-only :influences (non-causal, G4)
+  {":kumi/from" "lantern-district-arts-society" ":kumi/to" "old-mill-heritage-society"
+   ":kumi/kind" ":influences" ":co-occurrence-observed" true}
+  {":kumi/from" "old-mill-heritage-society" ":kumi/to" "lantern-district-arts-society"
+   ":kumi/kind" ":influences" ":co-occurrence-observed" true}
+
+  ;; vicious triad — one-directional :depends-on chain, no reciprocation
+  {":kumi/from" "harborview-civic-renewal-local" ":kumi/to" "dockworkers-mutual-aid-447"
+   ":kumi/kind" ":depends-on"
+   ":sources" ["https://example-registry.invalid/src/harborview-docks-1"
+               "https://example-registry.invalid/src/harborview-docks-2"]}
+  {":kumi/from" "dockworkers-mutual-aid-447" ":kumi/to" "riverside-fellowship-congregation"
+   ":kumi/kind" ":depends-on"
+   ":sources" ["https://example-registry.invalid/src/docks-fellowship-1"
+               "https://example-registry.invalid/src/docks-fellowship-2"]}
+  {":kumi/from" "riverside-fellowship-congregation" ":kumi/to" "harborview-civic-renewal-local"
+   ":kumi/kind" ":depends-on"
+   ":sources" ["https://example-registry.invalid/src/fellowship-civic-1"
+               "https://example-registry.invalid/src/fellowship-civic-2"]}
+
+  ;; transitioning triad — one-directional cycle with ONE partial reciprocation
+  {":kumi/from" "founders-day-historical-committee" ":kumi/to" "elmwood-quilters-circle"
+   ":kumi/kind" ":follows"}
+  {":kumi/from" "elmwood-quilters-circle" ":kumi/to" "old-mill-heritage-society"
+   ":kumi/kind" ":depends-on"
+   ":sources" ["https://example-registry.invalid/src/elmwood-oldmill-1"
+               "https://example-registry.invalid/src/elmwood-oldmill-2"]}
+  {":kumi/from" "old-mill-heritage-society" ":kumi/to" "founders-day-historical-committee"
+   ":kumi/kind" ":follows"}
+  {":kumi/from" "elmwood-quilters-circle" ":kumi/to" "founders-day-historical-committee"
+   ":kumi/kind" ":follows"}
+
+  ;; extra ties for a richer, non-trivial leverage read (harborview touches
+  ;; political + labor + religious + cultural neighbors => high versatility)
+  {":kumi/from" "harborview-civic-renewal-local" ":kumi/to" "lantern-district-arts-society"
+   ":kumi/kind" ":follows"}
+  {":kumi/from" "cedar-creek-youth-football" ":kumi/to" "harborview-civic-renewal-local"
+   ":kumi/kind" ":influences" ":co-occurrence-observed" true}]}

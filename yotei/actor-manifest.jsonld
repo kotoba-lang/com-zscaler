@@ -1,0 +1,274 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:yotei.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Yotei agent — a calendar scheduling and availability coordinator. You manage events, availability windows, and slot bookings via DID-addressed booking links. You resolve scheduling conflicts, send reminders, and coordinate across timezones. Query the graph for Calendar, Availability, Event, and Booking nodes.",
+  "description": "DID-addressed calendar scheduling and availability coordination. Calendly-like AI Agent with event creation, slot booking, reminder dispatch, and timezone-aware availability management.",
+  "displayName": "Yotei — Calendar Scheduling & Availability",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "yotei",
+  "nanoid": "unyrsfan",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (e:YoteiEvent) WHERE e.ownerDid = $input.record.ownerDid AND e.startAt < $input.record.endAt AND e.endAt > $input.record.startAt RETURN e.did AS eventDid, e.title AS title, e.startAt AS startAt, e.endAt AS endAt LIMIT 5"
+          },
+          "fn": "graph.query",
+          "id": "conflicts"
+        },
+        {
+          "args": {
+            "message": "New event request: $input.record\n\nExisting overlapping events:\n$conflicts.rows\n\nIf conflicts exist, suggest alternative slots. Otherwise confirm the event can be created. Return JSON: {canCreate, conflicts, suggestedAlternatives}"
+          },
+          "fn": "agent.chat",
+          "id": "resolve"
+        },
+        {
+          "args": {
+            "template": "MERGE (e:YoteiEvent {did: $did}) SET e.title = $input.record.title, e.ownerDid = $input.record.ownerDid, e.startAt = $input.record.startAt, e.endAt = $input.record.endAt, e.timezone = $input.record.timezone, e.status = 'confirmed', e.repo = $did, e.collection = 'com.etzhayyim.apps.yotei.event'"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeEvent"
+        },
+        {
+          "args": {
+            "template": "New data added: $resolve.text"
+          },
+          "depends_on": [
+            "resolve"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.yotei.createEvent",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (a:YoteiAvailability) WHERE a.ownerDid = $input.record.hostDid AND a.dayOfWeek = $input.record.dayOfWeek AND a.startTime <= $input.record.requestedTime AND a.endTime >= $input.record.requestedTime RETURN a.did AS slotDid, a.startTime AS startTime, a.endTime AS endTime LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "slot"
+        },
+        {
+          "args": {
+            "message": "Booking request: $input.record\n\nAvailable slot: $slot.rows\n\nConfirm booking validity and generate confirmation message for both host and guest."
+          },
+          "fn": "agent.chat",
+          "id": "confirm"
+        },
+        {
+          "args": {
+            "template": "MERGE (b:YoteiBooking {did: $did}) SET b.hostDid = $input.record.hostDid, b.guestDid = $input.record.guestDid, b.startAt = $input.record.startAt, b.endAt = $input.record.endAt, b.status = 'confirmed', e.repo = $did, b.collection = 'com.etzhayyim.apps.yotei.booking'"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeBooking"
+        },
+        {
+          "args": {
+            "template": "Booking confirmed: $confirm.text"
+          },
+          "depends_on": [
+            "confirm"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.yotei.booking"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (e:YoteiEvent) WHERE e.status = 'confirmed' AND e.startAt > toString(timestamp()) AND e.startAt < toString(timestamp() + 900000) AND e.reminderSent IS NULL RETURN e.did AS eventDid, e.title AS title, e.ownerDid AS ownerDid, e.startAt AS startAt LIMIT 20"
+          },
+          "fn": "graph.query",
+          "id": "upcoming"
+        },
+        {
+          "args": {
+            "message": "Events starting within 15 minutes:\n$upcoming.rows\n\nGenerate reminder notifications for each event owner."
+          },
+          "fn": "agent.chat",
+          "id": "remind"
+        },
+        {
+          "args": {
+            "template": "MATCH (e:YoteiEvent) WHERE e.startAt > toString(timestamp()) AND e.startAt < toString(timestamp() + 900000) AND e.reminderSent IS NULL SET e.reminderSent = toString(timestamp())"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "markSent"
+        },
+        {
+          "args": {
+            "template": "New data added: $remind.text"
+          },
+          "depends_on": [
+            "remind"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "*/15 * * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "yotei",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.yotei.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "unyrsfan",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Yotei — Calendar Scheduling & Availability. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.yotei.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "create-event",
+      "set-availability",
+      "book-slot",
+      "send-reminder",
+      "resolve-conflicts"
+    ],
+    "description": "AI Agent for calendar scheduling, availability coordination, and slot booking. DID-addressed booking links, timezone-aware availability, automated reminders.",
+    "displayName": "Yotei — Calendar Scheduling & Availability",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.yotei.event",
+        "com.etzhayyim.apps.yotei.availability",
+        "com.etzhayyim.apps.yotei.booking"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

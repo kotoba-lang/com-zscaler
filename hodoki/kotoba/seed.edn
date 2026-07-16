@@ -1,0 +1,32 @@
+;; hodoki 解き — kotoba seed data (representative, R0)
+;; ADR-2605261215  ·  :sourcing :representative (NOT authoritative)
+;; A small worked example: one ELV intake record, a depollution attestation,
+;; and a data wipe attestation. All values are representative and for testing.
+
+[;; ════════════ ELV Intake Record ════════════
+ {:elv-intake/vin "VIN-DEMO-001"
+  :elv-intake/title-doc "ipfs://bafybeicg2uew2g4c6f37r7b62z2w3g3h3i3j3k3l3m3n3o3p3q3r3s3t3u"
+  :elv-intake/owner-consent "did:web:member.example.etzhayyim.com/consent/XYZ"
+  :elv-intake/arrival-timestamp "2026-06-01T10:00:00Z"
+  :elv-intake/charter-scan-status :passed
+  :elv-intake/data-wipe-request "datawipe.demo.001"}
+
+ ;; ════════════ Data Wipe Attestation ════════════
+ {:data-wipe/attestation-id "datawipe.demo.001"
+  :data-wipe/vin "VIN-DEMO-001"
+  :data-wipe/ecu-wipe-status true
+  :data-wipe/infotainment-wipe-status true
+  :data-wipe/telematics-wipe-status true
+  :data-wipe/cryptographic-destruction-status true
+  :data-wipe/physical-chip-shred-fallback false
+  :data-wipe/attestation-timestamp "2026-06-01T10:30:00Z"}
+
+ ;; ════════════ Depollution Attestation ════════════
+ {:depollution/record-id "depollution.demo.001"
+  :depollution/vin "VIN-DEMO-001"
+  :depollution/fluid-drain-status true
+  :depollution/f-gas-capture-status true
+  :depollution/airbag-disarmed true
+  :depollution/battery-disconnected true
+  :depollution/attestation-timestamp "2026-06-01T11:00:00Z"}
+]

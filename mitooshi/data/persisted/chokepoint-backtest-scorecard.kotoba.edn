@@ -1,0 +1,9 @@
+;; chokepoint-backtest-scorecard.kotoba.edn — ROLLING-ORIGIN leak-free backtest.
+;; Aggregate skill vs climatology over ALL origins (no cherry-picked target).
+;; G5 leak-free at each origin; G12 skill vs a documented baseline. DERIVED
+;; :representative. Live promotion G10-gated. ADR-2606051800.
+
+[
+ {:fc.score/method :climatology :fc.score/n 50 :fc.score/mean-crps 33.455745 :fc.score/mean-skill 0.6 :fc.score/pit-mean 0.6647 :fc.score/calibration-deviation 1.24 :fc.score/sourcing :representative}
+ {:fc.score/method :persistence :fc.score/n 50 :fc.score/mean-crps 23.64458 :fc.score/mean-skill 0.7716 :fc.score/pit-mean 0.76 :fc.score/calibration-deviation 1.44 :fc.score/sourcing :representative}
+]

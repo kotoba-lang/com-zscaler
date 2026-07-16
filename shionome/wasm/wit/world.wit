@@ -1,0 +1,12 @@
+package etzhayyim:shionome;
+
+// The shionome actor's executable interface. A single export returns the
+// cross-asset capital-flow result as a JSON string — the same logical contract
+// as the watatsuna/tsumugi core ABI, realized as a WASI Component-Model
+// component built with componentize-py (ADR-2606014600 + ADR-2606072200).
+//
+// The result is an OBSERVATIONAL summary (net flow / rotation / regime); it
+// carries no_trade=true and never a buy/sell signal or price target (トレードはしない, G2).
+world shionome-actor {
+  export compute: func() -> string;
+}

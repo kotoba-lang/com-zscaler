@@ -1,0 +1,20 @@
+;; sanae (早苗) kotoba EAVT schema — field-agriculture robotics (R0)
+[{:db/ident :parcel/id           :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :parcel/soil-carbon  :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :parcel/area-ha      :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :field/bed-state     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :field/moisture      :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :seed/varietal       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :seed/bank-source    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :seeding/record      :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :weeding/method      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :weeding/herbicide-free :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :harvest/attestation :db/valueType :db.type/ref     :db/cardinality :db.cardinality/many}
+ {:db/ident :harvest/yield-kg    :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :soil/carbon-delta   :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+ {:db/ident :soil/net-regenerative :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :robot/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :robot/role          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ ;; displacement coupling (ADR-2606032130)
+ {:db/ident :displacement/cohort-id :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :displacement/isco      :db/valueType :db.type/string :db/cardinality :db.cardinality/one}]

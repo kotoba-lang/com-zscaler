@@ -1,0 +1,124 @@
+;; watatsuna 綿津綱 — seed submarine-cable network graph (real, PUBLIC infrastructure only)
+;; ADR-2606012600 · vocabulary: submarine-cable-ontology.kotoba.edn (00-contracts/schemas/)
+;;
+;; SCOPE: the planet's submarine cable network as a kotoba EAVT knowledge graph —
+;;   cable SYSTEMS, their LANDING STATIONS, the SEGMENTS that join them (with the
+;;   geographic chokepoints they traverse), and OBSERVED public fault bulletins.
+;;   The lens is RESILIENCE (where capacity concentrates onto a chokepoint / single
+;;   point of failure), routed to redundancy + faster repair. NOT a target-list
+;;   (constitutional — watatsumi N8 anti-sabotage + Charter Rider §2(d)).
+;;
+;; SOURCING (G5): every node/edge carries :*/sourcing. This is a BOUNDED illustrative
+;;   seed of well-known systems (cable owners, landing points, capacity, RFS year are
+;;   matters of public record — TeleGeography, consortium RFS notices, regulatory filings,
+;;   press). Coordinates are :representative (rounded to the landing town, not the manhole).
+;;   Capacities and lengths are public design figures; where a precise figure is uncertain
+;;   it is flagged :synthesized. Absence of a cable = "not yet ingested", NOT "does not exist".
+;;   Live planet-scale ingest (TeleGeography feed / cable-ship AIS) is G7 Council+operator gated.
+
+[;; ───────────────────────────── cable SYSTEMS ─────────────────────────────
+ {:cable/id "cable.jupiter" :cable/name "JUPITER" :cable/owner-consortium ["org.corp.us.amazon" "org.corp.us.meta" "org.corp.jp.ntt" "org.corp.jp.softbank" "org.corp.ph.pldt" "org.corp.hk.pccw"] :cable/length-km 14000 :cable/design-capacity-tbps 60.0 :cable/rfs-year 2020 :cable/status :in-service :cable/sourcing :representative}
+ {:cable/id "cable.faster" :cable/name "FASTER" :cable/owner-consortium ["org.corp.us.google" "org.corp.jp.kddi" "org.corp.sg.singtel" "org.corp.my.global-transit"] :cable/length-km 11629 :cable/design-capacity-tbps 60.0 :cable/rfs-year 2016 :cable/status :in-service :cable/sourcing :representative}
+ {:cable/id "cable.plcn" :cable/name "Pacific Light Cable Network (PLCN)" :cable/owner-consortium ["org.corp.us.google" "org.corp.us.meta"] :cable/length-km 12800 :cable/design-capacity-tbps 144.0 :cable/rfs-year 2022 :cable/status :in-service :cable/sourcing :representative :watatsuna/note "HK landing dropped after US Team-Telecom objection; rerouted to TW + PH"}
+ {:cable/id "cable.marea" :cable/name "MAREA" :cable/owner-consortium ["org.corp.us.microsoft" "org.corp.us.meta" "org.corp.es.telxius"] :cable/length-km 6605 :cable/design-capacity-tbps 200.0 :cable/rfs-year 2018 :cable/status :in-service :cable/fiber-pairs 8 :cable/sourcing :representative}
+ {:cable/id "cable.dunant" :cable/name "Dunant" :cable/owner-consortium ["org.corp.us.google"] :cable/length-km 6600 :cable/design-capacity-tbps 250.0 :cable/rfs-year 2021 :cable/status :in-service :cable/fiber-pairs 12 :cable/sourcing :representative :watatsuna/note "first major SDM (space-division-multiplexing) 12-pair system"}
+ {:cable/id "cable.grace-hopper" :cable/name "Grace Hopper" :cable/owner-consortium ["org.corp.us.google"] :cable/length-km 7770 :cable/design-capacity-tbps 220.0 :cable/rfs-year 2022 :cable/status :in-service :cable/fiber-pairs 16 :cable/sourcing :representative}
+ {:cable/id "cable.2africa" :cable/name "2Africa" :cable/owner-consortium ["org.corp.us.meta" "org.corp.za.mtn" "org.corp.fr.orange" "org.corp.sa.stc" "org.corp.eg.te" "org.corp.es.telxius" "org.corp.cn.china-mobile"] :cable/length-km 45000 :cable/design-capacity-tbps 180.0 :cable/rfs-year 2024 :cable/status :in-service :cable/sourcing :representative :watatsuna/note "longest system; circumnavigates Africa, 33+ landings"}
+ {:cable/id "cable.smw3" :cable/name "SEA-ME-WE 3" :cable/owner-consortium ["org.consortium.smw3"] :cable/length-km 39000 :cable/design-capacity-tbps 4.6 :cable/rfs-year 1999 :cable/status :in-service :cable/sourcing :representative :watatsuna/note "world's longest by route; 39 landing points; aging"}
+ {:cable/id "cable.smw4" :cable/name "SEA-ME-WE 4" :cable/owner-consortium ["org.consortium.smw4"] :cable/length-km 18800 :cable/design-capacity-tbps 65.0 :cable/rfs-year 2005 :cable/status :in-service :cable/sourcing :representative}
+ {:cable/id "cable.adc" :cable/name "Asia Direct Cable (ADC)" :cable/owner-consortium ["org.corp.jp.ntt" "org.corp.jp.softbank" "org.corp.sg.singtel" "org.corp.ph.pldt" "org.corp.in.tata" "org.corp.cn.china-telecom" "org.corp.vn.viettel"] :cable/length-km 9800 :cable/design-capacity-tbps 160.0 :cable/rfs-year 2024 :cable/status :in-service :cable/sourcing :representative}
+ {:cable/id "cable.sjc" :cable/name "SJC (Southeast Asia Japan Cable)" :cable/owner-consortium ["org.corp.jp.ntt" "org.corp.us.google" "org.corp.sg.singtel" "org.corp.hk.pccw" "org.corp.ph.globe"] :cable/length-km 8900 :cable/design-capacity-tbps 28.0 :cable/rfs-year 2013 :cable/status :in-service :cable/sourcing :representative}
+ {:cable/id "cable.equiano" :cable/name "Equiano" :cable/owner-consortium ["org.corp.us.google"] :cable/length-km 15000 :cable/design-capacity-tbps 144.0 :cable/rfs-year 2023 :cable/status :in-service :cable/sourcing :representative}
+ {:cable/id "cable.bifrost" :cable/name "Bifrost" :cable/owner-consortium ["org.corp.us.meta" "org.corp.sg.keppel" "org.corp.id.telin"] :cable/length-km 20000 :cable/design-capacity-tbps 230.0 :cable/rfs-year 2024 :cable/status :in-service :cable/sourcing :representative :watatsuna/note "routed via Java Sea to avoid South China Sea / Luzon Strait congestion"}
+ {:cable/id "cable.apcn2" :cable/name "APCN-2" :cable/owner-consortium ["org.consortium.apcn2"] :cable/length-km 19000 :cable/design-capacity-tbps 2.56 :cable/rfs-year 2001 :cable/status :in-service :cable/sourcing :representative :watatsuna/note "ring topology JP/KR/CN/TW/HK/PH/SG/MY; aging"}
+
+ ;; ───────────────────────────── landing STATIONS ─────────────────────────────
+ ;; :station/chokepoint = the named maritime chokepoint(s) this station's seaward
+ ;; routes sit behind. Drives the resilience / single-point-of-failure analysis.
+ {:station/id "station.us.hermosa-beach" :station/name "Hermosa Beach, CA" :station/country "US" :station/lat 33.86 :station/lon -118.40 :station/sourcing :representative}
+ {:station/id "station.us.bandon" :station/name "Bandon, OR" :station/country "US" :station/lat 43.12 :station/lon -124.41 :station/sourcing :representative}
+ {:station/id "station.us.el-segundo" :station/name "El Segundo, CA" :station/country "US" :station/lat 33.92 :station/lon -118.42 :station/sourcing :representative}
+ {:station/id "station.us.virginia-beach" :station/name "Virginia Beach, VA" :station/country "US" :station/lat 36.85 :station/lon -75.98 :station/sourcing :representative}
+ {:station/id "station.us.shirley" :station/name "Shirley, NY" :station/country "US" :station/lat 40.79 :station/lon -72.87 :station/sourcing :representative}
+ {:station/id "station.jp.chikura" :station/name "千倉 Chikura" :station/country "JP" :station/lat 34.93 :station/lon 139.95 :station/chokepoint [:luzon-strait] :station/sourcing :representative :watatsuna/note "major Pacific landing hub south of Tokyo"}
+ {:station/id "station.jp.shima" :station/name "志摩 Shima" :station/country "JP" :station/lat 34.32 :station/lon 136.79 :station/chokepoint [:luzon-strait] :station/sourcing :representative}
+ {:station/id "station.jp.maruyama" :station/name "丸山 Maruyama" :station/country "JP" :station/lat 34.97 :station/lon 139.98 :station/chokepoint [:luzon-strait] :station/sourcing :representative}
+ {:station/id "station.tw.toucheng" :station/name "頭城 Toucheng" :station/country "TW" :station/lat 24.86 :station/lon 121.82 :station/chokepoint [:luzon-strait] :station/sourcing :representative}
+ {:station/id "station.ph.baler" :station/name "Baler" :station/country "PH" :station/lat 15.76 :station/lon 121.56 :station/chokepoint [:luzon-strait] :station/sourcing :representative}
+ {:station/id "station.ph.daet" :station/name "Daet" :station/country "PH" :station/lat 14.11 :station/lon 122.96 :station/chokepoint [:luzon-strait] :station/sourcing :representative}
+ {:station/id "station.hk.tseung-kwan-o" :station/name "Tseung Kwan O 將軍澳" :station/country "HK" :station/lat 22.31 :station/lon 114.26 :station/chokepoint [:luzon-strait :south-china-sea] :station/sourcing :representative}
+ {:station/id "station.sg.tuas" :station/name "Tuas" :station/country "SG" :station/lat 1.32 :station/lon 103.64 :station/chokepoint [:malacca] :station/sourcing :representative}
+ {:station/id "station.sg.changi" :station/name "Changi" :station/country "SG" :station/lat 1.39 :station/lon 103.99 :station/chokepoint [:malacca] :station/sourcing :representative}
+ {:station/id "station.id.jakarta" :station/name "Jakarta" :station/country "ID" :station/lat -6.12 :station/lon 106.77 :station/sourcing :representative}
+ {:station/id "station.eg.ras-ghareb" :station/name "Ras Ghareb" :station/country "EG" :station/lat 28.35 :station/lon 33.08 :station/chokepoint [:suez-red-sea] :station/sourcing :representative}
+ {:station/id "station.eg.port-said" :station/name "Port Said" :station/country "EG" :station/lat 31.26 :station/lon 32.30 :station/chokepoint [:suez-red-sea] :station/sourcing :representative}
+ {:station/id "station.es.bilbao" :station/name "Bilbao / Sopelana" :station/country "ES" :station/lat 43.38 :station/lon -2.98 :station/sourcing :representative}
+ {:station/id "station.fr.saint-hilaire" :station/name "Saint-Hilaire-de-Riez" :station/country "FR" :station/lat 46.72 :station/lon -1.94 :station/sourcing :representative}
+ {:station/id "station.uk.bude" :station/name "Bude" :station/country "GB" :station/lat 50.83 :station/lon -4.55 :station/sourcing :representative}
+ {:station/id "station.pt.sesimbra" :station/name "Sesimbra" :station/country "PT" :station/lat 38.44 :station/lon -9.10 :station/chokepoint [:gibraltar] :station/sourcing :representative}
+ {:station/id "station.za.melkbosstrand" :station/name "Melkbosstrand" :station/country "ZA" :station/lat -33.72 :station/lon 18.44 :station/sourcing :representative}
+
+ ;; ───────────────────────────── cable.link (cable ⇄ station) ─────────────────────────────
+ {:cable.link/id "lk.jupiter.hermosa" :cable.link/cable "cable.jupiter" :cable.link/station "station.us.hermosa-beach" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.jupiter.maruyama" :cable.link/cable "cable.jupiter" :cable.link/station "station.jp.maruyama" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.jupiter.shima" :cable.link/cable "cable.jupiter" :cable.link/station "station.jp.shima" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.jupiter.daet" :cable.link/cable "cable.jupiter" :cable.link/station "station.ph.daet" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.faster.bandon" :cable.link/cable "cable.faster" :cable.link/station "station.us.bandon" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.faster.chikura" :cable.link/cable "cable.faster" :cable.link/station "station.jp.chikura" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.faster.shima" :cable.link/cable "cable.faster" :cable.link/station "station.jp.shima" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.faster.toucheng" :cable.link/cable "cable.faster" :cable.link/station "station.tw.toucheng" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.plcn.elsegundo" :cable.link/cable "cable.plcn" :cable.link/station "station.us.el-segundo" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.plcn.toucheng" :cable.link/cable "cable.plcn" :cable.link/station "station.tw.toucheng" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.plcn.baler" :cable.link/cable "cable.plcn" :cable.link/station "station.ph.baler" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.marea.virginia" :cable.link/cable "cable.marea" :cable.link/station "station.us.virginia-beach" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.marea.bilbao" :cable.link/cable "cable.marea" :cable.link/station "station.es.bilbao" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.dunant.virginia" :cable.link/cable "cable.dunant" :cable.link/station "station.us.virginia-beach" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.dunant.sthilaire" :cable.link/cable "cable.dunant" :cable.link/station "station.fr.saint-hilaire" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.grace.shirley" :cable.link/cable "cable.grace-hopper" :cable.link/station "station.us.shirley" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.grace.bude" :cable.link/cable "cable.grace-hopper" :cable.link/station "station.uk.bude" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.grace.bilbao" :cable.link/cable "cable.grace-hopper" :cable.link/station "station.es.bilbao" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.2africa.portsaid" :cable.link/cable "cable.2africa" :cable.link/station "station.eg.port-said" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.2africa.rasghareb" :cable.link/cable "cable.2africa" :cable.link/station "station.eg.ras-ghareb" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.2africa.melkbos" :cable.link/cable "cable.2africa" :cable.link/station "station.za.melkbosstrand" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.2africa.sesimbra" :cable.link/cable "cable.2africa" :cable.link/station "station.pt.sesimbra" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.smw3.portsaid" :cable.link/cable "cable.smw3" :cable.link/station "station.eg.port-said" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.smw3.rasghareb" :cable.link/cable "cable.smw3" :cable.link/station "station.eg.ras-ghareb" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.smw3.tuas" :cable.link/cable "cable.smw3" :cable.link/station "station.sg.tuas" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.smw4.portsaid" :cable.link/cable "cable.smw4" :cable.link/station "station.eg.port-said" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.smw4.rasghareb" :cable.link/cable "cable.smw4" :cable.link/station "station.eg.ras-ghareb" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.smw4.tuas" :cable.link/cable "cable.smw4" :cable.link/station "station.sg.tuas" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.adc.chikura" :cable.link/cable "cable.adc" :cable.link/station "station.jp.chikura" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.adc.tko" :cable.link/cable "cable.adc" :cable.link/station "station.hk.tseung-kwan-o" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.adc.changi" :cable.link/cable "cable.adc" :cable.link/station "station.sg.changi" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.adc.daet" :cable.link/cable "cable.adc" :cable.link/station "station.ph.daet" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.sjc.chikura" :cable.link/cable "cable.sjc" :cable.link/station "station.jp.chikura" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.sjc.tko" :cable.link/cable "cable.sjc" :cable.link/station "station.hk.tseung-kwan-o" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.sjc.changi" :cable.link/cable "cable.sjc" :cable.link/station "station.sg.changi" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.equiano.sesimbra" :cable.link/cable "cable.equiano" :cable.link/station "station.pt.sesimbra" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.equiano.melkbos" :cable.link/cable "cable.equiano" :cable.link/station "station.za.melkbosstrand" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.bifrost.elsegundo" :cable.link/cable "cable.bifrost" :cable.link/station "station.us.el-segundo" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.bifrost.jakarta" :cable.link/cable "cable.bifrost" :cable.link/station "station.id.jakarta" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.bifrost.changi" :cable.link/cable "cable.bifrost" :cable.link/station "station.sg.changi" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.apcn2.chikura" :cable.link/cable "cable.apcn2" :cable.link/station "station.jp.chikura" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.apcn2.tko" :cable.link/cable "cable.apcn2" :cable.link/station "station.hk.tseung-kwan-o" :cable.link/sourcing :representative}
+ {:cable.link/id "lk.apcn2.changi" :cable.link/cable "cable.apcn2" :cable.link/station "station.sg.changi" :cable.link/sourcing :representative}
+
+ ;; ───────────────────────────── cable.seg (station ⇄ station, with chokepoint) ─────────────
+ ;; only the chokepoint-traversing segments are seeded (the resilience-relevant ones)
+ {:cable.seg/id "seg.faster.jp-tw" :cable.seg/cable "cable.faster" :cable.seg/from "station.jp.shima" :cable.seg/to "station.tw.toucheng" :cable.seg/traverses [:luzon-strait] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.plcn.tw-ph" :cable.seg/cable "cable.plcn" :cable.seg/from "station.tw.toucheng" :cable.seg/to "station.ph.baler" :cable.seg/traverses [:luzon-strait] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.jupiter.jp-ph" :cable.seg/cable "cable.jupiter" :cable.seg/from "station.jp.shima" :cable.seg/to "station.ph.daet" :cable.seg/traverses [:luzon-strait] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.adc.jp-hk" :cable.seg/cable "cable.adc" :cable.seg/from "station.jp.chikura" :cable.seg/to "station.hk.tseung-kwan-o" :cable.seg/traverses [:luzon-strait] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.sjc.jp-hk" :cable.seg/cable "cable.sjc" :cable.seg/from "station.jp.chikura" :cable.seg/to "station.hk.tseung-kwan-o" :cable.seg/traverses [:luzon-strait] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.apcn2.jp-hk" :cable.seg/cable "cable.apcn2" :cable.seg/from "station.jp.chikura" :cable.seg/to "station.hk.tseung-kwan-o" :cable.seg/traverses [:luzon-strait] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.adc.hk-sg" :cable.seg/cable "cable.adc" :cable.seg/from "station.hk.tseung-kwan-o" :cable.seg/to "station.sg.changi" :cable.seg/traverses [:south-china-sea :malacca] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.smw3.suez" :cable.seg/cable "cable.smw3" :cable.seg/from "station.eg.ras-ghareb" :cable.seg/to "station.eg.port-said" :cable.seg/traverses [:suez-red-sea] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.smw4.suez" :cable.seg/cable "cable.smw4" :cable.seg/from "station.eg.ras-ghareb" :cable.seg/to "station.eg.port-said" :cable.seg/traverses [:suez-red-sea] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.2africa.suez" :cable.seg/cable "cable.2africa" :cable.seg/from "station.eg.ras-ghareb" :cable.seg/to "station.eg.port-said" :cable.seg/traverses [:suez-red-sea] :cable.seg/sourcing :representative}
+ {:cable.seg/id "seg.bifrost.java" :cable.seg/cable "cable.bifrost" :cable.seg/from "station.id.jakarta" :cable.seg/to "station.sg.changi" :cable.seg/traverses [:malacca] :cable.seg/sourcing :representative}
+
+ ;; ───────────────────────────── cable.fault (observed public bulletins) ─────────────
+ ;; watatsuna does NOT adjudicate intent. :kind records the BULLETIN's own classification.
+ ;; Sabotage determination is a state matter; watatsuna only mirrors the public record.
+ {:cable.fault/id "fault.smw.redsea.2024" :cable.fault/cable "cable.smw3" :cable.fault/segment "seg.smw3.suez" :cable.fault/kind :under-investigation :cable.fault/detected-at "2024-02-24T00:00:00Z" :cable.fault/restored-at nil :cable.fault/sourcing :representative :watatsuna/note "Red Sea multi-cable disruption widely reported Feb 2024; cause publicly attributed to a dragging anchor — recorded as :under-investigation, NOT asserted by watatsuna"}
+ {:cable.fault/id "fault.luzon.quake.2006" :cable.fault/cable "cable.apcn2" :cable.fault/segment "seg.apcn2.jp-hk" :cable.fault/kind :earthquake :cable.fault/detected-at "2006-12-26T12:26:00Z" :cable.fault/restored-at "2007-01-31T00:00:00Z" :cable.fault/repair-vessel "(multiple cable ships, public record)" :cable.fault/sourcing :representative :watatsuna/note "2006 Hengchun earthquake severed numerous Luzon-Strait cables; canonical chokepoint-fragility event"}]

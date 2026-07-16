@@ -1,0 +1,63 @@
+;; ipaddress — GENERATED merged number-resource graph (seed + active ingest).
+;; DO NOT hand-edit. dedup by id, seed wins. kotoba EAVT (ADR-2605301400 §T2).
+[
+ {:rir/id "rir.apnic" :rir/name "APNIC" :rir/region "Asia-Pacific" :rir/delegated-stats-url "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest" :rir/sourcing :authoritative}
+ {:rir/id "rir.ripe" :rir/name "RIPE NCC" :rir/region "Europe / Middle East" :rir/delegated-stats-url "https://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-latest" :rir/sourcing :authoritative}
+ {:rir/id "rir.arin" :rir/name "ARIN" :rir/region "North America" :rir/delegated-stats-url "https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest" :rir/sourcing :authoritative}
+ {:rir/id "rir.lacnic" :rir/name "LACNIC" :rir/region "Latin America" :rir/delegated-stats-url "https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-latest" :rir/sourcing :authoritative}
+ {:rir/id "rir.afrinic" :rir/name "AFRINIC" :rir/region "Africa" :rir/delegated-stats-url "https://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-latest" :rir/sourcing :authoritative}
+ {:asn/id "asn.13335" :asn/number 13335 :asn/name "CLOUDFLARENET" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 1500 :asn/hosting-class :cdn :asn/sourcing :representative}
+ {:asn/id "asn.15169" :asn/number 15169 :asn/name "GOOGLE" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 1200 :asn/hosting-class :cloud :asn/sourcing :representative}
+ {:asn/id "asn.16509" :asn/number 16509 :asn/name "AMAZON-02" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 2600 :asn/hosting-class :cloud :asn/sourcing :representative}
+ {:asn/id "asn.8075" :asn/number 8075 :asn/name "MICROSOFT-CORP-MSN-AS-BLOCK" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 1100 :asn/hosting-class :cloud :asn/sourcing :representative}
+ {:asn/id "asn.20940" :asn/number 20940 :asn/name "AKAMAI-ASN1" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 900 :asn/hosting-class :cdn :asn/sourcing :representative}
+ {:asn/id "asn.54113" :asn/number 54113 :asn/name "FASTLY" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 120 :asn/hosting-class :cdn :asn/sourcing :representative}
+ {:asn/id "asn.32934" :asn/number 32934 :asn/name "FACEBOOK" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 320 :asn/hosting-class :cdn :asn/sourcing :representative}
+ {:asn/id "asn.714" :asn/number 714 :asn/name "APPLE-ENGINEERING" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 90 :asn/hosting-class :enterprise :asn/sourcing :representative}
+ {:asn/id "asn.3356" :asn/number 3356 :asn/name "LEVEL3" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 41000 :asn/hosting-class :transit :asn/sourcing :representative}
+ {:asn/id "asn.7922" :asn/number 7922 :asn/name "COMCAST-7922" :asn/country "US" :asn/rir "rir.arin" :asn/prefix-count 6200 :asn/hosting-class :residential :asn/sourcing :representative}
+ {:asn/id "asn.2914" :asn/number 2914 :asn/name "NTT-LTD" :asn/country "JP" :asn/rir "rir.apnic" :asn/prefix-count 22000 :asn/hosting-class :transit :asn/sourcing :representative}
+ {:asn/id "asn.2497" :asn/number 2497 :asn/name "IIJ" :asn/country "JP" :asn/rir "rir.apnic" :asn/prefix-count 900 :asn/hosting-class :transit :asn/sourcing :representative}
+ {:asn/id "asn.4837" :asn/number 4837 :asn/name "CHINA169-BACKBONE" :asn/country "CN" :asn/rir "rir.apnic" :asn/prefix-count 8800 :asn/hosting-class :transit :asn/sourcing :representative}
+ {:asn/id "asn.24940" :asn/number 24940 :asn/name "HETZNER-AS" :asn/country "DE" :asn/rir "rir.ripe" :asn/prefix-count 200 :asn/hosting-class :hosting :asn/sourcing :representative}
+ {:asn/id "asn.16276" :asn/number 16276 :asn/name "OVH" :asn/country "FR" :asn/rir "rir.ripe" :asn/prefix-count 380 :asn/hosting-class :hosting :asn/sourcing :representative}
+ {:asn/id "asn.28573" :asn/number 28573 :asn/name "CLARO-NXT" :asn/country "BR" :asn/rir "rir.lacnic" :asn/prefix-count 1700 :asn/hosting-class :residential :asn/sourcing :representative}
+ {:asn/id "asn.36874" :asn/number 36874 :asn/name "Liquid-Telecom" :asn/country "ZA" :asn/rir "rir.afrinic" :asn/prefix-count 140 :asn/hosting-class :transit :asn/sourcing :representative}
+ {:iprange/id "range.v4.104-16-0-0-13" :iprange/cidr "104.16.0.0/13" :iprange/version 4 :iprange/country "US" :iprange/rir "rir.arin" :iprange/status :allocated :iprange/alloc-date "2014-03-25" :iprange/host-count 524288 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.1-1-1-0-24" :iprange/cidr "1.1.1.0/24" :iprange/version 4 :iprange/country "AU" :iprange/rir "rir.apnic" :iprange/status :assigned :iprange/alloc-date "2011-08-11" :iprange/host-count 256 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.8-8-8-0-24" :iprange/cidr "8.8.8.0/24" :iprange/version 4 :iprange/country "US" :iprange/rir "rir.arin" :iprange/status :assigned :iprange/alloc-date "1992-12-01" :iprange/host-count 256 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.13-32-0-0-15" :iprange/cidr "13.32.0.0/15" :iprange/version 4 :iprange/country "US" :iprange/rir "rir.arin" :iprange/status :allocated :iprange/alloc-date "2014-09-19" :iprange/host-count 131072 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.151-101-0-0-16" :iprange/cidr "151.101.0.0/16" :iprange/version 4 :iprange/country "US" :iprange/rir "rir.arin" :iprange/status :allocated :iprange/alloc-date "2016-01-13" :iprange/host-count 65536 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.17-0-0-0-8" :iprange/cidr "17.0.0.0/8" :iprange/version 4 :iprange/country "US" :iprange/rir "rir.arin" :iprange/status :allocated :iprange/alloc-date "1990-04-16" :iprange/host-count 16777216 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.31-13-24-0-21" :iprange/cidr "31.13.24.0/21" :iprange/version 4 :iprange/country "IE" :iprange/rir "rir.ripe" :iprange/status :assigned :iprange/alloc-date "2011-03-11" :iprange/host-count 2048 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.88-198-0-0-16" :iprange/cidr "88.198.0.0/16" :iprange/version 4 :iprange/country "DE" :iprange/rir "rir.ripe" :iprange/status :allocated :iprange/alloc-date "2007-05-09" :iprange/host-count 65536 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.51-38-0-0-16" :iprange/cidr "51.38.0.0/16" :iprange/version 4 :iprange/country "FR" :iprange/rir "rir.ripe" :iprange/status :allocated :iprange/alloc-date "2017-02-20" :iprange/host-count 65536 :iprange/sourcing :representative}
+ {:iprange/id "range.v4.210-130-0-0-16" :iprange/cidr "210.130.0.0/16" :iprange/version 4 :iprange/country "JP" :iprange/rir "rir.apnic" :iprange/status :allocated :iprange/alloc-date "1997-03-01" :iprange/host-count 65536 :iprange/sourcing :representative}
+ {:iprange/id "range.v6.2606-4700--32" :iprange/cidr "2606:4700::/32" :iprange/version 6 :iprange/country "US" :iprange/rir "rir.arin" :iprange/status :allocated :iprange/alloc-date "2011-11-01" :iprange/host-count 0 :iprange/sourcing :representative}
+ {:iprange/id "range.v6.2001-4860--32" :iprange/cidr "2001:4860::/32" :iprange/version 6 :iprange/country "US" :iprange/rir "rir.arin" :iprange/status :allocated :iprange/alloc-date "2005-03-14" :iprange/host-count 0 :iprange/sourcing :representative}
+ {:net.announce/id "ann.104-16.13335" :net.announce/range "range.v4.104-16-0-0-13" :net.announce/asn "asn.13335" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.1-1-1.13335" :net.announce/range "range.v4.1-1-1-0-24" :net.announce/asn "asn.13335" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.8-8-8.15169" :net.announce/range "range.v4.8-8-8-0-24" :net.announce/asn "asn.15169" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.13-32.16509" :net.announce/range "range.v4.13-32-0-0-15" :net.announce/asn "asn.16509" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.151-101.54113" :net.announce/range "range.v4.151-101-0-0-16" :net.announce/asn "asn.54113" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.17-0.714" :net.announce/range "range.v4.17-0-0-0-8" :net.announce/asn "asn.714" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.31-13.32934" :net.announce/range "range.v4.31-13-24-0-21" :net.announce/asn "asn.32934" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.88-198.24940" :net.announce/range "range.v4.88-198-0-0-16" :net.announce/asn "asn.24940" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.51-38.16276" :net.announce/range "range.v4.51-38-0-0-16" :net.announce/asn "asn.16276" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.210-130.2497" :net.announce/range "range.v4.210-130-0-0-16" :net.announce/asn "asn.2497" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.2606-4700.13335" :net.announce/range "range.v6.2606-4700--32" :net.announce/asn "asn.13335" :net.announce/sourcing :representative}
+ {:net.announce/id "ann.2001-4860.15169" :net.announce/range "range.v6.2001-4860--32" :net.announce/asn "asn.15169" :net.announce/sourcing :representative}
+ {:ip/id "ip.v4.1-1-1-1" :ip/address "1.1.1.1" :ip/version 4 :ip/first-seen-at "2018-04-01" :ip/last-seen-at "2026-06-03" :ip/sourcing :representative}
+ {:ip/id "ip.v4.8-8-8-8" :ip/address "8.8.8.8" :ip/version 4 :ip/first-seen-at "2009-12-03" :ip/last-seen-at "2026-06-03" :ip/sourcing :representative}
+ {:ip/id "ip.v4.104-16-1-1" :ip/address "104.16.1.1" :ip/version 4 :ip/first-seen-at "2014-04-01" :ip/last-seen-at "2026-06-03" :ip/sourcing :representative}
+ {:net.member/id "mem.1-1-1-1" :net.member/ip "ip.v4.1-1-1-1" :net.member/range "range.v4.1-1-1-0-24" :net.member/sourcing :representative}
+ {:net.member/id "mem.8-8-8-8" :net.member/ip "ip.v4.8-8-8-8" :net.member/range "range.v4.8-8-8-0-24" :net.member/sourcing :representative}
+ {:net.member/id "mem.104-16-1-1" :net.member/ip "ip.v4.104-16-1-1" :net.member/range "range.v4.104-16-0-0-13" :net.member/sourcing :representative}
+ {:geo/id "geo.1-1-1-1" :geo/ip "ip.v4.1-1-1-1" :geo/country "AU" :geo/city "Research (anycast)" :geo/lat -33.49 :geo/lon 143.21 :geo/is-datacenter true :geo/is-proxy false :geo/observed-at "2026-06-03" :geo/sourcing :representative}
+ {:geo/id "geo.8-8-8-8" :geo/ip "ip.v4.8-8-8-8" :geo/country "US" :geo/city "Mountain View" :geo/lat 37.4 :geo/lon -122.07 :geo/is-datacenter true :geo/is-proxy false :geo/observed-at "2026-06-03" :geo/sourcing :representative}
+ {:rdns/id "rdns.1-1-1-1" :rdns/ip "ip.v4.1-1-1-1" :rdns/ptr "one.one.one.one" :rdns/verified true :rdns/observed-at "2026-06-03" :rdns/sourcing :representative}
+ {:rdns/id "rdns.8-8-8-8" :rdns/ip "ip.v4.8-8-8-8" :rdns/ptr "dns.google" :rdns/verified true :rdns/observed-at "2026-06-03" :rdns/sourcing :representative}
+ {:whois/id "whois.range.104-16" :whois/subject "range.v4.104-16-0-0-13" :whois/registrant-org "Cloudflare, Inc." :whois/abuse-email "abuse@cloudflare.com" :whois/registrar "ARIN" :whois/updated-at "2024-01-10" :whois/sourcing :representative :ip.attr/encrypted false}
+ {:whois/id "whois.range.88-198" :whois/subject "range.v4.88-198-0-0-16" :whois/registrant-org "Hetzner Online GmbH" :whois/abuse-email "abuse@hetzner.com" :whois/registrar "RIPE NCC" :whois/updated-at "2023-08-02" :whois/sourcing :representative :ip.attr/encrypted false}
+ {:whois/id "whois.asn.15169" :whois/subject "asn.15169" :whois/registrant-org "Google LLC" :whois/abuse-email "network-abuse@google.com" :whois/registrar "ARIN" :whois/updated-at "2024-05-01" :whois/sourcing :representative :ip.attr/encrypted false}
+]

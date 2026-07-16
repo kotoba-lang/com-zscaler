@@ -1,0 +1,49 @@
+;; hagukumi 育み — kotoba seed data (representative, R0)
+;; ADR-2605261030 · :sourcing :representative (NOT authoritative)
+;; Worked example: caregiver attestation → consent record → care session → review.
+
+[;; ════════════ Caregiver Attestation ════════════
+ {:caregiverAttestation/id "cga.demo.0001"
+  :caregiverAttestation/caregiverDid "did:web:hagukumi.etzhayyim.com:caregiver:alice-cert-2026"
+  :caregiverAttestation/trainingCertification "CPR+Pediatrics Certificate 2026-05-01"
+  :caregiverAttestation/backgroundCheckCid "ipfs://QmABC123BackgroundCheck"
+  :caregiverAttestation/councilApprovalDate "2026-05-15T10:00:00Z"
+  :caregiverAttestation/specializations ["child-infancy" "early-childhood"]
+  :sourcing :representative}
+
+ ;; ════════════ Consent Record ════════════
+ {:consentRecord/id "cr.demo.0001"
+  :consentRecord/careRecipientPseudonymDid "did:web:hagukumi.etzhayyim.com:recipient:pseudonym:2026-05"
+  :consentRecord/guardianDidIfUnder14 "did:web:hagukumi.etzhayyim.com:guardian:parent-bob"
+  :consentRecord/consentType "daily-care"
+  :consentRecord/consentTimestamp "2026-05-20T08:30:00Z"
+  :consentRecord/revokedAt nil
+  :consentRecord/humanReadableSummary "Daily childcare (8:00-16:00 weekdays, infancy specialization required)"
+  :sourcing :representative}
+
+ ;; ════════════ Care Session Attestation ════════════
+ {:careSessionAttestation/id "csa.demo.0001"
+  :careSessionAttestation/careRecipientPseudonymDid "did:web:hagukumi.etzhayyim.com:recipient:pseudonym:2026-05"
+  :careSessionAttestation/caregiverDid "did:web:hagukumi.etzhayyim.com:caregiver:alice-cert-2026"
+  :careSessionAttestation/sessionStartTime "2026-05-20T08:00:00Z"
+  :careSessionAttestation/sessionEndTime "2026-05-20T12:00:00Z"
+  :careSessionAttestation/encryptedPayloadCid "ipfs://QmXChaCha20PolyEncrypted"
+  :careSessionAttestation/consentRecordCid "ipfs://QmConsentRecord0001"
+  :careSessionAttestation/careType "child-daily-care"
+  :careSessionAttestation/aggregateSessionDurationMinutes 240
+  :careSessionAttestation/aggregateActivityCategory "morning-routine-play-meal"
+  :careSessionAttestation/emergencyTriggered false
+  :careSessionAttestation/mitateCareEscalationLevel 0
+  :careSessionAttestation/humanCaregiverCoAttestedEvery30Min false
+  :sourcing :representative}
+
+ ;; ════════════ Silen Care Review (Quarterly Council Audit) ════════════
+ {:silenCareReview/id "scr.demo.q2-2026"
+  :silenCareReview/reviewPeriodStart "2026-04-01T00:00:00Z"
+  :silenCareReview/reviewPeriodEnd "2026-06-30T23:59:59Z"
+  :silenCareReview/councilAttestation "Council 5-of-7 Safe Q2-2026 attestation signed"
+  :silenCareReview/cohortRatioChildElderMultiGen "45:30:25"
+  :silenCareReview/privacyFindingsCid nil
+  :silenCareReview/wellbecomingViolations []
+  :sourcing :representative}
+ ]

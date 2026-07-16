@@ -1,0 +1,15 @@
+{:lexicon 1
+ :id "com.etzhayyim.kiyome.siteAssessmentRecord"
+ :defs
+ {:main
+  {:type "record" :key "tid"
+   :record
+   {:type "object"
+    :required ["siteId" "onDeviceOnly" "createdAt"]
+    :properties
+    {:siteId {:type "string"}
+     :siteClass {:type "string" :enum ["home" "facility" "office" "common-space"]}
+     :areaM2 {:type "integer" :minimum 0}
+     :onDeviceOnly {:type "boolean" :const true :description "G9 — map/assessment stays on the robot"}
+     :biometricCapture {:type "boolean" :const false :description "N5 — no facial/biometric recognition of occupants"}
+     :createdAt {:type "string" :format "datetime"}}}}}}

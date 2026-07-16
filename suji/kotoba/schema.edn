@@ -1,0 +1,47 @@
+;; suji (筋) kotoba EAVT schema — musculoskeletal posture-load biomechanics (R0)
+;; Canonical state in the kotoba Datom log (ADR-2605312345); every body model / posture /
+;; joint load / muscle tension / strain is a Datom (G9 audit; as-of, replayable; 非終末論 —
+;; a stiffness trajectory has NO final state). NON-DIAGNOSTIC by construction (G1): the schema
+;; carries mechanical quantities only — there is no :diagnosis / :prescription / :treatment
+;; attribute anywhere (structurally unrepresentable, the nusa/tazuna/kamado pattern). 医師法 §17.
+[;; ── body model (anthropometric segment set; :representative population avg, G7) ──
+ {:db/ident :body/id              :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :body/total-mass-kg   :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :body/stature-m       :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :body/representative   :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}   ;; G7 (true = population avg, not a member scan)
+ {:db/ident :body/encrypted-cid   :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; G4 — set ONLY when fed a real kizashi scan (要配慮 PII envelope)
+
+ ;; ── posture (sagittal joint angles; from a workstation, kinematics) ────────────
+ {:db/ident :posture/id           :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :posture/body         :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :posture/workstation  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; :representative scenario name
+ {:db/ident :posture/head-flex-deg     :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :posture/trunk-flex-deg    :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :posture/shoulder-flex-deg :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :posture/arms-supported    :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}
+ {:db/ident :posture/as-of         :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}   ;; Wellbecoming trajectory stamp (非終末論)
+
+ ;; ── joint load (static inverse dynamics — RNEA gravity term) ───────────────────
+ {:db/ident :load/id              :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :load/posture         :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :load/joint           :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :cervicothoracic :shoulder :lumbosacral
+ {:db/ident :load/moment-nm       :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :load/compressive-kgf :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}   ;; cervical only (the Hansraj unit)
+ {:db/ident :load/mult-vs-head    :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}   ;; cervical: load / head weight
+
+ ;; ── muscle tension (Hill-type moment-arm; %MVC = 緊張) ─────────────────────────
+ {:db/ident :muscle/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :muscle/posture       :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :muscle/group         :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :cervical-extensors :upper-trapezius :levator-scapulae :anterior-deltoid :erector-spinae
+ {:db/ident :muscle/force-n       :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :muscle/mvc-pct       :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+
+ ;; ── strain (Rohmert sustained-isometric dose; stiffness index = 強張り) ─────────
+ {:db/ident :strain/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :strain/posture       :db/valueType :db.type/ref     :db/cardinality :db.cardinality/one}
+ {:db/ident :strain/group         :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :strain/session-min   :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}
+ {:db/ident :strain/endurance-min :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}   ;; inf encoded as -1
+ {:db/ident :strain/stiffness     :db/valueType :db.type/double  :db/cardinality :db.cardinality/one}   ;; [0,1) 強張り index
+ {:db/ident :strain/band          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :low :moderate :high :very-high
+ {:db/ident :strain/as-of         :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}]  ;; trajectory stamp (非終末論)

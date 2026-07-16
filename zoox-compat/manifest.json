@@ -1,0 +1,780 @@
+{
+  "schemaVersion": "1.0",
+  "handle": "zoox-compat",
+  "did": "did:web:etzhayyim.com:actor:zoox-compat",
+  "kind": "compat",
+  "title": "zoox clean-room actor",
+  "description": "Clean-room, API-compatible mobility / auto / EV actor (zoox); runs browser-local on IPFS + kotoba-WASM.",
+  "wasmCid": "bafkreidamteochs4khzxhd4snhhpdi6qehwdnfd7mr3lfuodszlypdhpjy",
+  "wasmProvenance": "built-rust-raw",
+  "runtime": "kotoba-wasm",
+  "exec": "browser-local|donated-mesh",
+  "ipfs": "ipfs://bafkreidamteochs4khzxhd4snhhpdi6qehwdnfd7mr3lfuodszlypdhpjy",
+  "schema": "schema/zoox.kotoba",
+  "tier": "L4",
+  "verified": null,
+  "entities": [
+    "Vehicle",
+    "Signal",
+    "ChargeSession",
+    "Connector",
+    "Trip",
+    "Command"
+  ],
+  "adr": [
+    "260607",
+    "2606014500",
+    "2606013800",
+    "2606036000"
+  ],
+  "capabilities": {
+    "api": {
+      "type": "rest",
+      "runtime": "kotoba-wasm",
+      "endpointCount": 30,
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/v1/vehicles",
+          "op": "create Vehicle"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/vehicles",
+          "op": "list Vehicle"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/vehicles/{id}",
+          "op": "get Vehicle"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/vehicles/{id}",
+          "op": "update Vehicle"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/vehicles/{id}",
+          "op": "delete Vehicle"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/signals",
+          "op": "create Signal"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/signals",
+          "op": "list Signal"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/signals/{id}",
+          "op": "get Signal"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/signals/{id}",
+          "op": "update Signal"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/signals/{id}",
+          "op": "delete Signal"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/chargesessions",
+          "op": "create ChargeSession"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/chargesessions",
+          "op": "list ChargeSession"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/chargesessions/{id}",
+          "op": "get ChargeSession"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/chargesessions/{id}",
+          "op": "update ChargeSession"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/chargesessions/{id}",
+          "op": "delete ChargeSession"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/connectors",
+          "op": "create Connector"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/connectors",
+          "op": "list Connector"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/connectors/{id}",
+          "op": "get Connector"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/connectors/{id}",
+          "op": "update Connector"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/connectors/{id}",
+          "op": "delete Connector"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/trips",
+          "op": "create Trip"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/trips",
+          "op": "list Trip"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/trips/{id}",
+          "op": "get Trip"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/trips/{id}",
+          "op": "update Trip"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/trips/{id}",
+          "op": "delete Trip"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/commands",
+          "op": "create Command"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/commands",
+          "op": "list Command"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/commands/{id}",
+          "op": "get Command"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/commands/{id}",
+          "op": "update Command"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/commands/{id}",
+          "op": "delete Command"
+        }
+      ],
+      "features": {
+        "pagination": true,
+        "filtering": true,
+        "relationExpansion": true,
+        "strictValidation": true,
+        "contractTest": true
+      },
+      "health": "/healthz"
+    },
+    "supplychain": {
+      "type": "cyclonedx-sbom",
+      "runtime": "kotoba-wasm",
+      "sbom": "manifest:supplychain.sbom",
+      "sbomData": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "metadata": {
+          "component": {
+            "type": "application",
+            "name": "zoox-compat",
+            "purl": "pkg:etzhayyim/zoox-compat"
+          }
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "kotoba",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotoba"
+          },
+          {
+            "type": "library",
+            "name": "kotodama-wasm",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotodama-wasm"
+          },
+          {
+            "type": "library",
+            "name": "datomic-client",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/datomic-client"
+          }
+        ]
+      },
+      "adr": [
+        "2606036000"
+      ]
+    },
+    "socialpost": {
+      "type": "datom-event-feed",
+      "runtime": "kotoba-wasm",
+      "lexicon": "app.bsky.feed.post",
+      "source": "zoox.* Datom events",
+      "mode": "dry-run",
+      "gate": "G8"
+    },
+    "mcp": {
+      "type": "model-context-protocol",
+      "runtime": "kotoba-wasm",
+      "transport": "ipfs+kotoba-wasm",
+      "toolCount": 30,
+      "tools": [
+        {
+          "name": "create_vehicle",
+          "description": "Create a Vehicle.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "vin": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "odometerKm": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "vin",
+              "model"
+            ]
+          }
+        },
+        {
+          "name": "list_vehicles",
+          "description": "List Vehicles.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_vehicle",
+          "description": "Get a Vehicle by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_vehicle",
+          "description": "Update a Vehicle.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "vin": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "odometerKm": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_vehicle",
+          "description": "Delete a Vehicle.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_signal",
+          "description": "Create a Signal.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "vehicleId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ]
+          }
+        },
+        {
+          "name": "list_signals",
+          "description": "List Signals.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_signal",
+          "description": "Get a Signal by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_signal",
+          "description": "Update a Signal.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "vehicleId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_signal",
+          "description": "Delete a Signal.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_charge_session",
+          "description": "Create a ChargeSession.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "vehicleId": {
+                "type": "string"
+              },
+              "connectorId": {
+                "type": "string"
+              },
+              "energyKwh": {
+                "type": "number"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "energyKwh",
+              "status"
+            ]
+          }
+        },
+        {
+          "name": "list_charge_sessions",
+          "description": "List ChargeSessions.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_charge_session",
+          "description": "Get a ChargeSession by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_charge_session",
+          "description": "Update a ChargeSession.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "vehicleId": {
+                "type": "string"
+              },
+              "connectorId": {
+                "type": "string"
+              },
+              "energyKwh": {
+                "type": "number"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_charge_session",
+          "description": "Delete a ChargeSession.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_connector",
+          "description": "Create a Connector.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "stationId": {
+                "type": "string"
+              },
+              "standard": {
+                "type": "string"
+              },
+              "powerKw": {
+                "type": "number"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "standard",
+              "powerKw"
+            ]
+          }
+        },
+        {
+          "name": "list_connectors",
+          "description": "List Connectors.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_connector",
+          "description": "Get a Connector by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_connector",
+          "description": "Update a Connector.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "stationId": {
+                "type": "string"
+              },
+              "standard": {
+                "type": "string"
+              },
+              "powerKw": {
+                "type": "number"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_connector",
+          "description": "Delete a Connector.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_trip",
+          "description": "Create a Trip.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "vehicleId": {
+                "type": "string"
+              },
+              "distanceKm": {
+                "type": "number"
+              },
+              "startedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "distanceKm",
+              "startedAt"
+            ]
+          }
+        },
+        {
+          "name": "list_trips",
+          "description": "List Trips.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_trip",
+          "description": "Get a Trip by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_trip",
+          "description": "Update a Trip.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "vehicleId": {
+                "type": "string"
+              },
+              "distanceKm": {
+                "type": "number"
+              },
+              "startedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_trip",
+          "description": "Delete a Trip.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_command",
+          "description": "Create a Command.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "vehicleId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "status"
+            ]
+          }
+        },
+        {
+          "name": "list_commands",
+          "description": "List Commands.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_command",
+          "description": "Get a Command by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_command",
+          "description": "Update a Command.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "vehicleId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_command",
+          "description": "Delete a Command.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

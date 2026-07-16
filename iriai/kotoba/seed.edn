@@ -1,0 +1,136 @@
+;; iriai 入会 — synthetic lifeline-commons seed (ADR-2606272200, R0).
+;; 6 regions × 4 lifelines (電気/水道/ガス/通信) = 24 cells, spanning every verdict:
+;;   :provision (kibou) · :redundancy (shima) · :reinforce (saigai) ·
+;;   :maintain (midori) · :await-consent (yama) · :monitor (machi gas).
+;; ALL :synthetic (G8). Real region/utility data is an operator/Council step (G7).
+;; A cell = one region × one lifeline; :source names the producer actor (iriai composes).
+[
+ ;; ── regions ───────────────────────────────────────────────────────────────
+ {:type :region :id "kibou"  :name "Kibou Village"   :country "—" :population 1000 :vulnerability 0.8
+  :note "off-grid rural — the §1.16 reach gap on all four lifelines"}
+ {:type :region :id "shima"  :name "Shima Atoll"     :country "—" :population 1000 :vulnerability 0.6
+  :note "island — served but single-source on power + telecom (SPOF)"}
+ {:type :region :id "saigai" :name "Saigai Town"     :country "—" :population 1000 :vulnerability 0.7
+  :note "post-disaster — coverage degraded below baseline"}
+ {:type :region :id "midori" :name "Midori Commons"  :country "—" :population 1000 :vulnerability 0.3
+  :note "fully served + resilient commons — steady state"}
+ {:type :region :id "yama"   :name "Yama Hamlet"     :country "—" :population 1000 :vulnerability 0.7
+  :note "needs a build but landowner/community consent is NOT in hand"}
+ {:type :region :id "machi"  :name "Machi Ward"      :country "—" :population 5000 :vulnerability 0.2
+  :note "adequate urban ward — low gap; gas below adequate → observe"}
+
+ ;; ── kibou: unconnected → :provision (all four) ────────────────────────────
+ {:type :lifeline-cell :region "kibou" :region-name "Kibou Village" :lifeline :electric :source "hikari"
+  :served-pop 200 :total-pop 1000 :vulnerability 0.8 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "kibou" :region-name "Kibou Village" :lifeline :water :source "mizuho"
+  :served-pop 150 :total-pop 1000 :vulnerability 0.8 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "kibou" :region-name "Kibou Village" :lifeline :gas :source "kamado"
+  :served-pop 100 :total-pop 1000 :vulnerability 0.8 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "kibou" :region-name "Kibou Village" :lifeline :telecom :source "noroshi"
+  :served-pop 300 :total-pop 1000 :vulnerability 0.8 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? false}
+
+ ;; ── shima: single-source power+telecom → :redundancy; water+gas resilient → :maintain ──
+ {:type :lifeline-cell :region "shima" :region-name "Shima Atoll" :lifeline :electric :source "hikari"
+  :served-pop 950 :total-pop 1000 :vulnerability 0.6 :single-source? true :n1-margin -0.2 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "shima" :region-name "Shima Atoll" :lifeline :telecom :source "noroshi"
+  :served-pop 920 :total-pop 1000 :vulnerability 0.6 :single-source? true :n1-margin -0.1 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "shima" :region-name "Shima Atoll" :lifeline :water :source "mizuho"
+  :served-pop 980 :total-pop 1000 :vulnerability 0.6 :single-source? false :n1-margin 0.3 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "shima" :region-name "Shima Atoll" :lifeline :gas :source "kamado"
+  :served-pop 900 :total-pop 1000 :vulnerability 0.6 :single-source? false :n1-margin 0.2 :consent true :disaster-degraded? false}
+
+ ;; ── saigai: disaster-degraded → :reinforce (all four) ─────────────────────
+ {:type :lifeline-cell :region "saigai" :region-name "Saigai Town" :lifeline :water :source "mizuho"
+  :served-pop 600 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? true}
+ {:type :lifeline-cell :region "saigai" :region-name "Saigai Town" :lifeline :electric :source "hikari"
+  :served-pop 700 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? true}
+ {:type :lifeline-cell :region "saigai" :region-name "Saigai Town" :lifeline :telecom :source "noroshi"
+  :served-pop 650 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? true}
+ {:type :lifeline-cell :region "saigai" :region-name "Saigai Town" :lifeline :gas :source "kamado"
+  :served-pop 500 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? true}
+
+ ;; ── midori: fully served + resilient → :maintain (all four) ───────────────
+ {:type :lifeline-cell :region "midori" :region-name "Midori Commons" :lifeline :electric :source "hikari"
+  :served-pop 995 :total-pop 1000 :vulnerability 0.3 :single-source? false :n1-margin 0.5 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "midori" :region-name "Midori Commons" :lifeline :water :source "mizuho"
+  :served-pop 1000 :total-pop 1000 :vulnerability 0.3 :single-source? false :n1-margin 0.5 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "midori" :region-name "Midori Commons" :lifeline :gas :source "kamado"
+  :served-pop 980 :total-pop 1000 :vulnerability 0.3 :single-source? false :n1-margin 0.4 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "midori" :region-name "Midori Commons" :lifeline :telecom :source "noroshi"
+  :served-pop 990 :total-pop 1000 :vulnerability 0.3 :single-source? false :n1-margin 0.4 :consent true :disaster-degraded? false}
+
+ ;; ── yama: high need but NO consent → :await-consent (all four; G3 land sovereignty) ──
+ {:type :lifeline-cell :region "yama" :region-name "Yama Hamlet" :lifeline :electric :source "hikari"
+  :served-pop 100 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent false :disaster-degraded? false}
+ {:type :lifeline-cell :region "yama" :region-name "Yama Hamlet" :lifeline :water :source "mizuho"
+  :served-pop 80 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent false :disaster-degraded? false}
+ {:type :lifeline-cell :region "yama" :region-name "Yama Hamlet" :lifeline :gas :source "kamado"
+  :served-pop 50 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent false :disaster-degraded? false}
+ {:type :lifeline-cell :region "yama" :region-name "Yama Hamlet" :lifeline :telecom :source "noroshi"
+  :served-pop 120 :total-pop 1000 :vulnerability 0.7 :single-source? false :n1-margin 0.1 :consent false :disaster-degraded? false}
+
+ ;; ── machi: adequate → :maintain; gas below adequate but low-burden → :monitor ──
+ {:type :lifeline-cell :region "machi" :region-name "Machi Ward" :lifeline :electric :source "hikari"
+  :served-pop 4900 :total-pop 5000 :vulnerability 0.2 :single-source? false :n1-margin 0.4 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "machi" :region-name "Machi Ward" :lifeline :water :source "mizuho"
+  :served-pop 4950 :total-pop 5000 :vulnerability 0.2 :single-source? false :n1-margin 0.4 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "machi" :region-name "Machi Ward" :lifeline :telecom :source "noroshi"
+  :served-pop 4800 :total-pop 5000 :vulnerability 0.2 :single-source? false :n1-margin 0.3 :consent true :disaster-degraded? false}
+ {:type :lifeline-cell :region "machi" :region-name "Machi Ward" :lifeline :gas :source "kamado"
+  :served-pop 4100 :total-pop 5000 :vulnerability 0.2 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? false}
+
+ ;; ── 道路 road coverage-cells (5th lifeline in all layers, ADR-2606280900) ──
+ {:type :lifeline-cell :region "kibou" :region-name "Kibou Village" :lifeline :road :source "tatekata"
+  :served-pop 100 :total-pop 1000 :vulnerability 0.8 :single-source? false :n1-margin 0.1 :consent true :disaster-degraded? false}   ; off-grid hamlet, no road → :provision
+ {:type :lifeline-cell :region "midori" :region-name "Midori Commons" :lifeline :road :source "tatekata"
+  :served-pop 990 :total-pop 1000 :vulnerability 0.3 :single-source? false :n1-margin 0.4 :consent true :disaster-degraded? false}  ; served + resilient → :maintain
+ {:type :lifeline-cell :region "machi" :region-name "Machi Ward" :lifeline :road :source "tatekata"
+  :served-pop 4900 :total-pop 5000 :vulnerability 0.2 :single-source? false :n1-margin 0.4 :consent true :disaster-degraded? false} ; adequate urban road → :maintain
+
+ ;; ── DEPLOYED ASSETS (the physical-simulation twin + maintenance layer, ADR-2606280900) ──
+ ;; Each :asset is a built piece of infrastructure with a degradation model + maintenance
+ ;; schedule, spanning every maintenance verdict + both safety-floor domains. All :synthetic.
+
+ ;; electric transformers (IEEE C57.91 thermal aging)
+ {:type :asset :id "xfmr-midori-1" :name "Midori T1" :lifeline :electric :region "midori"
+  :age-years 3 :design-life 30 :load-factor 0.5 :ambient-c 25
+  :inspect-interval 2 :last-inspect-age 2 :service-interval 6 :last-service-age 0 :opex-base 8000}     ; → :ok
+ {:type :asset :id "xfmr-machi-2" :name "Machi T2" :lifeline :electric :region "machi"
+  :age-years 16 :design-life 30 :load-factor 0.6 :ambient-c 28 :refurbished? false
+  :inspect-interval 2 :last-inspect-age 1 :service-interval 6 :last-service-age 2 :opex-base 9000}     ; → :refurbish (mid-life)
+ {:type :asset :id "xfmr-decom-1" :name "Old Substation T9" :lifeline :electric :region "machi"
+  :age-years 26 :design-life 30 :load-factor 1.0 :ambient-c 40
+  :inspect-interval 1 :last-inspect-age 0 :service-interval 4 :last-service-age 1 :opex-base 12000}    ; → :decommission (unsafe-eol)
+
+ ;; water mains (Hazen-Williams C decline)
+ {:type :asset :id "pipe-kibou-1" :name "Kibou Main W1" :lifeline :water :region "kibou"
+  :age-years 10 :design-life 50 :c0 130 :c-decline-per-yr 1.2
+  :inspect-interval 4 :last-inspect-age 2 :service-interval 8 :last-service-age 1 :opex-base 6000}     ; → :preventive-service
+ {:type :asset :id "pipe-shima-3" :name "Shima Main W3" :lifeline :water :region "shima"
+  :age-years 48 :design-life 60 :c0 130 :c-decline-per-yr 1.3
+  :inspect-interval 4 :last-inspect-age 1 :service-interval 8 :last-service-age 3 :opex-base 7000}     ; → :renew (condition < 0.25)
+
+ ;; gas mains (corrosion → leak; SAFETY FLOOR)
+ {:type :asset :id "gas-saigai-1" :name "Saigai Gas G1" :lifeline :gas :region "saigai"
+  :age-years 33 :design-life 50 :wall-mm0 8.0 :corrosion-mm-per-yr 0.08 :wall-min-mm 3.0
+  :inspect-interval 2 :last-inspect-age 1 :service-interval 6 :last-service-age 2 :opex-base 7000}     ; → :corrective-repair (condition)
+ {:type :asset :id "gas-shima-2" :name "Shima Gas G2" :lifeline :gas :region "shima"
+  :age-years 38 :design-life 50 :wall-mm0 8.0 :corrosion-mm-per-yr 0.12 :wall-min-mm 3.0
+  :inspect-interval 2 :last-inspect-age 1 :service-interval 6 :last-service-age 2 :opex-base 7500}     ; → :corrective-repair (SAFETY FLOOR, leak-prob > 0.7)
+
+ ;; fibre spans (attenuation creep)
+ {:type :asset :id "fibre-machi-1" :name "Machi Fibre F1" :lifeline :telecom :region "machi"
+  :age-years 6 :design-life 25 :atten0-db 6.0 :atten-creep-db-per-yr 0.15 :budget-db 28.0
+  :inspect-interval 2 :last-inspect-age 3 :service-interval 10 :last-service-age 1 :opex-base 5000}    ; → :inspect
+
+ ;; roads (pavement PCI decay + bridge load-rating; 道路)
+ {:type :asset :id "road-midori-1" :name "Midori Rd R1" :lifeline :road :region "midori"
+  :age-years 4 :design-life 25 :pci0 100 :pci-a 0.15 :pci-b 2.0 :load-rating 1.6
+  :inspect-interval 2 :last-inspect-age 3 :service-interval 5 :last-service-age 1 :opex-base 4000}     ; → :ok (or inspect)
+ {:type :asset :id "road-saigai-2" :name "Saigai Rd R2" :lifeline :road :region "saigai"
+  :age-years 18 :design-life 25 :pci0 100 :pci-a 0.15 :pci-b 2.0 :load-rating 1.4
+  :inspect-interval 2 :last-inspect-age 1 :service-interval 5 :last-service-age 2 :opex-base 4500}     ; → :renew (RUL < 3)
+ {:type :asset :id "road-bridge-1" :name "Kibou Bridge B1" :lifeline :road :region "kibou"
+  :age-years 8 :design-life 50 :pci0 100 :pci-a 0.15 :pci-b 2.0 :load-rating 0.9
+  :inspect-interval 1 :last-inspect-age 0 :service-interval 5 :last-service-age 1 :opex-base 11000}    ; → :corrective-repair (SAFETY FLOOR, load-rating < 1.0)
+]

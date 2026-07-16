@@ -1,0 +1,89 @@
+;; junkan 循環 — country/region system-dynamics actor ontology.
+;;
+;; Purpose:
+;;   Make the India packaged-goods addendum repeatable as country-level and
+;;   region-level actors without turning cultures into ethnic stereotypes.
+;;
+;; Actor levels:
+;;   :world     - cross-country taxonomy, shared stocks, source registry, no ranking-to-shame.
+;;   :country   - one sovereign/state-market context, aggregate only.
+;;   :region    - subnational region, language area, state/province, metro, or rural belt.
+;;   :city      - optional later fission for metro-specific dynamics.
+;;
+;; Discipline:
+;;   G4  analysis-only: no actuation/outward channel.
+;;   G5  hypothesis-only: loop regimes are structural read-offs, not proven causation.
+;;   G6  aggregate-only: no household/person/profile data.
+;;   G7  map, not target list or culture ranking.
+;;   G11 candidates, not directives.
+{:ontology/id "junkan-country-region-loop-actors"
+ :ontology/version "0.1.0"
+ :ontology/adr ["2605290927"]
+
+ :node-kinds
+ [{:kind :loop-actor
+   :doc "A country or region scoped system-dynamics observer actor."
+   :keys [:id :parent :scope :jurisdiction :region :languages :domains
+          :stocks :loops :sources :fission-rules :gates :status]}
+  {:kind :loop-domain
+   :doc "A reusable system-dynamics domain template, e.g. packaged goods, housing, education."
+   :keys [:id :label :stocks :loops :sign-convention :source-classes]}
+  {:kind :fission-rule
+   :doc "When a country actor should split out a region/city actor."
+   :keys [:id :trigger :reason :minimum-signals :required-dimensions]}]
+
+ :enums
+ {:scope #{:world :country :region :city}
+  :status #{:designed :seeded :active :retired}
+  :domain #{:packaged-goods-culture
+            :governance-asymmetry
+            :housing-access
+            :education-access
+            :food-system
+            :labor-market
+            :health-access
+            :waste-sanitation-cycle}
+  :source-class #{:household-consumption
+                  :census-language
+                  :retail-channel
+                  :price-index
+                  :public-health
+                  :education
+                  :labor
+                  :governance
+                  :geospatial
+                  :solid-waste-management}
+  :gate #{:analysis-only
+          :hypothesis-only
+          :aggregate-only
+          :non-essentialist
+          :map-not-ranking
+          :candidate-not-directive}}
+
+ :required-gates
+ [:analysis-only :hypothesis-only :aggregate-only :non-essentialist :map-not-ranking :candidate-not-directive]
+
+ :actor-id-pattern
+ "junkan.loop.<domain>.<ISO-3166-country-or-region-code>"
+
+ :default-fission-rules
+ [{:id :language-fragmentation
+   :trigger "dominant source languages differ enough that label/media/trust loops change sign"
+   :reason "language fit is itself a stock; a national average hides the loop"
+   :minimum-signals 3
+   :required-dimensions [:language :region :channel]}
+  {:id :settlement-split
+   :trigger "rural and urban regimes diverge between :loose-refill-persistent and :packaged-gaining"
+   :reason "cash-flow, logistics, and retail-channel loops are structurally different"
+   :minimum-signals 4
+   :required-dimensions [:settlement :channel :income-proxy]}
+  {:id :regional-sign-reversal
+   :trigger "one region's net pressure has opposite sign from the country-level net"
+   :reason "country actor would otherwise erase a material local feedback loop"
+   :minimum-signals 3
+   :required-dimensions [:region :stock :source]}
+  {:id :category-split
+   :trigger "product categories have different loop signs, e.g. staples vs personal care"
+   :reason "domain actor should split when category dynamics are not commensurate"
+   :minimum-signals 4
+   :required-dimensions [:category :channel :price-unit]}]}

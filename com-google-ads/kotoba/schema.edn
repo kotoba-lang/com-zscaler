@@ -1,0 +1,66 @@
+;; com-google-ads (広) — kotoba EAVT schema
+;; ADR-2606292130 (R0)
+;; Charter-clean outreach & performance marketing. Cohort-scale ONLY (G2 — there is deliberately
+;; NO :person/* or individual-profile attribute; the schema cannot represent an individual target).
+;; Audiences are self-sovereign opt-in cohorts, hard-retracted on forget (G3 — NO :_alive/soft-delete
+;; attribute, talent-G4 lineage). Spend is append-only + finance-signed (G4). Performance aggregates
+;; are :bond/is-transient (read-time, itonami-G3 lineage — never durable verdicts). Identifying fields
+;; hold signal:v1: ciphertext ONLY (G3, ADR-2605181100).
+;;
+;; The buy/create side of the akashi 証 loop: every published creative + spend range carries an
+;; :akashi/disclosure-ref (G7).
+
+[;; ── :audience/* — self-sovereign opt-in cohort, hard-deletable (G3) ──
+ {:db/ident :audience/cohort-id   :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity :db/doc "cohort key (isco × country, k-anonymous); the finest target granularity (G2)"}
+ {:db/ident :audience/isco        :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "ISCO-08 cohort key (talent lineage)"}
+ {:db/ident :audience/country     :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :audience/source      :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "self-optin | orcid | github-public | public-credential-registry ONLY (G3)"}
+ {:db/ident :audience/consent-did :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "cohort-owner DID — self-sovereign opt-in (G3, talent-G1/G6 lineage)"}
+ {:db/ident :audience/count       :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/doc "published only when ≥ k (G2 k-anonymity)"}
+ {:db/ident :audience/enc-contact :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc "signal:v1: ciphertext ONLY (G3) — any outreach contact PII; plaintext refused"}
+ {:db/ident :audience/registered-by :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "MUST equal cohort-owner (G3); member-signed"}
+ ;; NOTE: deliberately NO :audience/alive / :audience/deleted-at — forget is a hard retract of every
+ ;; datom for the cohort-id (G3 GDPR Art 17), not a flag flip. There is NO individual-member attribute
+ ;; anywhere — only cohort-level aggregates (G2 anti-surveillance is structural).
+
+ ;; ── :campaign/* — cohort-bound, budget-capped, approval-gated (G1) ──
+ {:db/ident :campaign/id          :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :campaign/cohort      :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "MUST resolve to an :audience/cohort-id (G2 — cohort target only)"}
+ {:db/ident :campaign/purpose     :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "mission-bound outreach purpose (event | publication | mutual-aid | land-sovereignty | donation)"}
+ {:db/ident :campaign/budget-cap  :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/doc "hard ceiling; spend cannot exceed (G4)"}
+ {:db/ident :campaign/status      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc "proposed | approved | publishing | paused | closed"}
+ {:db/ident :campaign/approved-by :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "finance/Council DID — required to enter :publishing (G1)"}
+ {:db/ident :campaign/creative    :db/valueType :db.type/ref    :db/cardinality :db.cardinality/many  :db/doc "→ :creative/id (G5-reviewed)"}
+
+ ;; ── :creative/* — content hash + review verdict + akashi mirror (G5/G7) ──
+ {:db/ident :creative/id          :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :creative/content-hash :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "CID/hash of creative payload (text/image/video)"}
+ {:db/ident :creative/review-verdict :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc "passed | rejected | hold — G5 anti-manipulation gate (protected-category / dark-pattern / deceptive check)"}
+ {:db/ident :creative/review-reason :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :creative/akashi-ref  :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "akashi 証 disclosure record ref — set on publish (G7); the buy→disclose half-loop"}
+
+ ;; ── :spend/* — append-only ledger, finance-signed (G4) ──
+ {:db/ident :spend/tx             :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/unique :db.unique/identity :db/doc "monotonic spend txn id; append-only"}
+ {:db/ident :spend/campaign       :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "→ :campaign/id"}
+ {:db/ident :spend/amount         :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/doc "currency minor units; cumulative ≤ campaign/budget-cap (G4)"}
+ {:db/ident :spend/signed-by      :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "finance DID signature (G4) — never mutated, only appended"}
+ {:db/ident :spend/range-bucket   :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "disclosed to akashi as a RANGE only (G7), never exact-to-the-cent in public"}
+
+ ;; ── :performance/* — aggregate, transient (G2; itonami-G3 lineage) ──
+ ;; These are READ-TIME aggregates flagged :bond/is-transient. There is no durable per-individual
+ ;; impression/click/conversion datom — only cohort aggregates. The finest grain is the cohort.
+ {:db/ident :performance/cohort   :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "→ :audience/cohort-id (G2 — no finer grain exists)"}
+ {:db/ident :performance/campaign :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :performance/impressions :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/is-transient true :db/doc "aggregate; :bond/is-transient — computed on read"}
+ {:db/ident :performance/clicks   :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/is-transient true}
+ {:db/ident :performance/conversions :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/is-transient true :db/doc "aggregate; no individual journey is representable (G2)"}
+
+ ;; ── :proposal/* — actor proposal + human disposition (G1 audit trail) ──
+ {:db/ident :proposal/id          :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :proposal/campaign    :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :proposal/kind        :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc "create | adjust-bid | adjust-budget | swap-creative | pause"}
+ {:db/ident :proposal/payload     :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "EDN proposal body (cohort, bid, budget, creative ref)"}
+ {:db/ident :proposal/governor-verdict :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc "accept | reject | hold — independent PolicyGovernor (G2/G3/G5)"}
+ {:db/ident :proposal/governor-violations :db/valueType :db.type/string :db/cardinality :db.cardinality/many :db/doc "gate violations if rejected/hold"}
+ {:db/ident :proposal/disposition :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc "committed | held | rejected — set by human sign-off (G1)"}
+ {:db/ident :proposal/disposition-by :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "finance/Council DID (G1)"}]

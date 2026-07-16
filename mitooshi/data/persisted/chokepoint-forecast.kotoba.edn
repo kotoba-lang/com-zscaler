@@ -1,0 +1,15 @@
+;; chokepoint-forecast.kotoba.edn — DISTRIBUTION forecasts @ target=7 (climatology).
+;; G1 distribution-only (:forecast/point-asserted false, 非終末論). G5 leak-free
+;; (info-as-of < target). DERIVED :representative. Live promotion G10-gated. ADR-2606051800.
+
+[
+ {:forecast/id "fc.s-gibraltar-cable.7.climatology" :forecast/series "s-gibraltar-cable" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 324.0 :forecast/sd 0.0 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-hormuz-transit.7.climatology" :forecast/series "s-hormuz-transit" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 1.0 :forecast/sd 0.0 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-luzon-strait-cable.7.climatology" :forecast/series "s-luzon-strait-cable" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 529.8933 :forecast/sd 116.705898 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-luzon-strait-transit.7.climatology" :forecast/series "s-luzon-strait-transit" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 1.3333 :forecast/sd 0.516398 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-malacca-cable.7.climatology" :forecast/series "s-malacca-cable" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 640.16 :forecast/sd 232.379001 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-malacca-transit.7.climatology" :forecast/series "s-malacca-transit" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 3.0 :forecast/sd 0.0 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-south-china-sea-cable.7.climatology" :forecast/series "s-south-china-sea-cable" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 190.56 :forecast/sd 0.0 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-suez-red-sea-cable.7.climatology" :forecast/series "s-suez-red-sea-cable" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 282.9333 :forecast/sd 51.639778 :forecast/sourcing :representative}
+ {:forecast/id "fc.s-suez-red-sea-transit.7.climatology" :forecast/series "s-suez-red-sea-transit" :forecast/dist :gaussian :forecast/point-asserted false :forecast/use :resilience :forecast/info-as-of 6 :forecast/target-at 7 :forecast/mean 1.0 :forecast/sd 0.0 :forecast/sourcing :representative}
+]

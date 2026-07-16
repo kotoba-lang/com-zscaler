@@ -1,0 +1,3 @@
+;; iryo 医療 — rezept cell (langgraph, wasm runtime)
+;; maps to py/agent.py handle_rezept
+[{:cell/entry "py/agent.py", :cell/id "rezept", :cell/glyph "医療", :cell/kind :langgraph, :cell/runtime :wasm, :db/id -1, :cell/gates ["G4" "G5"], :cell/doc "診療録(encounter) → レセプト点数計算. 診療行為/薬剤料(五捨五超四入)/特定器材料 を診療識別で区分集計し, 総点数→総医療費(1点=10円)→一部負担金(10円未満四捨五入)→高額療養費自己負担限度額調整 を返す. 点数は全て loaded master 経由で解決 (G4 master-honest); engine は tariff をハードコードしない.", :cell/handler "handle_rezept", :cell/kotoba "{:reads [:shinryo/ten :shinryo/shikibetsu :iyaku/yakka :tokutei/yakka], :writes [:iryo.rezept/total-ten :iryo.rezept/total-iryohi-yen :iryo.rezept/ichibu-futan-yen :iryo.rezept/kogaku-applied :iryo.rezept/patient-pay-yen :iryo.line/kind :iryo.line/kubun :iryo.line/ten]}"}]

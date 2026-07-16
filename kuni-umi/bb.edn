@@ -1,0 +1,32 @@
+{:tasks
+ {test {:doc "Run kuni-umi .cljc tests"
+        :requires ([clojure.test :as t])
+        :task (do
+                (doseq [f ["robotics/kinematics.cljc"
+                           "robotics/plant.cljc"
+                           "robotics/control.cljc"
+                           "robotics/safety.cljc"
+                           "robotics/commissioning.cljc"
+                           "cells/decommission/cell.cljc"
+                           "cells/site_survey/cell.cljc"
+                           "cells/audit_witness/cell.cljc"
+                           "cells/construction_orchestration/cell.cljc"
+                           "cells/deployment_planning/cell.cljc"
+                           "robotics/test_kinematics.cljc"
+                           "robotics/test_robotics.cljc"
+                           "cells/decommission/test_cell.cljc"
+                           "cells/site_survey/test_cell.cljc"
+                           "cells/audit_witness/test_cell.cljc"
+                           "cells/construction_orchestration/test_cell.cljc"
+                           "cells/deployment_planning/test_cell.cljc"]]
+                  (load-file f))
+                (let [result (apply t/run-tests
+                                    '[kuni-umi.robotics.test-kinematics
+                                      kuni-umi.robotics.test-robotics
+                                      kuni-umi.cells.decommission.test-cell
+                                      kuni-umi.cells.site-survey.test-cell
+                                      kuni-umi.cells.audit-witness.test-cell
+                                      kuni-umi.cells.construction-orchestration.test-cell
+                                      kuni-umi.cells.deployment-planning.test-cell])]
+                  (when (pos? (+ (:fail result) (:error result)))
+                    (System/exit 1))))}}}

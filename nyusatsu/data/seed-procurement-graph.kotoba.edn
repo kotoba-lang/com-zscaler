@@ -1,0 +1,94 @@
+;; seed-procurement-graph.kotoba.edn — 入札 (nyusatsu) :representative worldwide-procurement seed (ADR-2606271700)
+;;
+;; HONESTY (G10): every record is :representative — ILLUSTRATIVE tenders with rounded/synthetic
+;; ids and GENERIC issuer/title placeholders, NOT a live authoritative capture of any real
+;; procurement portal. Live full-universe ingest (EU TED / UN UNGM / ProZorro / UK FTS / SAM.gov /
+;; JP GEPS / …) is G8-gated (Council Lv6+ + operator + member signature).
+;;
+;; The seed spans jurisdictions + statuses to exercise the normalizer + social projection:
+;;   ua-* : OCDS-native active goods tender (ProZorro shape)
+;;   gb-* : complete WORKS tender WITH an award (≥2 sources required, G3)
+;;   mx-* : services tender, selective method
+;;   jp-* : active goods tender (the legacy JP adapter, jurisdiction "JP-13" Tokyo)
+;;
+;; Keywords are kept as ":ns/name" STRINGS (root CLAUDE.md convention; read by nyusatsu.methods.edn).
+
+{:graph {:name "nyusatsu-procurement-v1" :visibility :public}
+
+ :bids
+ [{":bid/ocid"           "ocds-ua-2026-000001"
+   ":bid/jurisdiction"   "UA"
+   ":bid/issuer-did"     "did:web:gov.etzhayyim.com:country:ukr:health-procurement"
+   ":bid/issuer-name"    "Representative Health Procurement Agency (UA)"
+   ":bid/tender-id"      "UA-2026-000001"
+   ":bid/title"          "Supply of representative medical consumables"
+   ":bid/method"         ":open"
+   ":bid/status"         ":active"
+   ":bid/category"       ":goods"
+   ":bid/value-amount"   4200000
+   ":bid/value-currency" "UAH"
+   ":bid/tender-start"   "2026-06-10"
+   ":bid/tender-end"     "2026-07-01"
+   ":bid/source-url"     "https://public.api.openprocurement.org/api/2.5/tenders/rep000001"
+   ":bid/source-lang"    "uk"
+   ":bid/sources"        ["https://public.api.openprocurement.org/api/2.5/tenders/rep000001"]
+   ":bid/sourcing"       ":representative"}
+
+  {":bid/ocid"            "ocds-gb-2026-000042"
+   ":bid/jurisdiction"    "GB"
+   ":bid/issuer-did"      "did:web:gov.etzhayyim.com:country:gbr:transport-authority"
+   ":bid/issuer-name"     "Representative Transport Authority (GB)"
+   ":bid/tender-id"       "FTS-2026-000042"
+   ":bid/title"           "Representative bridge refurbishment works"
+   ":bid/method"          ":open"
+   ":bid/status"          ":complete"
+   ":bid/category"        ":works"
+   ":bid/value-amount"    8800000
+   ":bid/value-currency"  "GBP"
+   ":bid/tender-start"    "2026-03-01"
+   ":bid/tender-end"      "2026-04-15"
+   ":bid/source-url"      "https://www.find-tender.service.gov.uk/Notice/000042-2026"
+   ":bid/source-lang"     "en"
+   ":bid/sources"         ["https://www.find-tender.service.gov.uk/Notice/000042-2026"
+                           "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/000042"]
+   ":bid/sourcing"        ":representative"
+   ":bid/awarded-supplier" "Representative Civil Works Co."
+   ":bid/awarded-amount"  8650000
+   ":bid/awarded-currency" "GBP"
+   ":bid/awarded-at"      "2026-05-20"}
+
+  {":bid/ocid"           "ocds-mx-2026-000777"
+   ":bid/jurisdiction"   "MX"
+   ":bid/issuer-did"     "did:web:gov.etzhayyim.com:country:mex:education-ministry"
+   ":bid/issuer-name"    "Representative Education Ministry (MX)"
+   ":bid/tender-id"      "MX-2026-000777"
+   ":bid/title"          "Representative IT support services"
+   ":bid/method"         ":selective"
+   ":bid/status"         ":active"
+   ":bid/category"       ":services"
+   ":bid/value-amount"   3100000
+   ":bid/value-currency" "MXN"
+   ":bid/tender-start"   "2026-06-05"
+   ":bid/tender-end"     "2026-06-30"
+   ":bid/source-url"     "https://api.datos.gob.mx/v1/contrataciones/rep000777"
+   ":bid/source-lang"    "es"
+   ":bid/sources"        ["https://api.datos.gob.mx/v1/contrataciones/rep000777"]
+   ":bid/sourcing"       ":representative"}
+
+  {":bid/ocid"           "ocds-jp-13-2026-000123"
+   ":bid/jurisdiction"   "JP-13"
+   ":bid/issuer-did"     "did:web:gov.etzhayyim.com:country:jpn:tokyo-metro"
+   ":bid/issuer-name"    "Representative Tokyo Metropolitan Bureau (JP)"
+   ":bid/tender-id"      "JP-13-2026-000123"
+   ":bid/title"          "代表的な物品調達（事務機器）"
+   ":bid/method"         ":open"
+   ":bid/status"         ":active"
+   ":bid/category"       ":goods"
+   ":bid/value-amount"   12000000
+   ":bid/value-currency" "JPY"
+   ":bid/tender-start"   "2026-06-12"
+   ":bid/tender-end"     "2026-07-03"
+   ":bid/source-url"     "https://www.e-procurement.metro.tokyo.lg.jp/notice/rep000123"
+   ":bid/source-lang"    "ja"
+   ":bid/sources"        ["https://www.e-procurement.metro.tokyo.lg.jp/notice/rep000123"]
+   ":bid/sourcing"       ":representative"}]}

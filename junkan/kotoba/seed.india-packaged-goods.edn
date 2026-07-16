@@ -1,0 +1,175 @@
+;; junkan 循環 — India packaged-goods / loose-refill retail culture seed.
+;;
+;; Question:
+;;   Why do some Indian household segments lean away from standard packaged goods
+;;   toward loose, refill, fresh, kirana-mediated, or small-quantity purchase?
+;;
+;; Discipline:
+;;   - aggregate-only: region/language/channel/settlement cohorts, never persons.
+;;   - hypothesis-only: :polarity/:magnitude/:confidence are disclosed model
+;;     hypotheses, not causal proof.
+;;   - non-essentialist: this does NOT model "Indians" as a single culture.
+;;     India also has strong packaged FMCG, sachet, modern trade, and ecommerce
+;;     adoption; those counter-forces are represented explicitly.
+;;
+;; Sign convention in junkan.methods.consumer-culture:
+;;   :toward-loose     => positive pressure toward loose/refill/local-small-quantity purchase
+;;   :toward-packaged  => negative pressure toward standard packaged/modern-retail purchase
+;;   :ambiguous        => zero contribution, retained for coverage/context
+[
+ {:type :consumer-signal
+  :id "in-hces-rural-small-basket"
+  :name "Rural low-cash-flow shopping basket favors small quantities"
+  :region :pan-india :settlement :rural
+  :languages [:hi :bn :te :mr :ta :ur :gu :kn :ml :or :pa :as]
+  :channel :kirana
+  :stock :cashflow-unit-size
+  :polarity :toward-loose
+  :magnitude 0.78 :confidence 0.58
+  :basis "MoSPI Household Consumption Expenditure Survey 2022-23/2023-24 shows rural/urban and state-wise MPCE dispersion; hypothesis: tighter cash-flow raises demand for buy-by-weight, credit, refill, or smallest-unit purchase."
+  :sourceUrl "https://www.mospi.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-urban-modern-trade-packaged-pull"
+  :name "Urban modern trade and ecommerce pull toward standardized packaged SKUs"
+  :region :pan-india :settlement :urban
+  :languages [:hi :en :mr :ta :te :bn :kn :ml :gu]
+  :channel :modern-trade
+  :stock :modern-retail-standardization
+  :polarity :toward-packaged
+  :magnitude 0.72 :confidence 0.56
+  :basis "Urban MPCE is materially higher than rural in HCES; organized retail/ecommerce availability makes branded packaged SKUs easier to compare, store, deliver, and reorder."
+  :sourceUrl "https://www.mospi.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-kirana-proximity-credit"
+  :name "Kirana proximity, familiarity, and informal credit preserve loose/refill buying"
+  :region :pan-india :settlement :mixed
+  :languages [:hi :bn :te :mr :ta :ur :gu :kn :ml :or :pa :as]
+  :channel :kirana
+  :stock :trust-proximity
+  :polarity :toward-loose
+  :magnitude 0.82 :confidence 0.6
+  :basis "India's retail system remains strongly kirana-led; hypothesis: proximity, shopkeeper trust, and ledger credit reduce the need for standardized national-package trust."
+  :sourceUrl "https://www.investindia.gov.in/sector/retail-e-commerce"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-sachet-small-pack-counterforce"
+  :name "Sachet and low-unit-price packs convert cash constraint into packaged adoption"
+  :region :pan-india :settlement :mixed
+  :languages [:hi :bn :te :mr :ta :ur :gu :kn :ml :or :pa :as]
+  :channel :fmcg
+  :stock :cashflow-unit-size
+  :polarity :toward-packaged
+  :magnitude 0.66 :confidence 0.54
+  :basis "FMCG firms use sachets/small packs to fit daily cash constraints; hypothesis: this turns the same cash-flow constraint that supports loose buying into packaged penetration."
+  :sourceUrl "https://www.investindia.gov.in/sector/retail-e-commerce"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-north-hindi-belt-price-sensitive-staples"
+  :name "North Hindi-belt staples retain price-sensitive loose/flour/rice channels"
+  :region :north :settlement :mixed
+  :languages [:hi :ur :pa]
+  :channel :kirana
+  :stock :price-transparency-by-weight
+  :polarity :toward-loose
+  :magnitude 0.6 :confidence 0.43
+  :basis "Representative hypothesis from HCES state dispersion plus staple-heavy baskets: direct price-per-kg comparison and local milling/loose staples can remain salient outside high-income urban districts."
+  :sourceUrl "https://www.mospi.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-west-urban-income-packaged-pull"
+  :name "West urban income and supermarket density pull toward packaged goods"
+  :region :west :settlement :urban
+  :languages [:mr :gu :hi :en]
+  :channel :modern-trade
+  :stock :modern-retail-standardization
+  :polarity :toward-packaged
+  :magnitude 0.62 :confidence 0.46
+  :basis "Representative hypothesis: higher-income urban corridors in Maharashtra/Gujarat raise convenience, storage, and brand-comparison value of packaged SKUs."
+  :sourceUrl "https://www.mospi.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-south-local-language-brand-fit"
+  :name "South Indian language-local brands can make packaging legible without national homogenization"
+  :region :south :settlement :mixed
+  :languages [:ta :te :kn :ml :en]
+  :channel :regional-fmcg
+  :stock :language-label-fit
+  :polarity :toward-packaged
+  :magnitude 0.5 :confidence 0.42
+  :basis "Census language diversity plus regional media/brand ecosystems; hypothesis: packaging adoption improves when label, ad, and trust signals are in the household's working language."
+  :sourceUrl "https://censusindia.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-east-rural-wet-market-freshness"
+  :name "East rural and peri-urban wet-market freshness norms support unpackaged purchase"
+  :region :east :settlement :rural
+  :languages [:bn :or :hi]
+  :channel :wet-market
+  :stock :freshness-local-provenance
+  :polarity :toward-loose
+  :magnitude 0.58 :confidence 0.42
+  :basis "Representative hypothesis: fresh foods and local provenance make visible inspection more valuable than sealed-package standardization in many rural/peri-urban baskets."
+  :sourceUrl "https://www.mospi.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-northeast-language-fragmentation-local-trust"
+  :name "Northeast language fragmentation raises value of local trusted retailers"
+  :region :northeast :settlement :mixed
+  :languages [:as :mni :lus :kha :en]
+  :channel :kirana
+  :stock :language-label-fit
+  :polarity :toward-loose
+  :magnitude 0.52 :confidence 0.38
+  :basis "Census language diversity; hypothesis: when national packaging/advertising languages mismatch local speech communities, retailer explanation and local trust compensate."
+  :sourceUrl "https://censusindia.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-central-rural-distribution-friction"
+  :name "Central rural distribution friction keeps loose and local channels competitive"
+  :region :central :settlement :rural
+  :languages [:hi :mr :gon]
+  :channel :kirana
+  :stock :distribution-friction
+  :polarity :toward-loose
+  :magnitude 0.56 :confidence 0.4
+  :basis "Representative hypothesis: dispersed rural demand and weaker cold-chain/shelf logistics reduce the advantage of standardized packaged goods for some categories."
+  :sourceUrl "https://www.investindia.gov.in/sector/retail-e-commerce"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-english-hindi-national-brand-bridge"
+  :name "Hindi/English media bridge supports national packaged brand trust"
+  :region :pan-india :settlement :urban
+  :languages [:hi :en]
+  :channel :fmcg
+  :stock :language-label-fit
+  :polarity :toward-packaged
+  :magnitude 0.48 :confidence 0.44
+  :basis "Census language distribution plus national media reach; hypothesis: shared Hindi/English label and ad channels lower the trust cost of packaged goods in urban national-brand categories."
+  :sourceUrl "https://censusindia.gov.in/"
+  :sourcing :representative}
+
+ {:type :consumer-signal
+  :id "in-refill-waste-household-containers"
+  :name "Household container reuse and refill norms reduce packaging value"
+  :region :pan-india :settlement :mixed
+  :languages [:hi :bn :te :mr :ta :ur :gu :kn :ml :or :pa :as]
+  :channel :refill
+  :stock :waste-refill-norm
+  :polarity :toward-loose
+  :magnitude 0.5 :confidence 0.36
+  :basis "Representative hypothesis: where households already reuse containers and buy by weight, package material is a cost rather than a trusted feature."
+  :sourceUrl "https://www.mospi.gov.in/"
+  :sourcing :representative}
+]

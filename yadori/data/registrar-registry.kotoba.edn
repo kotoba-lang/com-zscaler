@@ -1,0 +1,40 @@
+;; yadori (宿り) registrar registry — :representative (R0, G8).
+;; Cloudflare Registrar is the default (at-cost, no markup), consistent with existing did:web
+;; operations (etzhayyim.com registered there 2026-05-15). External fiat-markup registrars are
+;; NOT recommended and external use is Council-gated (G3). This is policy data, not an endorsement;
+;; yadori is never the buyer (G2) and holds no registrar credential (G5).
+[{:registrar/id "cloudflare"
+  :registrar/name "Cloudflare Registrar"
+  :registrar/pricing :at-cost
+  :registrar/markup false
+  :registrar/council-gated false
+  :registrar/rdap "https://rdap.cloudflare.com"
+  :registrar/whois-privacy :included
+  :registrar/note "DEFAULT (G3). At-cost wholesale pricing, no upsell, no parking ads, WHOIS-privacy included. Existing did:web operations registrar."}
+
+ {:registrar/id "porkbun"
+  :registrar/name "Porkbun"
+  :registrar/pricing :low-markup
+  :registrar/markup true
+  :registrar/council-gated true
+  :registrar/rdap "https://rdap.porkbun.com"
+  :registrar/whois-privacy :included
+  :registrar/note "External; low-markup; Council-gated (G3). Acceptable fallback only with Council approval + member-principal funding."}
+
+ {:registrar/id "godaddy"
+  :registrar/name "GoDaddy"
+  :registrar/pricing :markup
+  :registrar/markup true
+  :registrar/council-gated true
+  :registrar/rdap "https://rdap.godaddy.com"
+  :registrar/whois-privacy :upsell
+  :registrar/note "NOT recommended. Premium-domain markup + privacy/upsell + parking/affiliate economics collide with Charter-Rider §2 (ad-free, anti-gatekeeping). External + Council-gated (G3); the triggering ad link is here only as the counter-example."}
+
+ {:registrar/id "namecheap"
+  :registrar/name "Namecheap"
+  :registrar/pricing :markup
+  :registrar/markup true
+  :registrar/council-gated true
+  :registrar/rdap "https://rdap.namecheap.com"
+  :registrar/whois-privacy :included
+  :registrar/note "External fiat-markup registrar; Council-gated (G3)."}]

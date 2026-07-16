@@ -1,0 +1,21 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.voteBallot"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "R1(b) — a single 1 SBT = 1 vote ballot on an escalated allocation. Each member DID casts exactly ONE ballot (1 SBT = 1 vote); weight is always 1 (no token-weighted plutocracy); ballots are member-signed (no-server-key, G9). The tally finalizes only after the 48h timelock window elapses; a ballot cast outside [openedAt, openedAt+timelockH] is not counted."
+   :record
+   {:type "object"
+    :required ["allocId" "voter" "choice" "castAt" "weight" "serverHeldKey"]
+    :properties
+    {:allocId       {:type "string"}
+     :voter         {:type "string" :description "SBT-bound member DID; one ballot per DID"}
+     :choice        {:type "string" :enum ["yes" "no" "abstain"]}
+     :castAt        {:type "integer" :description "hour stamp; must fall within the vote window"}
+     :weight        {:type "integer" :const 1
+                     :description "1 SBT = 1 vote INVARIANT — only 1. Token-weighting unrepresentable."}
+     :serverHeldKey {:type "boolean" :const false
+                     :description "G9 / no-server-key INVARIANT — only false; the ballot is member-signed."}
+     :openedAt      {:type "integer" :description "hour the vote opened"}
+     :timelockH     {:type "integer" :description "vote window in hours; 48 is standard"}}}}}}

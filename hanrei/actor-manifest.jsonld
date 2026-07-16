@@ -1,0 +1,312 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:hanrei.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Hanrei global case law and legislation intelligence agent. You cover 83 jurisdictions (75 national + 8 international courts), 4 legal systems. Japan has deep coverage with 6 court DIDs (supreme/ip_high/high/district/family/summary_court) and 2 source DIDs (kanpo/egov). You collect cases via browser automation (courts.go.jp), legislation from e-Gov API (CC BY 4.0), courts from Wikidata SPARQL (CC0). Extract persons from case records for natural-person.etzhayyim.com.",
+  "description": "Case law, legislation, and judicial intelligence covering 83 jurisdictions (75 national + 8 international courts: ICJ/ICC/ECHR/CJEU/IACHR/ACHPR/ITLOS/WTO AB), 4 legal systems (civil/common/islamic/mixed). Japan deep coverage with 6 court DIDs + 2 source DIDs (kanpo/egov). 27 XRPC commands.",
+  "displayName": "Global Case Law & Legislation Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "hanrei",
+  "nanoid": "h4nr31jp",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "collectCasesBatch",
+            "params": {
+              "maxPages": 50
+            }
+          },
+          "fn": "agent.invoke",
+          "id": "collectCasesBatch"
+        },
+        {
+          "args": {
+            "command": "coverageStats"
+          },
+          "depends_on": [],
+          "fn": "agent.invoke",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "message": "You are Global Case Law & Legislation Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageStats.text"
+          },
+          "depends_on": [
+            "coverageStats"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 2 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "extractCasePersons",
+            "params": {
+              "rkey": "$input.record.rkey"
+            }
+          },
+          "fn": "agent.invoke",
+          "id": "extractPersons"
+        },
+        {
+          "args": {
+            "message": "New case record: $input.record. Summarize legal significance and relevant jurisdiction context."
+          },
+          "depends_on": [],
+          "fn": "agent.chat",
+          "id": "digest"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.hanrei.caseRecord"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "collectEgovLaws"
+          },
+          "fn": "agent.invoke",
+          "id": "collectEgov"
+        },
+        {
+          "args": {
+            "command": "collectWikidataCourts"
+          },
+          "depends_on": [],
+          "fn": "agent.invoke",
+          "id": "collectWikidata"
+        }
+      ],
+      "trigger": {
+        "cron": "0 4 * * 1",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "hanrei",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.hanrei.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "h4nr31jp",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Global Case Law & Legislation Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.hanrei.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "collect-cases",
+      "collect-legislation",
+      "register-jurisdictions",
+      "search-decisions",
+      "collect-egov-laws",
+      "collect-wikidata-courts",
+      "extract-case-persons"
+    ],
+    "description": "83 jurisdictions, 4 legal systems, Japan deep coverage (6 courts + kanpo + egov). Case collection, legislation indexing, Wikidata SPARQL, person extraction.",
+    "displayName": "Global Case Law & Legislation Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.hanrei.caseRecord",
+        "com.etzhayyim.hanrei.collectionJob",
+        "com.etzhayyim.hanrei.jurisdiction",
+        "com.etzhayyim.hanrei.egovLaw",
+        "com.etzhayyim.hanrei.hanreiRecord",
+        "com.etzhayyim.hanrei.hanketsuRecord",
+        "com.etzhayyim.hanrei.citationEdge"
+      ]
+    }
+  },
+  "uiType": "yoro",
+  "writerDids": [
+    {
+      "description": "Supreme Court case law collection (courts.go.jp search2)",
+      "displayName": "最高裁判所",
+      "path": "court:supreme"
+    },
+    {
+      "description": "IP High Court case law collection (courts.go.jp search5)",
+      "displayName": "知的財産高等裁判所",
+      "path": "court:ip_high"
+    },
+    {
+      "description": "High Courts case law collection (courts.go.jp search3)",
+      "displayName": "高等裁判所",
+      "path": "court:high"
+    },
+    {
+      "description": "District Courts case law collection (courts.go.jp search4)",
+      "displayName": "地方裁判所",
+      "path": "court:district"
+    },
+    {
+      "description": "Family Courts case law collection (courts.go.jp search6)",
+      "displayName": "家庭裁判所",
+      "path": "court:family"
+    },
+    {
+      "description": "Summary Courts case law collection (courts.go.jp search7)",
+      "displayName": "簡易裁判所",
+      "path": "court:summary_court"
+    },
+    {
+      "description": "Official Gazette (kanpou.npb.go.jp)",
+      "displayName": "官報",
+      "path": "source:kanpo"
+    },
+    {
+      "description": "e-Gov Laws API (CC BY 4.0)",
+      "displayName": "e-Gov法令検索",
+      "path": "source:egov"
+    },
+    {
+      "description": "Wikidata courts/legal systems (CC0)",
+      "displayName": "Wikidata SPARQL",
+      "path": "source:wikidata"
+    },
+    {
+      "description": "判例レコード — 事件番号・裁判年月日・裁判所・法廷名をキーに一意識別。citation graph の node",
+      "displayName": "判例DID",
+      "path": "hanrei:record"
+    },
+    {
+      "description": "判決レコード — 判例に紐づく判決全文・主文・理由。1判例:N判決 (地裁→高裁→最高裁)。citation graph の edge 起点",
+      "displayName": "判決DID",
+      "path": "hanketsu:record"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+;; yotei — kotoba EAVT schema
+;; ADR-2606072200
+;; Scheduling commons. Append-only bookings; NO :booking/email|phone|profile attribute
+;; (G2 no-harvest — booker contact is an encrypted ref only); a confirmed booking is never
+;; retracted (G3); overlap with a confirmed booking is refused in the cell (G4). No RW/SQL (G3).
+
+[;; ── :calendar/* ──
+ {:db/ident :calendar/did       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :calendar/owner-did :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :calendar/timezone  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+
+ ;; ── :availability/* — weekly recurring window ──
+ {:db/ident :availability/id       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :availability/calendar :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :availability/day      :db/valueType :db.type/long    :db/cardinality :db.cardinality/one :db/doc "0=Mon..6=Sun"}
+ {:db/ident :availability/start-min :db/valueType :db.type/long   :db/cardinality :db.cardinality/one :db/doc "minutes from midnight, inclusive"}
+ {:db/ident :availability/end-min  :db/valueType :db.type/long    :db/cardinality :db.cardinality/one :db/doc "minutes from midnight, exclusive"}
+ {:db/ident :availability/slot-min :db/valueType :db.type/long    :db/cardinality :db.cardinality/one}
+
+ ;; ── :booking/* — append-only ──
+ {:db/ident :booking/id         :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :booking/calendar   :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :booking/requester  :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "booker DID"}
+ {:db/ident :booking/start-epoch-min :db/valueType :db.type/long :db/cardinality :db.cardinality/one :db/doc "absolute slot start (epoch minutes UTC)"}
+ {:db/ident :booking/duration-min :db/valueType :db.type/long   :db/cardinality :db.cardinality/one}
+ {:db/ident :booking/consent-ref :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "DID-signed consent (G8)"}
+ {:db/ident :booking/contact-ref :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/doc "com.etzhayyim.encrypted.* envelope — NO plaintext, NO harvest (G2)"}
+ {:db/ident :booking/status     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one :db/doc ":proposed | :confirmed | :cancelled (append-only G3)"}
+ {:db/ident :booking/confirmed-sig :db/valueType :db.type/string :db/cardinality :db.cardinality/one :db/doc "member signature ref; server sig refused (G5)"}]

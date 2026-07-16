@@ -1,0 +1,312 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:abuse.etzhayyim.com",
+  "name": "abuse",
+  "nanoid": "abs3r3p0",
+  "displayName": "Abuse — Phishing Takedown Coordinator",
+  "description": "Phishing / brand-impersonation takedown drafting and dispatch. Gathers DNS/whois/reverse-IP/ASN/wayback intel, composes per-target abuse reports (registrar + hosting + brand owner + CERT), dispatches via mailer.etzhayyim.com (Resend).",
+  "performerType": "service",
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "heartbeatRequired": false,
+  "domainKnowledgeRequired": true,
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "mailer.send",
+    "derive:social"
+  ],
+  "governance": {
+    "classification": "public-intel",
+    "complianceFrameworks": ["NIST CSF 2.0", "APWG"],
+    "raci": "responsible"
+  },
+  "actors": [
+    {
+      "path": "registrar:takedown",
+      "displayName": "Registrar Takedown Router",
+      "description": "Routes abuse reports to ICANN-accredited registrars"
+    },
+    {
+      "path": "hosting:takedown",
+      "displayName": "Hosting Takedown Router",
+      "description": "Routes abuse reports to ASN/hosting providers"
+    },
+    {
+      "path": "brand:takedown",
+      "displayName": "Brand Owner Notifier",
+      "description": "Notifies impersonated brand owners (Meta/Mastercard/LINE/Apple/SMBC)"
+    },
+    {
+      "path": "cert:takedown",
+      "displayName": "CERT Liaison",
+      "description": "Reports to JPCERT / JC3 / APWG"
+    }
+  ],
+  "convoSystemPrompt": "You are the Abuse actor — a phishing takedown coordinator. You receive flagged phishing URLs from yabai, enrich them with DNS/whois/ASN/reverse-IP intel, draft jurisdiction-appropriate takedown reports to registrars / hosting providers / brand owners / CERTs, and dispatch via mailer.etzhayyim.com. Never send without explicit approval. Audit every dispatch.",
+  "pipelines": [
+    {
+      "id": "gather-intel",
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.abuse.gatherIntel"
+      },
+      "steps": [
+        {
+          "id": "validate",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT entity_id, entity_type, name FROM vertex_yabai_entity WHERE entity_id = $entityId LIMIT 1",
+            "params": {"entityId": "$input.params.entityId"}
+          }
+        },
+        {
+          "id": "dns",
+          "fn": "tool.dig",
+          "depends_on": ["validate"],
+          "args": {"host": "$validate.rows[0].name", "types": ["A","AAAA","MX","NS","TXT","SOA"]}
+        },
+        {
+          "id": "whois",
+          "fn": "tool.whois",
+          "depends_on": ["validate"],
+          "args": {"host": "$validate.rows[0].name"}
+        },
+        {
+          "id": "reverseIp",
+          "fn": "tool.reverseIp",
+          "depends_on": ["dns"],
+          "args": {"ip": "$dns.a[0]"}
+        },
+        {
+          "id": "wayback",
+          "fn": "tool.wayback",
+          "depends_on": ["validate"],
+          "args": {"url": "$validate.rows[0].name"}
+        },
+        {
+          "id": "asn",
+          "fn": "tool.whoisCymru",
+          "depends_on": ["dns"],
+          "args": {"ip": "$dns.a[0]"}
+        },
+        {
+          "id": "persistEvidence",
+          "fn": "graph.write",
+          "depends_on": ["dns","whois","reverseIp","wayback","asn"],
+          "args": {
+            "sql": "INSERT INTO vertex_yabai_evidence (vertex_id, rkey, repo, owner_did, evidence_id, entity_id, category, confidence, severity, probability, source, source_reliability, jurisdiction, summary, description, occurred_at, created_at, created_date, sensitivity_ord, actor_id) VALUES (concat('at://did:web:yabai.etzhayyim.com/com.etzhayyim.apps.yabai.evidence/ev-intel-', $entityId), concat('ev-intel-', $entityId), 'did:web:yabai.etzhayyim.com', 'did:web:yabai.etzhayyim.com', concat('ev-intel-', $entityId), $entityId, 'PhishingInfrastructure', 0.95, 3, 1.0, 'abuse.gatherIntel', 'dns+whois+asn+wayback+reverse-ip', $jurisdiction, $summary, $description, NOW()::VARCHAR, NOW()::VARCHAR, CURRENT_DATE, 100, 't1:abuse')",
+            "params": {
+              "entityId": "$input.params.entityId",
+              "jurisdiction": "$whois.registrant_country",
+              "summary": "$asn.org",
+              "description": "$*|json"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "submit-report",
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.abuse.submitReport"
+      },
+      "steps": [
+        {
+          "id": "domain",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT entity_id, name, canonical_name AS brand FROM vertex_yabai_entity WHERE entity_type = 'phishing_url' AND name = $domain LIMIT 1",
+            "params": {"domain": "$input.params.domain"}
+          }
+        },
+        {
+          "id": "intel",
+          "fn": "graph.query",
+          "depends_on": ["domain"],
+          "args": {
+            "sql": "SELECT description FROM vertex_yabai_evidence WHERE entity_id = $entityId AND category = 'PhishingInfrastructure' ORDER BY created_at DESC LIMIT 1",
+            "params": {"entityId": "$domain.rows[0].entity_id"}
+          }
+        },
+        {
+          "id": "targets",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT did, handle, description, props FROM vertex_etzhayyim_identity WHERE status IN ('implicated-phishing-host','implicated-phishing-registrar') OR entity_type = 'brand' OR entity_type = 'cert'"
+          }
+        },
+        {
+          "id": "compose",
+          "fn": "agent.chat",
+          "depends_on": ["domain","intel","targets"],
+          "args": {
+            "useCase": "structured",
+            "message": "Compose N takedown email drafts. Per target_type use jurisdiction-appropriate phrasing. Include evidence (SMS body / reverse-IP cluster). Return JSON array: [{target_type, target_email, subject, body}]"
+          }
+        },
+        {
+          "id": "writeDrafts",
+          "fn": "graph.writeBatch",
+          "depends_on": ["compose"],
+          "args": {
+            "tableName": "vertex_yabai_entity",
+            "records": "$compose.rows"
+          }
+        },
+        {
+          "id": "announce",
+          "fn": "derive:social",
+          "depends_on": ["writeDrafts"],
+          "args": {
+            "template": "Takedown drafts prepared: $input.params.domain → $writeDrafts.count targets (awaiting approval)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "send-report",
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.abuse.sendReport"
+      },
+      "steps": [
+        {
+          "id": "approvalCheck",
+          "fn": "auth.requireScope",
+          "args": {"scope": "abuse:send"}
+        },
+        {
+          "id": "draft",
+          "fn": "graph.query",
+          "depends_on": ["approvalCheck"],
+          "args": {
+            "sql": "SELECT rkey, name AS subject, value AS body, canonical_name AS to_email, aliases AS target_type FROM vertex_yabai_entity WHERE entity_type = 'abuse_report' AND rkey = $reportId LIMIT 1",
+            "params": {"reportId": "$input.params.reportId"}
+          }
+        },
+        {
+          "id": "dispatch",
+          "fn": "xrpc.call",
+          "depends_on": ["draft"],
+          "args": {
+            "did": "did:web:mailer.etzhayyim.com",
+            "nsid": "com.etzhayyim.apps.mailer.sendEmail",
+            "params": {
+              "to": "$draft.rows[0].to_email",
+              "subject": "$draft.rows[0].subject",
+              "text": "$draft.rows[0].body",
+              "from": "abuse-report@etzhayyim.com"
+            }
+          }
+        },
+        {
+          "id": "markSent",
+          "fn": "graph.write",
+          "depends_on": ["dispatch"],
+          "args": {
+            "sql": "INSERT INTO vertex_yabai_audit_log (vertex_id, rkey, repo, owner_did, action, resource_id, result, created_at, created_date, sensitivity_ord, actor_id) VALUES (concat('at://did:web:yabai.etzhayyim.com/com.etzhayyim.apps.yabai.auditLog/', $reportId, '-sent-', NOW()::VARCHAR), concat($reportId, '-sent'), 'did:web:yabai.etzhayyim.com', 'did:web:yabai.etzhayyim.com', 'abuse.send', $reportId, $messageId, NOW()::VARCHAR, CURRENT_DATE, 200, 't1:abuse')",
+            "params": {"reportId": "$input.params.reportId", "messageId": "$dispatch.messageId"}
+          }
+        }
+      ]
+    },
+    {
+      "id": "reply-track",
+      "description": "Track replies from abuse contacts. Triggered by new mailer.inboundEmail commits. Matches fromAddress to abuse_report.canonical_name → marks source='takedown-acked' + logs audit.",
+      "trigger": {
+        "type": "subscribeRepos",
+        "follows": ["did:web:ml1nb0nd.etzhayyim.com"],
+        "collections": ["com.etzhayyim.apps.mailer.inboundEmail"]
+      },
+      "steps": [
+        {
+          "id": "extractFrom",
+          "fn": "record.project",
+          "args": {
+            "path": ["fromAddress", "toLocal", "subject", "bodyText", "messageId", "receivedAtMs"]
+          }
+        },
+        {
+          "id": "matchReport",
+          "fn": "graph.query",
+          "depends_on": ["extractFrom"],
+          "args": {
+            "sql": "SELECT rkey, canonical_name AS target_email, aliases AS target_type, SPLIT_PART(rkey, '-', 3) || '.' || SPLIT_PART(rkey, '-', 4) AS domain FROM vertex_yabai_entity WHERE entity_type='abuse_report' AND canonical_name = $fromAddress LIMIT 1",
+            "params": {"fromAddress": "$extractFrom.fromAddress"}
+          }
+        },
+        {
+          "id": "projectInbound",
+          "fn": "graph.write",
+          "depends_on": ["matchReport"],
+          "args": {
+            "sql": "INSERT INTO public.vertex_mailer_inbound_email (vertex_id, rkey, repo, owner_did, message_id, from_address, from_domain, to_local, to_address, subject, body_text, received_at_ms, received_at, status, is_abuse_reply, matched_report_rkey, created_at, created_date, sensitivity_ord, org_id, user_id, actor_id) VALUES (concat('at://', 'did:web:ml1nb0nd.etzhayyim.com', '/com.etzhayyim.apps.mailer.inboundEmail/', $rkey), $rkey, 'did:web:ml1nb0nd.etzhayyim.com', 'did:web:ml1nb0nd.etzhayyim.com', $messageId, $fromAddress, SPLIT_PART($fromAddress, '@', 2), $toLocal, concat($toLocal, '@etzhayyim.com'), $subject, $bodyText, $receivedAtMs, to_char(to_timestamp($receivedAtMs/1000), 'YYYY-MM-DD\"T\"HH24:MI:SS.MSZ'), 'received', CASE WHEN $matchedRkey != '' THEN 'true' ELSE 'false' END, $matchedRkey, NOW()::VARCHAR, CURRENT_DATE, 300, 'etzhayyim', 'did:etzhayyim:03fa7d86a1406bce8f226dc5', 't1:abuse-reply-track')",
+            "params": {
+              "rkey": "$input.rkey",
+              "messageId": "$extractFrom.messageId",
+              "fromAddress": "$extractFrom.fromAddress",
+              "toLocal": "$extractFrom.toLocal",
+              "subject": "$extractFrom.subject",
+              "bodyText": "$extractFrom.bodyText",
+              "receivedAtMs": "$extractFrom.receivedAtMs",
+              "matchedRkey": "$matchReport.rows[0].rkey"
+            }
+          }
+        },
+        {
+          "id": "markAcked",
+          "fn": "graph.write",
+          "depends_on": ["matchReport", "projectInbound"],
+          "when": "$matchReport.rows[0].rkey != null",
+          "args": {
+            "sql": "UPDATE public.vertex_yabai_entity SET source = 'takedown-acked' WHERE rkey = $matchedRkey AND entity_type = 'abuse_report'",
+            "params": {"matchedRkey": "$matchReport.rows[0].rkey"}
+          }
+        },
+        {
+          "id": "audit",
+          "fn": "graph.write",
+          "depends_on": ["markAcked"],
+          "when": "$matchReport.rows[0].rkey != null",
+          "args": {
+            "sql": "INSERT INTO public.vertex_yabai_audit_log (vertex_id, rkey, repo, owner_did, action, resource_id, result, created_at, created_date, sensitivity_ord, actor_id) VALUES (concat('at://did:web:yabai.etzhayyim.com/com.etzhayyim.apps.yabai.auditLog/', $matchedRkey, '-acked-', $receivedAtMs::VARCHAR), concat($matchedRkey, '-acked'), 'did:web:yabai.etzhayyim.com', 'did:web:yabai.etzhayyim.com', 'abuse.reply', $matchedRkey, concat('ACK from ', $fromAddress, ' re: ', $subject), NOW()::VARCHAR, CURRENT_DATE, 200, 't1:abuse-reply-track')",
+            "params": {
+              "matchedRkey": "$matchReport.rows[0].rkey",
+              "fromAddress": "$extractFrom.fromAddress",
+              "subject": "$extractFrom.subject",
+              "receivedAtMs": "$extractFrom.receivedAtMs"
+            }
+          }
+        },
+        {
+          "id": "announce",
+          "fn": "derive:social",
+          "depends_on": ["markAcked"],
+          "when": "$matchReport.rows[0].rkey != null",
+          "args": {
+            "template": "Takedown ACK received: $extractFrom.fromAddress re: $matchReport.rows[0].domain (target_type=$matchReport.rows[0].target_type)"
+          }
+        }
+      ]
+    }
+  ],
+  "triggers": {
+    "subscribeRepos": [
+      {
+        "follows": ["did:web:yabai.etzhayyim.com"],
+        "collections": ["com.etzhayyim.apps.yabai.flag"],
+        "filter": "flag_type LIKE 'phishing-%'",
+        "pipeline": "gather-intel"
+      },
+      {
+        "follows": ["did:web:ml1nb0nd.etzhayyim.com"],
+        "collections": ["com.etzhayyim.apps.mailer.inboundEmail"],
+        "pipeline": "reply-track"
+      }
+    ]
+  }
+}

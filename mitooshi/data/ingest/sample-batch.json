@@ -1,0 +1,33 @@
+{
+  "observedAt": "2026-06-05T00:00:00Z",
+  "series": [
+    {
+      "id": "s-hormuz-transit", "name": "Hormuz-Strait aggregate transit load",
+      "kind": "transit-load", "unit": "Tbps", "freq": "daily",
+      "source": "watari/watatsuna Hormuz chokepoint roll-up (public AIS + cable bulletins)",
+      "sourceClass": "public-broadcast",
+      "obs": [
+        {"observedAt": 3, "value": 2.7},
+        {"observedAt": 1, "value": 2.5},
+        {"observedAt": 2, "value": 2.6}
+      ]
+    },
+    {
+      "id": "s-port-congestion", "name": "Major-port approach congestion index",
+      "kind": "congestion", "unit": "index", "freq": "daily",
+      "source": "gov-open-data port authority feed",
+      "sourceClass": "gov-open-data",
+      "obs": [
+        {"observedAt": 1, "value": 0.0, "class": "flat"},
+        {"observedAt": 2, "value": 0.0, "class": "up"}
+      ]
+    },
+    {
+      "id": "s-blocked-terminal", "name": "(must be refused) proprietary terminal feed",
+      "kind": "price-index", "unit": "USD", "freq": "daily",
+      "source": "Bloomberg Terminal",
+      "sourceClass": "bloomberg-terminal",
+      "obs": [{"observedAt": 1, "value": 100.0}]
+    }
+  ]
+}

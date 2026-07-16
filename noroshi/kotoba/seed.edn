@@ -1,0 +1,43 @@
+;; noroshi (烽) :representative seed (G10) — R0, no silicon, no live laser, no live fab (G8).
+;; Demonstrates all three faces (chip / isac / packaging) as Datoms, mirroring the methods/ outputs.
+[;; ── chip face: a CPO link device + its closed link budget (methods/link_budget.py) ──
+ {:pdev/id "cpo-2km-100g" :pdev/kind :cpo-module :pdev/platform :silicon-photonics
+  :pdev/force-class :civilian-comms :pdev/line-rate-gbps 106.25 :pdev/energy-pj-bit 3.141
+  :pdev/process :open-pdk :pdev/eda :gdsfactory :pdev/representative true}
+ {:pdev/id "pluggable-2km-100g" :pdev/kind :pic-link :pdev/platform :silicon-photonics
+  :pdev/force-class :civilian-comms :pdev/line-rate-gbps 106.25 :pdev/energy-pj-bit 12.441
+  :pdev/process :open-pdk :pdev/eda :gdsfactory :pdev/representative true}
+ {:budget/id "bud-cpo-001" :budget/device "cpo-2km-100g" :budget/received-dbm -1.95
+  :budget/total-loss-db 11.95 :budget/margin-db 10.05 :budget/closes true :budget/energy-pj-bit 3.141}
+
+ ;; discrete PIC components of the tx/rx chain (mirror methods/pic_layout.py transmitter+receiver plans)
+ {:pdev/id "mzm-100g" :pdev/kind :modulator :pdev/platform :silicon-photonics
+  :pdev/force-class :civilian-comms :pdev/line-rate-gbps 106.25 :pdev/energy-pj-bit 1.2
+  :pdev/process :open-pdk :pdev/eda :gdsfactory :pdev/representative true}
+ {:pdev/id "gc-elliptical" :pdev/kind :grating-coupler :pdev/platform :silicon-photonics
+  :pdev/force-class :civilian-comms :pdev/line-rate-gbps 106.25 :pdev/energy-pj-bit 0.0
+  :pdev/process :open-pdk :pdev/eda :klayout :pdev/representative true}
+ {:pdev/id "pd-pin" :pdev/kind :photodetector :pdev/platform :silicon-photonics
+  :pdev/force-class :civilian-comms :pdev/line-rate-gbps 106.25 :pdev/energy-pj-bit 1.0
+  :pdev/process :open-pdk :pdev/eda :gdsfactory :pdev/representative true}
+
+ ;; ── isac face: an OFDM-JCAS waveform + a civilian object estimate (methods/isac_sim.py) ──
+ {:wave/id "jcas-64x16" :wave/n-sub 64 :wave/n-sym 16 :wave/bandwidth-mhz 64.0
+  :wave/range-res-m 2.342 :wave/vel-res-mps 278.825 :wave/power-split 0.5
+  :wave/capacity-gbps 0.700 :wave/civilian true}
+ {:sense/id "sense-001" :sense/wave "jcas-64x16" :sense/target-class :object
+  :sense/range-m 9.369 :sense/velocity-mps 836.474 :sense/range-bin 4 :sense/doppler-bin 3}
+
+ ;; ── packaging face: a fibre-aligner robot (G2 dividend-coupled) + a member-signed align job ──
+ {:probot/id "noroshi-aligner-01" :probot/role :fibre-aligner :probot/force-class :fab-process-laser
+  :probot/laser-class "1" :probot/edge-envelope true
+  :probot/dividend-cohort-ref "dividend:photonic-assembly-001" :probot/representative true}
+ {:pkg/id "pkg-001" :pkg/robot "noroshi-aligner-01" :pkg/op :active-align :pkg/use :alignment
+  :pkg/laser-class "1" :pkg/interlock false :pkg/attestation-ref "" :pkg/coupling-loss-db 0.9692
+  :pkg/member-sig "m:ed25519:demo" :pkg/server-held-key false :pkg/dry-run true}
+
+ ;; reliability qualification (methods/reliability_qual.cljc, GR-468 SHAPE only) — the
+ ;; cpo-2km-100g device qualified against all four representative test types, PASS.
+ {:qual/id "qual-cpo-2km-100g-001" :qual/device "cpo-2km-100g"
+  :qual/suite [:thermal-cycling :damp-heat :mechanical-shock :fibre-pull]
+  :qual/acceptance :pass :qual/dry-run true :qual/representative true}]

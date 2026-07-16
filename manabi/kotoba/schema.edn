@@ -1,0 +1,106 @@
+;; manabi 学び — kotoba EAVT schema
+;; ADR-2605261045 · Phase 2 scaffold
+;; Open-curriculum education over kotoba Datoms: learner sessions, modules, attestations,
+;; skill demonstrations. All state is kotoba Datoms — G6.
+
+[;; ───────────────────────────── :module/* — curriculum module ─────────────────────────────
+ {:db/ident :module/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "e.g. 'literacy-phonemic-awareness' or 'numeracy-fractions'"}
+ {:db/ident :module/content-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CIDv1 for module content (Apache 2.0 + Charter Rider, G1)"}
+ {:db/ident :module/curriculum-type
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":literacy | :numeracy | :civics-charter | :vocational | :lifelong-inquiry"}
+ {:db/ident :module/curriculum-reviewed
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Council Lv6+ ≥3 attestation passed (G4)"}
+
+ ;; ───────────────────────────── :learner/* — learner identity ─────────────────────────────
+ {:db/ident :learner/did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "learner DID; 30-day rotating pseudonym for minors (ADR-2605181200)"}
+ {:db/ident :learner/age-bucket
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":minor | :adult — discriminator for G6 aggregate-only enforcement"}
+ {:db/ident :learner/active-sbt
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "active Adherent SBT? G11 lifelong access prerequisite"}
+
+ ;; ───────────────────────────── :learner-session/* — per-session aggregate data ─────────────────────────────
+ {:db/ident :learner-session/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :learner-session/learner-did
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :learner-session/module-id
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :learner-session/duration-minutes
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "permitted for minors (G6 aggregate-only)"}
+ {:db/ident :learner-session/completion-fraction
+  :db/valueType :db.type/float
+  :db/cardinality :db.cardinality/one
+  :db/doc "0.0 to 1.0 progress; permitted for minors (G6)"}
+ {:db/ident :learner-session/literacy-stage
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intro | :phonemic-awareness | :decoding | :fluency | :comprehension | :writing-mechanics | :written-expression (if module=literacy)"}
+ {:db/ident :learner-session/numeracy-stage
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":counting | :place-value | ... | :calculus (if module=numeracy)"}
+ {:db/ident :learner-session/civics-stage
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intro-governance | :comparative-systems | ... | :assessment (if module=civics-charter)"}
+ {:db/ident :learner-session/vocational-stage
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":skill-assessment | :curriculum-match | ... | :reflection (if module=vocational)"}
+ {:db/ident :learner-session/inquiry-topic
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "learner-formulated question/topic (if module=lifelong-inquiry)"}
+
+ ;; ───────────────────────────── :skill-attestation/* — replayable demonstrations (G7 anti-credentialism) ─────────────────────────────
+ {:db/ident :skill-attestation/learner-did
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :skill-attestation/domain
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":literacy | :numeracy | :civics | :agriculture | :construction | :energy | :pharmaceuticals | :other"}
+ {:db/ident :skill-attestation/demonstration-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CIDv1 of replayable artifact (code, photo, project)"}
+ {:db/ident :skill-attestation/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :charter-understanding-attestation/* — civics module gate ─────────────────────────────
+ {:db/ident :charter-understanding-attestation/learner-did
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :charter-understanding-attestation/level
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":foundational | :intermediate | :advanced"}
+ {:db/ident :charter-understanding-attestation/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}]

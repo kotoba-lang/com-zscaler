@@ -1,0 +1,786 @@
+{
+  "schemaVersion": "1.0",
+  "handle": "zscaler-compat",
+  "did": "did:web:etzhayyim.com:actor:zscaler-compat",
+  "kind": "compat",
+  "title": "zscaler clean-room actor",
+  "description": "Clean-room, API-compatible security / IAM actor (zscaler); runs browser-local on IPFS + kotoba-WASM.",
+  "wasmCid": "bafkreia3rwbew23ceytqrdevrfc3g2hig7swcjd47zrk2okinp5vflrrue",
+  "wasmProvenance": "built-rust-raw",
+  "runtime": "kotoba-wasm",
+  "exec": "browser-local|donated-mesh",
+  "ipfs": "ipfs://bafkreia3rwbew23ceytqrdevrfc3g2hig7swcjd47zrk2okinp5vflrrue",
+  "schema": "schema/zscaler.kotoba",
+  "tier": "L4",
+  "verified": null,
+  "entities": [
+    "Identity",
+    "Policy",
+    "Detection",
+    "Incident",
+    "Asset",
+    "Session"
+  ],
+  "adr": [
+    "260607",
+    "2606014500",
+    "2606013800",
+    "2606036000"
+  ],
+  "capabilities": {
+    "api": {
+      "type": "rest",
+      "runtime": "kotoba-wasm",
+      "endpointCount": 30,
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/v1/identities",
+          "op": "create Identity"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/identities",
+          "op": "list Identity"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/identities/{id}",
+          "op": "get Identity"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/identities/{id}",
+          "op": "update Identity"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/identities/{id}",
+          "op": "delete Identity"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/policies",
+          "op": "create Policy"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/policies",
+          "op": "list Policy"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/policies/{id}",
+          "op": "get Policy"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/policies/{id}",
+          "op": "update Policy"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/policies/{id}",
+          "op": "delete Policy"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/detections",
+          "op": "create Detection"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/detections",
+          "op": "list Detection"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/detections/{id}",
+          "op": "get Detection"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/detections/{id}",
+          "op": "update Detection"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/detections/{id}",
+          "op": "delete Detection"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/incidents",
+          "op": "create Incident"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/incidents",
+          "op": "list Incident"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/incidents/{id}",
+          "op": "get Incident"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/incidents/{id}",
+          "op": "update Incident"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/incidents/{id}",
+          "op": "delete Incident"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/assets",
+          "op": "create Asset"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/assets",
+          "op": "list Asset"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/assets/{id}",
+          "op": "get Asset"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/assets/{id}",
+          "op": "update Asset"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/assets/{id}",
+          "op": "delete Asset"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/sessions",
+          "op": "create Session"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/sessions",
+          "op": "list Session"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/sessions/{id}",
+          "op": "get Session"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/sessions/{id}",
+          "op": "update Session"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/sessions/{id}",
+          "op": "delete Session"
+        }
+      ],
+      "features": {
+        "pagination": true,
+        "filtering": true,
+        "relationExpansion": true,
+        "strictValidation": true,
+        "contractTest": true
+      },
+      "health": "/healthz"
+    },
+    "supplychain": {
+      "type": "cyclonedx-sbom",
+      "runtime": "kotoba-wasm",
+      "sbom": "manifest:supplychain.sbom",
+      "sbomData": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "metadata": {
+          "component": {
+            "type": "application",
+            "name": "zscaler-compat",
+            "purl": "pkg:etzhayyim/zscaler-compat"
+          }
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "kotoba",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotoba"
+          },
+          {
+            "type": "library",
+            "name": "kotodama-wasm",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotodama-wasm"
+          },
+          {
+            "type": "library",
+            "name": "datomic-client",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/datomic-client"
+          }
+        ]
+      },
+      "adr": [
+        "2606036000"
+      ]
+    },
+    "socialpost": {
+      "type": "datom-event-feed",
+      "runtime": "kotoba-wasm",
+      "lexicon": "app.bsky.feed.post",
+      "source": "zscaler.* Datom events",
+      "mode": "dry-run",
+      "gate": "G8"
+    },
+    "mcp": {
+      "type": "model-context-protocol",
+      "runtime": "kotoba-wasm",
+      "transport": "ipfs+kotoba-wasm",
+      "toolCount": 30,
+      "tools": [
+        {
+          "name": "create_identity",
+          "description": "Create a Identity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "mfaEnabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "username",
+              "email"
+            ]
+          }
+        },
+        {
+          "name": "list_identities",
+          "description": "List Identities.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_identity",
+          "description": "Get a Identity by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_identity",
+          "description": "Update a Identity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "mfaEnabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_identity",
+          "description": "Delete a Identity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_policy",
+          "description": "Create a Policy.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "effect": {
+                "type": "string"
+              },
+              "resources": {
+                "type": "string"
+              },
+              "actions": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "effect"
+            ]
+          }
+        },
+        {
+          "name": "list_policies",
+          "description": "List Policies.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_policy",
+          "description": "Get a Policy by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_policy",
+          "description": "Update a Policy.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "effect": {
+                "type": "string"
+              },
+              "resources": {
+                "type": "string"
+              },
+              "actions": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_policy",
+          "description": "Delete a Policy.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_detection",
+          "description": "Create a Detection.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "severity": {
+                "type": "string"
+              },
+              "rule": {
+                "type": "string"
+              },
+              "entityRef": {
+                "type": "string"
+              },
+              "detectedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "severity",
+              "rule"
+            ]
+          }
+        },
+        {
+          "name": "list_detections",
+          "description": "List Detections.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_detection",
+          "description": "Get a Detection by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_detection",
+          "description": "Update a Detection.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              },
+              "rule": {
+                "type": "string"
+              },
+              "entityRef": {
+                "type": "string"
+              },
+              "detectedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_detection",
+          "description": "Delete a Detection.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_incident",
+          "description": "Create a Incident.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "assignee": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "severity"
+            ]
+          }
+        },
+        {
+          "name": "list_incidents",
+          "description": "List Incidents.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_incident",
+          "description": "Get a Incident by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_incident",
+          "description": "Update a Incident.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "assignee": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_incident",
+          "description": "Delete a Incident.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_asset",
+          "description": "Create a Asset.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "hostname": {
+                "type": "string"
+              },
+              "ipAddress": {
+                "type": "string"
+              },
+              "os": {
+                "type": "string"
+              },
+              "riskScore": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "hostname",
+              "ipAddress"
+            ]
+          }
+        },
+        {
+          "name": "list_assets",
+          "description": "List Assets.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_asset",
+          "description": "Get a Asset by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_asset",
+          "description": "Update a Asset.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "hostname": {
+                "type": "string"
+              },
+              "ipAddress": {
+                "type": "string"
+              },
+              "os": {
+                "type": "string"
+              },
+              "riskScore": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_asset",
+          "description": "Delete a Asset.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_session",
+          "description": "Create a Session.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "identityId": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "expiresAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "source",
+              "expiresAt"
+            ]
+          }
+        },
+        {
+          "name": "list_sessions",
+          "description": "List Sessions.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_session",
+          "description": "Get a Session by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_session",
+          "description": "Update a Session.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "identityId": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "expiresAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_session",
+          "description": "Delete a Session.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,207 @@
+;; kuni-umi 国産 — kotoba EAVT schema
+;; ADR-2605201400 · Phase 2 scaffold
+;; Planetary-infra producer: Giemon robotics fleet deployment, site survey, construction,
+;; commissioning, audit witness, decommission. All state is kotoba Datoms — replaces
+;; the legacy Python cell.py path.
+
+[;; ───────────────────────────── :site/* — site registry & land anchor ─────────────────────────────
+ {:db/ident :site/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "unique site identifier"}
+ {:db/ident :site/geolocation
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "lat,lon,elevation (WGS84)"}
+ {:db/ident :site/land-registry-anchor
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "kuni-umi LandRegistry or OceanStewardship waqf-inalienable anchor (G10)"}
+ {:db/ident :site/zoning-status
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "zoning classification / permit-required flag"}
+ {:db/ident :site/environmental-baseline
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "pre-deployment soil/air/water baseline (G10)"}
+ {:db/ident :site/council-gates
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":pending (awaiting Lv6+ 3-sig) | :cleared (deployment green-light) — constitutional (G11)"}
+
+ ;; ───────────────────────────── :deployment/* — deployment intent & plan ─────────────────────────────
+ {:db/ident :deployment/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :deployment/site
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :deployment/robot-roster
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Giemon class composition: Otete/Mimi/Watari/Awa/Hitogata/Quad"}
+ {:db/ident :deployment/sequence-plan
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Murakumo motion-sequence (LLM-generated, simulation-based)"}
+ {:db/ident :deployment/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":planned (unsigned intent) | :signed (member + ≥2 robot witness) | :dispatched (R1+, Council gated)"}
+ {:db/ident :deployment/member-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "member principal (G14), active Adherent SBT"}
+ {:db/ident :deployment/member-sig-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "member passkey/smart-account signature (if state :signed)"}
+
+ ;; ───────────────────────────── :construction/* — construction progress (G17) ─────────────────────────────
+ {:db/ident :construction/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :construction/deployment
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :construction/progress
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "task-by-task progress log (simulated in R0, real in R1+)"}
+ {:db/ident :construction/witness-sigs
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "robot-DID signatures (≥2 mandatory, constitutional, G8); N=1 rejected + Council escalation"}
+ {:db/ident :construction/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":in-progress | :ready-qc | :failed"}
+
+ ;; ───────────────────────────── :commissioning/* — commissioning checklist ─────────────────────────────
+ {:db/ident :commissioning/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :commissioning/construction
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :commissioning/checklist-result
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "safety PLC + motion bounds + sensor calibration attestation"}
+ {:db/ident :commissioning/witness-sigs
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "robot-DID signatures (≥2 mandatory, G8)"}
+ {:db/ident :commissioning/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":in-progress | :passed | :failed"}
+
+ ;; ───────────────────────────── :audit/* — audit witness (R1+ real, R0 simulated) ─────────────────────────────
+ {:db/ident :audit/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :audit/commissioning
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :audit/anomaly-log
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "safety anomalies (Murakumo LLM-flagged in R0, real sensor in R1+)"}
+ {:db/ident :audit/witness-sigs
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "≥2 robot-DID signatures (constitutional, G8); N=1 rejected"}
+ {:db/ident :audit/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":in-progress (monitoring) | :complete (operational) | :alert (anomaly, escalated)"}
+
+ ;; ───────────────────────────── :decommission/* — end-of-mission decommission ─────────────────────────────
+ {:db/ident :decommission/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :decommission/audit
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :decommission/salvage-inventory
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Giemon hardware returned to fleet pool (circular)"}
+ {:db/ident :decommission/restoration
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "site remediation: soil/water post-op baseline attestation"}
+ {:db/ident :decommission/witness-sigs
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "≥2 robot-DID signatures (G8)"}
+ {:db/ident :decommission/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":in-progress | :complete"}
+
+ ;; ───────────────────────────── :robot/* — Giemon fleet registry ─────────────────────────────
+ {:db/ident :robot/did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "did:web:etzhayyim.com:kuniumi:robot:<serial> (Ed25519, open-source firmware)"}
+ {:db/ident :robot/class
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":otete | :mimi | :watari | :awa | :hitogata | :quad (G16)"}
+ {:db/ident :robot/capabilities
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many}
+ {:db/ident :robot/availability
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":available | :deployed | :maintenance"}
+ {:db/ident :robot/safety-pnp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "safety PLC pass-not-pass attestation (IEC 61508 / 61511)"}
+
+ ;; ───────────────────────────── :sbt/* — Adherent SBT eligibility (member principal) ─────────────────────────────
+ {:db/ident :sbt/holder-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "DID of an Adherent SBT holder (member operator)"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "active Adherent SBT? required for deployment principal (G14)"}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter intent (R0 computation only) ─────────────────────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :settlement/deployment
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :settlement/rail
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":usdc-base-l2 (ERC-4337 via warifu); no fiat (G7)"}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC minor (6-dp) gross deployment cost"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split → Public Fund (G7)"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (computed, NOT broadcast) | :executed (member-signed + broadcast, R1+)"}]

@@ -1,0 +1,525 @@
+;; uchiwake 内訳 — seed graph of the world's TRADE ITEMS (products) decomposed to their
+;; bill of materials: PRODUCT → PART → raw MATERIAL, + PROCESS / LOGISTICS / DESIGN refs.
+;; ADR-2606081800 · vocabulary: product-bom-ontology.kotoba.edn (00-contracts/schemas/)
+;;
+;; SCOPE: a bounded illustrative slice of the world's GTIN-identified trade items as a kotoba
+;;   EAVT knowledge graph — the PRODUCT (GTIN, brand, brand-owner→kabuto org.corp.*, GS1 prefix,
+;;   GPC/UNSPSC/HS classification), its PARTS, its raw MATERIALS, the PROCESS steps that make it,
+;;   the LOGISTICS legs that move it, the DESIGN/standard refs that specify it, and the OWNERSHIP
+;;   edges that roll a brand-owning subsidiary up to its ULTIMATE parent (子会社, GLEIF RR). The
+;;   lens is SUPPLY-CHAIN RESILIENCE + corporate-power TRANSPARENCY — where a product's material
+;;   inputs / processing / transport concentrate onto a single source or jurisdiction, routed to
+;;   redundancy + accountability. NOT a target-list, NOT a clone/counterfeit recipe (G2).
+;;
+;; SOURCING (G5): every node/edge carries :*/sourcing. GTINs marked :authoritative are REAL,
+;;   publicly-documented identifiers (GS1 / product labels). BOM decompositions are
+;;   :representative — inferred from public teardowns / ingredient labels / supplier disclosure,
+;;   NOT an exhaustive authoritative bill of materials. Quantities & mass fractions are bounded
+;;   public estimates, NEVER a confidential recipe or contract figure. Absence of a product =
+;;   "not yet ingested", NOT "does not exist". Full GS1 GDSN / Open Product Data / GLEIF-RR
+;;   universe ingest (hundreds of millions of GTINs) is G7 Council + operator gated.
+
+[;; ═══════════════════════════════ MATERIALS (raw / refined inputs) ═══════════════════════════════
+ {:material/id "mat.aluminum"      :material/name "Aluminium"            :material/kind :metal        :material/hs-code "7601" :material/unspsc "11101501" :material/sourcing :representative}
+ {:material/id "mat.lithium"       :material/name "Lithium"              :material/kind :metal        :material/hs-code "2805" :material/unspsc "11101701" :material/sourcing :representative}
+ {:material/id "mat.cobalt"        :material/name "Cobalt"               :material/kind :metal        :material/hs-code "8105" :material/unspsc "11101601" :material/sourcing :representative}
+ {:material/id "mat.nickel"        :material/name "Nickel"               :material/kind :metal        :material/hs-code "7502" :material/sourcing :representative}
+ {:material/id "mat.copper"        :material/name "Copper"               :material/kind :metal        :material/hs-code "7403" :material/unspsc "11101516" :material/sourcing :representative}
+ {:material/id "mat.gold"          :material/name "Gold"                 :material/kind :metal        :material/hs-code "7108" :material/sourcing :representative}
+ {:material/id "mat.graphite"      :material/name "Graphite"             :material/kind :mineral      :material/hs-code "2504" :material/sourcing :representative}
+ {:material/id "mat.silicon"       :material/name "Silicon (polysilicon)" :material/kind :mineral     :material/hs-code "2804" :material/sourcing :representative}
+ {:material/id "mat.rare-earth"    :material/name "Rare-earth elements (NdFeB)" :material/kind :mineral :material/hs-code "2846" :material/sourcing :representative}
+ {:material/id "mat.glass"         :material/name "Aluminosilicate glass" :material/kind :glass       :material/hs-code "7007" :material/sourcing :representative}
+ {:material/id "mat.cotton-fibre"  :material/name "Cotton fibre"         :material/kind :agricultural :material/hs-code "5201" :material/unspsc "11151600" :material/sourcing :representative}
+ {:material/id "mat.polyester"     :material/name "Polyester fibre"      :material/kind :polymer      :material/hs-code "5503" :material/sourcing :representative}
+ {:material/id "mat.sugar"         :material/name "Sugar (sucrose)"      :material/kind :agricultural :material/hs-code "1701" :material/sourcing :representative}
+ {:material/id "mat.cocoa"         :material/name "Cocoa"               :material/kind :agricultural :material/hs-code "1801" :material/sourcing :representative}
+ {:material/id "mat.hazelnut"      :material/name "Hazelnut"             :material/kind :agricultural :material/hs-code "0802" :material/sourcing :representative}
+ {:material/id "mat.palm-oil"      :material/name "Palm oil"             :material/kind :agricultural :material/hs-code "1511" :material/sourcing :representative}
+ {:material/id "mat.water"         :material/name "Water"                :material/kind :chemical     :material/sourcing :representative}
+ {:material/id "mat.co2"           :material/name "Carbon dioxide (food grade)" :material/kind :chemical :material/hs-code "2811" :material/sourcing :representative}
+ {:material/id "mat.paracetamol-api" :material/name "Paracetamol (acetaminophen) API" :material/kind :chemical :material/hs-code "2924" :material/sourcing :representative}
+ {:material/id "mat.milk-powder"   :material/name "Skim milk powder"     :material/kind :agricultural :material/hs-code "0402" :material/sourcing :representative}
+ {:material/id "mat.steel"         :material/name "Steel"                :material/kind :metal        :material/hs-code "7208" :material/unspsc "11101704" :material/sourcing :representative}
+ {:material/id "mat.pet"           :material/name "PET (polyethylene terephthalate)" :material/kind :polymer :material/hs-code "3907" :material/sourcing :representative}
+ {:material/id "mat.neodymium"     :material/name "Neodymium (NdFeB magnet)" :material/kind :mineral   :material/hs-code "2846" :material/sourcing :representative}
+
+ ;; ═══════════════════════════════ PARTS (sub-assemblies / components) ═══════════════════════════
+ {:part/id "part.soc"              :part/name "System-on-Chip (application processor)" :part/kind :component :part/unspsc "32101604" :part/sourcing :representative}
+ {:part/id "part.dram"             :part/name "DRAM (LPDDR)"             :part/kind :component   :part/unspsc "32101602" :part/sourcing :representative}
+ {:part/id "part.nand"            :part/name "NAND flash storage"       :part/kind :component   :part/unspsc "32101602" :part/sourcing :representative}
+ {:part/id "part.display-oled"     :part/name "OLED display module"      :part/kind :sub-assembly :part/unspsc "32121509" :part/sourcing :representative}
+ {:part/id "part.image-sensor"     :part/name "CMOS image sensor"        :part/kind :component   :part/unspsc "32101626" :part/sourcing :representative}
+ {:part/id "part.li-ion-cell"      :part/name "Lithium-ion cell"         :part/kind :component   :part/unspsc "26111701" :part/sourcing :representative}
+ {:part/id "part.bms"              :part/name "Battery management system" :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.al-can"           :part/name "Aluminium beverage can"   :part/kind :packaging   :part/unspsc "24121801" :part/sourcing :representative}
+ {:part/id "part.woven-fabric"     :part/name "Woven cotton fabric"      :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.tablet-excipient" :part/name "Tablet excipient blend"   :part/kind :ingredient  :part/sourcing :representative}
+
+ ;; ═══════════════════════════════ PRODUCTS (trade items, keyed on GTIN) ══════════════════════════
+ ;; Coca-Cola Classic 330ml can — GTIN-13 5449000000996 is a widely-documented public EAN-13.
+ {:product/id "gtin.05449000000996" :product/gtin "05449000000996" :product/gtin-format :gtin-13
+  :product/name "Coca-Cola Classic 330ml can" :product/brand "Coca-Cola" :product/brand-owner "org.corp.us.coca-cola"
+  :product/gs1-prefix "544" :product/gs1-prefix-country "BE" :product/sector :food-beverage
+  :product/unspsc "50202301" :product/hs-code "2202" :product/net-content 330.0 :product/net-content-unit "ml"
+  :product/sourcing :authoritative}
+ ;; Nutella 750g — GTIN-13 3017620422003 is a widely-documented public EAN-13 (Open Food Facts).
+ {:product/id "gtin.03017620422003" :product/gtin "03017620422003" :product/gtin-format :gtin-13
+  :product/name "Nutella 750g jar" :product/brand "Nutella" :product/brand-owner "org.corp.it.ferrero"
+  :product/gs1-prefix "301" :product/gs1-prefix-country "FR" :product/sector :food-beverage
+  :product/unspsc "50161900" :product/hs-code "1806" :product/net-content 750.0 :product/net-content-unit "g"
+  :product/sourcing :authoritative}
+ ;; Flagship smartphone — GTIN withheld (varies by SKU/region); identity & teardown :representative.
+ ;; brand-owner + assembler wired to REAL kabuto companies (Apple / Foxconn).
+ {:product/id "prod.smartphone-flagship" :product/name "Flagship smartphone (representative teardown)"
+  :product/brand "(representative)" :product/brand-owner "org.corp.us.apple"
+  :product/sector :electronics :product/unspsc "43191501" :product/hs-code "8517"
+  :product/sourcing :representative}
+ ;; EV traction battery pack — representative composition (NMC chemistry teardown); brand-owner BYD.
+ {:product/id "prod.ev-battery-pack" :product/name "EV traction battery pack (NMC, representative)"
+  :product/brand "(representative)" :product/brand-owner "org.corp.cn.byd"
+  :product/sector :automotive :product/unspsc "26111714" :product/hs-code "8507" :product/sourcing :representative}
+ ;; Cotton T-shirt — representative apparel chain (ties to hataori 機織); brand-owner Fast Retailing.
+ {:product/id "prod.cotton-tshirt" :product/name "Cotton T-shirt (representative)"
+  :product/brand "(representative)" :product/brand-owner "org.corp.jp.fast-retailing"
+  :product/sector :apparel :product/unspsc "53102516" :product/hs-code "6109" :product/sourcing :representative}
+ ;; KitKat 4-finger — Nestlé; GTIN 7613035044289 structurally valid (GS1 mod-10), product↔GTIN
+ ;; binding :representative pending GS1 GDSN authoritative lookup (R1).
+ {:product/id "gtin.07613035044289" :product/gtin "07613035044289" :product/gtin-format :gtin-13
+  :product/name "KitKat 4-finger" :product/brand "KitKat" :product/brand-owner "org.corp.ch.nestle"
+  :product/gs1-prefix "761" :product/gs1-prefix-country "CH" :product/sector :food-beverage
+  :product/unspsc "50161900" :product/hs-code "1806" :product/net-content 41.5 :product/net-content-unit "g"
+  :product/sourcing :representative}
+ ;; Paracetamol 500mg tablet — representative OTC pharma chain.
+ {:product/id "prod.paracetamol-500" :product/name "Paracetamol 500mg tablet (representative)"
+  :product/brand "(representative)" :product/sector :pharma :product/unspsc "51142003"
+  :product/hs-code "3004" :product/sourcing :representative}
+
+ ;; ═══════════════════════════════ BOM EDGES (parent CONTAINS child) ═══════════════════════════════
+ ;; Coca-Cola can → ingredients + packaging
+ {:bom.edge/id "bom.cola.water"   :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.water" :bom.edge/qty 89.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.1 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cola.sugar"   :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.sugar" :bom.edge/qty 11.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.2 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cola.co2"     :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.co2"   :bom.edge/qty 0.5 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cola.can"     :bom.edge/parent "gtin.05449000000996" :bom.edge/child "part.al-can" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.alcan.al"     :bom.edge/parent "part.al-can"         :bom.edge/child "mat.aluminum" :bom.edge/qty 13.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.5 :bom.edge/sourcing :representative}
+ ;; Nutella → ingredients
+ {:bom.edge/id "bom.nut.sugar"    :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.sugar"   :bom.edge/qty 56.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/supplier "org.corp.us.adm" :bom.edge/criticality 0.2 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.nut.palm"     :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.palm-oil" :bom.edge/qty 31.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.nut.hazel"    :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.hazelnut" :bom.edge/qty 13.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.nut.cocoa"    :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.cocoa"    :bom.edge/qty 7.4 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ ;; Smartphone → parts (suppliers link to kabuto org.corp.*)
+ {:bom.edge/id "bom.phone.soc"    :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.soc"    :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.tw.tsmc"            :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.dram"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.dram"   :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.kr.sk-hynix"        :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.nand"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.nand"   :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.jp.kioxia"          :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.disp"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.display-oled" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.kr.samsung-electronics" :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.cam"    :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.image-sensor" :bom.edge/qty 3.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.jp.sony-semicon"   :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.phone.batt"   :bom.edge/parent "prod.smartphone-flagship" :bom.edge/child "part.li-ion-cell"  :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.5 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.soc.si"       :bom.edge/parent "part.soc"      :bom.edge/child "mat.silicon" :bom.edge/qty 1.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.disp.glass"   :bom.edge/parent "part.display-oled" :bom.edge/child "mat.glass" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 2 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ ;; Li-ion cell → materials (shared by phone + EV pack)
+ {:bom.edge/id "bom.cell.li"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.lithium"  :bom.edge/qty 2.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.co"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.cobalt"   :bom.edge/qty 12.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/supplier "org.corp.ch.glencore" :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.ni"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.nickel"   :bom.edge/qty 20.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.gr"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.graphite" :bom.edge/qty 16.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.cell.cu"      :bom.edge/parent "part.li-ion-cell" :bom.edge/child "mat.copper"   :bom.edge/qty 8.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ ;; EV battery pack → cells + BMS
+ {:bom.edge/id "bom.ev.cells"     :bom.edge/parent "prod.ev-battery-pack" :bom.edge/child "part.li-ion-cell" :bom.edge/qty 4000.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.cn.catl" :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ ;; KitKat → ingredients (cocoa/sugar/palm-oil/milk-powder)
+ {:bom.edge/id "bom.kk.cocoa"     :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.cocoa"    :bom.edge/qty 18.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.kk.sugar"     :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.sugar"    :bom.edge/qty 47.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.2 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.kk.palm"      :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.palm-oil" :bom.edge/qty 12.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.kk.milk"      :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.milk-powder" :bom.edge/qty 15.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ev.bms"       :bom.edge/parent "prod.ev-battery-pack" :bom.edge/child "part.bms"          :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ ;; T-shirt → fabric → fibre
+ {:bom.edge/id "bom.tshirt.fab"   :bom.edge/parent "prod.cotton-tshirt" :bom.edge/child "part.woven-fabric" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.fab.cotton"   :bom.edge/parent "part.woven-fabric" :bom.edge/child "mat.cotton-fibre"  :bom.edge/qty 95.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.4 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.fab.poly"     :bom.edge/parent "part.woven-fabric" :bom.edge/child "mat.polyester"     :bom.edge/qty 5.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 2 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+ ;; Paracetamol tablet → API + excipient
+ {:bom.edge/id "bom.para.api"     :bom.edge/parent "prod.paracetamol-500" :bom.edge/child "mat.paracetamol-api" :bom.edge/qty 500.0 :bom.edge/qty-unit "mg" :bom.edge/tier 1 :bom.edge/criticality 0.8 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.para.exc"     :bom.edge/parent "prod.paracetamol-500" :bom.edge/child "part.tablet-excipient" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative}
+
+ ;; ═══════════════════════════════ PROCESS STEPS (transformation) ══════════════════════════════════
+ {:process.step/id "proc.poly-refine" :process.step/name "Polysilicon refining" :process.step/kind :refining :process.step/of "mat.silicon" :process.step/country "CN" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.wafer-fab"   :process.step/name "Wafer fabrication" :process.step/kind :fabrication :process.step/of "part.soc" :process.step/operator "org.corp.tw.tsmc" :process.step/country "TW" :process.step/seq 2 :process.step/sourcing :representative}
+ {:process.step/id "proc.phone-asm"   :process.step/name "Final phone assembly" :process.step/kind :assembly :process.step/of "prod.smartphone-flagship" :process.step/operator "org.corp.tw.foxconn" :process.step/country "CN" :process.step/seq 3 :process.step/sourcing :representative}
+ {:process.step/id "proc.cotton-gin"  :process.step/name "Ginning" :process.step/kind :extraction :process.step/of "mat.cotton-fibre" :process.step/country "IN" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.spin-weave"  :process.step/name "Spinning + weaving" :process.step/kind :fabrication :process.step/of "part.woven-fabric" :process.step/country "BD" :process.step/seq 2 :process.step/sourcing :representative}
+ {:process.step/id "proc.cmt"         :process.step/name "Cut-make-trim" :process.step/kind :assembly :process.step/of "prod.cotton-tshirt" :process.step/country "VN" :process.step/seq 3 :process.step/sourcing :representative}
+ {:process.step/id "proc.api-synth"   :process.step/name "API synthesis" :process.step/kind :refining :process.step/of "mat.paracetamol-api" :process.step/country "CN" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.tablet-form" :process.step/name "Tablet formulation + compression" :process.step/kind :fabrication :process.step/of "prod.paracetamol-500" :process.step/country "IN" :process.step/seq 2 :process.step/sourcing :representative}
+
+ ;; ═══════════════════════════════ LOGISTICS LEGS (transport) ══════════════════════════════════════
+ {:logistics.leg/id "leg.soc.tw-cn"   :logistics.leg/of "part.soc"  :logistics.leg/origin-country "TW" :logistics.leg/dest-country "CN" :logistics.leg/mode :air  :logistics.leg/seq 1 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.phone.cn-ww" :logistics.leg/of "prod.smartphone-flagship" :logistics.leg/origin-country "CN" :logistics.leg/dest-country "US" :logistics.leg/mode :air :logistics.leg/seq 2 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.fab.bd-vn"   :logistics.leg/of "part.woven-fabric" :logistics.leg/origin-country "BD" :logistics.leg/dest-country "VN" :logistics.leg/mode :sea :logistics.leg/carrier "org.corp.dk.maersk" :logistics.leg/seq 1 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.tshirt.vn-eu" :logistics.leg/of "prod.cotton-tshirt" :logistics.leg/origin-country "VN" :logistics.leg/dest-country "DE" :logistics.leg/mode :sea :logistics.leg/carrier "org.corp.dk.maersk" :logistics.leg/seq 2 :logistics.leg/sourcing :representative}
+ {:logistics.leg/id "leg.api.cn-in"   :logistics.leg/of "mat.paracetamol-api" :logistics.leg/origin-country "CN" :logistics.leg/dest-country "IN" :logistics.leg/mode :sea :logistics.leg/seq 1 :logistics.leg/sourcing :representative}
+
+ ;; ═══════════════════════════════ DESIGN / STANDARD REFS ══════════════════════════════════════════
+ {:design.ref/id "dr.cell.iec62133" :design.ref/of "part.li-ion-cell" :design.ref/standard "IEC 62133-2" :design.ref/kind :safety-standard :design.ref/body "IEC" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.phone.usb"     :design.ref/of "prod.smartphone-flagship" :design.ref/standard "USB Type-C r2.1" :design.ref/kind :interface-spec :design.ref/body "USB-IF" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.tshirt.iso105" :design.ref/of "prod.cotton-tshirt" :design.ref/standard "ISO 105-C06" :design.ref/kind :material-spec :design.ref/body "ISO" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.para.usp"      :design.ref/of "prod.paracetamol-500" :design.ref/standard "USP Acetaminophen monograph" :design.ref/kind :regulatory :design.ref/body "USP" :design.ref/sourcing :representative}
+
+ ;; ═══════════════════════════════ OWNERSHIP EDGES (子会社, GLEIF Level-2 RR) ══════════════════════
+ ;; A brand-owning / supplying SUBSIDIARY rolls up to its ULTIMATE parent so concentration is
+ ;; computed at the true beneficial-owner level. :is-ultimately-consolidated-by mirrors GLEIF RR.
+ {:company.ownership/id "own.sony-semicon" :company.ownership/child "org.corp.jp.sony-semicon" :company.ownership/parent "org.corp.jp.sony" :company.ownership/relationship :is-ultimately-consolidated-by :company.ownership/sourcing :representative}
+ {:company.ownership/id "own.cocacola-na"  :company.ownership/child "org.corp.us.coca-cola-na"  :company.ownership/parent "org.corp.us.coca-cola" :company.ownership/relationship :is-directly-consolidated-by :company.ownership/sourcing :representative}
+ {:company.ownership/id "own.ferrero"      :company.ownership/child "org.corp.it.ferrero" :company.ownership/parent "org.corp.lu.ferrero-intl" :company.ownership/relationship :is-ultimately-consolidated-by :company.ownership/sourcing :representative}
+
+ ;; ═══════════════ ITER4 WORKLIST COVERAGE — products wired to high-centrality kabuto suppliers ═══
+ ;; Closes the top of crosscheck.py's reverse-coverage ingest worklist (NVIDIA/Ericsson/Boeing/
+ ;; ARM/SMIC/Denso/Magna/Glencore/ADM/LG-Energy). All :representative public teardown/disclosure.
+
+ ;; new materials
+ {:material/id "mat.composite"    :material/name "Carbon-fibre composite (CFRP)" :material/kind :composite :material/hs-code "6815" :material/sourcing :representative}
+ {:material/id "mat.titanium"     :material/name "Titanium"             :material/kind :metal        :material/hs-code "8108" :material/sourcing :representative}
+ {:material/id "mat.tin"          :material/name "Tin (solder)"         :material/kind :metal        :material/hs-code "8001" :material/sourcing :representative}
+
+ ;; new parts
+ {:part/id "part.gpu-die"         :part/name "GPU/AI-accelerator die"   :part/kind :component   :part/unspsc "32101604" :part/sourcing :representative}
+ {:part/id "part.hbm"            :part/name "High-bandwidth memory (HBM) stack" :part/kind :component :part/unspsc "32101602" :part/sourcing :representative}
+ {:part/id "part.cpu-core-ip"     :part/name "CPU core IP block (licensed)" :part/kind :component :part/sourcing :representative}
+ {:part/id "part.rf-soc"          :part/name "RF transceiver SoC"       :part/kind :component   :part/unspsc "32101604" :part/sourcing :representative}
+ {:part/id "part.jet-engine"      :part/name "Turbofan jet engine"      :part/kind :sub-assembly :part/unspsc "25172504" :part/sourcing :representative}
+ {:part/id "part.avionics"        :part/name "Avionics suite"           :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.auto-ecu"        :part/name "Automotive ECU + thermal module" :part/kind :sub-assembly :part/sourcing :representative}
+ {:part/id "part.driveline"       :part/name "EV driveline / e-axle"    :part/kind :sub-assembly :part/sourcing :representative}
+
+ ;; new products
+ {:product/id "prod.ai-gpu-module" :product/name "AI GPU server module (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.us.nvidia" :product/sector :electronics :product/unspsc "43201401" :product/hs-code "8473" :product/sourcing :representative}
+ {:product/id "prod.5g-radio"      :product/name "5G radio unit (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.se.ericsson" :product/sector :electronics :product/unspsc "43222609" :product/hs-code "8517" :product/sourcing :representative}
+ {:product/id "prod.aircraft-narrowbody" :product/name "Narrowbody commercial aircraft (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.us.boeing" :product/sector :industrials :product/unspsc "25111500" :product/hs-code "8802" :product/sourcing :representative}
+ {:product/id "prod.ev-vehicle"    :product/name "Battery-electric vehicle (representative)" :product/brand "(representative)" :product/brand-owner "org.corp.cn.byd" :product/sector :automotive :product/unspsc "25101503" :product/hs-code "8703" :product/sourcing :representative}
+
+ ;; AI GPU module BOM — TSMC die, SK hynix HBM, ARM core IP
+ {:bom.edge/id "bom.gpu.die"      :bom.edge/parent "prod.ai-gpu-module" :bom.edge/child "part.gpu-die" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.tw.tsmc" :bom.edge/criticality 0.95 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.gpu.hbm"      :bom.edge/parent "prod.ai-gpu-module" :bom.edge/child "part.hbm"     :bom.edge/qty 8.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.kr.sk-hynix" :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.gpu.ip"       :bom.edge/parent "part.gpu-die"       :bom.edge/child "part.cpu-core-ip" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 2 :bom.edge/supplier "org.corp.gb.arm" :bom.edge/criticality 0.85 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.gpu.si"       :bom.edge/parent "part.gpu-die"       :bom.edge/child "mat.silicon"  :bom.edge/qty 2.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+
+ ;; 5G radio BOM — SMIC RF SoC, rare-earth filters
+ {:bom.edge/id "bom.5g.soc"       :bom.edge/parent "prod.5g-radio"      :bom.edge/child "part.rf-soc"  :bom.edge/qty 4.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.cn.smic" :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.5g.re"        :bom.edge/parent "part.rf-soc"        :bom.edge/child "mat.rare-earth" :bom.edge/qty 1.0 :bom.edge/qty-unit "g" :bom.edge/tier 2 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+
+ ;; Aircraft BOM — engines, composite fuselage, avionics
+ {:bom.edge/id "bom.ac.engine"    :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "part.jet-engine" :bom.edge/qty 2.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.9 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ac.fuse"      :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "mat.composite" :bom.edge/qty 35.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.5 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ac.ti"        :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "mat.titanium" :bom.edge/qty 14.0 :bom.edge/qty-unit "%mass" :bom.edge/tier 1 :bom.edge/criticality 0.7 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.ac.avi"       :bom.edge/parent "prod.aircraft-narrowbody" :bom.edge/child "part.avionics" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+
+ ;; EV vehicle BOM — CATL pack, Denso ECU, Magna driveline
+ {:bom.edge/id "bom.evv.pack"     :bom.edge/parent "prod.ev-vehicle"    :bom.edge/child "prod.ev-battery-pack" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.cn.catl" :bom.edge/criticality 0.85 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.evv.ecu"      :bom.edge/parent "prod.ev-vehicle"    :bom.edge/child "part.auto-ecu" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.jp.denso" :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+ {:bom.edge/id "bom.evv.drv"      :bom.edge/parent "prod.ev-vehicle"    :bom.edge/child "part.driveline" :bom.edge/qty 1.0 :bom.edge/qty-unit "unit" :bom.edge/tier 1 :bom.edge/supplier "org.corp.ca.magna" :bom.edge/criticality 0.6 :bom.edge/sourcing :representative}
+
+ ;; DESIGN activity steps (設計) — operator = the design house (kind :design)
+ {:process.step/id "proc.gpu-design" :process.step/name "GPU architecture + physical design (EDA)" :process.step/kind :design :process.step/of "part.gpu-die" :process.step/operator "org.corp.us.nvidia" :process.step/country "US" :process.step/seq 1 :process.step/sourcing :representative}
+ {:process.step/id "proc.ac-design"  :process.step/name "Airframe design + certification" :process.step/kind :design :process.step/of "prod.aircraft-narrowbody" :process.step/operator "org.corp.us.boeing" :process.step/country "US" :process.step/seq 1 :process.step/sourcing :representative}
+
+ ;; design/standard refs for new products
+ {:design.ref/id "dr.gpu.pcie"    :design.ref/of "prod.ai-gpu-module" :design.ref/standard "PCIe 5.0" :design.ref/kind :interface-spec :design.ref/body "PCI-SIG" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.5g.3gpp"     :design.ref/of "prod.5g-radio" :design.ref/standard "3GPP 5G NR Rel-16" :design.ref/kind :interface-spec :design.ref/body "3GPP" :design.ref/sourcing :representative}
+ {:design.ref/id "dr.ac.do178"    :design.ref/of "prod.aircraft-narrowbody" :design.ref/standard "DO-178C" :design.ref/kind :safety-standard :design.ref/body "RTCA" :design.ref/sourcing :representative}
+ ;; ── bridged datoms (offline adapters; :representative, G5) ──
+ {:bom.edge/id "bom.03017620422003.sugar" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 52.13 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.palm-oil" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.palm-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 18.26 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.hazelnut" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.hazelnut" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 13.5 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.cocoa" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.cocoa" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 7.15 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.milk-powder" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 6.35 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.whey-powder" :material/name "LACTOSERUM en poudre" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.03017620422003.whey-powder" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.whey-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.56 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.emulsifier" :material/name "émulsifiants" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.03017620422003.emulsifier" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.emulsifier" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.56 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.vanillin" :material/name "vanilline" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.03017620422003.vanillin" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.vanillin" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.03017620425035" :product/gtin "03017620425035" :product/gtin-format :gtin-13 :product/name "Nutella" :product/brand "nutella" :product/gs1-prefix "301" :product/sector :food-beverage :product/sourcing :representative}
+ {:bom.edge/id "bom.03017620425035.sugar" :bom.edge/parent "gtin.03017620425035" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 50.96 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620425035.palm-oil" :bom.edge/parent "gtin.03017620425035" :bom.edge/child "mat.palm-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 17.11 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620425035.hazelnut" :bom.edge/parent "gtin.03017620425035" :bom.edge/child "mat.hazelnut" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 12.5 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620425035.milk-powder" :bom.edge/parent "gtin.03017620425035" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 8.45 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620425035.cocoa" :bom.edge/parent "gtin.03017620425035" :bom.edge/child "mat.cocoa" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 7.15 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620425035.emulsifier" :bom.edge/parent "gtin.03017620425035" :bom.edge/child "mat.emulsifier" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.33 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620425035.vanillin" :bom.edge/parent "gtin.03017620425035" :bom.edge/child "mat.vanillin" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.carbonated-water" :material/name "carbonated water" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000000996.carbonated-water" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.carbonated-water" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 59.9 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000000996.sugar" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 18.44 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.colour" :material/name "colour" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000000996.colour" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.colour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 9.25 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.acid" :material/name "acid" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000000996.acid" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.acid" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.67 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.natural-flavouring" :material/name "natural flavourings" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000000996.natural-flavouring" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.natural-flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.88 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.caffeine-flavour" :material/name "caffeine flavouring" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000000996.caffeine-flavour" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.caffeine-flavour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.85 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.05449000131805" :product/gtin "05449000131805" :product/gtin-format :gtin-13 :product/name "Coca-Cola Zero Azúcar" :product/brand "Coca-Cola" :product/gs1-prefix "544" :product/sector :food-beverage :product/sourcing :representative}
+ {:bom.edge/id "bom.05449000131805.carbonated-water" :bom.edge/parent "gtin.05449000131805" :bom.edge/child "mat.carbonated-water" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 57.14 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000131805.colour" :bom.edge/parent "gtin.05449000131805" :bom.edge/child "mat.colour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 21.43 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000131805.acid" :bom.edge/parent "gtin.05449000131805" :bom.edge/child "mat.acid" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 10.71 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.sweetener" :material/name "sweeteners" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000131805.sweetener" :bom.edge/parent "gtin.05449000131805" :bom.edge/child "mat.sweetener" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.36 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000131805.natural-flavouring" :bom.edge/parent "gtin.05449000131805" :bom.edge/child "mat.natural-flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.5 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000131805.caffeine-flavour" :bom.edge/parent "gtin.05449000131805" :bom.edge/child "mat.caffeine-flavour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.43 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.acidity-regulator" :material/name "acidity regulator" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000131805.acidity-regulator" :bom.edge/parent "gtin.05449000131805" :bom.edge/child "mat.acidity-regulator" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.43 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.05449000054227" :product/gtin "05449000054227" :product/gtin-format :gtin-13 :product/name "Cocacola original  500" :product/brand "Coca Cola Life" :product/gs1-prefix "544" :product/sector :food-beverage :product/sourcing :representative}
+ {:bom.edge/id "bom.05449000054227.water" :bom.edge/parent "gtin.05449000054227" :bom.edge/child "mat.water" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 59.9 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.glucose-fructose-syrup" :material/name "fructose-glucose syrup" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000054227.glucose-fructose-syrup" :bom.edge/parent "gtin.05449000054227" :bom.edge/child "mat.glucose-fructose-syrup" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 18.44 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.e290" :material/name "carbon dioxide" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000054227.e290" :bom.edge/parent "gtin.05449000054227" :bom.edge/child "mat.e290" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 9.25 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000054227.colour" :bom.edge/parent "gtin.05449000054227" :bom.edge/child "mat.colour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.67 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000054227.acid" :bom.edge/parent "gtin.05449000054227" :bom.edge/child "mat.acid" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.88 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000054227.natural-flavouring" :bom.edge/parent "gtin.05449000054227" :bom.edge/child "mat.natural-flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.85 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.05449000011527" :product/gtin "05449000011527" :product/gtin-format :gtin-13 :product/name "fanta Orange" :product/brand "Fanta" :product/gs1-prefix "544" :product/sector :food-beverage :product/sourcing :representative}
+ {:bom.edge/id "bom.05449000011527.carbonated-water" :bom.edge/parent "gtin.05449000011527" :bom.edge/child "mat.carbonated-water" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 50.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000011527.sugar" :bom.edge/parent "gtin.05449000011527" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 25.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.natural-orange-aromas-with-other-natural-aromas" :material/name "natural orange aromas with other natural aromas" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000011527.natural-orange-aromas-with-other-natural-aromas" :bom.edge/parent "gtin.05449000011527" :bom.edge/child "mat.natural-orange-aromas-with-other-natural-aromas" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 12.5 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.e202" :material/name "potassium sorbate" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000011527.e202" :bom.edge/parent "gtin.05449000011527" :bom.edge/child "mat.e202" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 6.25 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.honey-extracts-coloring" :material/name "honey extracts coloring" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05449000011527.honey-extracts-coloring" :bom.edge/parent "gtin.05449000011527" :bom.edge/child "mat.honey-extracts-coloring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 6.25 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.07622210449283" :product/gtin "07622210449283" :product/gtin-format :gtin-13 :product/name "Prince Goût Chocolat au blé complet" :product/brand "Mondelez" :product/gs1-prefix "762" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.cereal" :material/name "Céréale" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.cereal" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.cereal" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 49.5 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07622210449283.sugar" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 27.14 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.vegetable-oil" :material/name "huiles végétales" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.vegetable-oil" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.vegetable-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 14.67 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.fat-reduced-cocoa-powder" :material/name "cacao maigre en poudre" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.fat-reduced-cocoa-powder" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.fat-reduced-cocoa-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.25 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.glucose-syrup" :material/name "sirop de glucose" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.glucose-syrup" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.glucose-syrup" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.66 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.wheat-starch" :material/name "amidon de blé" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.wheat-starch" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.wheat-starch" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.63 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.raising-agent" :material/name "poudres à lever" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.raising-agent" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.raising-agent" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.83 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07622210449283.emulsifier" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.emulsifier" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.83 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.salt" :material/name "sel" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.salt" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.83 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07622210449283.milk-powder" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.83 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.whey-permeate" :material/name "perméat de lactosérum" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.whey-permeate" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.whey-permeate" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.flavouring" :material/name "arômes" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622210449283.flavouring" :bom.edge/parent "gtin.07622210449283" :bom.edge/child "mat.flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.03046920029759" :product/gtin "03046920029759" :product/gtin-format :gtin-13 :product/name "Extra fine dark chocolate" :product/brand "Lindt & Sprüngli" :product/gs1-prefix "304" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.cocoa-paste" :material/name "Cocoa mass" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.03046920029759.cocoa-paste" :bom.edge/parent "gtin.03046920029759" :bom.edge/child "mat.cocoa-paste" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 23.42 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03046920029759.cocoa" :bom.edge/parent "gtin.03046920029759" :bom.edge/child "mat.cocoa" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 23.42 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03046920029759.fat-reduced-cocoa-powder" :bom.edge/parent "gtin.03046920029759" :bom.edge/child "mat.fat-reduced-cocoa-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 23.42 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03046920029759.sugar" :bom.edge/parent "gtin.03046920029759" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 7.32 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.08000500037560" :product/gtin "08000500037560" :product/gtin-format :gtin-13 :product/name "bueno" :product/brand "Kinder" :product/gs1-prefix "800" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.milk-chocolate" :material/name "milk chocolate" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500037560.milk-chocolate" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.milk-chocolate" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 31.73 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.sugar" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 19.12 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.palm-oil" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.palm-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 18.04 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.wheat-flour" :material/name "wheat flour" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500037560.wheat-flour" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.wheat-flour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 10.55 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.ground-hazelnuts" :material/name "ground hazelnuts" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500037560.ground-hazelnuts" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.ground-hazelnuts" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 10.55 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.milk-powder" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 10.49 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.milk-powder" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.dark-chocolate" :material/name "dark chocolate" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500037560.dark-chocolate" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.dark-chocolate" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.cocoa" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.cocoa" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.emulsifier" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.emulsifier" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.raising-agent" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.raising-agent" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.salt" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500037560.vanillin" :bom.edge/parent "gtin.08000500037560" :bom.edge/child "mat.vanillin" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.07622300441937" :product/gtin "07622300441937" :product/gtin-format :gtin-13 :product/name "Philadelphia Original" :product/brand "Mondelez International" :product/gs1-prefix "762" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.whole-milk" :material/name "whole milk" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622300441937.whole-milk" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.whole-milk" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 57.63 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.cream" :material/name "cream" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622300441937.cream" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.cream" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 17.74 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.milk-protein-preparation" :material/name "milk protein preparation" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622300441937.milk-protein-preparation" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.milk-protein-preparation" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 8.9 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07622300441937.whey-permeate" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.whey-permeate" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.46 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07622300441937.salt" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.74 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.stabiliser" :material/name "stabilizer" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.07622300441937.stabiliser" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.stabiliser" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.74 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07622300441937.acid" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.acid" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.11 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07622300441937.milk-powder" :bom.edge/parent "gtin.07622300441937" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.68 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.03068320055008" :product/gtin "03068320055008" :product/gtin-format :gtin-13 :product/name "Evian 500ml" :product/brand "Evian" :product/gs1-prefix "306" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.ca2-80-hco5-360-mg-26-so-14-ci-10-si0" :material/name "ca2 80 hco5 360 mg* 26 so 14 ci 10 si0" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.03068320055008.ca2-80-hco5-360-mg-26-so-14-ci-10-si0" :bom.edge/parent "gtin.03068320055008" :bom.edge/child "mat.ca2-80-hco5-360-mg-26-so-14-ci-10-si0" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 66.67 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.15-k-nat-6-5-no-3-8-f-0-06-f-algua" :material/name "15 k nat 6‚5 no 3‚8 f 0‚06 f° algua" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.03068320055008.15-k-nat-6-5-no-3-8-f-0-06-f-algua" :bom.edge/parent "gtin.03068320055008" :bom.edge/child "mat.15-k-nat-6-5-no-3-8-f-0-06-f-algua" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 16.67 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.suma" :material/name "suma" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.03068320055008.suma" :bom.edge/parent "gtin.03068320055008" :bom.edge/child "mat.suma" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 16.67 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.08076809513753" :product/gtin "08076809513753" :product/gtin-format :gtin-13 :product/name "PESTO alla GENOVESE" :product/brand "Barilla" :product/gs1-prefix "807" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.sunflower-oil" :material/name "sunflower oil" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.sunflower-oil" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.sunflower-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 37.16 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.fresh-basil" :material/name "fresh basil" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.fresh-basil" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.fresh-basil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 29.94 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.cashew-nuts" :material/name "cashew nuts" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.cashew-nuts" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.cashew-nuts" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.89 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.parmigiano-reggiano" :material/name "parmigiano reggiano cheese" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.parmigiano-reggiano" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.parmigiano-reggiano" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.5 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.corn-fiber" :material/name "maize fibre" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.corn-fiber" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.corn-fiber" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08076809513753.whey-powder" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.whey-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08076809513753.salt" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.milk-proteins" :material/name "milk protein" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.milk-proteins" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.milk-proteins" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.extra-virgin-olive-oil" :material/name "extra virgin olive oil" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.extra-virgin-olive-oil" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.extra-virgin-olive-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08076809513753.sugar" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.basil-extract" :material/name "basil extract" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.basil-extract" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.basil-extract" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08076809513753.natural-flavouring" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.natural-flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08076809513753.acidity-regulator" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.acidity-regulator" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.garlic" :material/name "garlic" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076809513753.garlic" :bom.edge/parent "gtin.08076809513753" :bom.edge/child "mat.garlic" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 4.1 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.08076800195057" :product/gtin "08076800195057" :product/gtin-format :gtin-13 :product/name "Spaghetti N° 5" :product/brand "Barilla" :product/gs1-prefix "807" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.durum-wheat-semolina-pasta" :material/name "DURUM WHEAT SEMOLINA PASTA" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08076800195057.durum-wheat-semolina-pasta" :bom.edge/parent "gtin.08076800195057" :bom.edge/child "mat.durum-wheat-semolina-pasta" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 100.0 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.09002490100070" :product/gtin "09002490100070" :product/gtin-format :gtin-13 :product/name "Red Bull" :product/brand "Red Bull" :product/gs1-prefix "900" :product/sector :food-beverage :product/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.water" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.water" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 54.27 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.09002490100070.sugar" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 16.75 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.glucose" :material/name "Glucose" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.glucose" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.glucose" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 8.44 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.s-uerung-mittel" :material/name "Säuerung mittel" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.s-uerung-mittel" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.s-uerung-mittel" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.2 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.09002490100070.e290" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.e290" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.57 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.taurine" :material/name "Taurin" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.taurine" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.taurine" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.64 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.09002490100070.acidity-regulator" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.acidity-regulator" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.65 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.caffeine" :material/name "Koffein" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.caffeine" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.caffeine" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.vitamins" :material/name "vitamine" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.vitamins" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.vitamins" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.e375" :material/name "Niacin" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.e375" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.e375" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.pantothenic-acid" :material/name "Pantothensäure" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.pantothenic-acid" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.pantothenic-acid" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.vitamin-b6" :material/name "vitamin B6" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.vitamin-b6" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.vitamin-b6" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.vitamin-b12" :material/name "vitamin B12" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.09002490100070.vitamin-b12" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.vitamin-b12" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.09002490100070.flavouring" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.09002490100070.colour" :bom.edge/parent "gtin.09002490100070" :bom.edge/child "mat.colour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.28 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.05000159461122" :product/gtin "05000159461122" :product/gtin-format :gtin-13 :product/name "Snickers" :product/brand "Snickers" :product/gs1-prefix "500" :product/sector :food-beverage :product/sourcing :representative}
+ {:bom.edge/id "bom.05000159461122.milk-chocolate" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.milk-chocolate" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 55.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.peanut" :material/name "peanuts" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05000159461122.peanut" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.peanut" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 22.5 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.corn-syrup" :material/name "corn syrup" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05000159461122.corn-syrup" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.corn-syrup" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 11.25 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05000159461122.sugar" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.62 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05000159461122.palm-oil" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.palm-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.81 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.skimmed-milk" :material/name "skim milk" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05000159461122.skimmed-milk" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.skimmed-milk" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.41 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.lactose" :material/name "lactose" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05000159461122.lactose" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.lactose" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.7 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05000159461122.salt" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.31 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.egg-white" :material/name "egg whites" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05000159461122.egg-white" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.egg-white" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.19 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.artificial-flavouring" :material/name "artificial flavor" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05000159461122.artificial-flavouring" :bom.edge/parent "gtin.05000159461122" :bom.edge/child "mat.artificial-flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.19 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.08000500310427" :product/gtin "08000500310427" :product/gtin-format :gtin-13 :product/name "Biscuits NUTELLA Biscuits Noisettes et Cacao x22 - 304g" :product/brand "Nutella biscuits" :product/gs1-prefix "800" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.hazelnut-spread" :material/name "Pâte à tartiner aux NOISETTES" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.hazelnut-spread" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.hazelnut-spread" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 53.5 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.cocoa" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.cocoa" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 16.46 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.wheat-flour" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.wheat-flour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 8.27 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.vegetable-fat" :material/name "graisses végétales" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.vegetable-fat" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.vegetable-fat" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 5.07 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.cane-sugar" :material/name "sucre de canne" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.cane-sugar" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.cane-sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.47 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.lactose" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.lactose" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.54 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.wheat-bran" :material/name "son de BLE" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.wheat-bran" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.wheat-bran" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.96 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.milk-powder" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.56 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.honey" :material/name "miel" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.honey" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.honey" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.28 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.raising-agent" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.raising-agent" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.07 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.barley-malt-flour" :material/name "farine d'ORGE malté" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.barley-malt-flour" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.barley-malt-flour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.91 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.fat-reduced-cocoa-powder" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.fat-reduced-cocoa-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.78 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.salt" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.68 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.malted-barley" :material/name "de malt d'ORGE" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.malted-barley" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.malted-barley" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.6 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.corn" :material/name "de maïs" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08000500310427.corn" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.corn" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.54 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.wheat-starch" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.wheat-starch" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.48 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.emulsifier" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.emulsifier" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.43 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08000500310427.vanillin" :bom.edge/parent "gtin.08000500310427" :bom.edge/child "mat.vanillin" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.39 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.08410076472304" :product/gtin "08410076472304" :product/gtin-format :gtin-13 :product/name "Fajita Kit Medium 483g" :product/brand "Pancho Villa" :product/gs1-prefix "841" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.tortillas-de-farine-de-ble-souples" :material/name "Tortillas de farine de blé souples" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.tortillas-de-farine-de-ble-souples" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.tortillas-de-farine-de-ble-souples" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 50.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.water" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.water" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 25.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.stabiliser" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.stabiliser" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 12.5 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.sunflower-oil" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.sunflower-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 6.25 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.emulsifier" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.emulsifier" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 3.12 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.dextrose" :material/name "dextrose" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.dextrose" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.dextrose" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 1.56 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.raising-agent" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.raising-agent" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.78 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.salt" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.39 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.sauce-aux-piments-jalapenos" :material/name "Sauce aux piments jalapeños" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.sauce-aux-piments-jalapenos" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.sauce-aux-piments-jalapenos" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.2 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.tomato-concentrate" :material/name "concentré de tomates" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.tomato-concentrate" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.tomato-concentrate" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.2 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.tomato-cubes" :material/name "tomate en morceaux" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.tomato-cubes" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.tomato-cubes" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.chili-pepper" :material/name "piments" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.chili-pepper" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.chili-pepper" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.jalapeno-pepper" :material/name "jalapeños" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.jalapeno-pepper" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.jalapeno-pepper" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.dehydrated-onion" :material/name "oignons déshydratés" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.dehydrated-onion" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.dehydrated-onion" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.salt" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.alcohol-vinegar" :material/name "vinaigre d'alcool" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.alcohol-vinegar" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.alcohol-vinegar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.sugar" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.green-bell-pepper" :material/name "poivrons verts" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.green-bell-pepper" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.green-bell-pepper" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.modified-corn-starch" :material/name "amidon de maïs modifié" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.modified-corn-starch" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.modified-corn-starch" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.acidity-regulator" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.acidity-regulator" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.melange-aux-epices-pour-fajitas" :material/name "Mélange aux épices pour fajitas" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.melange-aux-epices-pour-fajitas" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.melange-aux-epices-pour-fajitas" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.legume-deshydrate" :material/name "légumes déshydratés" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.legume-deshydrate" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.legume-deshydrate" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.salt" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.flavouring" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.smoke-flavouring" :material/name "arômes de fumée" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.smoke-flavouring" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.smoke-flavouring" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.proteines-hydrolysees-de-soja" :material/name "protéines hydrolysées de soja" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.proteines-hydrolysees-de-soja" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.proteines-hydrolysees-de-soja" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.spice" :material/name "épices" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.spice" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.spice" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.correcteur" :material/name "correcteur" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.correcteur" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.correcteur" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.d-acidite" :material/name "d'acidité" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.d-acidite" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.d-acidite" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.yeast-extract" :material/name "extrait de levure" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.08410076472304.yeast-extract" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.yeast-extract" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.08410076472304.colour" :bom.edge/parent "gtin.08410076472304" :bom.edge/child "mat.colour" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.0 :bom.edge/qty-unit "%mass"}
+ {:product/id "gtin.05410188031072" :product/gtin "05410188031072" :product/gtin-format :gtin-13 :product/name "Gazpacho" :product/brand "Alvalle" :product/gs1-prefix "541" :product/sector :food-beverage :product/sourcing :representative}
+ {:material/id "mat.tomato" :material/name "Tomate" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05410188031072.tomato" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.tomato" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 50.36 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.bell-pepper" :material/name "poivron" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05410188031072.bell-pepper" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.bell-pepper" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 24.35 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.cucumber" :material/name "concombre" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05410188031072.cucumber" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.cucumber" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 13.95 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.onion" :material/name "oignon" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05410188031072.onion" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.onion" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 6.97 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05410188031072.extra-virgin-olive-oil" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.extra-virgin-olive-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 2.6 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.wine-vinegar" :material/name "vinaigre de vin" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05410188031072.wine-vinegar" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.wine-vinegar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.89 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05410188031072.salt" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.salt" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.3 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05410188031072.garlic" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.garlic" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.29 :bom.edge/qty-unit "%mass"}
+ {:material/id "mat.lemon-juice" :material/name "jus de citron" :material/kind :agricultural :material/sourcing :representative}
+ {:bom.edge/id "bom.05410188031072.lemon-juice" :bom.edge/parent "gtin.05410188031072" :bom.edge/child "mat.lemon-juice" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.29 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.sugar" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 56.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.palm-oil" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.palm-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 31.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.hazelnut" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.hazelnut" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 13.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.cocoa" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.cocoa" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 7.4 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.03017620422003.milk-powder" :bom.edge/parent "gtin.03017620422003" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 6.6 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000000996.water" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.water" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 89.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000000996.sugar" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 11.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.05449000000996.co2" :bom.edge/parent "gtin.05449000000996" :bom.edge/child "mat.co2" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 0.5 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07613035044289.sugar" :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.sugar" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 47.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07613035044289.cocoa" :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.cocoa" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 18.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07613035044289.milk-powder" :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.milk-powder" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 15.0 :bom.edge/qty-unit "%mass"}
+ {:bom.edge/id "bom.07613035044289.palm-oil" :bom.edge/parent "gtin.07613035044289" :bom.edge/child "mat.palm-oil" :bom.edge/tier 1 :bom.edge/criticality 0.3 :bom.edge/sourcing :representative :bom.edge/qty 12.0 :bom.edge/qty-unit "%mass"}
+]

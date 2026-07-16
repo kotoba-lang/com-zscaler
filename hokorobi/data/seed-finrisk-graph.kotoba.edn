@@ -1,0 +1,99 @@
+;; hokorobi 綻び — seed systemic finance-risk graph (real, PUBLIC institutions + risk channels)
+;; ADR-2606073400 · vocabulary: finrisk-ontology (00-contracts/schemas/finrisk-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - hokorobi is a RESILIENCE map of systemic financial fragility, NEVER a panic / bank-run
+;;     trigger, NEVER a trading / short / market-moving signal, NEVER a per-institution
+;;     solvency verdict. It NEVER trades. Aggregate-first.
+;;   - The lens is SYSTEMIC-RISK concentration vs RESILIENCE, routed to resilience (繕い).
+;;     The 取-holder is the RISK-SOURCE; the bearer is the public (depositors / pensioners /
+;;     insured / taxpayers). karma lives ONLY on edges (:en/risk-load; N1).
+;;   - OBSERVATION ONLY: finance PRODUCTION (insurance/banking/lending) is Charter-excluded.
+;;
+;; SOURCING: systemic-importance designations are DISCLOSED facts — FSB G-SIB list, IAIS
+;;   internationally-active insurer groups, regulator D-SIB lists — :authoritative. The SAMPLE
+;;   is a bounded illustrative seed (:representative coverage), NOT exhaustive, and risk-load
+;;   values are representative severities, NOT measured solvency. No fabricated coverage. Live
+;;   ingest (FSB/IAIS/regulator disclosures) is G7/Council-gated. Designations are DISCLOSED,
+;;   never hokorobi adjudications (N3).
+
+[;; ───────────────────────────── institutions (nodes) ────────────────────────
+ ;; banks — FSB G-SIB designations are PUBLIC
+ {:organism/id "fin.inst.jpmorgan" :organism/kind :institution :organism/label "JPMorgan Chase" :inst/sector :bank :inst/sii :g-sib :inst/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.bofa" :organism/kind :institution :organism/label "Bank of America" :inst/sector :bank :inst/sii :g-sib :inst/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.citi" :organism/kind :institution :organism/label "Citigroup" :inst/sector :bank :inst/sii :g-sib :inst/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.hsbc" :organism/kind :institution :organism/label "HSBC" :inst/sector :bank :inst/sii :g-sib :inst/jurisdiction "GB" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.bnp" :organism/kind :institution :organism/label "BNP Paribas" :inst/sector :bank :inst/sii :g-sib :inst/jurisdiction "FR" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.mufg" :organism/kind :institution :organism/label "Mitsubishi UFJ FG" :inst/sector :bank :inst/sii :g-sib :inst/jurisdiction "JP" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.icbc" :organism/kind :institution :organism/label "ICBC" :inst/sector :bank :inst/sii :g-sib :inst/jurisdiction "CN" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.regional-bank" :organism/kind :institution :organism/label "Regional bank (representative)" :inst/sector :bank :inst/sii :mid :inst/jurisdiction "US" :organism/sourcing :representative}
+
+ ;; insurers / reinsurers — IAIS internationally-active groups are PUBLIC
+ {:organism/id "fin.inst.allianz" :organism/kind :institution :organism/label "Allianz" :inst/sector :insurer :inst/sii :large :inst/jurisdiction "DE" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.axa" :organism/kind :institution :organism/label "AXA" :inst/sector :insurer :inst/sii :large :inst/jurisdiction "FR" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.munichre" :organism/kind :institution :organism/label "Munich Re" :inst/sector :reinsurer :inst/sii :large :inst/jurisdiction "DE" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.pingan" :organism/kind :institution :organism/label "Ping An" :inst/sector :insurer :inst/sii :large :inst/jurisdiction "CN" :organism/sourcing :authoritative}
+
+ ;; pension funds — public-record AUM
+ {:organism/id "fin.inst.gpif" :organism/kind :institution :organism/label "GPIF (Japan)" :inst/sector :pension-fund :inst/sii :large :inst/jurisdiction "JP" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.calpers" :organism/kind :institution :organism/label "CalPERS" :inst/sector :pension-fund :inst/sii :large :inst/jurisdiction "US" :organism/sourcing :authoritative}
+ {:organism/id "fin.inst.gpfg" :organism/kind :institution :organism/label "Norway GPFG" :inst/sector :pension-fund :inst/sii :large :inst/jurisdiction "NO" :organism/sourcing :authoritative}
+
+ ;; market infrastructure / shadow banking
+ {:organism/id "fin.inst.global-ccp" :organism/kind :institution :organism/label "Global clearing CCP (representative)" :inst/sector :ccp :inst/sii :g-sib :inst/jurisdiction "GB" :organism/sourcing :representative}
+ {:organism/id "fin.inst.mmf-complex" :organism/kind :institution :organism/label "Money-market-fund complex (representative)" :inst/sector :shadow-bank :inst/sii :large :inst/jurisdiction "US" :organism/sourcing :representative}
+
+ ;; ───────────────────────────── risk-sources (取-holders) ───────────────────
+ {:organism/id "fin.risk.leverage" :organism/kind :risk :organism/label "Excess leverage" :risk/kind :leverage :organism/sourcing :authoritative}
+ {:organism/id "fin.risk.maturity" :organism/kind :risk :organism/label "Maturity / liquidity mismatch" :risk/kind :maturity-mismatch :organism/sourcing :authoritative}
+ {:organism/id "fin.risk.interconnect" :organism/kind :risk :organism/label "Interconnection / contagion" :risk/kind :interconnection :organism/sourcing :authoritative}
+ {:organism/id "fin.risk.protection-gap" :organism/kind :risk :organism/label "Insurance protection gap (nat-cat / cyber)" :risk/kind :protection-gap :organism/sourcing :authoritative}
+ {:organism/id "fin.risk.pension-underfund" :organism/kind :risk :organism/label "Pension underfunding" :risk/kind :underfunding :organism/sourcing :authoritative}
+ {:organism/id "fin.risk.concentration" :organism/kind :risk :organism/label "Asset / counterparty concentration" :risk/kind :concentration :organism/sourcing :authoritative}
+
+ ;; ───────────────────────────── bearers (who bears realized risk) ───────────
+ {:organism/id "fin.bearer.depositors" :organism/kind :bearer :organism/label "Depositors" :bearer/kind :depositors :organism/sourcing :representative}
+ {:organism/id "fin.bearer.pensioners" :organism/kind :bearer :organism/label "Pensioners" :bearer/kind :pensioners :organism/sourcing :representative}
+ {:organism/id "fin.bearer.policyholders" :organism/kind :bearer :organism/label "Policyholders" :bearer/kind :policyholders :organism/sourcing :representative}
+ {:organism/id "fin.bearer.taxpayers" :organism/kind :bearer :organism/label "Taxpayers / public (bailout)" :bearer/kind :taxpayers :organism/sourcing :representative}
+ {:organism/id "fin.bearer.real-economy" :organism/kind :bearer :organism/label "Real economy (credit crunch)" :bearer/kind :real-economy :organism/sourcing :representative}
+
+ ;; ───────────────────────────── 縁 (edges) ──────────────────────────────────
+ ;; (A) RISK 縁 — :exposes / :interconnects / :underfunds / :protection-gap (risk-load = severity)
+ {:en/from "fin.risk.leverage" :en/to "fin.inst.jpmorgan" :en/kind :exposes :en/risk-load 0.55 :en/sourcing :representative}
+ {:en/from "fin.risk.leverage" :en/to "fin.inst.bofa" :en/kind :exposes :en/risk-load 0.55 :en/sourcing :representative}
+ {:en/from "fin.risk.leverage" :en/to "fin.inst.citi" :en/kind :exposes :en/risk-load 0.60 :en/sourcing :representative}
+ {:en/from "fin.risk.maturity" :en/to "fin.inst.regional-bank" :en/kind :exposes :en/risk-load 0.85 :en/sourcing :representative}
+ {:en/from "fin.risk.maturity" :en/to "fin.inst.mmf-complex" :en/kind :exposes :en/risk-load 0.80 :en/sourcing :representative}
+ {:en/from "fin.risk.interconnect" :en/to "fin.inst.global-ccp" :en/kind :exposes :en/risk-load 0.90 :en/sourcing :representative}
+ {:en/from "fin.risk.interconnect" :en/to "fin.inst.jpmorgan" :en/kind :exposes :en/risk-load 0.70 :en/sourcing :representative}
+ {:en/from "fin.risk.interconnect" :en/to "fin.inst.hsbc" :en/kind :exposes :en/risk-load 0.65 :en/sourcing :representative}
+ {:en/from "fin.risk.interconnect" :en/to "fin.inst.bnp" :en/kind :exposes :en/risk-load 0.65 :en/sourcing :representative}
+ {:en/from "fin.risk.concentration" :en/to "fin.inst.icbc" :en/kind :exposes :en/risk-load 0.60 :en/sourcing :representative}
+ {:en/from "fin.risk.protection-gap" :en/to "fin.inst.munichre" :en/kind :exposes :en/risk-load 0.70 :en/sourcing :authoritative}
+ {:en/from "fin.risk.protection-gap" :en/to "fin.inst.allianz" :en/kind :exposes :en/risk-load 0.55 :en/sourcing :authoritative}
+ {:en/from "fin.risk.protection-gap" :en/to "fin.inst.pingan" :en/kind :exposes :en/risk-load 0.55 :en/sourcing :representative}
+ {:en/from "fin.risk.pension-underfund" :en/to "fin.inst.calpers" :en/kind :exposes :en/risk-load 0.60 :en/sourcing :authoritative}
+ {:en/from "fin.risk.pension-underfund" :en/to "fin.inst.gpif" :en/kind :exposes :en/risk-load 0.35 :en/sourcing :authoritative}
+
+ ;; risk → bearer (who ultimately bears it — the public)
+ {:en/from "fin.risk.maturity" :en/to "fin.bearer.depositors" :en/kind :exposes :en/risk-load 0.75 :en/sourcing :representative}
+ {:en/from "fin.risk.pension-underfund" :en/to "fin.bearer.pensioners" :en/kind :exposes :en/risk-load 0.80 :en/sourcing :representative}
+ {:en/from "fin.risk.protection-gap" :en/to "fin.bearer.policyholders" :en/kind :exposes :en/risk-load 0.70 :en/sourcing :representative}
+ {:en/from "fin.risk.leverage" :en/to "fin.bearer.taxpayers" :en/kind :exposes :en/risk-load 0.65 :en/sourcing :representative}
+ {:en/from "fin.risk.interconnect" :en/to "fin.bearer.real-economy" :en/kind :exposes :en/risk-load 0.70 :en/sourcing :representative}
+
+ ;; institution-to-institution contagion 縁 (:interconnects)
+ {:en/from "fin.inst.jpmorgan" :en/to "fin.inst.global-ccp" :en/kind :interconnects :en/risk-load 0.80 :en/sourcing :representative}
+ {:en/from "fin.inst.bofa" :en/to "fin.inst.global-ccp" :en/kind :interconnects :en/risk-load 0.75 :en/sourcing :representative}
+ {:en/from "fin.inst.hsbc" :en/to "fin.inst.global-ccp" :en/kind :interconnects :en/risk-load 0.70 :en/sourcing :representative}
+ {:en/from "fin.inst.mmf-complex" :en/to "fin.inst.regional-bank" :en/kind :interconnects :en/risk-load 0.60 :en/sourcing :representative}
+
+ ;; (B) RESILIENCE 縁 — :backstops / :capitalizes / :diversifies (the buffers that absorb risk)
+ {:en/from "fin.inst.gpfg" :en/to "fin.bearer.pensioners" :en/kind :backstops :en/risk-load 0.85 :en/sourcing :authoritative}
+ {:en/from "fin.inst.gpfg" :en/to "fin.risk.concentration" :en/kind :diversifies :en/risk-load 0.80 :en/sourcing :authoritative}
+ {:en/from "fin.inst.munichre" :en/to "fin.risk.protection-gap" :en/kind :backstops :en/risk-load 0.65 :en/sourcing :authoritative}
+ {:en/from "fin.inst.allianz" :en/to "fin.bearer.policyholders" :en/kind :backstops :en/risk-load 0.55 :en/sourcing :representative}
+ {:en/from "fin.inst.jpmorgan" :en/to "fin.risk.leverage" :en/kind :capitalizes :en/risk-load 0.60 :en/sourcing :representative}
+ {:en/from "fin.inst.gpif" :en/to "fin.risk.concentration" :en/kind :diversifies :en/risk-load 0.70 :en/sourcing :authoritative}
+ {:en/from "fin.inst.global-ccp" :en/to "fin.risk.interconnect" :en/kind :capitalizes :en/risk-load 0.55 :en/sourcing :representative}]

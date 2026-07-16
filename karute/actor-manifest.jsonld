@@ -1,0 +1,558 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:karute.etzhayyim.com",
+  "name": "karute",
+  "nanoid": "karu7t3e",
+  "displayName": "Karute — 電子カルテ (EMR / FHIR R5)",
+  "description": "FHIR R5 互換の電子カルテ (Patient / Encounter / SOAP / Observation / Condition / MedicationRequest / ServiceRequest)。PHI は `com.etzhayyim.encrypted.record` envelope (XChaCha20-Poly1305 + Signal key-wrap, ADR-2605181100) で保護。public meta + 統計のみ平文。kotoba 基盤 (AT MST + IPFS + Base L2) 準拠。",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "performerType": "service",
+  "uiType": "yoro",
+  "heartbeatRequired": true,
+  "governance": {
+    "classification": "phi-tier3",
+    "complianceFrameworks": [
+      "個人情報保護法",
+      "次世代医療基盤法",
+      "医療法",
+      "薬機法",
+      "GDPR Article 9",
+      "HIPAA-compatible-pattern"
+    ],
+    "raci": "responsible",
+    "phiPolicy": "all clinical records MUST flow through com.etzhayyim.encrypted.record envelope (ADR-2605181100); plaintext on MST is prohibited for any field containing patient-identifying data"
+  },
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "encrypted.write",
+    "encrypted.read",
+    "fhir.bundle.export",
+    "derive:social"
+  ],
+  "actors": [
+    {
+      "description": "電子カルテ利用規約 — 医療従事者 (医師・看護師・薬剤師) 向け",
+      "displayName": "Clinician Terms",
+      "path": "legal:clinicianTerms"
+    },
+    {
+      "description": "電子カルテ患者規約 — 患者 PHI 取扱・第二意見・データ可搬性",
+      "displayName": "Patient Terms",
+      "path": "legal:patientTerms"
+    },
+    {
+      "description": "医療機関 (診療所・在宅医療事業者) 提携契約",
+      "displayName": "Practice Agreement",
+      "path": "legal:practiceAgreement"
+    }
+  ],
+  "complianceDocs": [
+    "90-docs/adr/2605231100-karute-emr-phase1.md",
+    "90-docs/adr/2605181100-mst-encrypted-records-signal-keywrap.md",
+    "90-docs/adr/2605192100-etzhayyim-mission-charter.md"
+  ],
+  "convoSystemPrompt": "You are the Karute agent — FHIR R5 互換の電子カルテ. You assist clinicians with SOAP composition, Rx safety checking (相互作用 / 禁忌 / 用量), vitals trending, FHIR Bundle export, and patient timeline summarization. All PHI MUST stay inside the encrypted envelope — never echo raw clinical content in shared logs. Cross-actor invocations: yabai (sanctions screening for cross-border referral), trust (clinician DID trust score), credits (second-opinion compute reward).",
+  "profile": {
+    "agentType": "autonomous",
+    "isBot": true,
+    "country": "jpn",
+    "operator": "etzhayyim",
+    "displayName": "Karute — 電子カルテ EMR",
+    "description": "FHIR R5 EMR with end-to-end encrypted PHI on kotoba substrate. SOAP / Rx / Vitals / Orders. AI-assisted summarization, interaction check, second opinion.",
+    "capabilities": [
+      "soap-composition",
+      "rx-safety-check",
+      "vitals-trending",
+      "fhir-bundle-export",
+      "patient-timeline-summary",
+      "drg-coding-assist",
+      "cross-border-referral"
+    ]
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.encrypted.record",
+        "com.etzhayyim.apps.karute.terminologyBinding",
+        "com.etzhayyim.apps.karute.referral"
+      ]
+    }
+  },
+  "pipelines": [
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.listPatients", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "patients",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:KarutePatient) WHERE p.repo = $did RETURN p.vertex_id, p.rkey, p.repo, p.did, p.publicMeta, p._seq ORDER BY p._seq DESC SKIP $input.offset LIMIT $input.limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.getPatient", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "patient",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:KarutePatient {patientDid: $input.patientDid}) RETURN p LIMIT 1"
+          }
+        },
+        {
+          "id": "encounters",
+          "fn": "graph.query",
+          "depends_on": ["patient"],
+          "args": {
+            "sql": "MATCH (e:KaruteEncounter {patientDid: $input.patientDid}) RETURN e.rkey, e.publicMeta, e._seq ORDER BY e._seq DESC LIMIT 50"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.createSoapNote", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "encrypt",
+          "fn": "encrypted.write",
+          "args": {
+            "innerType": "com.etzhayyim.karute.soapNote",
+            "envelope": "com.etzhayyim.encrypted.record",
+            "recipients": "$input.recipientDids",
+            "record": "$input.record",
+            "publicMeta": "$input.publicMeta"
+          }
+        },
+        {
+          "id": "indexNote",
+          "fn": "graph.write",
+          "depends_on": ["encrypt"],
+          "args": {
+            "template": "CREATE (n:KaruteSoapNote {did: $did, patientDid: $input.publicMeta.patientDid, encounterDid: $input.publicMeta.encounterDid, occurredAt: $input.publicMeta.occurredAt, authorDid: $input.publicMeta.authorDid, repo: $did, collection: 'com.etzhayyim.encrypted.record', innerType: 'com.etzhayyim.karute.soapNote', encryptedCid: $encrypt.cid})"
+          }
+        },
+        {
+          "id": "notifyClinicians",
+          "fn": "agent.invoke",
+          "depends_on": ["indexNote"],
+          "args": {
+            "targetDid": "did:web:matrix.etzhayyim.com",
+            "method": "sendRoomEvent",
+            "args": {
+              "room": "karute-encounters",
+              "type": "m.text",
+              "body": "SOAP note recorded for encounter $input.publicMeta.encounterDid (PHI redacted)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.createMedicationRequest", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "interactionCheck",
+          "fn": "agent.chat",
+          "args": {
+            "message": "Check the proposed medication against patient's active medication list and allergy list. Return JSON: {risks: [{severity, mechanism, recommendation}], shouldBlock: bool}. Patient context: $input.publicMeta. Proposed: $input.record.medication"
+          }
+        },
+        {
+          "id": "encrypt",
+          "fn": "encrypted.write",
+          "depends_on": ["interactionCheck"],
+          "args": {
+            "innerType": "com.etzhayyim.karute.medicationRequest",
+            "envelope": "com.etzhayyim.encrypted.record",
+            "recipients": "$input.recipientDids",
+            "record": "$input.record",
+            "publicMeta": "$input.publicMeta"
+          }
+        },
+        {
+          "id": "indexRx",
+          "fn": "graph.write",
+          "depends_on": ["encrypt"],
+          "args": {
+            "template": "CREATE (r:KaruteMedicationRequest {did: $did, patientDid: $input.publicMeta.patientDid, encounterDid: $input.publicMeta.encounterDid, prescriberDid: $input.publicMeta.prescriberDid, status: $input.publicMeta.status, repo: $did, collection: 'com.etzhayyim.encrypted.record', innerType: 'com.etzhayyim.karute.medicationRequest', encryptedCid: $encrypt.cid, interactionFlags: $interactionCheck.text})"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.createObservation", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "encrypt",
+          "fn": "encrypted.write",
+          "args": {
+            "innerType": "com.etzhayyim.karute.observation",
+            "envelope": "com.etzhayyim.encrypted.record",
+            "recipients": "$input.recipientDids",
+            "record": "$input.record",
+            "publicMeta": "$input.publicMeta"
+          }
+        },
+        {
+          "id": "indexObs",
+          "fn": "graph.write",
+          "depends_on": ["encrypt"],
+          "args": {
+            "template": "CREATE (o:KaruteObservation {did: $did, patientDid: $input.publicMeta.patientDid, encounterDid: $input.publicMeta.encounterDid, loincCode: $input.publicMeta.loincCode, occurredAt: $input.publicMeta.occurredAt, repo: $did, collection: 'com.etzhayyim.encrypted.record', innerType: 'com.etzhayyim.karute.observation', encryptedCid: $encrypt.cid})"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.createDispense", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "writeDispense",
+          "fn": "graph.write",
+          "args": {
+            "template": "CREATE (d:KaruteDispense {did: $did, patientDid: $input.publicMeta.patientDid, medicationRequestUri: $input.publicMeta.medicationRequestUri, pharmacyDid: $input.publicMeta.pharmacyDid, pharmacistDid: $input.publicMeta.pharmacistDid, status: $input.publicMeta.status, whenHandedOver: $input.publicMeta.whenHandedOver, substitutionPerformed: $input.publicMeta.substitutionPerformed, repo: $did, collection: 'com.etzhayyim.encrypted.record', innerType: 'com.etzhayyim.karute.dispenseRecord', encryptedCid: $input.encryptedCid})"
+          }
+        },
+        {
+          "id": "updateRxStatus",
+          "fn": "graph.write",
+          "depends_on": ["writeDispense"],
+          "args": {
+            "template": "MATCH (r:KaruteMedicationRequest {encryptedCid: $input.publicMeta.medicationRequestUri}) SET r.status = CASE $input.publicMeta.status WHEN 'completed' THEN 'completed' WHEN 'on-hold' THEN 'on-hold' ELSE r.status END"
+          }
+        },
+        {
+          "id": "notifyDispense",
+          "fn": "agent.invoke",
+          "depends_on": ["writeDispense"],
+          "args": {
+            "targetDid": "did:web:matrix.etzhayyim.com",
+            "method": "sendRoomEvent",
+            "args": {
+              "room": "karute-dispense",
+              "type": "m.text",
+              "body": "Dispense recorded by pharmacist (PHI redacted)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.listDispenses", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "rows",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (d:KaruteDispense) WHERE ($input.patientDid IS NULL OR d.patientDid = $input.patientDid) AND ($input.pharmacyDid IS NULL OR d.pharmacyDid = $input.pharmacyDid) AND ($input.status IS NULL OR d.status = $input.status) RETURN d.rkey, d.encryptedCid, d.patientDid, d.medicationRequestUri, d.pharmacyDid, d.pharmacistDid, d.status, d.whenHandedOver, d.substitutionPerformed ORDER BY d._seq DESC SKIP $input.offset LIMIT $input.limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.getChartSummary", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "timeline",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (n) WHERE n.patientDid = $input.patientDid AND n.innerType IN ['com.etzhayyim.karute.patient','com.etzhayyim.karute.encounter','com.etzhayyim.karute.soapNote','com.etzhayyim.karute.observation','com.etzhayyim.karute.condition','com.etzhayyim.karute.medicationRequest','com.etzhayyim.karute.serviceRequest','com.etzhayyim.karute.dispenseRecord'] RETURN n.innerType AS kind, n.rkey AS rkey, n.occurredAt AS occurredAt, n._seq AS seq, n.encryptedCid AS encryptedCid, n.publicMeta AS publicMeta ORDER BY n._seq DESC LIMIT $input.limit"
+          }
+        },
+        {
+          "id": "summary",
+          "fn": "agent.chat",
+          "depends_on": ["timeline"],
+          "args": {
+            "message": "Summarize the following patient timeline metadata (PHI redacted — only public meta available). Highlight: active problems, recent encounters, pending orders, medication count. Return concise clinical narrative under 200 words. Timeline: $timeline.rows"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.exportFhirBundle", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "fetchTimeline",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (n) WHERE n.patientDid = $input.patientDid AND n.innerType IN ['com.etzhayyim.karute.patient','com.etzhayyim.karute.encounter','com.etzhayyim.karute.soapNote','com.etzhayyim.karute.observation','com.etzhayyim.karute.condition','com.etzhayyim.karute.medicationRequest','com.etzhayyim.karute.serviceRequest','com.etzhayyim.karute.dispenseRecord'] RETURN n.innerType AS innerType, n.encryptedCid AS encryptedCid, n.publicMeta AS publicMeta, n._seq AS seq ORDER BY n._seq ASC"
+          }
+        },
+        {
+          "id": "bundle",
+          "fn": "encrypted.read",
+          "depends_on": ["fetchTimeline"],
+          "args": {
+            "cids": "$fetchTimeline.rows[*].encryptedCid",
+            "recipientDid": "$input.recipientDid",
+            "outputFormat": "fhir-r5-bundle"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.grantConsent", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "sign",
+          "fn": "agent.invoke",
+          "args": {
+            "targetDid": "did:web:etzhayyim-sdk.etzhayyim.com",
+            "method": "signConsentCapability",
+            "args": {
+              "granterDid": "$input.granterDid",
+              "granteeDid": "$input.granteeDid",
+              "purpose": "$input.purpose",
+              "scope": "$input.scope",
+              "resourceUris": "$input.resourceUris",
+              "expiresAt": "$input.expiresAt",
+              "constraints": "$input.constraints",
+              "delegationPath": "$input.delegationPath"
+            }
+          }
+        },
+        {
+          "id": "indexCap",
+          "fn": "graph.write",
+          "depends_on": ["sign"],
+          "args": {
+            "template": "CREATE (c:ConsentCapability {did: $input.granterDid, granterDid: $input.granterDid, granteeDid: $input.granteeDid, purpose: $input.purpose, scope: $input.scope, status: 'active', issuedAt: $sign.issuedAt, expiresAt: $input.expiresAt, capabilityUri: $sign.capabilityUri, repo: $input.granterDid, collection: 'com.etzhayyim.consent.capability'})"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.revokeConsent", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "revoke",
+          "fn": "graph.write",
+          "args": {
+            "template": "MATCH (c:ConsentCapability {capabilityUri: $input.capabilityUri}) SET c.status = 'revoked', c.revokedAt = $now, c.revocationReason = $input.reason"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.listConsent", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "rows",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (c:ConsentCapability) WHERE ($input.granterDid IS NULL OR c.granterDid = $input.granterDid) AND ($input.granteeDid IS NULL OR c.granteeDid = $input.granteeDid) AND ($input.status = 'all' OR c.status = $input.status) RETURN c.capabilityUri, c.granterDid, c.granteeDid, c.purpose, c.scope, c.status, c.issuedAt, c.expiresAt, c.revokedAt ORDER BY c.issuedAt DESC LIMIT $input.limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.rekeyRecord", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "rekey",
+          "fn": "encrypted.write",
+          "args": {
+            "innerType": "$input.innerType",
+            "envelope": "com.etzhayyim.encrypted.record",
+            "recipients": "$input.newRecipientDids",
+            "rekeyOfCid": "$input.priorCid"
+          }
+        },
+        {
+          "id": "tombstone",
+          "fn": "graph.write",
+          "depends_on": ["rekey"],
+          "args": {
+            "template": "CREATE (t:EncryptedTombstone {supersededCid: $input.priorCid, supersededAtUri: $input.priorAtUri, successorCid: $rekey.cid, successorAtUri: $rekey.uri, tombstoneType: 'rekey', reason: $input.reason, scope: 'single-record', removedRecipientDid: $input.removedRecipientDid, actorDid: $did, tombstoneAt: $now, repo: $did, collection: 'com.etzhayyim.encrypted.tombstone'})"
+          }
+        },
+        {
+          "id": "auditEvent",
+          "fn": "agent.invoke",
+          "depends_on": ["tombstone"],
+          "args": {
+            "targetDid": "did:web:audit.etzhayyim.com",
+            "method": "emitAuditEvent",
+            "args": {
+              "eventType": "tombstone.rekey",
+              "subjectDid": "$did",
+              "actorDid": "$did",
+              "envelopeCid": "$input.priorCid",
+              "tombstoneCid": "$tombstone.cid",
+              "reason": "$input.reason",
+              "occurredAt": "$now",
+              "outcome": "ok"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.redactRecord", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "tombstone",
+          "fn": "graph.write",
+          "args": {
+            "template": "CREATE (t:EncryptedTombstone {supersededCid: $input.targetCid, supersededAtUri: $input.targetAtUri, tombstoneType: CASE $input.seal WHEN true THEN 'sealed' ELSE 'redact' END, reason: $input.reason, scope: 'single-record', actorDid: $did, tombstoneAt: $now, repo: $did, collection: 'com.etzhayyim.encrypted.tombstone'})"
+          }
+        },
+        {
+          "id": "auditEvent",
+          "fn": "agent.invoke",
+          "depends_on": ["tombstone"],
+          "args": {
+            "targetDid": "did:web:audit.etzhayyim.com",
+            "method": "emitAuditEvent",
+            "args": {
+              "eventType": "tombstone.redact",
+              "subjectDid": "$did",
+              "actorDid": "$did",
+              "envelopeCid": "$input.targetCid",
+              "tombstoneCid": "$tombstone.cid",
+              "reason": "$input.reason",
+              "occurredAt": "$now",
+              "outcome": "ok"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.listTombstones", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "rows",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (t:EncryptedTombstone) WHERE ($input.actorDid IS NULL OR t.actorDid = $input.actorDid) AND ($input.tombstoneType IS NULL OR t.tombstoneType = $input.tombstoneType) AND ($input.reason IS NULL OR t.reason = $input.reason) RETURN t.cid AS tombstoneCid, t.supersededCid, t.successorCid, t.tombstoneType, t.reason, t.actorDid, t.tombstoneAt, t.scope ORDER BY t.tombstoneAt DESC SKIP $input.offset LIMIT $input.limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.listAuditEvents", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "rows",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (e:AuditEvent) WHERE e.subjectDid = $input.subjectDid AND ($input.eventType IS NULL OR e.eventType = $input.eventType) AND ($input.actorDid IS NULL OR e.actorDid = $input.actorDid) RETURN e.auditUri, e.eventType, e.subjectDid, e.actorDid, e.granteeDid, e.capabilityUri, e.envelopeCid, e.tombstoneCid, e.purpose, e.reason, e.outcome, e.occurredAt ORDER BY e.occurredAt DESC LIMIT $input.limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"nsid": "com.etzhayyim.apps.karute.requestIryoBilling", "type": "xrpc"},
+      "steps": [
+        {
+          "id": "verifyCap",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (c:ConsentCapability {capabilityUri: $input.consentCapabilityUri}) WHERE c.granterDid = $input.patientDid AND c.granteeDid = 'did:web:iryo.etzhayyim.com' AND c.purpose = 'insurance-billing' AND c.status = 'active' AND c.expiresAt > $now RETURN c.capabilityUri AS capUri, c.scope AS scope LIMIT 1"
+          }
+        },
+        {
+          "id": "forwardToIryo",
+          "fn": "agent.invoke",
+          "depends_on": ["verifyCap"],
+          "args": {
+            "targetDid": "did:web:iryo.etzhayyim.com",
+            "method": "ingestKaruteEncounterForBilling",
+            "args": {
+              "patientDid": "$input.patientDid",
+              "encounterDid": "$input.encounterDid",
+              "facilityDid": "$input.facilityDid",
+              "serviceRequestUris": "$input.serviceRequestUris",
+              "medicationRequestUris": "$input.medicationRequestUris",
+              "consentCapabilityUri": "$input.consentCapabilityUri"
+            }
+          }
+        },
+        {
+          "id": "recordRequest",
+          "fn": "graph.write",
+          "depends_on": ["forwardToIryo"],
+          "args": {
+            "template": "CREATE (r:IryoBillingRequest {did: $did, patientDid: $input.patientDid, encounterDid: $input.encounterDid, consentCapabilityUri: $input.consentCapabilityUri, iryoClaimRef: $forwardToIryo.iryoClaimRef, iryoStatus: $forwardToIryo.iryoStatus, requestedAt: $now, repo: $did, collection: 'com.etzhayyim.apps.karute.iryoBillingRequest'})"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"cron": "0 6 * * *", "type": "cron"},
+      "steps": [
+        {
+          "id": "dailyEncounters",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (e:KaruteEncounter) WHERE e.occurredAt >= date() RETURN count(e) AS cnt LIMIT 1"
+          }
+        },
+        {
+          "id": "pendingOrders",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (r:KaruteServiceRequest {status: 'active'}) RETURN count(r) AS cnt LIMIT 1"
+          }
+        },
+        {
+          "id": "briefing",
+          "fn": "agent.chat",
+          "depends_on": ["dailyEncounters", "pendingOrders"],
+          "args": {
+            "message": "Karute daily operational briefing (PHI redacted). Encounters today: $dailyEncounters.rows[0].cnt. Pending orders: $pendingOrders.rows[0].cnt. Highlight items needing attention."
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {"cron": "0 */6 * * *", "type": "cron"},
+      "steps": [
+        {
+          "id": "coverageNodes",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          }
+        },
+        {
+          "id": "coverageSnapshot",
+          "fn": "graph.write",
+          "depends_on": ["coverageNodes"],
+          "args": {
+            "params": {
+              "actorName": "karute",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.karute.coverageSnapshot",
+              "nanoid": "karu7t3e",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, repo: $did, collection: $collection, status: 'active'})"
+          }
+        }
+      ]
+    }
+  ]
+}

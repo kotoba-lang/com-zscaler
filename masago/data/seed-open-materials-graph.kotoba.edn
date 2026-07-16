@@ -1,0 +1,184 @@
+;; masago 真砂 — seed open-materials graph (real, PUBLIC computed-materials data only)
+;; ADR-2606151027 · vocabulary: open-materials-ontology (00-contracts/schemas/open-materials-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - masago is a RESEARCH map of PUBLIC computed-materials data, NEVER a weapons-design or
+;;     synthesis-recipe tool. It mirrors computed PROPERTIES + crystal STRUCTURES only. NO
+;;     synthesis route, NO precursor list, NO enrichment/processing procedure appears here —
+;;     those fields are structurally unrepresentable (not schema members).
+;;   - Weaponizable application classes are NOT enum members. Dual-use materials are mirrored at
+;;     the property level only. The routing is open research, never fabrication or force (§1.12).
+;;   - The lens is integrated discovery EVIDENCE over a material, routed to RESEARCH. karma lives
+;;     ONLY on edges (:en/grasping-load × disclosed :en/confidence; N1). The raw computed VALUE
+;;     rides the edge as :en/value (DISCLOSED fact, never re-judged; N3).
+;;
+;; SOURCING: structures + computed properties are :authoritative publicly-disclosed facts from the
+;;   open-materials commons — Meta FAIR Chemistry Open Materials 2024 (OMat24, CC-BY-4.0), the
+;;   Materials Project (CC-BY-4.0), OQMD, NOMAD, AFLOW, JARVIS. The SAMPLE is a bounded illustrative
+;;   seed (:representative coverage), NOT exhaustive: coverage of the ~10^8-scale commons is ~0 by
+;;   design. mp-* source-ids are real Materials Project identifiers. Live ingest (Materials Project
+;;   REST / OMat24 dumps) is G7/Council-gated. Property values are DISCLOSED DFT/MLIP results, never
+;;   masago adjudications (N3).
+;;
+;; A NOTE ON VALUES: :en/value is a DISCLOSED computed number for orientation; it is NOT used in the
+;;   discovery integral (which uses only :en/grasping-load × confidence). Precise re-verification of
+;;   each datum against the source release is an R1 ingest task (live leg, G7).
+
+[;; ───────────────────────────── dataset-sources (the open commons; G4/G5) ────
+ {:db/id -1 :mat/id "src.omat24" :mat/kind :dataset-source :mat/label "Meta FAIR Chemistry — Open Materials 2024 (OMat24)" :source/license "CC-BY-4.0" :source/doi "10.48550/arXiv.2410.12771" :source/url "https://huggingface.co/datasets/fairchem/OMAT24" :mat/sourcing :authoritative}
+ {:db/id -2 :mat/id "src.materials-project" :mat/kind :dataset-source :mat/label "The Materials Project" :source/license "CC-BY-4.0" :source/doi "10.1063/1.4812323" :source/url "https://materialsproject.org" :mat/sourcing :authoritative}
+ {:db/id -3 :mat/id "src.oqmd" :mat/kind :dataset-source :mat/label "Open Quantum Materials Database (OQMD)" :source/license "CC-BY-4.0" :source/doi "10.1007/s11837-013-0755-4" :source/url "https://oqmd.org" :mat/sourcing :authoritative}
+ {:db/id -4 :mat/id "src.nomad" :mat/kind :dataset-source :mat/label "NOMAD Repository / Archive" :source/license "CC-BY-4.0" :source/doi "10.1063/1.4812323" :source/url "https://nomad-lab.eu" :mat/sourcing :authoritative}
+ {:db/id -5 :mat/id "src.aflow" :mat/kind :dataset-source :mat/label "AFLOW — Automatic FLOW for Materials Discovery" :source/license "open" :source/doi "10.1016/j.commatsci.2012.02.005" :source/url "https://aflowlib.org" :mat/sourcing :authoritative}
+ {:db/id -6 :mat/id "src.jarvis" :mat/kind :dataset-source :mat/label "NIST JARVIS-DFT" :source/license "open" :source/doi "10.1038/s41524-020-00440-1" :source/url "https://jarvis.nist.gov" :mat/sourcing :authoritative}
+
+ ;; ───────────────────────────── elements (nodes) ────────────────────────────
+ {:db/id -7 :mat/id "el.h" :mat/kind :element :mat/label "Hydrogen" :element/symbol "H" :element/z 1 :mat/sourcing :authoritative}
+ {:db/id -8 :mat/id "el.li" :mat/kind :element :mat/label "Lithium" :element/symbol "Li" :element/z 3 :mat/sourcing :authoritative}
+ {:db/id -9 :mat/id "el.b" :mat/kind :element :mat/label "Boron" :element/symbol "B" :element/z 5 :mat/sourcing :authoritative}
+ {:db/id -10 :mat/id "el.c" :mat/kind :element :mat/label "Carbon" :element/symbol "C" :element/z 6 :mat/sourcing :authoritative}
+ {:db/id -11 :mat/id "el.n" :mat/kind :element :mat/label "Nitrogen" :element/symbol "N" :element/z 7 :mat/sourcing :authoritative}
+ {:db/id -12 :mat/id "el.o" :mat/kind :element :mat/label "Oxygen" :element/symbol "O" :element/z 8 :mat/sourcing :authoritative}
+ {:db/id -13 :mat/id "el.mg" :mat/kind :element :mat/label "Magnesium" :element/symbol "Mg" :element/z 12 :mat/sourcing :authoritative}
+ {:db/id -14 :mat/id "el.al" :mat/kind :element :mat/label "Aluminium" :element/symbol "Al" :element/z 13 :mat/sourcing :authoritative}
+ {:db/id -15 :mat/id "el.si" :mat/kind :element :mat/label "Silicon" :element/symbol "Si" :element/z 14 :mat/sourcing :authoritative}
+ {:db/id -16 :mat/id "el.p" :mat/kind :element :mat/label "Phosphorus" :element/symbol "P" :element/z 15 :mat/sourcing :authoritative}
+ {:db/id -17 :mat/id "el.ti" :mat/kind :element :mat/label "Titanium" :element/symbol "Ti" :element/z 22 :mat/sourcing :authoritative}
+ {:db/id -18 :mat/id "el.mn" :mat/kind :element :mat/label "Manganese" :element/symbol "Mn" :element/z 25 :mat/sourcing :authoritative}
+ {:db/id -19 :mat/id "el.fe" :mat/kind :element :mat/label "Iron" :element/symbol "Fe" :element/z 26 :mat/sourcing :authoritative}
+ {:db/id -20 :mat/id "el.co" :mat/kind :element :mat/label "Cobalt" :element/symbol "Co" :element/z 27 :mat/sourcing :authoritative}
+ {:db/id -21 :mat/id "el.ga" :mat/kind :element :mat/label "Gallium" :element/symbol "Ga" :element/z 31 :mat/sourcing :authoritative}
+ {:db/id -22 :mat/id "el.pt" :mat/kind :element :mat/label "Platinum" :element/symbol "Pt" :element/z 78 :mat/sourcing :authoritative}
+
+ ;; ───────────────────────────── property types (nodes) ──────────────────────
+ ;; the VALUE lives on the :has-property edge (:en/value); these are the TYPE + unit only.
+ {:db/id -23 :mat/id "prop.formation-energy" :mat/kind :property :mat/label "Formation energy per atom" :property/kind :formation-energy :property/unit "eV/atom" :mat/sourcing :authoritative}
+ {:db/id -24 :mat/id "prop.energy-above-hull" :mat/kind :property :mat/label "Energy above convex hull" :property/kind :energy-above-hull :property/unit "eV/atom" :mat/sourcing :authoritative}
+ {:db/id -25 :mat/id "prop.band-gap" :mat/kind :property :mat/label "Electronic band gap" :property/kind :band-gap :property/unit "eV" :mat/sourcing :authoritative}
+ {:db/id -26 :mat/id "prop.bulk-modulus" :mat/kind :property :mat/label "Bulk modulus" :property/kind :bulk-modulus :property/unit "GPa" :mat/sourcing :authoritative}
+ {:db/id -27 :mat/id "prop.density" :mat/kind :property :mat/label "Mass density" :property/kind :density :property/unit "g/cm^3" :mat/sourcing :authoritative}
+ {:db/id -28 :mat/id "prop.ionic-conductivity" :mat/kind :property :mat/label "Li-ion conductivity" :property/kind :ionic-conductivity :property/unit "S/cm" :mat/sourcing :authoritative}
+ {:db/id -29 :mat/id "prop.seebeck" :mat/kind :property :mat/label "Seebeck coefficient" :property/kind :seebeck :property/unit "uV/K" :mat/sourcing :authoritative}
+ {:db/id -30 :mat/id "prop.magnetization" :mat/kind :property :mat/label "Saturation magnetization" :property/kind :magnetization :property/unit "uB/f.u." :mat/sourcing :authoritative}
+ {:db/id -31 :mat/id "prop.dielectric" :mat/kind :property :mat/label "Relative permittivity" :property/kind :dielectric :property/unit "eps_r" :mat/sourcing :authoritative}
+ {:db/id -32 :mat/id "prop.tc" :mat/kind :property :mat/label "Superconducting critical temperature" :property/kind :critical-temperature :property/unit "K" :mat/sourcing :authoritative}
+
+ ;; ───────────────────────────── application classes (nodes) ─────────────────
+ ;; weaponizable classes are NOT enum members (G1). These route materials to open use.
+ {:db/id -33 :mat/id "app.battery-cathode" :mat/kind :application :mat/label "Battery cathode" :application/class :battery-cathode :mat/sourcing :authoritative}
+ {:db/id -34 :mat/id "app.battery-anode" :mat/kind :application :mat/label "Battery anode" :application/class :battery-anode :mat/sourcing :authoritative}
+ {:db/id -35 :mat/id "app.solid-electrolyte" :mat/kind :application :mat/label "Solid electrolyte" :application/class :solid-electrolyte :mat/sourcing :authoritative}
+ {:db/id -36 :mat/id "app.semiconductor" :mat/kind :application :mat/label "Semiconductor" :application/class :semiconductor :mat/sourcing :authoritative}
+ {:db/id -37 :mat/id "app.photovoltaic" :mat/kind :application :mat/label "Photovoltaic absorber" :application/class :photovoltaic :mat/sourcing :authoritative}
+ {:db/id -38 :mat/id "app.catalyst" :mat/kind :application :mat/label "Catalyst" :application/class :catalyst :mat/sourcing :authoritative}
+ {:db/id -39 :mat/id "app.thermoelectric" :mat/kind :application :mat/label "Thermoelectric" :application/class :thermoelectric :mat/sourcing :authoritative}
+ {:db/id -40 :mat/id "app.superconductor" :mat/kind :application :mat/label "Superconductor" :application/class :superconductor :mat/sourcing :authoritative}
+ {:db/id -41 :mat/id "app.dielectric" :mat/kind :application :mat/label "Dielectric / ferroelectric" :application/class :dielectric :mat/sourcing :authoritative}
+ {:db/id -42 :mat/id "app.structural" :mat/kind :application :mat/label "Structural / refractory" :application/class :structural :mat/sourcing :authoritative}
+ {:db/id -43 :mat/id "app.magnet" :mat/kind :application :mat/label "Permanent magnet" :application/class :magnet :mat/sourcing :authoritative}
+ {:db/id -44 :mat/id "app.hydrogen-storage" :mat/kind :application :mat/label "Hydrogen storage" :application/class :hydrogen-storage :mat/sourcing :authoritative}
+
+ ;; ───────────────────────────── materials (nodes) ───────────────────────────
+ ;; mp-* are real Materials Project ids; structures are PUBLIC computed reference data.
+ {:db/id -45 :mat/id "mat.lifepo4" :mat/kind :material :mat/label "Lithium iron phosphate (olivine)" :material/formula "LiFePO4" :material/spacegroup "Pnma" :material/crystal-system :orthorhombic :material/source-id "mp-19017" :mat/links "hikari.cell.lfp" :mat/sourcing :authoritative}
+ {:db/id -46 :mat/id "mat.licoo2" :mat/kind :material :mat/label "Lithium cobalt oxide" :material/formula "LiCoO2" :material/spacegroup "R-3m" :material/crystal-system :trigonal :material/source-id "mp-22526" :mat/sourcing :authoritative}
+ {:db/id -47 :mat/id "mat.limn2o4" :mat/kind :material :mat/label "Lithium manganese oxide (spinel)" :material/formula "LiMn2O4" :material/spacegroup "Fd-3m" :material/crystal-system :cubic :material/source-id "mp-25015" :mat/sourcing :authoritative}
+ {:db/id -48 :mat/id "mat.graphite" :mat/kind :material :mat/label "Graphite" :material/formula "C" :material/spacegroup "P6_3/mmc" :material/crystal-system :hexagonal :material/source-id "mp-48" :mat/sourcing :authoritative}
+ {:db/id -49 :mat/id "mat.llzo" :mat/kind :material :mat/label "Lithium lanthanum zirconate (garnet, LLZO)" :material/formula "Li7La3Zr2O12" :material/spacegroup "Ia-3d" :material/crystal-system :cubic :material/source-id "mp-942733" :mat/sourcing :authoritative}
+ {:db/id -50 :mat/id "mat.si" :mat/kind :material :mat/label "Silicon (diamond cubic)" :material/formula "Si" :material/spacegroup "Fd-3m" :material/crystal-system :cubic :material/source-id "mp-149" :mat/links "iwakura.substrate.si" :mat/sourcing :authoritative}
+ {:db/id -51 :mat/id "mat.gan" :mat/kind :material :mat/label "Gallium nitride (wurtzite)" :material/formula "GaN" :material/spacegroup "P6_3mc" :material/crystal-system :hexagonal :material/source-id "mp-804" :mat/links "hotaru.substrate.gan" :mat/sourcing :authoritative}
+ {:db/id -52 :mat/id "mat.zno" :mat/kind :material :mat/label "Zinc oxide (wurtzite)" :material/formula "ZnO" :material/spacegroup "P6_3mc" :material/crystal-system :hexagonal :material/source-id "mp-2133" :mat/sourcing :authoritative}
+ {:db/id -53 :mat/id "mat.tio2-anatase" :mat/kind :material :mat/label "Titanium dioxide (anatase)" :material/formula "TiO2" :material/spacegroup "I4_1/amd" :material/crystal-system :tetragonal :material/source-id "mp-390" :mat/sourcing :authoritative}
+ {:db/id -54 :mat/id "mat.pt" :mat/kind :material :mat/label "Platinum (fcc)" :material/formula "Pt" :material/spacegroup "Fm-3m" :material/crystal-system :cubic :material/source-id "mp-126" :mat/sourcing :authoritative}
+ {:db/id -55 :mat/id "mat.bi2te3" :mat/kind :material :mat/label "Bismuth telluride" :material/formula "Bi2Te3" :material/spacegroup "R-3m" :material/crystal-system :trigonal :material/source-id "mp-568390" :mat/sourcing :authoritative}
+ {:db/id -56 :mat/id "mat.mgb2" :mat/kind :material :mat/label "Magnesium diboride" :material/formula "MgB2" :material/spacegroup "P6/mmm" :material/crystal-system :hexagonal :material/source-id "mp-763" :mat/sourcing :authoritative}
+ {:db/id -57 :mat/id "mat.batio3" :mat/kind :material :mat/label "Barium titanate (tetragonal)" :material/formula "BaTiO3" :material/spacegroup "P4mm" :material/crystal-system :tetragonal :material/source-id "mp-5777" :mat/sourcing :authoritative}
+ {:db/id -58 :mat/id "mat.al2o3" :mat/kind :material :mat/label "Aluminium oxide (corundum)" :material/formula "Al2O3" :material/spacegroup "R-3c" :material/crystal-system :trigonal :material/source-id "mp-1143" :mat/sourcing :authoritative}
+ {:db/id -59 :mat/id "mat.mgh2" :mat/kind :material :mat/label "Magnesium hydride (rutile)" :material/formula "MgH2" :material/spacegroup "P4_2/mnm" :material/crystal-system :tetragonal :material/source-id "mp-23710" :mat/sourcing :authoritative}
+ {:db/id -60 :mat/id "mat.fe2o3" :mat/kind :material :mat/label "Hematite (iron(III) oxide)" :material/formula "Fe2O3" :material/spacegroup "R-3c" :material/crystal-system :trigonal :material/source-id "mp-19770" :mat/sourcing :authoritative}
+
+ ;; ───────────────────────────── 縁 (edges) ──────────────────────────────────
+ ;; (A) :composed-of — material → element (provenance, no value)
+ {:db/id -61 :en/from "mat.lifepo4" :en/to "el.li" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -62 :en/from "mat.lifepo4" :en/to "el.fe" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -63 :en/from "mat.lifepo4" :en/to "el.p" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -64 :en/from "mat.lifepo4" :en/to "el.o" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -65 :en/from "mat.licoo2" :en/to "el.li" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -66 :en/from "mat.licoo2" :en/to "el.co" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -67 :en/from "mat.licoo2" :en/to "el.o" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -68 :en/from "mat.limn2o4" :en/to "el.li" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -69 :en/from "mat.limn2o4" :en/to "el.mn" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -70 :en/from "mat.limn2o4" :en/to "el.o" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -71 :en/from "mat.graphite" :en/to "el.c" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -72 :en/from "mat.si" :en/to "el.si" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -73 :en/from "mat.gan" :en/to "el.ga" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -74 :en/from "mat.gan" :en/to "el.n" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -75 :en/from "mat.tio2-anatase" :en/to "el.ti" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -76 :en/from "mat.tio2-anatase" :en/to "el.o" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -77 :en/from "mat.pt" :en/to "el.pt" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -78 :en/from "mat.mgb2" :en/to "el.mg" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -79 :en/from "mat.mgb2" :en/to "el.b" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -80 :en/from "mat.al2o3" :en/to "el.al" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -81 :en/from "mat.al2o3" :en/to "el.o" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -82 :en/from "mat.mgh2" :en/to "el.mg" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -83 :en/from "mat.mgh2" :en/to "el.h" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -84 :en/from "mat.fe2o3" :en/to "el.fe" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -85 :en/from "mat.fe2o3" :en/to "el.o" :en/kind :composed-of :en/grasping-load 1.0 :en/sourcing :authoritative}
+
+ ;; (B) :has-property — material → property; :en/value DISCLOSED computed datum, :en/confidence provenance
+ {:db/id -86 :en/from "mat.lifepo4" :en/to "prop.formation-energy" :en/kind :has-property :en/value -2.51 :en/confidence :dft :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -87 :en/from "mat.lifepo4" :en/to "prop.energy-above-hull" :en/kind :has-property :en/value 0.0 :en/confidence :dft :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:db/id -88 :en/from "mat.licoo2" :en/to "prop.formation-energy" :en/kind :has-property :en/value -2.06 :en/confidence :dft :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:db/id -89 :en/from "mat.limn2o4" :en/to "prop.formation-energy" :en/kind :has-property :en/value -1.99 :en/confidence :dft :en/grasping-load 0.8 :en/sourcing :authoritative}
+ {:db/id -90 :en/from "mat.llzo" :en/to "prop.ionic-conductivity" :en/kind :has-property :en/value 0.001 :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -91 :en/from "mat.llzo" :en/to "prop.energy-above-hull" :en/kind :has-property :en/value 0.02 :en/confidence :mlip-predicted :en/grasping-load 0.6 :en/sourcing :authoritative}
+ {:db/id -92 :en/from "mat.si" :en/to "prop.band-gap" :en/kind :has-property :en/value 1.12 :en/confidence :experimental :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:db/id -93 :en/from "mat.si" :en/to "prop.bulk-modulus" :en/kind :has-property :en/value 98.0 :en/confidence :experimental :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:db/id -94 :en/from "mat.gan" :en/to "prop.band-gap" :en/kind :has-property :en/value 3.4 :en/confidence :experimental :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:db/id -95 :en/from "mat.zno" :en/to "prop.band-gap" :en/kind :has-property :en/value 3.37 :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -96 :en/from "mat.tio2-anatase" :en/to "prop.band-gap" :en/kind :has-property :en/value 3.2 :en/confidence :experimental :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:db/id -97 :en/from "mat.bi2te3" :en/to "prop.seebeck" :en/kind :has-property :en/value -230.0 :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -98 :en/from "mat.bi2te3" :en/to "prop.band-gap" :en/kind :has-property :en/value 0.15 :en/confidence :dft :en/grasping-load 0.7 :en/sourcing :authoritative}
+ {:db/id -99 :en/from "mat.mgb2" :en/to "prop.tc" :en/kind :has-property :en/value 39.0 :en/confidence :experimental :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:db/id -100 :en/from "mat.batio3" :en/to "prop.dielectric" :en/kind :has-property :en/value 1500.0 :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -101 :en/from "mat.al2o3" :en/to "prop.bulk-modulus" :en/kind :has-property :en/value 254.0 :en/confidence :experimental :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:db/id -102 :en/from "mat.al2o3" :en/to "prop.density" :en/kind :has-property :en/value 3.95 :en/confidence :experimental :en/grasping-load 0.8 :en/sourcing :authoritative}
+ {:db/id -103 :en/from "mat.mgh2" :en/to "prop.density" :en/kind :has-property :en/value 1.45 :en/confidence :dft :en/grasping-load 0.7 :en/sourcing :authoritative}
+ {:db/id -104 :en/from "mat.fe2o3" :en/to "prop.magnetization" :en/kind :has-property :en/value 0.0 :en/confidence :dft :en/grasping-load 0.6 :en/sourcing :authoritative}
+ {:db/id -105 :en/from "mat.fe2o3" :en/to "prop.band-gap" :en/kind :has-property :en/value 2.2 :en/confidence :dft :en/grasping-load 0.7 :en/sourcing :authoritative}
+ {:db/id -106 :en/from "mat.graphite" :en/to "prop.density" :en/kind :has-property :en/value 2.26 :en/confidence :experimental :en/grasping-load 0.8 :en/sourcing :authoritative}
+
+ ;; (C) :candidate-for — material → application (candidacy evidence; routed to RESEARCH)
+ {:db/id -107 :en/from "mat.lifepo4" :en/to "app.battery-cathode" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:db/id -108 :en/from "mat.licoo2" :en/to "app.battery-cathode" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -109 :en/from "mat.limn2o4" :en/to "app.battery-cathode" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.8 :en/sourcing :authoritative}
+ {:db/id -110 :en/from "mat.graphite" :en/to "app.battery-anode" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:db/id -111 :en/from "mat.llzo" :en/to "app.solid-electrolyte" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:db/id -112 :en/from "mat.si" :en/to "app.semiconductor" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.98 :en/sourcing :authoritative}
+ {:db/id -113 :en/from "mat.si" :en/to "app.photovoltaic" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -114 :en/from "mat.gan" :en/to "app.semiconductor" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -115 :en/from "mat.zno" :en/to "app.semiconductor" :en/kind :candidate-for :en/confidence :dft :en/grasping-load 0.7 :en/sourcing :authoritative}
+ {:db/id -116 :en/from "mat.tio2-anatase" :en/to "app.catalyst" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:db/id -117 :en/from "mat.pt" :en/to "app.catalyst" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -118 :en/from "mat.fe2o3" :en/to "app.catalyst" :en/kind :candidate-for :en/confidence :dft :en/grasping-load 0.6 :en/sourcing :authoritative}
+ {:db/id -119 :en/from "mat.bi2te3" :en/to "app.thermoelectric" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -120 :en/from "mat.mgb2" :en/to "app.superconductor" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -121 :en/from "mat.batio3" :en/to "app.dielectric" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.9 :en/sourcing :authoritative}
+ {:db/id -122 :en/from "mat.al2o3" :en/to "app.structural" :en/kind :candidate-for :en/confidence :experimental :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:db/id -123 :en/from "mat.mgh2" :en/to "app.hydrogen-storage" :en/kind :candidate-for :en/confidence :dft :en/grasping-load 0.7 :en/sourcing :authoritative}
+
+ ;; (D) :derived-from — material → dataset-source (provenance of the mirror)
+ {:db/id -124 :en/from "mat.lifepo4" :en/to "src.materials-project" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -125 :en/from "mat.licoo2" :en/to "src.materials-project" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -126 :en/from "mat.si" :en/to "src.omat24" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -127 :en/from "mat.gan" :en/to "src.omat24" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -128 :en/from "mat.llzo" :en/to "src.omat24" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -129 :en/from "mat.bi2te3" :en/to "src.oqmd" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -130 :en/from "mat.batio3" :en/to "src.jarvis" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+ {:db/id -131 :en/from "mat.mgb2" :en/to "src.aflow" :en/kind :derived-from :en/grasping-load 1.0 :en/sourcing :authoritative}
+
+ ;; (E) :similar-to — material → material (structural/chemical similarity; cascade breadth)
+ {:db/id -132 :en/from "mat.licoo2" :en/to "mat.limn2o4" :en/kind :similar-to :en/grasping-load 0.6 :en/sourcing :representative}
+ {:db/id -133 :en/from "mat.lifepo4" :en/to "mat.licoo2" :en/kind :similar-to :en/grasping-load 0.5 :en/sourcing :representative}
+ {:db/id -134 :en/from "mat.gan" :en/to "mat.zno" :en/kind :similar-to :en/grasping-load 0.7 :en/sourcing :representative}
+ {:db/id -135 :en/from "mat.si" :en/to "mat.gan" :en/kind :similar-to :en/grasping-load 0.4 :en/sourcing :representative}]

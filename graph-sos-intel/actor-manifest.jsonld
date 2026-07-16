@@ -1,0 +1,219 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:graph-sos-intel.etzhayyim.com",
+  "name": "graph-sos-intel",
+  "nanoid": "gs0s1nt7",
+  "displayName": "Graph SoS Intel — Vertex Edge MV IDX Intelligence",
+  "description": "System-of-Systems graph intelligence actor. Continuously inventories vertex, edge, mv, and idx relations; reasons over topology and read-model coverage; writes auditable snapshots and findings without executing heavy DDL directly.",
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "performerType": "service",
+  "heartbeatRequired": true,
+  "domainKnowledgeRequired": true,
+  "convoSystemPrompt": "You are the Graph SoS Intel actor. Treat the graph platform itself as an intelligence target. Continuously analyze vertex_* tables, edge_* tables, mv_* read models, and idx_* indexes; infer topology drift, missing read models, index gaps, stale snapshots, and actor impact. Write compact auditable findings. Never execute heavy DDL directly; recommend DDL through the governed RisingWave background DDL path.",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/adr/2605071700-graph-sos-intel-actor.md",
+    "90-docs/adr/2604261900-risingwave-ddl-backfill-path-topology.md",
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md"
+  ],
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible",
+    "rules": [
+      {
+        "id": "RULE-GRAPH-SOS-NO-HEAVY-DDL",
+        "name": "No Direct Heavy DDL",
+        "enforcement": "Actor may recommend CREATE INDEX, CREATE MATERIALIZED VIEW, backfill, ALTER, or DROP, but must not execute heavy DDL directly."
+      },
+      {
+        "id": "RULE-GRAPH-SOS-COMPACT-SNAPSHOT",
+        "name": "Compact Snapshot",
+        "enforcement": "Catalog dumps stay in bounded catalog queries; persisted snapshots store rollups, findings, and bounded evidence only."
+      }
+    ]
+  },
+  "pipelines": [
+    {
+      "trigger": {
+        "type": "cron",
+        "cron": "*/15 * * * *"
+      },
+      "steps": [
+        {
+          "id": "relationRollup",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT CASE WHEN table_name LIKE 'vertex_%' THEN 'vertex' WHEN table_name LIKE 'edge_%' THEN 'edge' WHEN table_name LIKE 'mv_%' THEN 'mv' WHEN table_name LIKE 'view_%' THEN 'view' ELSE 'other' END AS relationKind, COUNT(*) AS relationCount FROM information_schema.tables WHERE table_schema = current_schema() AND (table_name LIKE 'vertex_%' OR table_name LIKE 'edge_%' OR table_name LIKE 'mv_%' OR table_name LIKE 'view_%') GROUP BY relationKind ORDER BY relationKind"
+          }
+        },
+        {
+          "id": "indexRollup",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "SELECT count(*) AS idxCount, count(DISTINCT tablename) AS indexedTableCount FROM pg_indexes WHERE schemaname = current_schema() AND indexname LIKE 'idx_%'"
+          }
+        },
+        {
+          "id": "latestFindings",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "SELECT finding_id AS findingId, severity, finding_kind AS findingKind, status, summary FROM vertex_graph_sos_intel_finding WHERE status IN ('open','watch') ORDER BY created_at DESC LIMIT 20"
+          }
+        },
+        {
+          "id": "analyze",
+          "fn": "agent.chat",
+          "depends_on": [
+            "relationRollup",
+            "indexRollup",
+            "latestFindings"
+          ],
+          "args": {
+            "message": "Graph SoS intelligence tick. Relation rollup: $relationRollup.rows\n\nIndex rollup: $indexRollup.rows\n\nOpen findings: $latestFindings.rows\n\nInfer topology health, missing read-model/index risks, and next recommended actions. Return concise JSON: {status, summary, anomalyCount, recommendations[]}."
+          }
+        },
+        {
+          "id": "writeSnapshot",
+          "fn": "graph.write",
+          "depends_on": [
+            "analyze"
+          ],
+          "args": {
+            "template": "INSERT INTO vertex_graph_sos_intel_snapshot (vertex_id, snapshot_id, actor_did, scope, status, relation_total, vertex_table_count, edge_table_count, mv_count, idx_count, anomaly_count, summary, recommendation_json, evidence_json, created_at, owner_did, sensitivity_ord) SELECT concat('at://', $did, '/com.etzhayyim.apps.graphSosIntel.snapshot/', NOW()::VARCHAR), concat('graph-sos-', NOW()::VARCHAR), $did, 'global', 'active', COALESCE(count(*), 0), COALESCE(sum(CASE WHEN table_name LIKE 'vertex_%' THEN 1 ELSE 0 END), 0), COALESCE(sum(CASE WHEN table_name LIKE 'edge_%' THEN 1 ELSE 0 END), 0), COALESCE(sum(CASE WHEN table_name LIKE 'mv_%' THEN 1 ELSE 0 END), 0), (SELECT count(*) FROM pg_indexes WHERE schemaname = current_schema() AND indexname LIKE 'idx_%'), 0, $analyze.text, $analyze.text, $analyze.text, NOW()::VARCHAR, $did, 100 FROM information_schema.tables WHERE table_schema = current_schema() AND (table_name LIKE 'vertex_%' OR table_name LIKE 'edge_%' OR table_name LIKE 'mv_%' OR table_name LIKE 'view_%')"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "cron",
+        "cron": "0 */6 * * *"
+      },
+      "steps": [
+        {
+          "id": "latestSnapshot",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT snapshot_id AS snapshotId, status, summary, created_at AS createdAt FROM vertex_graph_sos_intel_snapshot ORDER BY created_at DESC LIMIT 1"
+          }
+        },
+        {
+          "id": "relationSample",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "SELECT table_name AS relationName, CASE WHEN table_name LIKE 'vertex_%' THEN 'vertex' WHEN table_name LIKE 'edge_%' THEN 'edge' WHEN table_name LIKE 'mv_%' THEN 'mv' WHEN table_name LIKE 'view_%' THEN 'view' ELSE 'other' END AS relationKind FROM information_schema.tables WHERE table_schema = current_schema() AND (table_name LIKE 'vertex_%' OR table_name LIKE 'edge_%' OR table_name LIKE 'mv_%' OR table_name LIKE 'view_%') ORDER BY relationKind, relationName LIMIT 80"
+          }
+        },
+        {
+          "id": "briefing",
+          "fn": "agent.chat",
+          "depends_on": [
+            "latestSnapshot",
+            "relationSample"
+          ],
+          "args": {
+            "message": "Graph SoS topology briefing.\n\nLatest snapshot: $latestSnapshot.rows\n\nRelation sample: $relationSample.rows\n\nWrite a concise operational briefing with risks and next actions."
+          }
+        },
+        {
+          "id": "announce",
+          "fn": "derive:social",
+          "depends_on": [
+            "briefing"
+          ],
+          "args": {
+            "template": "Graph SoS Intel: $briefing.text"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.graphSosIntel.health"
+      },
+      "steps": [
+        {
+          "id": "latestSnapshot",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT snapshot_id AS snapshotId, status, relation_total AS relationTotal, vertex_table_count AS vertexTableCount, edge_table_count AS edgeTableCount, mv_count AS mvCount, idx_count AS idxCount, anomaly_count AS anomalyCount, summary, created_at AS createdAt FROM vertex_graph_sos_intel_snapshot ORDER BY created_at DESC LIMIT 1"
+          }
+        },
+        {
+          "id": "relationRollup",
+          "fn": "graph.query",
+          "depends_on": [],
+          "args": {
+            "sql": "SELECT CASE WHEN table_name LIKE 'vertex_%' THEN 'vertex' WHEN table_name LIKE 'edge_%' THEN 'edge' WHEN table_name LIKE 'mv_%' THEN 'mv' WHEN table_name LIKE 'view_%' THEN 'view' ELSE 'other' END AS relationKind, COUNT(*) AS relationCount FROM information_schema.tables WHERE table_schema = current_schema() AND (table_name LIKE 'vertex_%' OR table_name LIKE 'edge_%' OR table_name LIKE 'mv_%' OR table_name LIKE 'view_%') GROUP BY relationKind ORDER BY relationKind"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.graphSosIntel.listRelations"
+      },
+      "steps": [
+        {
+          "id": "relations",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT table_name AS relationName, CASE WHEN table_name LIKE 'vertex_%' THEN 'vertex' WHEN table_name LIKE 'edge_%' THEN 'edge' WHEN table_name LIKE 'mv_%' THEN 'mv' WHEN table_name LIKE 'view_%' THEN 'view' ELSE 'other' END AS relationKind, table_type AS tableType FROM information_schema.tables WHERE table_schema = current_schema() AND (table_name LIKE 'vertex_%' OR table_name LIKE 'edge_%' OR table_name LIKE 'mv_%' OR table_name LIKE 'view_%') AND ($input.kind IS NULL OR CASE WHEN table_name LIKE 'vertex_%' THEN 'vertex' WHEN table_name LIKE 'edge_%' THEN 'edge' WHEN table_name LIKE 'mv_%' THEN 'mv' WHEN table_name LIKE 'view_%' THEN 'view' ELSE 'other' END = $input.kind) ORDER BY relationKind, relationName LIMIT 500"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.graphSosIntel.listFindings"
+      },
+      "steps": [
+        {
+          "id": "findings",
+          "fn": "graph.query",
+          "args": {
+            "sql": "SELECT finding_id AS findingId, severity, finding_kind AS findingKind, affected_relation AS affectedRelation, status, summary, recommendation, created_at AS createdAt FROM vertex_graph_sos_intel_finding WHERE ($input.status IS NULL OR status = $input.status) ORDER BY created_at DESC LIMIT 200"
+          }
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp",
+    "displayName": "Graph SoS Intel",
+    "description": "Vertex / edge / mv / idx graph topology intelligence.",
+    "capabilities": [
+      "health",
+      "list-relations",
+      "list-findings",
+      "topology-briefing"
+    ]
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required"
+}

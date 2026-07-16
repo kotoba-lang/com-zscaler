@@ -1,0 +1,619 @@
+;; kabuto — DERIVED supply-chain concentration datoms (ADR-2606022000). :derived — NOT fact.
+;; Recomputed from the seed graph; do not re-ingest as :authoritative.
+[
+ {:supply/single-source-customer "org.corp.tw.tsmc" :supply/commodity ":lithography" :supply/sole-supplier "org.corp.nl.asml" :supply/criticality 0.95 :supply/derived true}
+ {:supply/single-source-customer "org.corp.kr.samsung-electronics" :supply/commodity ":lithography" :supply/sole-supplier "org.corp.nl.asml" :supply/criticality 0.95 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.apple" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.tw.tsmc" :supply/criticality 0.95 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.nvidia" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.tw.tsmc" :supply/criticality 0.95 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.amd" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.tw.tsmc" :supply/criticality 0.9 :supply/derived true}
+ {:supply/single-source-customer "org.corp.nl.asml" :supply/commodity ":mask-blank" :supply/sole-supplier "org.corp.jp.hoya" :supply/criticality 0.9 :supply/derived true}
+ {:supply/single-source-customer "org.corp.tw.mediatek" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.tw.tsmc" :supply/criticality 0.85 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.qualcomm" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.tw.tsmc" :supply/criticality 0.8 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.broadcom" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.tw.tsmc" :supply/criticality 0.8 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.qualcomm" :supply/commodity ":sensor" :supply/sole-supplier "org.corp.gb.arm" :supply/criticality 0.8 :supply/derived true}
+ {:supply/single-source-customer "org.corp.tw.mediatek" :supply/commodity ":sensor" :supply/sole-supplier "org.corp.gb.arm" :supply/criticality 0.8 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.marvell" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.tw.tsmc" :supply/criticality 0.8 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.microsoft" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.us.nvidia" :supply/criticality 0.7 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.meta" :supply/commodity ":foundry" :supply/sole-supplier "org.corp.us.nvidia" :supply/criticality 0.7 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.gm" :supply/commodity ":battery" :supply/sole-supplier "org.corp.kr.lg-energy" :supply/criticality 0.7 :supply/derived true}
+ {:supply/single-source-customer "org.corp.kr.hyundai" :supply/commodity ":assembly" :supply/sole-supplier "org.corp.kr.hyundai-mobis" :supply/criticality 0.7 :supply/derived true}
+ {:supply/single-source-customer "org.corp.us.southwest" :supply/commodity ":assembly" :supply/sole-supplier "org.corp.us.boeing" :supply/criticality 0.7 :supply/derived true}
+ {:supply/jurisdiction "US" :supply/jurisdiction-load 33.85 :supply/derived true}
+ {:supply/jurisdiction "JP" :supply/jurisdiction-load 28.2 :supply/derived true}
+ {:supply/jurisdiction "CN" :supply/jurisdiction-load 19.6 :supply/derived true}
+ {:supply/jurisdiction "TW" :supply/jurisdiction-load 14.85 :supply/derived true}
+ {:supply/jurisdiction "KR" :supply/jurisdiction-load 10.5 :supply/derived true}
+ {:supply/jurisdiction "FR" :supply/jurisdiction-load 5.15 :supply/derived true}
+ {:supply/jurisdiction "CH" :supply/jurisdiction-load 5.1 :supply/derived true}
+ {:supply/jurisdiction "SE" :supply/jurisdiction-load 5.1 :supply/derived true}
+ {:supply/jurisdiction "NL" :supply/jurisdiction-load 4.95 :supply/derived true}
+ {:supply/jurisdiction "DE" :supply/jurisdiction-load 4.6 :supply/derived true}
+ {:supply/jurisdiction "AU" :supply/jurisdiction-load 4.5 :supply/derived true}
+ {:supply/jurisdiction "IN" :supply/jurisdiction-load 3.3 :supply/derived true}
+ {:supply/jurisdiction "GB" :supply/jurisdiction-load 3.0 :supply/derived true}
+ {:supply/jurisdiction "CA" :supply/jurisdiction-load 2.35 :supply/derived true}
+ {:supply/jurisdiction "IE" :supply/jurisdiction-load 1.8 :supply/derived true}
+ {:supply/jurisdiction "CL" :supply/jurisdiction-load 1.5 :supply/derived true}
+ {:supply/jurisdiction "FI" :supply/jurisdiction-load 1.4 :supply/derived true}
+ {:supply/jurisdiction "DK" :supply/jurisdiction-load 1.2 :supply/derived true}
+ {:supply/jurisdiction "BR" :supply/jurisdiction-load 1.2 :supply/derived true}
+ {:supply/jurisdiction "IT" :supply/jurisdiction-load 1.1 :supply/derived true}
+ {:supply/jurisdiction "SA" :supply/jurisdiction-load 0.9 :supply/derived true}
+ {:supply/jurisdiction "LU" :supply/jurisdiction-load 0.85 :supply/derived true}
+ {:supply/jurisdiction "NO" :supply/jurisdiction-load 0.7 :supply/derived true}
+ {:supply/jurisdiction "TH" :supply/jurisdiction-load 0.65 :supply/derived true}
+ {:supply/jurisdiction "PE" :supply/jurisdiction-load 0.5 :supply/derived true}
+ {:supply/jurisdiction "HK" :supply/jurisdiction-load 0.3 :supply/derived true}
+ {:supply/jurisdiction "SG" :supply/jurisdiction-load 0.3 :supply/derived true}
+ {:supply/jurisdiction "MX" :supply/jurisdiction-load 0.3 :supply/derived true}
+ {:supply/jurisdiction "VN" :supply/jurisdiction-load 0.3 :supply/derived true}
+ {:supply/jurisdiction "AE" :supply/jurisdiction-load 0.2 :supply/derived true}
+ {:supply/jurisdiction "PL" :supply/jurisdiction-load 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.tsmc" :supply/out-degree 12 :supply/outward-criticality 8.75 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.catl" :supply/out-degree 11 :supply/outward-criticality 5.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.se.ericsson" :supply/out-degree 8 :supply/outward-criticality 2.9 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.nl.asml" :supply/out-degree 3 :supply/outward-criticality 2.85 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.gb.arm" :supply/out-degree 4 :supply/outward-criticality 2.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.nvidia" :supply/out-degree 4 :supply/outward-criticality 2.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.lasertec" :supply/out-degree 3 :supply/outward-criticality 2.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.boeing" :supply/out-degree 4 :supply/outward-criticality 1.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.denso" :supply/out-degree 3 :supply/outward-criticality 1.75 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.smic" :supply/out-degree 4 :supply/outward-criticality 1.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.synopsys" :supply/out-degree 3 :supply/outward-criticality 1.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.foxconn" :supply/out-degree 3 :supply/outward-criticality 1.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.lg-energy" :supply/out-degree 3 :supply/outward-criticality 1.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.shin-etsu" :supply/out-degree 2 :supply/outward-criticality 1.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.hoya" :supply/out-degree 2 :supply/outward-criticality 1.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.cadence" :supply/out-degree 3 :supply/outward-criticality 1.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.samsung-electronics" :supply/out-degree 3 :supply/outward-criticality 1.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ca.magna" :supply/out-degree 3 :supply/outward-criticality 1.35 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.sumco" :supply/out-degree 2 :supply/outward-criticality 1.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.safran" :supply/out-degree 2 :supply/outward-criticality 1.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.hyundai-mobis" :supply/out-degree 2 :supply/outward-criticality 1.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cl.sqm" :supply/out-degree 2 :supply/outward-criticality 1.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ch.glencore" :supply/out-degree 3 :supply/outward-criticality 1.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.br.vale" :supply/out-degree 2 :supply/outward-criticality 1.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.tokyo-electron" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.applied-materials" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.nippon-steel" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.posco" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.au.rio" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fi.nokia" :supply/out-degree 3 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.nl.nxp" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.tokyo-ohka" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.ibiden" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.globalwafers" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ie.linde" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.toray" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.adm" :supply/out-degree 3 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ch.lonza" :supply/out-degree 2 :supply/outward-criticality 1.1 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.quanta" :supply/out-degree 2 :supply/outward-criticality 1.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.continental" :supply/out-degree 2 :supply/outward-criticality 1.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.au.bhp" :supply/out-degree 2 :supply/outward-criticality 1.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.au.fortescue" :supply/out-degree 2 :supply/outward-criticality 1.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.ge" :supply/out-degree 2 :supply/outward-criticality 1.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.cocacola" :supply/out-degree 2 :supply/outward-criticality 1.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.cummins" :supply/out-degree 2 :supply/outward-criticality 1.0 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.rtx" :supply/out-degree 2 :supply/outward-criticality 0.95 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.boe" :supply/out-degree 2 :supply/outward-criticality 0.9 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.dk.vestas" :supply/out-degree 2 :supply/outward-criticality 0.9 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.china-northern-rare-earth" :supply/out-degree 2 :supply/outward-criticality 0.9 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.pfizer" :supply/out-degree 2 :supply/outward-criticality 0.9 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.hindalco" :supply/out-degree 3 :supply/outward-criticality 0.9 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.lu.arcelormittal" :supply/out-degree 2 :supply/outward-criticality 0.85 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.valeo" :supply/out-degree 2 :supply/outward-criticality 0.85 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.sony" :supply/out-degree 1 :supply/outward-criticality 0.85 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.sk-hynix" :supply/out-degree 1 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.murata" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.luxshare" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.thermo-fisher" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.amkor" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.bridgestone" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.komatsu" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.nucor" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.nidec" :supply/out-degree 3 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.arista" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.samsung-electro-mechanics" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ch.vat-group" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.corning" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.largan" :supply/out-degree 2 :supply/outward-criticality 0.8 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.aisin" :supply/out-degree 1 :supply/outward-criticality 0.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.cisco" :supply/out-degree 2 :supply/outward-criticality 0.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.airbus" :supply/out-degree 2 :supply/outward-criticality 0.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.no.norsk-hydro" :supply/out-degree 2 :supply/outward-criticality 0.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ch.givaudan" :supply/out-degree 2 :supply/outward-criticality 0.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.ganfeng-lithium" :supply/out-degree 2 :supply/outward-criticality 0.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.zhongji-innolight" :supply/out-degree 2 :supply/outward-criticality 0.7 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.amec" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.renesas" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.infineon" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ch.stmicro" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.panasonic" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.sa.aramco" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.schneider" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.teradyne" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.it.prysmian" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.ajinomoto" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.se.evolution" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.howmet" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.gds" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.cirrus-logic" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.au.amcor" :supply/out-degree 2 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.thyssenkrupp" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.mckesson" :supply/out-degree 1 :supply/outward-criticality 0.6 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.lam-research" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.kla" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.disco" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.tdk" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.samsung-sdi" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.albemarle" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.au.pilbara" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.onsemi" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.nl.asm-international" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.nl.besi" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.tata-steel" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.soitec" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.air-liquide" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.skyworks" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.hanmi-semi" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.pepsico" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.yaskawa" :supply/out-degree 2 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.tongwei" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.it.brembo" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.honeywell" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.korea-zinc" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.bunge" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.se.sandvik" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.caterpillar" :supply/out-degree 1 :supply/outward-criticality 0.5 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.advantest" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.micron" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.lg-display" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.pegatron" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.sap" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.marvell" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.mitsubishi-corp" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.mitsui-co" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.itochu" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.gb.rolls-royce" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.fii" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.merck-kgaa" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.entegris" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.naura" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.mks" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.air-products" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ie.aptiv" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.rohm" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.qorvo" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.aixtron" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.screen-holdings" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.thales" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.jsw-steel" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.ge-vernova" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.mtu" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.schlumberger" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.lg-chem" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.zte" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.gotion" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.nabtesco" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.horiba" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.posco-future-m" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.fujifilm" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.hyundai-glovis" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.aac-technologies" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.lens-technology" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.monolithic-power" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ch.barry-callebaut" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.china-tower" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ca.nutrien" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.freeport" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ca.teck" :supply/out-degree 1 :supply/outward-criticality 0.4 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.wistron" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.dk.maersk" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.kline" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.sa.sabic" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.tcs" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.infosys" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.eve-energy" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.marubeni" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fr.saint-gobain" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.ongc" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.nikon" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.canon" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.coherent" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.hk.asmpt" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.sg.wilmar" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.novatek" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.mx.grupo-mexico" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.will-semi" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.byd-electronic" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.wuxi-apptec" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.tokyo-seimitsu" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.hua-hong" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.pe.southern-copper" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cl.antofagasta" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.tcl-tech" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.zijin-mining" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.eaton" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.divis-labs" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.kr.samsung-biologics" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.sf-holding" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.th.delta-thailand" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.halliburton" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.baker-hughes" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.conocophillips" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.nitto-denko" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.iqvia" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.se.epiroc" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.fi.wartsila" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.kawasaki-heavy" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.jnj" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.se.skf" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.se.alfa-laval" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.chalco" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.symrise" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.cmoc" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.agilent" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.in.bharat-forge" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.maxscend" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.sartorius" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.omron" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.veeva" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.sunny-optical" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.amphenol" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.te-connectivity" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.jabil" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.au.brambles" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.wabtec" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.montage" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.kyocera" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.jp.ngk-insulators" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.au-optronics" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.vn.hoa-phat" :supply/out-degree 1 :supply/outward-criticality 0.3 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.cosco" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.nextera" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.de.deutsche-post" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.cn.weichai" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.us.corteva" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.se.trelleborg" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.tw.evergreen-marine" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.th.ptt" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ca.enbridge" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.ae.borouge" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.pl.kghm" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.pe.ferreycorp" :supply/out-degree 1 :supply/outward-criticality 0.2 :supply/derived true}
+ {:supply/systemic-supplier "org.corp.th.siam-cement" :supply/out-degree 1 :supply/outward-criticality 0.15 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.apple" :supply/supplier-sectors 6 :supply/inbound-criticality 14.7 :supply/diversification-index 0.408 :supply/derived true}
+ {:supply/diversification-customer "org.corp.tw.tsmc" :supply/supplier-sectors 5 :supply/inbound-criticality 12.15 :supply/diversification-index 0.412 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.nvidia" :supply/supplier-sectors 3 :supply/inbound-criticality 6.35 :supply/diversification-index 0.472 :supply/derived true}
+ {:supply/diversification-customer "org.corp.kr.posco" :supply/supplier-sectors 1 :supply/inbound-criticality 2.1 :supply/diversification-index 0.476 :supply/derived true}
+ {:supply/diversification-customer "org.corp.cn.smic" :supply/supplier-sectors 1 :supply/inbound-criticality 1.8 :supply/diversification-index 0.556 :supply/derived true}
+ {:supply/diversification-customer "org.corp.kr.samsung-electronics" :supply/supplier-sectors 3 :supply/inbound-criticality 5.35 :supply/diversification-index 0.561 :supply/derived true}
+ {:supply/diversification-customer "org.corp.cn.catl" :supply/supplier-sectors 1 :supply/inbound-criticality 1.6 :supply/diversification-index 0.625 :supply/derived true}
+ {:supply/diversification-customer "org.corp.jp.nippon-steel" :supply/supplier-sectors 1 :supply/inbound-criticality 1.6 :supply/diversification-index 0.625 :supply/derived true}
+ {:supply/diversification-customer "org.corp.fr.airbus" :supply/supplier-sectors 2 :supply/inbound-criticality 3.15 :supply/diversification-index 0.635 :supply/derived true}
+ {:supply/diversification-customer "org.corp.cn.xiaomi" :supply/supplier-sectors 2 :supply/inbound-criticality 3.1 :supply/diversification-index 0.645 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.boeing" :supply/supplier-sectors 2 :supply/inbound-criticality 3.0 :supply/diversification-index 0.667 :supply/derived true}
+ {:supply/diversification-customer "org.corp.kr.lg-energy" :supply/supplier-sectors 1 :supply/inbound-criticality 1.5 :supply/diversification-index 0.667 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.tesla" :supply/supplier-sectors 4 :supply/inbound-criticality 5.3 :supply/diversification-index 0.755 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.att" :supply/supplier-sectors 1 :supply/inbound-criticality 1.3 :supply/diversification-index 0.769 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.qualcomm" :supply/supplier-sectors 2 :supply/inbound-criticality 2.5 :supply/diversification-index 0.8 :supply/derived true}
+ {:supply/diversification-customer "org.corp.nl.asml" :supply/supplier-sectors 2 :supply/inbound-criticality 2.4 :supply/diversification-index 0.833 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.meta" :supply/supplier-sectors 1 :supply/inbound-criticality 1.1 :supply/diversification-index 0.909 :supply/derived true}
+ {:supply/diversification-customer "org.corp.au.bhp" :supply/supplier-sectors 1 :supply/inbound-criticality 1.1 :supply/diversification-index 0.909 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.intel" :supply/supplier-sectors 3 :supply/inbound-criticality 3.25 :supply/diversification-index 0.923 :supply/derived true}
+ {:supply/diversification-customer "org.corp.tw.mediatek" :supply/supplier-sectors 2 :supply/inbound-criticality 2.15 :supply/diversification-index 0.93 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.ford" :supply/supplier-sectors 1 :supply/inbound-criticality 1.0 :supply/diversification-index 1.0 :supply/derived true}
+ {:supply/diversification-customer "org.corp.de.bmw" :supply/supplier-sectors 3 :supply/inbound-criticality 2.8 :supply/diversification-index 1.071 :supply/derived true}
+ {:supply/diversification-customer "org.corp.jp.toyota" :supply/supplier-sectors 6 :supply/inbound-criticality 5.4 :supply/diversification-index 1.111 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.microsoft" :supply/supplier-sectors 2 :supply/inbound-criticality 1.7 :supply/diversification-index 1.176 :supply/derived true}
+ {:supply/diversification-customer "org.corp.in.tatamotors" :supply/supplier-sectors 2 :supply/inbound-criticality 1.6 :supply/diversification-index 1.25 :supply/derived true}
+ {:supply/diversification-customer "org.corp.cn.byd" :supply/supplier-sectors 3 :supply/inbound-criticality 2.4 :supply/diversification-index 1.25 :supply/derived true}
+ {:supply/diversification-customer "org.corp.de.volkswagen" :supply/supplier-sectors 5 :supply/inbound-criticality 3.9 :supply/diversification-index 1.282 :supply/derived true}
+ {:supply/diversification-customer "org.corp.jp.honda" :supply/supplier-sectors 2 :supply/inbound-criticality 1.55 :supply/diversification-index 1.29 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.pfizer" :supply/supplier-sectors 3 :supply/inbound-criticality 2.2 :supply/diversification-index 1.364 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.gm" :supply/supplier-sectors 3 :supply/inbound-criticality 2.0 :supply/diversification-index 1.5 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.broadcom" :supply/supplier-sectors 2 :supply/inbound-criticality 1.3 :supply/diversification-index 1.538 :supply/derived true}
+ {:supply/diversification-customer "org.corp.us.amazon" :supply/supplier-sectors 2 :supply/inbound-criticality 1.3 :supply/diversification-index 1.538 :supply/derived true}
+ {:supply/diversification-customer "org.corp.nl.stellantis" :supply/supplier-sectors 2 :supply/inbound-criticality 1.3 :supply/diversification-index 1.538 :supply/derived true}
+ {:supply/diversification-customer "org.corp.kr.hyundai" :supply/supplier-sectors 4 :supply/inbound-criticality 2.3 :supply/diversification-index 1.739 :supply/derived true}
+ {:supply/diversification-customer "org.corp.de.mercedes" :supply/supplier-sectors 2 :supply/inbound-criticality 1.1 :supply/diversification-index 1.818 :supply/derived true}
+ {:supply/diversification-customer "org.corp.kr.kia" :supply/supplier-sectors 2 :supply/inbound-criticality 1.1 :supply/diversification-index 1.818 :supply/derived true}
+ {:supply/diversification-customer "org.corp.ch.nestle" :supply/supplier-sectors 3 :supply/inbound-criticality 1.6 :supply/diversification-index 1.875 :supply/derived true}
+ {:supply/diversification-customer "org.corp.ch.roche" :supply/supplier-sectors 2 :supply/inbound-criticality 1.0 :supply/diversification-index 2.0 :supply/derived true}
+ {:supply/intermediary "org.corp.tw.tsmc" :supply/in-degree 24 :supply/out-degree 12 :supply/betweenness 288 :supply/derived true}
+ {:supply/intermediary "org.corp.us.nvidia" :supply/in-degree 12 :supply/out-degree 4 :supply/betweenness 48 :supply/derived true}
+ {:supply/intermediary "org.corp.cn.catl" :supply/in-degree 4 :supply/out-degree 11 :supply/betweenness 44 :supply/derived true}
+ {:supply/intermediary "org.corp.kr.samsung-electronics" :supply/in-degree 10 :supply/out-degree 3 :supply/betweenness 30 :supply/derived true}
+ {:supply/intermediary "org.corp.us.boeing" :supply/in-degree 6 :supply/out-degree 4 :supply/betweenness 24 :supply/derived true}
+ {:supply/intermediary "org.corp.cn.smic" :supply/in-degree 4 :supply/out-degree 4 :supply/betweenness 16 :supply/derived true}
+ {:supply/intermediary "org.corp.us.pfizer" :supply/in-degree 7 :supply/out-degree 2 :supply/betweenness 14 :supply/derived true}
+ {:supply/intermediary "org.corp.fr.airbus" :supply/in-degree 7 :supply/out-degree 2 :supply/betweenness 14 :supply/derived true}
+ {:supply/intermediary "org.corp.nl.asml" :supply/in-degree 4 :supply/out-degree 3 :supply/betweenness 12 :supply/derived true}
+ {:supply/intermediary "org.corp.kr.lg-energy" :supply/in-degree 3 :supply/out-degree 3 :supply/betweenness 9 :supply/derived true}
+ {:supply/intermediary "org.corp.kr.posco" :supply/in-degree 4 :supply/out-degree 2 :supply/betweenness 8 :supply/derived true}
+ {:supply/intermediary "org.corp.ch.glencore" :supply/in-degree 2 :supply/out-degree 3 :supply/betweenness 6 :supply/derived true}
+ {:supply/intermediary "org.corp.jp.nippon-steel" :supply/in-degree 3 :supply/out-degree 2 :supply/betweenness 6 :supply/derived true}
+ {:supply/intermediary "org.corp.au.bhp" :supply/in-degree 3 :supply/out-degree 2 :supply/betweenness 6 :supply/derived true}
+ {:supply/intermediary "org.corp.us.applied-materials" :supply/in-degree 2 :supply/out-degree 2 :supply/betweenness 4 :supply/derived true}
+ {:supply/intermediary "org.corp.jp.nidec" :supply/in-degree 1 :supply/out-degree 3 :supply/betweenness 3 :supply/derived true}
+ {:supply/intermediary "org.corp.us.adm" :supply/in-degree 1 :supply/out-degree 3 :supply/betweenness 3 :supply/derived true}
+ {:supply/intermediary "org.corp.au.rio" :supply/in-degree 1 :supply/out-degree 2 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.jp.ibiden" :supply/in-degree 1 :supply/out-degree 2 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.dk.maersk" :supply/in-degree 2 :supply/out-degree 1 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.kr.sk-hynix" :supply/in-degree 2 :supply/out-degree 1 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.us.mckesson" :supply/in-degree 2 :supply/out-degree 1 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.jp.yaskawa" :supply/in-degree 1 :supply/out-degree 2 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.us.arista" :supply/in-degree 1 :supply/out-degree 2 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.au.fortescue" :supply/in-degree 1 :supply/out-degree 2 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.us.pepsico" :supply/in-degree 2 :supply/out-degree 1 :supply/betweenness 2 :supply/derived true}
+ {:supply/intermediary "org.corp.pe.southern-copper" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.tw.novatek" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.us.corteva" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.jp.panasonic" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.us.micron" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.us.nextera" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.th.ptt" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.ch.stmicro" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.jp.sony" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.sa.aramco" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.us.marvell" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.kr.korea-zinc" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.kr.lg-chem" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.sa.sabic" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/intermediary "org.corp.kr.samsung-sdi" :supply/in-degree 1 :supply/out-degree 1 :supply/betweenness 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.amazon" :supply/tier-depth 6 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.alphabet" :supply/tier-depth 6 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.meta" :supply/tier-depth 6 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.microsoft" :supply/tier-depth 6 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.nvidia" :supply/tier-depth 5 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.skt" :supply/tier-depth 5 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.in.tatamotors" :supply/tier-depth 5 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.gm" :supply/tier-depth 5 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.hyundai" :supply/tier-depth 5 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.apple" :supply/tier-depth 5 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.lg-energy" :supply/tier-depth 4 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.samsung-electronics" :supply/tier-depth 4 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.in.varun-beverages" :supply/tier-depth 4 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.kia" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.sony" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.gigadevice" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.tesla" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.gac" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.cambricon" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.xiaomi" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.lg-chem" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.tw.novatek" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.de.volkswagen" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.xpeng" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.great-wall" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.tw.realtek" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.cvs" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.nio" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.socionext" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.broadcom" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.byd" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.li-auto" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.qualcomm" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.amd" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.general-mills" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.hygon" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.toyota" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.tw.mediatek" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.de.mercedes" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.de.bmw" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.mondelez" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.geely" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.marvell" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.saic" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.honda" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.pepsico" :supply/tier-depth 3 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.delta" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.catl" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.southwest" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.adm" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.smic" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.br.eletrobras" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.united-airlines" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.visa" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.tw.tsmc" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.cardinal-health" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.intel" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.de.lufthansa" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.mckesson" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.korea-zinc" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.samsung-sdi" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.baosteel" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.posco" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.nippon-steel" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.ch.nestle" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.sa.sabic" :supply/tier-depth 2 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.corteva" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.br.embraer" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.in.maruti" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.ntt" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.arista" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.gb.national-grid" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.kddi" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.kioxia" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.china-telecom" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.gb.unilever" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.pe.southern-copper" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.ford" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.th.ptt" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.fast-retailing" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.sa.savola" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.ng.mtn-nigeria" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.th.advanced-info" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.au.rio" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.za.mtn-group" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.ch.coca-cola-hbc" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.gb.hsbc" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.ch.stmicro" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.in.bharti-airtel" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.dell" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.att" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.es.iberdrola" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.ch.roche" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.nl.stellantis" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.de.vw" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.panasonic" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.suzuki" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.vn.vingroup" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.ibiden" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.china-mobile" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.nextera" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.gb.flutter" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.moderna" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.nidec" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.fr.airbus" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.paccar" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.chevron" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.tencent" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.lockheed" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.walmart" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.de.siemens" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.ch.glencore" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.boeing" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.yaskawa" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.au.fortescue" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.au.bhp" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.phillips66" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.jp.mitsubishi-heavy" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.alibaba" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.jpmorgan" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.dk.maersk" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.dk.orsted" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.pfizer" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.exxonmobil" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.cn.longi" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.br.tim-brasil" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.tw.chunghwa-telecom" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.deere" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.applied-materials" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.nl.asml" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.mx.arca-continental" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.gb.entain" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.micron" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.th.cp-all" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.wolfspeed" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.union-pacific" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.kr.sk-hynix" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.de.deutsche-telekom" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.sa.aramco" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.in.reliance" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.us.globalfoundries" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.it.ferrari" :supply/tier-depth 1 :supply/derived true}
+ {:supply/tier-depth-node "org.corp.fr.loreal" :supply/tier-depth 1 :supply/derived true}
+ {:supply/region-bloc "East Asia" :supply/bloc-load 73.45 :supply/derived true}
+ {:supply/region-bloc "North America" :supply/bloc-load 36.5 :supply/derived true}
+ {:supply/region-bloc "Europe" :supply/bloc-load 35.15 :supply/derived true}
+ {:supply/region-bloc "Oceania" :supply/bloc-load 4.5 :supply/derived true}
+ {:supply/region-bloc "South Asia" :supply/bloc-load 3.3 :supply/derived true}
+ {:supply/region-bloc "Latin America" :supply/bloc-load 3.2 :supply/derived true}
+ {:supply/region-bloc "SE Asia" :supply/bloc-load 1.25 :supply/derived true}
+ {:supply/region-bloc "Middle East" :supply/bloc-load 1.1 :supply/derived true}
+ {:supply/commodity "mask-blank" :supply/commodity-suppliers 1 :supply/commodity-hhi 1.0 :supply/derived true}
+ {:supply/commodity "rare-earth" :supply/commodity-suppliers 1 :supply/commodity-hhi 1.0 :supply/derived true}
+ {:supply/commodity "eda" :supply/commodity-suppliers 2 :supply/commodity-hhi 0.502 :supply/derived true}
+ {:supply/commodity "foundry" :supply/commodity-suppliers 5 :supply/commodity-hhi 0.461 :supply/derived true}
+ {:supply/commodity "photoresist" :supply/commodity-suppliers 3 :supply/commodity-hhi 0.424 :supply/derived true}
+ {:supply/commodity "substrate" :supply/commodity-suppliers 3 :supply/commodity-hhi 0.415 :supply/derived true}
+ {:supply/commodity "aluminium" :supply/commodity-suppliers 3 :supply/commodity-hhi 0.385 :supply/derived true}
+ {:supply/commodity "lithography" :supply/commodity-suppliers 6 :supply/commodity-hhi 0.375 :supply/derived true}
+ {:supply/commodity "gas" :supply/commodity-suppliers 4 :supply/commodity-hhi 0.343 :supply/derived true}
+ {:supply/commodity "memory" :supply/commodity-suppliers 4 :supply/commodity-hhi 0.285 :supply/derived true}
+ {:supply/commodity "polysilicon" :supply/commodity-suppliers 4 :supply/commodity-hhi 0.273 :supply/derived true}
+ {:supply/commodity "api" :supply/commodity-suppliers 4 :supply/commodity-hhi 0.256 :supply/derived true}
+ {:supply/commodity "composite" :supply/commodity-suppliers 6 :supply/commodity-hhi 0.249 :supply/derived true}
+ {:supply/commodity "battery" :supply/commodity-suppliers 16 :supply/commodity-hhi 0.164 :supply/derived true}
+ {:supply/commodity "copper" :supply/commodity-suppliers 7 :supply/commodity-hhi 0.153 :supply/derived true}
+ {:supply/commodity "display" :supply/commodity-suppliers 9 :supply/commodity-hhi 0.135 :supply/derived true}
+ {:supply/commodity "steel" :supply/commodity-suppliers 14 :supply/commodity-hhi 0.083 :supply/derived true}
+ {:supply/commodity "wafer" :supply/commodity-suppliers 19 :supply/commodity-hhi 0.069 :supply/derived true}
+ {:supply/commodity "sensor" :supply/commodity-suppliers 33 :supply/commodity-hhi 0.046 :supply/derived true}
+ {:supply/commodity "logistics" :supply/commodity-suppliers 48 :supply/commodity-hhi 0.038 :supply/derived true}
+ {:supply/commodity "assembly" :supply/commodity-suppliers 54 :supply/commodity-hhi 0.026 :supply/derived true}
+ {:supply/cross-bloc-corridor "East Asia→North America" :supply/cross-bloc-load 25.05 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→North America" :supply/cross-bloc-load 9.55 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→East Asia" :supply/cross-bloc-load 7.6 :supply/derived true}
+ {:supply/cross-bloc-corridor "North America→East Asia" :supply/cross-bloc-load 4.4 :supply/derived true}
+ {:supply/cross-bloc-corridor "East Asia→Europe" :supply/cross-bloc-load 4.2 :supply/derived true}
+ {:supply/cross-bloc-corridor "North America→Europe" :supply/cross-bloc-load 4.0 :supply/derived true}
+ {:supply/cross-bloc-corridor "Oceania→East Asia" :supply/cross-bloc-load 3.6 :supply/derived true}
+ {:supply/cross-bloc-corridor "Latin America→East Asia" :supply/cross-bloc-load 2.2 :supply/derived true}
+ {:supply/cross-bloc-corridor "South Asia→North America" :supply/cross-bloc-load 0.9 :supply/derived true}
+ {:supply/cross-bloc-corridor "Latin America→North America" :supply/cross-bloc-load 0.8 :supply/derived true}
+ {:supply/cross-bloc-corridor "East Asia→Oceania" :supply/cross-bloc-load 0.8 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→Oceania" :supply/cross-bloc-load 0.8 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→Africa" :supply/cross-bloc-load 0.7 :supply/derived true}
+ {:supply/cross-bloc-corridor "South Asia→Europe" :supply/cross-bloc-load 0.6 :supply/derived true}
+ {:supply/cross-bloc-corridor "Oceania→North America" :supply/cross-bloc-load 0.6 :supply/derived true}
+ {:supply/cross-bloc-corridor "North America→South Asia" :supply/cross-bloc-load 0.5 :supply/derived true}
+ {:supply/cross-bloc-corridor "North America→Oceania" :supply/cross-bloc-load 0.5 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→Other" :supply/cross-bloc-load 0.45 :supply/derived true}
+ {:supply/cross-bloc-corridor "East Asia→South Asia" :supply/cross-bloc-load 0.4 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→South Asia" :supply/cross-bloc-load 0.4 :supply/derived true}
+ {:supply/cross-bloc-corridor "North America→Latin America" :supply/cross-bloc-load 0.4 :supply/derived true}
+ {:supply/cross-bloc-corridor "Middle East→Europe" :supply/cross-bloc-load 0.3 :supply/derived true}
+ {:supply/cross-bloc-corridor "SE Asia→Europe" :supply/cross-bloc-load 0.3 :supply/derived true}
+ {:supply/cross-bloc-corridor "SE Asia→North America" :supply/cross-bloc-load 0.3 :supply/derived true}
+ {:supply/cross-bloc-corridor "North America→Middle East" :supply/cross-bloc-load 0.3 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→Latin America" :supply/cross-bloc-load 0.3 :supply/derived true}
+ {:supply/cross-bloc-corridor "Europe→SE Asia" :supply/cross-bloc-load 0.3 :supply/derived true}
+ {:supply/cross-bloc-corridor "Oceania→Europe" :supply/cross-bloc-load 0.3 :supply/derived true}
+ {:supply/cross-bloc-corridor "SE Asia→Latin America" :supply/cross-bloc-load 0.2 :supply/derived true}
+ {:supply/cross-bloc-corridor "North America→SE Asia" :supply/cross-bloc-load 0.2 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.qualcomm" :supply/resilience-score 14.5 :supply/single-source-count 2 :supply/derived true}
+ {:supply/resilience-customer "org.corp.tw.mediatek" :supply/resilience-score 15.0 :supply/single-source-count 2 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.apple" :supply/resilience-score 16.2 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.nvidia" :supply/resilience-score 17.1 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.tw.tsmc" :supply/resilience-score 17.2 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.kr.samsung-electronics" :supply/resilience-score 19.2 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.nl.asml" :supply/resilience-score 19.9 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.broadcom" :supply/resilience-score 23.4 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.gm" :supply/resilience-score 23.7 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.microsoft" :supply/resilience-score 23.8 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.meta" :supply/resilience-score 24.4 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.kr.posco" :supply/resilience-score 24.4 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.jp.nippon-steel" :supply/resilience-score 27.8 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.kr.hyundai" :supply/resilience-score 28.0 :supply/single-source-count 1 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.tesla" :supply/resilience-score 31.5 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.cn.catl" :supply/resilience-score 31.6 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.au.bhp" :supply/resilience-score 32.3 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.cn.smic" :supply/resilience-score 32.5 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.boeing" :supply/resilience-score 33.0 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.intel" :supply/resilience-score 33.4 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.att" :supply/resilience-score 33.4 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.fr.airbus" :supply/resilience-score 33.6 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.kr.lg-energy" :supply/resilience-score 33.7 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.ford" :supply/resilience-score 38.5 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.de.bmw" :supply/resilience-score 38.8 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.cn.xiaomi" :supply/resilience-score 39.2 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.pfizer" :supply/resilience-score 46.7 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.de.mercedes" :supply/resilience-score 47.7 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.in.tatamotors" :supply/resilience-score 48.8 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.cn.byd" :supply/resilience-score 49.8 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.nl.stellantis" :supply/resilience-score 50.1 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.de.volkswagen" :supply/resilience-score 51.0 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.ch.nestle" :supply/resilience-score 52.4 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.jp.toyota" :supply/resilience-score 52.6 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.ch.roche" :supply/resilience-score 52.6 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.us.amazon" :supply/resilience-score 53.2 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.jp.honda" :supply/resilience-score 56.3 :supply/single-source-count 0 :supply/derived true}
+ {:supply/resilience-customer "org.corp.kr.kia" :supply/resilience-score 64.5 :supply/single-source-count 0 :supply/derived true}
+ {:supply/cap-sector "software" :supply/cap-sector-busd 13725.0 :supply/derived true}
+ {:supply/cap-sector "semiconductors" :supply/cap-sector-busd 6292.0 :supply/derived true}
+ {:supply/cap-sector "financials" :supply/cap-sector-busd 5563.0 :supply/derived true}
+ {:supply/cap-sector "consumer" :supply/cap-sector-busd 5553.0 :supply/derived true}
+ {:supply/cap-sector "electronics" :supply/cap-sector-busd 3700.0 :supply/derived true}
+ {:supply/cap-sector "energy" :supply/cap-sector-busd 3500.0 :supply/derived true}
+ {:supply/cap-sector "pharma" :supply/cap-sector-busd 3450.0 :supply/derived true}
+ {:supply/cap-sector "industrials" :supply/cap-sector-busd 1492.0 :supply/derived true}
+ {:supply/cap-sector "automotive" :supply/cap-sector-busd 1230.0 :supply/derived true}
+ {:supply/cap-sector "healthcare" :supply/cap-sector-busd 925.0 :supply/derived true}
+ {:supply/cap-sector "telecom" :supply/cap-sector-busd 777.0 :supply/derived true}
+ {:supply/cap-sector "materials" :supply/cap-sector-busd 355.0 :supply/derived true}
+ {:supply/cap-sector "utilities" :supply/cap-sector-busd 181.0 :supply/derived true}
+ {:supply/cap-sector "real-estate" :supply/cap-sector-busd 50.0 :supply/derived true}
+ {:supply/cap-hhi 0.152 :supply/cap-total-busd 46793.0 :supply/cap-covered 205 :supply/cap-coverage-pct 11.9 :supply/derived true}
+]

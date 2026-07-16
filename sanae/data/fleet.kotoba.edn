@@ -1,0 +1,16 @@
+;; sanae (早苗) field-robotics fleet — :representative (R0, no hardware)
+[{:fleet/robot "saotome"  :fleet/glyph "早乙女" :fleet/class :manipulator
+  :fleet/role "transplant + precision-seeding arm" :fleet/maturity :design
+  :fleet/open-source true :fleet/sourcing :representative}
+ {:fleet/robot "kusanagi" :fleet/glyph "草薙"   :fleet/class :crawler
+  :fleet/role "autonomous weeding/cultivation (mechanical + laser; NO herbicide, G9)" :fleet/maturity :design
+  :fleet/open-source true :fleet/sourcing :representative}
+ {:fleet/robot "hasa"     :fleet/glyph "稲架"   :fleet/class :harvester
+  :fleet/role "harvest + in-field threshing" :fleet/maturity :design
+  :fleet/open-source true :fleet/sourcing :representative}
+ {:fleet/robot "kakashi"  :fleet/glyph "案山子" :fleet/class :drone
+  :fleet/role "aerial survey + spot-treat" :fleet/maturity :design
+  :fleet/open-source true :fleet/sourcing :representative}
+ {:fleet/robot "tanishi"  :fleet/glyph "田螺"   :fleet/class :sensor
+  :fleet/role "soil-microbiome + moisture probe" :fleet/maturity :design
+  :fleet/open-source true :fleet/sourcing :representative}]

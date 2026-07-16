@@ -1,0 +1,595 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:vin.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "browser.fetch",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the VIN / Vehicle Registration intelligence agent. You manage global vehicle identification data with a role-based DID hierarchy spanning from ISO/UNECE standards through WMI allocators and national registries to individual vehicles. You decode VINs (ISO 3779), resolve license plates across jurisdictions (JP kana, EU, US state, etc.), track recall campaigns, and register vehicles into cohort DIDs for fleet/camera analytics. You feed vehicle intelligence to livecam (plate OCR) and maps (spatial).",
+  "description": "Global vehicle identification intelligence. VIN (ISO 3779/3780), license plate (multi-jurisdiction), cohort DID registration. Role-based DID hierarchy from international standards bodies through national registries to individual vehicles.",
+  "displayName": "VIN / Vehicle Registration Intelligence",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "ISO 3779",
+      "ISO 3780",
+      "UNECE WP.29"
+    ],
+    "raci": "responsible",
+    "sensitivity": "restricted"
+  },
+  "graphLabels": [
+    "Vehicle",
+    "VinRecord",
+    "LicensePlate",
+    "Manufacturer",
+    "WmiCode",
+    "RecallCampaign",
+    "VehicleCohort",
+    "JurisdictionRegistry",
+    "VehicleType",
+    "ProductionPlant",
+    "ProductionLine",
+    "ShipmentVolume",
+    "ShipmentCohort"
+  ],
+  "heartbeatRequired": true,
+  "name": "vin",
+  "nanoid": "v1n0g10b",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "_comment": "L0-a: Seed JurisdictionRegistry (月次, 依存なし)",
+      "steps": [
+        {
+          "args": {
+            "template": "UNWIND $jurisdictions AS j MERGE (r:JurisdictionRegistry {country_code: j.code}) SET r.authority_name = j.name, r.plate_format = j.plate_format, r.vin_required = j.vin_required, r.repo = $did, r.collection = 'com.etzhayyim.apps.vin.jurisdictionRegistry', r.updated_at = datetime()"
+          },
+          "fn": "graph.write",
+          "id": "seedJurisdictions"
+        },
+        {
+          "args": {
+            "message": "You are VIN / Vehicle Registration Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $seedJurisdictions.text"
+          },
+          "depends_on": [
+            "seedJurisdictions"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "seedJurisdictionDigest"
+        }
+      ],
+      "trigger": {
+        "cron": "0 3 1 * *",
+        "type": "cron"
+      }
+    },
+    {
+      "_comment": "L1-type: Seed VehicleType (月次, standalone OICA taxonomy)",
+      "steps": [
+        {
+          "args": {
+            "command": "seedVehicleTypes"
+          },
+          "fn": "agent.invoke",
+          "id": "seedVehicleTypes"
+        },
+        {
+          "args": {
+            "template": "VIN L1-type seed: vehicle type taxonomy refreshed. $seedVehicleTypes.result"
+          },
+          "depends_on": [
+            "seedVehicleTypes"
+          ],
+          "fn": "derive:social",
+          "id": "postVehicleTypeSeed"
+        }
+      ],
+      "trigger": {
+        "cron": "0 3 2 * *",
+        "type": "cron"
+      }
+    },
+    {
+      "_comment": "L2-plant: Seed ProductionPlant + ProductionLine (週次, depends on L1)",
+      "steps": [
+        {
+          "args": {
+            "command": "seedProductionPlants"
+          },
+          "fn": "agent.invoke",
+          "id": "seedPlants"
+        },
+        {
+          "args": {
+            "sql": "MATCH (pp:ProductionPlant) WHERE NOT (pp)-[:OPERATED_BY]->(:Manufacturer) MATCH (m:Manufacturer {name: pp.manufacturer_name}) MERGE (pp)-[:OPERATED_BY]->(m)"
+          },
+          "depends_on": [
+            "seedPlants"
+          ],
+          "fn": "graph.write",
+          "id": "linkPlantManufacturer"
+        },
+        {
+          "args": {
+            "sql": "MATCH (pp:ProductionPlant) WHERE NOT (pp)-[:LOCATED_IN]->(:JurisdictionRegistry) MATCH (j:JurisdictionRegistry {country_code: pp.country}) MERGE (pp)-[:LOCATED_IN]->(j)"
+          },
+          "depends_on": [
+            "seedPlants"
+          ],
+          "fn": "graph.write",
+          "id": "linkPlantJurisdiction"
+        },
+        {
+          "args": {
+            "command": "seedProductionLines"
+          },
+          "depends_on": [
+            "linkPlantManufacturer"
+          ],
+          "fn": "agent.invoke",
+          "id": "seedLines"
+        },
+        {
+          "args": {
+            "sql": "MATCH (pl:ProductionLine) WHERE NOT (pl)-[:BELONGS_TO]->(:ProductionPlant) MATCH (pp:ProductionPlant {plant_code: pl.plant_code}) MERGE (pl)-[:BELONGS_TO]->(pp)"
+          },
+          "depends_on": [
+            "seedLines"
+          ],
+          "fn": "graph.write",
+          "id": "linkLinePlant"
+        },
+        {
+          "args": {
+            "sql": "MATCH (pl:ProductionLine) UNWIND pl.vehicle_types AS vt MATCH (t:VehicleType {type_code: vt}) MERGE (t)-[:PRODUCED_ON]->(pl)"
+          },
+          "depends_on": [
+            "seedLines"
+          ],
+          "fn": "graph.write",
+          "id": "linkLineVehicleType"
+        },
+        {
+          "args": {
+            "template": "VIN L2-plant seed: production plants + lines refreshed."
+          },
+          "depends_on": [
+            "linkLineVehicleType"
+          ],
+          "fn": "derive:social",
+          "id": "postPlantSeed"
+        }
+      ],
+      "trigger": {
+        "cron": "0 4 * * 0",
+        "type": "cron"
+      }
+    },
+    {
+      "_comment": "L5-shipment: ShipmentVolume → ShipmentCohort auto-gen (月次, depends on L2-plant + L1-type)",
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (sv:ShipmentVolume {_rkey: $input.record._rkey}) MATCH (pp:ProductionPlant {plant_code: sv.plant_code}) MATCH (j:JurisdictionRegistry {country_code: sv.jurisdiction}) MATCH (vt:VehicleType {type_code: sv.vehicle_type}) MERGE (sv)-[:FROM_PLANT]->(pp) MERGE (sv)-[:TO_JURISDICTION]->(j) MERGE (sv)-[:OF_TYPE]->(vt)"
+          },
+          "fn": "graph.write",
+          "id": "linkShipmentEdges"
+        },
+        {
+          "args": {
+            "params": {
+              "jurisdiction": "$input.record.jurisdiction",
+              "rkey": "$input.record._rkey",
+              "vehicleType": "$input.record.vehicle_type",
+              "volume": "$input.record.volume",
+              "year": "$input.record.year"
+            },
+            "template": "MERGE (sc:ShipmentCohort {cohortDid: 'did:web:vin.etzhayyim.com:cohort:shipment:' + $jurisdiction + ':' + toString($year) + ':' + $vehicleType}) SET sc.label = $jurisdiction + ' ' + toString($year) + ' ' + $vehicleType, sc.jurisdiction = $jurisdiction, sc.year = $year, sc.vehicle_type = $vehicleType, sc.volume = $volume, sc.repo = $did, sc.updated_at = datetime() MERGE (sc)-[:AGGREGATES]->(:ShipmentVolume {_rkey: $rkey})"
+          },
+          "depends_on": [
+            "linkShipmentEdges"
+          ],
+          "fn": "graph.write",
+          "id": "autoCohort"
+        },
+        {
+          "args": {
+            "template": "Shipment cohort: $input.record.jurisdiction $input.record.year $input.record.vehicle_type — $input.record.volume units from plant $input.record.plant_code"
+          },
+          "depends_on": [
+            "autoCohort"
+          ],
+          "fn": "derive:social",
+          "id": "postShipmentCohort"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.vin.shipmentVolume"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "_comment": "L1-a + L2: Seed Manufacturer + WmiCode (週次, depends on L0)",
+      "steps": [
+        {
+          "args": {
+            "command": "seedManufacturers"
+          },
+          "fn": "agent.invoke",
+          "id": "seedManufacturers"
+        },
+        {
+          "args": {
+            "sql": "MATCH (m:Manufacturer) WHERE m.country IS NOT NULL AND NOT (m)-[:REGISTERED_IN]->(:JurisdictionRegistry) MATCH (j:JurisdictionRegistry {country_code: m.country}) MERGE (m)-[:REGISTERED_IN]->(j)"
+          },
+          "depends_on": [
+            "seedManufacturers"
+          ],
+          "fn": "graph.write",
+          "id": "linkManufacturerJurisdiction"
+        },
+        {
+          "args": {
+            "command": "seedWmiCodes"
+          },
+          "depends_on": [
+            "seedManufacturers"
+          ],
+          "fn": "agent.invoke",
+          "id": "seedWmiCodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (w:WmiCode) WHERE NOT (w)-[:ASSIGNED_TO]->(:Manufacturer) MATCH (m:Manufacturer {name: w.manufacturer_name}) MERGE (w)-[:ASSIGNED_TO]->(m)"
+          },
+          "depends_on": [
+            "seedWmiCodes"
+          ],
+          "fn": "graph.write",
+          "id": "linkWmiManufacturer"
+        },
+        {
+          "args": {
+            "message": "You are VIN / Vehicle Registration Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $linkWmiManufacturer.text"
+          },
+          "depends_on": [
+            "linkWmiManufacturer"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "seedDigest"
+        }
+      ],
+      "trigger": {
+        "cron": "0 3 * * 0",
+        "type": "cron"
+      }
+    },
+    {
+      "_comment": "L1-b: Collect RecallCampaign (日次, depends on L0)",
+      "steps": [
+        {
+          "args": {
+            "command": "collectRecall"
+          },
+          "fn": "agent.invoke",
+          "id": "collectRecalls"
+        },
+        {
+          "args": {
+            "sql": "MATCH (rc:RecallCampaign) WHERE NOT (rc)-[:ISSUED_BY]->(:JurisdictionRegistry) MATCH (j:JurisdictionRegistry {country_code: rc.jurisdiction}) MERGE (rc)-[:ISSUED_BY]->(j)"
+          },
+          "depends_on": [
+            "collectRecalls"
+          ],
+          "fn": "graph.write",
+          "id": "linkRecallJurisdiction"
+        },
+        {
+          "args": {
+            "message": "You are VIN / Vehicle Registration Intelligence. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $linkRecallJurisdiction.text"
+          },
+          "depends_on": [
+            "linkRecallJurisdiction"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 4 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "decodeVin",
+            "params": {
+              "vin": "$input.record.vin"
+            }
+          },
+          "fn": "agent.invoke",
+          "id": "decodeVin"
+        },
+        {
+          "args": {
+            "params": {
+              "collection": "com.etzhayyim.apps.vin.vehicle",
+              "make": "$decodeVin.result.make",
+              "model": "$decodeVin.result.model",
+              "plant": "$decodeVin.result.plant",
+              "vds": "$decodeVin.result.vds",
+              "vin": "$input.record.vin",
+              "vis": "$decodeVin.result.vis",
+              "wmi": "$decodeVin.result.wmi",
+              "year": "$decodeVin.result.year"
+            },
+            "template": "MERGE (v:Vehicle {vin: $vin}) SET v.make = $make, v.model = $model, v.year = $year, v.plant = $plant, v.wmi = $wmi, v.vds = $vds, v.vis = $vis, v.repo = $did, v.collection = $collection, v.updated_at = datetime()"
+          },
+          "depends_on": [
+            "decodeVin"
+          ],
+          "fn": "graph.write",
+          "id": "writeVehicle"
+        },
+        {
+          "args": {
+            "template": "VIN decoded: $input.record.vin → $decodeVin.result.year $decodeVin.result.make $decodeVin.result.model (WMI: $decodeVin.result.wmi, plant: $decodeVin.result.plant)"
+          },
+          "depends_on": [
+            "writeVehicle"
+          ],
+          "fn": "derive:social",
+          "id": "postVinDecode"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.vin.vinRecord"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "lookupPlate",
+            "params": {
+              "jurisdiction": "$input.record.jurisdiction",
+              "plate": "$input.record.plate"
+            }
+          },
+          "fn": "agent.invoke",
+          "id": "resolvePlate"
+        },
+        {
+          "args": {
+            "params": {
+              "jurisdiction": "$input.record.jurisdiction",
+              "plate": "$input.record.plate",
+              "vin": "$resolvePlate.result.vin"
+            },
+            "template": "MERGE (p:LicensePlate {plate: $plate, jurisdiction: $jurisdiction}) MERGE (v:Vehicle {vin: $vin}) MERGE (p)-[:REGISTERED_TO]->(v) SET p.updated_at = datetime(), p.repo = $did"
+          },
+          "depends_on": [
+            "resolvePlate"
+          ],
+          "fn": "graph.write",
+          "id": "linkPlateToVehicle"
+        },
+        {
+          "args": {
+            "template": "Plate resolved: $input.record.jurisdiction $input.record.plate → VIN $resolvePlate.result.vin"
+          },
+          "depends_on": [
+            "linkPlateToVehicle"
+          ],
+          "fn": "derive:social",
+          "id": "postPlateResolve"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.vin.licensePlate"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "params": {
+              "cohortDid": "$input.record.cohortDid",
+              "label": "$input.record.label",
+              "vin": "$input.record.vin"
+            },
+            "template": "MERGE (c:VehicleCohort {cohortDid: $cohortDid}) MERGE (v:Vehicle {vin: $vin}) MERGE (v)-[:MEMBER_OF]->(c) SET c.label = $label, c.updated_at = datetime(), c.repo = $did"
+          },
+          "fn": "graph.write",
+          "id": "registerCohort"
+        },
+        {
+          "args": {
+            "template": "Cohort updated: $input.record.vin joined $input.record.label ($input.record.cohortDid)"
+          },
+          "depends_on": [
+            "registerCohort"
+          ],
+          "fn": "derive:social",
+          "id": "postCohortRegistration"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.vin.cohortRegistration"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "vin",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.vin.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "v1n0g10b",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.vin.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "decode-vin",
+      "lookup-plate",
+      "get-vehicle",
+      "list-vehicles",
+      "search-vehicles",
+      "get-manufacturer",
+      "list-manufacturers",
+      "collect-recall",
+      "get-vehicle-history",
+      "register-cohort",
+      "list-cohort",
+      "seed-vehicle-types",
+      "seed-production-plants",
+      "seed-production-lines",
+      "get-production-plant",
+      "get-shipment-flow",
+      "list-shipment-cohorts"
+    ],
+    "description": "Global VIN decoding, license plate lookup, vehicle history intelligence with cohort DID registration. Jurisdiction-aware multi-scheme identification (ISO 3779 VIN, JP kana plate, EU registration, US state plate).",
+    "displayName": "VIN / Vehicle Registration Intelligence",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.vin.vehicle",
+        "com.etzhayyim.apps.vin.vinRecord",
+        "com.etzhayyim.apps.vin.licensePlate",
+        "com.etzhayyim.apps.vin.recallCampaign",
+        "com.etzhayyim.apps.vin.cohortRegistration",
+        "com.etzhayyim.apps.vin.shipmentVolume",
+        "com.etzhayyim.apps.vin.productionPlant",
+        "com.etzhayyim.apps.vin.productionLine"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

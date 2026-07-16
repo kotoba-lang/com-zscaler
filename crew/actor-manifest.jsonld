@@ -1,0 +1,338 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:crew.etzhayyim.com",
+  "actors": [
+    {
+      "description": "Master, Chief/2nd/3rd Officers — navigation, cargo operations",
+      "displayName": "Deck Officers",
+      "path": "deck:officers"
+    },
+    {
+      "description": "Chief/2nd/3rd Engineers, Electricians — propulsion, power",
+      "displayName": "Engine Officers",
+      "path": "engine:officers"
+    },
+    {
+      "description": "Bosun, AB, OS — seamanship, maintenance",
+      "displayName": "Deck Ratings",
+      "path": "ratings:deck"
+    },
+    {
+      "description": "Oiler, Wiper — engine room support",
+      "displayName": "Engine Ratings",
+      "path": "ratings:engine"
+    },
+    {
+      "description": "Certificate expiry tracking, revalidation alerts, flag state requirements",
+      "displayName": "STCW Compliance Monitor",
+      "path": "stcw:compliance"
+    }
+  ],
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Crew Management agent. You manage seafarer registries, STCW certificates, crew manifests, and crew change schedules. Track certificate expiry dates, ensure safe manning compliance, and coordinate crew changes at ports. Link to vessel.etzhayyim.com for vessel assignments and port.etzhayyim.com for crew change logistics.",
+  "description": "Seafarer registry, STCW certificate tracking, crew manifest management, crew change scheduling. Links to vessel.etzhayyim.com and port.etzhayyim.com for operational coordination.",
+  "displayName": "Crew Management & STCW Compliance",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "complianceFrameworks": [
+      "STCW Convention",
+      "MLC 2006",
+      "ISM Code"
+    ],
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "crew",
+  "nanoid": "cr3w0001",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:StcwCertificate) WHERE c.expiryDate <= toString(datetime() + duration('P90D')) AND c.status = 'valid' RETURN c.seafarerId AS seafarerId, c.certType AS type, c.expiryDate AS expiry ORDER BY c.expiryDate ASC LIMIT 30"
+          },
+          "fn": "graph.query",
+          "id": "expiringCerts"
+        },
+        {
+          "args": {
+            "sql": "MATCH (s:Seafarer) RETURN s.rank AS rank, count(s) AS count ORDER BY count DESC LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "crewStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (cc:CrewChange) WHERE cc.status IN ['planned', 'confirmed'] RETURN cc.vesselImo AS vessel, cc.portLocode AS port, cc.plannedDate AS date, cc.signOnCount AS on, cc.signOffCount AS off LIMIT 20"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "pendingChanges"
+        },
+        {
+          "args": {
+            "message": "Crew management daily report.\n\nCertificates expiring within 90 days:\n$expiringCerts.rows\n\nCrew by rank:\n$crewStats.rows\n\nPending crew changes:\n$pendingChanges.rows\n\nFlag critical certificate expirations, manning gaps, and upcoming crew change logistics."
+          },
+          "depends_on": [
+            "expiringCerts",
+            "crewStats",
+            "pendingChanges"
+          ],
+          "fn": "agent.chat",
+          "id": "analyze"
+        },
+        {
+          "args": {
+            "template": "Crew report: $analyze.text"
+          },
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (cc:CrewChange {vesselImo: $input.record.imoNumber, portLocode: $input.record.portLocode}) WHERE cc.status = 'confirmed' RETURN cc.vertex_id, cc.rkey, cc.repo, cc.did, cc.status, cc.props, cc._seq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "checkCrewChange"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.vessel.portCall"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (s:Seafarer {seafarerId: $input.seafarerId}) RETURN s.vertex_id, s.rkey, s.repo, s.did, s.status, s.props, s._seq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "seafarer"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.management.getSeafarer",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (s:Seafarer) WHERE s.did = $input.query RETURN s.vertex_id, s.rkey, s.repo, s.did, s.status, s.props, s._seq LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "results"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.management.searchSeafarers",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:StcwCertificate {seafarerId: $input.seafarerId}) RETURN c.vertex_id, c.rkey, c.repo, c.did, c.status, c.props, c._seq ORDER BY c.expiryDate ASC LIMIT 30"
+          },
+          "fn": "graph.query",
+          "id": "certs"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.management.listCertificates",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:StcwCertificate) WHERE c.expiryDate <= toString(datetime() + duration($input.withinDays)) AND c.status = 'valid' RETURN c.vertex_id, c.rkey, c.repo, c.did, c.status, c.props, c._seq ORDER BY c.expiryDate ASC LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "expiring"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.management.listExpiringCertificates",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (cm:CrewManifest {vesselImo: $input.vesselImo}) RETURN cm.vertex_id, cm.rkey, cm.repo, cm.did, cm.status, cm.props, cm._seq ORDER BY cm.effectiveDate DESC LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "manifest"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.management.getCrewManifest",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (cc:CrewChange) RETURN cc.vertex_id, cc.rkey, cc.repo, cc.did, cc.status, cc.props, cc._seq ORDER BY cc.plannedDate DESC LIMIT 50"
+          },
+          "fn": "graph.query",
+          "id": "changes"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.management.listCrewChanges",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (s:Seafarer) RETURN count(s) AS seafarers LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "stats"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.health",
+        "type": "xrpc"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n:Seafarer) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n:Seafarer) WHERE n.repo = $did RETURN count(n) AS cnt LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "crew",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.crew.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "cr3w0001",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n:Seafarer) WHERE n.repo = $did RETURN count(n) AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.crew.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "seafarer-registry",
+      "stcw-compliance",
+      "crew-manifest",
+      "crew-change-scheduling"
+    ],
+    "description": "Maritime crew management — seafarer registry with rank/nationality/experience, STCW certificate lifecycle (issue→expiry alerts), crew manifests with safe manning compliance, crew change scheduling at ports. Links to vessel.etzhayyim.com for vessel assignment and port.etzhayyim.com for crew change logistics.",
+    "displayName": "Crew Management & STCW Compliance",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.crew.seafarer",
+        "com.etzhayyim.apps.crew.stcwCertificate",
+        "com.etzhayyim.apps.crew.crewManifest",
+        "com.etzhayyim.apps.crew.crewChange",
+        "com.etzhayyim.apps.vessel.voyage",
+        "com.etzhayyim.apps.vessel.portCall"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

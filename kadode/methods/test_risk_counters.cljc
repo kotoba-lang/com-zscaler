@@ -1,0 +1,44 @@
+#!/usr/bin/env bb
+;; kadode 門出 — tests for risk-counters (the employer-tactic → counter-ground preparedness map).
+;; Run:  bb --classpath 20-actors 20-actors/kadode/methods/test_risk_counters.cljc
+(ns kadode.methods.test-risk-counters
+  "Tests for risk-counters — each employer 引き止め risk pattern mapped to the legal grounds that
+  counter it (disclosed legal facts, G3/N3). kadode INFORMS, never advises/represents (G1); an
+  uncountered tactic surfaces as a coverage gap."
+  (:require [kadode.methods.analyze :as a]
+            [clojure.test :refer [deftest is run-tests]]))
+
+(def ^:private nodes
+  {"r1" {":lx/kind" ":risk" ":risk/pattern" "退職拒否"   ":lx/label" "退職を認めない"}
+   "r2" {":lx/kind" ":risk" ":risk/pattern" "損害賠償脅迫" ":lx/label" "賠償を請求すると脅す"}
+   "r3" {":lx/kind" ":risk" ":risk/pattern" "未対応"     ":lx/label" "no counter yet"}
+   "g1" {":lx/kind" ":ground" ":lx/label" "民法627条 — 期間の定めのない雇用の解約申入れ"}
+   "g2" {":lx/kind" ":ground" ":lx/label" "労働基準法16条 — 賠償予定の禁止"}})
+
+(def ^:private edges
+  [{":en/kind" ":counters"     ":en/from" "g1" ":en/to" "r1"}
+   {":en/kind" ":counters"     ":en/from" "g2" ":en/to" "r2"}
+   {":en/kind" ":supported-by" ":en/from" "g1" ":en/to" "r1"}])  ; not a counter → ignored
+
+(deftest maps-each-tactic-to-its-counter-grounds
+  (let [by (into {} (map (fn [[rid _ _ grounds]] [rid grounds]) (a/risk-counters nodes edges)))]
+    (is (= [["g1" "民法627条 — 期間の定めのない雇用の解約申入れ"]] (get by "r1")) "退職拒否 ← 民法627条")
+    (is (= [["g2" "労働基準法16条 — 賠償予定の禁止"]] (get by "r2")) "損害賠償脅迫 ← 労基法16条")))
+
+(deftest an-uncountered-tactic-is-a-coverage-gap
+  (let [by (into {} (map (fn [[rid _ _ grounds]] [rid grounds]) (a/risk-counters nodes edges)))]
+    (is (= [] (get by "r3")) "a tactic with no counter surfaces with an empty list — the gap")))
+
+(deftest only-counters-edges-count
+  (let [by (into {} (map (fn [[rid _ _ grounds]] [rid grounds]) (a/risk-counters nodes edges)))]
+    (is (= 1 (count (get by "r1"))) "the :supported-by edge does not add a counter")))
+
+(deftest gaps-sort-last
+  (is (= "r3" (first (last (a/risk-counters nodes edges)))) "the uncountered risk ranks last")
+  (let [[_ pattern label grounds] (first (a/risk-counters nodes edges))]
+    (is (= 4 (count [_ pattern label grounds])) "[risk pattern label counter-grounds]")))
+
+#?(:clj
+   (when (= *file* (System/getProperty "babashka.file"))
+     (let [{:keys [fail error]} (run-tests 'kadode.methods.test-risk-counters)]
+       (System/exit (if (zero? (+ fail error)) 0 1)))))

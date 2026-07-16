@@ -1,0 +1,23 @@
+;; itonami 営み — seed daily ops-KPI history (ADR-2606082300, R7 trend).
+;; Durable as-of snapshots: each day's analyze run persists one :opsday/* record per scope
+;; (line + watched stations). This IS ground state (kotoba as-of history; Wellbecoming = a
+;; trajectory, not a static value). trend.py reads the series and surfaces DRIFT.
+;; STATION/LINE scale only (G2): no :worker/* series exists or is permitted.
+;; :representative synthetic data (G5).
+[
+
+;; ── line trajectory: OEE degrading, scrap rising, energy/good flat ──
+{:db/id -1 :opsday/day 0 :opsday/scope :line.sarutahiko-a :opsday/oee 0.62 :opsday/scrap-rate 0.015 :opsday/energy-per-good 8.0}
+{:db/id -2 :opsday/day 1 :opsday/scope :line.sarutahiko-a :opsday/oee 0.60 :opsday/scrap-rate 0.018 :opsday/energy-per-good 8.0}
+{:db/id -3 :opsday/day 2 :opsday/scope :line.sarutahiko-a :opsday/oee 0.57 :opsday/scrap-rate 0.022 :opsday/energy-per-good 8.1}
+{:db/id -4 :opsday/day 3 :opsday/scope :line.sarutahiko-a :opsday/oee 0.54 :opsday/scrap-rate 0.026 :opsday/energy-per-good 8.0}
+{:db/id -5 :opsday/day 4 :opsday/scope :line.sarutahiko-a :opsday/oee 0.50 :opsday/scrap-rate 0.030 :opsday/energy-per-good 8.0}
+
+;; ── cab-weld station trajectory: scrap clearly rising (the regression driver) ──
+{:db/id -6 :opsday/day 0 :opsday/scope :st.cab-weld :opsday/oee 0.70 :opsday/scrap-rate 0.10 :opsday/energy-per-good 21.0}
+{:db/id -7 :opsday/day 1 :opsday/scope :st.cab-weld :opsday/oee 0.69 :opsday/scrap-rate 0.12 :opsday/energy-per-good 21.2}
+{:db/id -8 :opsday/day 2 :opsday/scope :st.cab-weld :opsday/oee 0.67 :opsday/scrap-rate 0.15 :opsday/energy-per-good 21.4}
+{:db/id -9 :opsday/day 3 :opsday/scope :st.cab-weld :opsday/oee 0.66 :opsday/scrap-rate 0.19 :opsday/energy-per-good 21.6}
+{:db/id -10 :opsday/day 4 :opsday/scope :st.cab-weld :opsday/oee 0.65 :opsday/scrap-rate 0.22 :opsday/energy-per-good 21.5}
+
+]

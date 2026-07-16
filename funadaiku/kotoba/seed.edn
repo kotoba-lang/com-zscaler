@@ -1,0 +1,55 @@
+;; funadaiku 船大工 — kotoba seed data (representative, R0)
+;; ADR-2606013400 · :sourcing :representative (NOT authoritative; G1)
+;; Reference vessel (Nagi class, zero-emission autonomous cargo carrier): 3,000 DWT, ~90m,
+;; wind-assist rotor + 800m² solar + 2×1.2 MW H₂ FC + 2 MWh LFP + electric pods. Prices =
+;; USDC minor (6-dp). NOT a live commercial offer. R0 scaffold only — no hull launched yet.
+
+[;; ════════════ Reference vessel (Nagi class) ════════════
+ {:vessel/id "did:web:funadaiku.etzhayyim.com/vessel/nagi-0001"
+  :vessel/name "Nagi-class reference (zero-emission autonomous cargo)"
+  :vessel/dwt 3000
+  :vessel/loa 90
+  :vessel/service-speed-kn 10
+  :vessel/propulsion-ready false
+  :vessel/outfitting-status :draft
+  :vessel/floats false
+  :vessel/fc-commissioned false
+  :vessel/gnc-ready false
+  :vessel/sea-trial-pass false}
+
+ ;; ════════════ Steel blocks (L1 fabrication) ════════════
+ {:block/id "block-hull-001"
+  :block/dimensions "12000x8000x25"
+  :block/weight-kg 150000
+  :block/steel-grade "AH36"
+  :block/status :draft
+  :block/cutting-plan "primary hull side shell (port forward)"}
+
+ {:block/id "block-deck-001"
+  :block/dimensions "8000x15000x12"
+  :block/weight-kg 45000
+  :block/steel-grade "AH36"
+  :block/status :draft
+  :block/cutting-plan "weather deck main panel"}
+
+ ;; ════════════ Grand blocks (L2 assembly) ════════════
+ {:grand-block/id "gblock-hull-fwd-port"
+  :grand-block/status :draft
+  :grand-block/location "panel-line-A"
+  :grand-block/ndt-status :pending}
+
+ ;; ════════════ Powertrain (L4 — THE zero-emission heart) ════════════
+ {:powerplant/type :wind-solar-hydrogen
+  :hydrogen-source/certification "green-h2-electrolyzer-norway-2026-06-01"
+  :hydrogen-source/co2-intensity "0.5 kg CO2e/kg H2 (renewable hydro power)"
+  :solar-panel/wattage 160000
+  :solar-panel/eol-recycling "silicone-encapsulation-recyclable"
+  :battery-pack/capacity-kwh 2000
+  :battery-pack/state-of-charge 0
+  :battery-pack/eol-recycling "lithium-iron-phosphate-anode-cathode-recovery"
+  :pod/thrust-kw 1500}
+
+ ;; ════════════ Settlement intent (computed, NOT broadcast; R0 stops here) ════════════
+ {:settlement-intent-id "settle-nagi-0001-demo"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "_note": "A :representative sample shaped like a legacy RisingWave vertex_spatial export (the rows the maps Worker used to SELECT). Used by methods/ingest.py to demonstrate the legacy -> kotoba :feature/* normalization. NOT a live dump.",
+  "rows": [
+    {"vertex_id": "at://did:web:maps.etzhayyim.com/com.etzhayyim.apps.maps.building/marunouchi-bldg", "label": "Building", "name": "Marunouchi Building", "lat": 35.6809, "lng": 139.7644, "source_did": "did:web:maps.etzhayyim.com:registry:osm", "props": "{\"heightM\": 179, \"levels\": 37, \"geometry\": {\"type\": \"Point\", \"coordinates\": [139.7644, 35.6809]}}"},
+    {"vertex_id": "at://did:web:maps.etzhayyim.com/com.etzhayyim.apps.maps.station/tokyo", "label": "Station", "name": "Tokyo Station", "category": "railway_station", "lat": 35.6812, "lng": 139.7671, "source_did": "did:web:maps.etzhayyim.com:registry:osm", "props": "{\"geometry\": {\"type\": \"Point\", \"coordinates\": [139.7671, 35.6812]}}"},
+    {"vertex_id": "at://did:web:maps.etzhayyim.com/com.etzhayyim.apps.maps.road/eitai-dori", "label": "Road", "name": "Eitai-dori", "category": "primary", "lat": 35.6805, "lng": 139.77, "source_did": "did:web:maps.etzhayyim.com:registry:osm", "props": "{}"},
+    {"vertex_id": "at://did:web:maps.etzhayyim.com/com.etzhayyim.apps.maps.airport/haneda", "label": "Airport", "name": "Tokyo Haneda (HND/RJTT)", "lat": 35.5494, "lng": 139.7798, "source_did": "did:web:maps.etzhayyim.com:registry:openflights", "props": "{}"}
+  ]
+}

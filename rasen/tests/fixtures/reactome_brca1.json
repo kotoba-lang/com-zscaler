@@ -1,0 +1,9 @@
+[
+  {"stId": "R-HSA-1221632", "displayName": "Meiotic synapsis", "maxDepth": 2, "speciesName": "Homo sapiens"},
+  {"stId": "R-HSA-5685938", "displayName": "HDR through Single Strand Annealing (SSA)", "maxDepth": 3, "speciesName": "Homo sapiens"},
+  {"stId": "R-HSA-73894", "displayName": "DNA Repair", "maxDepth": 1, "speciesName": "Homo sapiens"},
+  {"stId": "R-HSA-73894", "displayName": "DNA Repair", "maxDepth": 4, "speciesName": "Homo sapiens"},
+  {"stId": "R-HSA-5693532", "displayName": "DNA Double-Strand Break Repair", "maxDepth": 2, "speciesName": "Homo sapiens"},
+  {"stId": "R-HSA-3108214", "displayName": "SUMOylation of DNA damage response and repair proteins", "maxDepth": 3, "speciesName": "Homo sapiens"},
+  {"name": ["no-stid-row"], "maxDepth": 2}
+]

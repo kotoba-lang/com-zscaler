@@ -1,0 +1,4 @@
+# kaname 要 — runtime state (NOT committed). The persisted kotoba commit-DAG log is local
+# runtime output of the heartbeat; the committed durable artifacts are the seed, the
+# web-ingest output (data/ingested-web.kotoba.edn), and data/ingested-pages/.
+data/persisted/

@@ -1,0 +1,20 @@
+// rasen 螺旋 — kotoba pywasm actor world (ADR-2606101000 / 2606014500 / 2606014600).
+// Pure-stdlib methods (analyze / datom_emit / coverage_report) compile to a WASM Component
+// via componentize-py. No network, no filesystem at runtime: the bounded PUBLIC seed is
+// embedded read-only (build step). G1 holds in WASM — the component cannot leak what it does
+// not contain (no individual genotypes; aggregate-only).
+
+package etzhayyim:rasen@0.1.0;
+
+world rasen-actor {
+  /// Run the edge-primary care/research analyzer over the embedded PUBLIC genetics graph.
+  /// Returns JSON: { "care":[{id,symbol,taxon,score}], "burden":[...], "pleiotropy":[...] }.
+  export analyze: func() -> string;
+
+  /// Emit the kotoba Datom log (EAVT) for the embedded graph as EDN text. `tx` threads the
+  /// transaction id; ground datoms are op :add, derived readouts are flagged transient (N1/G2).
+  export datoms: func(tx: u32) -> string;
+
+  /// Honest coverage report (markdown): denominators + gap map (G5).
+  export coverage: func() -> string;
+}

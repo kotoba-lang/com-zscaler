@@ -1,0 +1,56 @@
+;; madomori 窓守 — actor manifest (Gen-3 kotoba-native, Clojure-first)
+;; High-rise / façade window-cleaning robotics — coverage path + wind/sway envelope + adhesion
+;; ADR-2606142020 (R0 scaffold) · 2026-06-14
+{:actor/id        "madomori"
+ :actor/glyph     "窓守"
+ :actor/tier      :tier-b
+ :actor/integrates ["hataori" "kiyome" "kuramori" "sanae" "tatekata" "tazuna"]
+ :actor/domain    "madomori.etzhayyim.com"
+ :actor/purpose   "High-rise / façade window-cleaning robotics — the body for the HIGHEST unmet remote-work GAP named in ADR-2606073001 §4 ('高所・façade window cleaning — fall fatality; current GAP, highest unmet remote value'). Removes a human from the rope/cradle. R0 design+sim: boustrophedon façade coverage-path planning over a pane grid (with a minimized water + cleaning-agent budget, G2), a rope/BMU pendulum sway + wind work-stop safety envelope (★ G5 — the fall-equivalent gate; wind threshold + ≥2 independent fall-arrest anchors both RAISE on violation), and a suction/adhesion factor-of-safety gate (★ G7 — RAISES below the required margin). Privacy-by-construction (★ G3 — cameras point AT glass, imagery on-device only, no person/interior recognition; mirrors kiyome/manako). Displacement-Dividend-coupled (高所清掃員, ADR-2606032130); tazuna-teleoperable (ADR-2606042100)."
+ :actor/status    :r0
+ :actor/adr       "2606142020"
+ :actor/related   ["2606073001" "2606032100" "2606032130" "2606042100" "2605215000" "2605312345" "2606142000" "2606034800"]
+
+ :actor/charter-rider
+ {:rider/version "3.1"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "design-sim-only"           :gate/rule "R0 = pure planning compute + sim; cleans no real glass, moves no real robot. Real actuation is Council Lv6+/operator-gated R1 (no-server-key)"}
+  {:gate/id "G2" :gate/name "water-chemical-minimization" :gate/rule "Track and MINIMIZE per-pane water + cleaning-agent budget (eco); deionized-water + surfactant only, no prohibited solvents"}
+  {:gate/id "G3" :gate/name "privacy-by-construction"   :gate/rule "★ Cameras point AT windows; imagery is on-device only and NEVER leaves the device; no person/interior recognition, no biometric. Off-device imagery + interior recognition are structurally unrepresentable (mirrors kiyome/manako on-device-no-cloud)"}
+  {:gate/id "G4" :gate/name "dividend-coupled"          :gate/rule "高所清掃員 displacement is coupled to a funded Displacement-Dividend cohort (ADR-2606032130 G2); no live displacement without it"}
+  {:gate/id "G5" :gate/name "wind-fall-arrest-safety"   :gate/rule "★ work-permitted? RAISES at/above the wind work-stop threshold (the fall-equivalent gate; not tunable up) OR with <2 independent fall-arrest anchors (a single-anchor descent is refused)"}
+  {:gate/id "G6" :gate/name "murakumo-only"             :gate/rule "Inference/narration is Murakumo-only (LiteLLM 127.0.0.1:4000); external LLM prohibited (ADR-2605215000)"}
+  {:gate/id "G7" :gate/name "adhesion-factor-of-safety" :gate/rule "★ adhesion-safe? RAISES when the achieved suction/adhesion factor-of-safety is below the required margin (an unsafe adhesion plan = a fall; it must surface, never be silently forced)"}
+  {:gate/id "G8" :gate/name "tazuna-operated"           :gate/rule "Remote operation/teleop is via tazuna 手綱 (ADR-2606042100); weaponizable use unrepresentable"}
+  {:gate/id "G9" :gate/name "handoff-provenance"        :gate/rule "A cross-actor handoff 縁 madomori→tatekata (a detected façade defect → repair work-order) names both source and destination actor and carries ONLY the structural defect descriptor (pane id + defect kind + severity), never imagery/interior/person data (G3 preserved). An orphan handoff (missing source/destination) RAISES — no unattributed chain edge"}]
+
+ :actor/methods
+ [{:method/id "facade_path"   :method/lang :clojure :method/pure true :method/desc "Façade coverage path planning over a rows×cols pane grid: boustrophedon (S-shape) sweep, path length (m), per-pane water + agent budget (G2), and coverage completeness (every pane visited exactly once)"}
+  {:method/id "wind_envelope" :method/lang :clojure :method/pure true :method/desc "Rope/BMU pendulum sway model + wind safety. work-permitted? RAISES above the wind work-stop threshold (★ G5) or with <2 independent fall-arrest anchors"}
+  {:method/id "adhesion"      :method/lang :clojure :method/pure true :method/desc "Suction/adhesion force vs payload × surface-type factor-of-safety. adhesion-safe? RAISES below the required margin (★ G7)"}
+  {:method/id "analyze"       :method/lang :clojure :method/pure true :method/desc "End-to-end R0 orchestrator: load seed → coverage path + budget → wind/sway envelope → adhesion FoS → GO? (both safety gates pass) → report map"}
+  {:method/id "datom_emit"    :method/lang :clojure :method/pure true :method/desc "kotoba EAVT Datom-log emitter (:mado.face/* :mado.pane/* :mado.robot/* + :anchored-by 縁 GROUND; :bond/* DERIVED transient). G3 structural: only the on-device imagery flag is emittable"}
+  {:method/id "handoff"       :method/lang :clojure :method/pure true :method/desc "Cross-actor handoff 縁: a detected façade defect (cracked pane / sealant failure / spalling) → tatekata 建方 repair work-order intent. assert-handoff! RAISES on a handoff missing source/destination actor (G9 provenance); emit produces :handoff/* EAVT datoms (edge entity en.handoff.madomori.tatekata.<id>). G3 structural: the payload carries only the defect descriptor (pane id + defect kind + severity), no imagery/interior/person data"}
+  {:method/id "multi_face"    :method/lang :clojure :method/pure true :method/desc "Multi-face campaign routing across a building's faces/elevations. face-sequence orders the faces by nearest-neighbour over their access points from the ground dock origin [0 0] to MINIMISE reposition travel; campaign-coverage sums the per-face boustrophedon coverage path length (reuses facade_path) → {:order :reposition-distance :coverage-length-m :total-length-m :per-face}. Pure geometric compute — faces are access points + pane grids only; NO imagery/person/interior/biometric attribute is representable (G3 preserved at the routing layer)"}
+  {:method/id "water_recovery" :method/lang :clojure :method/pure true :method/desc "Runoff/detergent capture water balance (★ G2 eco). water-balance computes recovery-fraction = captured/applied + lost-l (un-recovered runoff) + :compliant? (≥ a 0.7 eco floor); assert-compliant! RAISES below the floor — a façade job that can't capture its detergent runoff must surface, not be silently forced. Purely fluid quantities (litres/ml), no imagery/person data (G3 trivially preserved)"}
+  {:method/id "anchor"        :method/lang :clojure :method/pure true :method/desc "Rope/anchor rigging + per-anchor descent-load verification (★ G5). Complements wind_envelope's fall-arrest REDUNDANCY check with the per-anchor LOAD check: rig-ok? is true iff there are ≥2 independent REACHABLE anchors each rated ≥ working-load × FoS (default 2.0); assert-rig! RAISES on an insufficient rig (too few anchors / under-rated / unreachable) — a descent may not be rigged below the safety margin. Purely structural anchor data ({:anchor-id :rated-kn :reachable?}); no imagery/interior/person/biometric attribute (G3)"}
+  {:method/id "coverage"      :method/lang :clojure :method/pure true :method/desc "HONEST occupation sub-task coverage map (asobi/shiori coverage_report pattern; G5 sourcing-honesty — partial by design). Marks a window-cleaning sub-task :covered? true ONLY where a real existing method (facade_path/wind_envelope/adhesion/handoff/multi_face/water_recovery/anchor) implements it; any unbacked sub-task would be surfaced as a named, measured gap (all 8 now covered). report → {:total :covered :coverage :gaps}; report-str → coverage % + gap bullets"}]
+
+ :actor/cells
+ [{:cell/id "coverage_path"  :cell/kind :planning :cell/runtime :wasm :cell/layer "L0" :cell/method "facade_path"}
+  {:cell/id "wind_envelope"  :cell/kind :safety   :cell/runtime :wasm :cell/layer "L1" :cell/method "wind_envelope"}
+  {:cell/id "adhesion_check" :cell/kind :safety   :cell/runtime :wasm :cell/layer "L2" :cell/method "adhesion"}
+  {:cell/id "facade_plan"    :cell/kind :planning :cell/runtime :wasm :cell/layer "L3" :cell/method "analyze"}
+  {:cell/id "datom_emit"     :cell/kind :projection :cell/runtime :wasm :cell/layer "terminal" :cell/method "datom_emit"}]
+
+ :actor/reference-equipment
+ {:robot/class "BMU-suspended / façade-climbing (suction) window-cleaning unit"
+  :robot/mode "suction (façade-climbing) | bmu (rope/cradle)"
+  :wind/stop-threshold-mps 10.0
+  :anchors/required-independent 2
+  :adhesion/required-fos 2.5
+  :agent "deionized water + surfactant (no prohibited solvents, G2)"
+  :imagery "on-device only; pane-edge recognition; no person/interior/biometric (G3)"
+  :facility/ref "tower-ref-01 (reference high-rise office tower)"}}

@@ -1,0 +1,9 @@
+;; wadachi 轍 — Datomic/Datascript schema for the tx-data attributes
+;; introduced by the edn-datomize pass (Phase 4 fan-out; ported from
+;; manifest/edn-datomize.bb convention). Covers cells/*.edn and
+;; lex/*.edn attributes; kotoba/schema.edn + kotoba/seed.edn were
+;; ALREADY tx-data shaped (vectors of entity maps ready to transact)
+;; and were left untouched. manifest.edn is excluded from this pass
+;; pending the shared-consumer patch (see commit message).
+
+[#:db{:ident :cell/doc, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/entry, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/gates, :valueType :db.type/string, :cardinality :db.cardinality/many} #:db{:ident :cell/glyph, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/handler, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/kind, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :cell/kotoba, :valueType :db.type/string, :cardinality :db.cardinality/one, :doc "pr-str blob of original non-scalar value"} #:db{:ident :cell/llm, :valueType :db.type/string, :cardinality :db.cardinality/one, :doc "pr-str blob of original non-scalar value"} #:db{:ident :cell/runtime, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :cell/state-graph, :valueType :db.type/string, :cardinality :db.cardinality/one, :doc "pr-str blob of original non-scalar value"} #:db{:ident :lex/defs, :valueType :db.type/string, :cardinality :db.cardinality/one, :doc "pr-str blob of original non-scalar value"} #:db{:ident :lex/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

@@ -1,0 +1,28 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.allocationIntent"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "A tenure-weighted IN-KIND sustenance allocation for a maintainer. The charter-clean inverse of a cap-table line: an instrument from the sustenance set ONLY (G1 — no equity/debt/ROI/exit), cash structurally 0 (G2), member/Council-signed (G9). A 'share' governs onboarding PRIORITY + the in-kind floor, never a cash split."
+   :record
+   {:type "object"
+    :required ["allocId" "maintainerDid" "instrument" "shareBps" "priorityRank" "floorUsdMicrosYr" "cashUsdMicros" "serverHeldKey"]
+    :properties
+    {:allocId         {:type "string"}
+     :maintainerDid   {:type "string"}
+     :instrument      {:type "string"
+                       :enum ["in-kind-grant" "sustenance" "tooling-access" "compute-access"]
+                       :description "G1 INVARIANT — equity / debt / convertible / revenue-share / profit-claim / carry / dividend / exit are NOT enum members (not an investment fund, Charter-Rider §2(b))."}
+     :weightMilli     {:type "integer" :minimum 0
+                       :description "w×1000 (implied unit: milli) where w = ln(1+min(tenure_y,40)) * hazard"}
+     :shareBps        {:type "integer" :minimum 0 :maximum 10000
+                       :description "basis points of cohort PRIORITY (Σ==10000 over vowed cohort); never a cash split"}
+     :priorityRank    {:type "integer" :minimum 1
+                       :description "1 = provisioned first under a scarce stage cap"}
+     :floorUsdMicrosYr {:type "integer" :minimum 0
+                       :description "in-kind sustenance floor at elapsed=0, stage-capped, 5y decay"}
+     :cashUsdMicros   {:type "integer" :const 0
+                       :description "G2 / cash≡0 INVARIANT — only 0 (the on-chain N1 proof)."}
+     :serverHeldKey   {:type "boolean" :const false
+                       :description "G9 / no-server-key INVARIANT — only false (ADR-2605231525)."}}}}}}

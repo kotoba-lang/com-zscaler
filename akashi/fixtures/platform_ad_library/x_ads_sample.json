@@ -1,0 +1,37 @@
+{
+  "fixtureId": "akashi-platform-ad-library-x-ads-r1",
+  "capturedAt": "2026-07-10T00:00:00Z",
+  "source": {
+    "id": "x-ads-transparency",
+    "platform": "x",
+    "sourceFamily": "social-ad-library",
+    "sourceUrl": "https://ads.twitter.com/transparency",
+    "jurisdiction": "US",
+    "accessMode": "manual-review-only"
+  },
+  "records": [
+    {
+      "sourceRecordId": "x-ads-2026-0001",
+      "sourceUrl": "https://ads.twitter.com/transparency/x-ads-2026-0001",
+      "advertiser": {
+        "displayName": "Example Launch Account",
+        "platformAdvertiserId": "x-account-67890",
+        "pageUrl": "https://x.com/examplelaunch",
+        "websiteDomain": "launch.example",
+        "verifiedStatus": "not-disclosed"
+      },
+      "creativeText": "Launch announcement creative exactly as disclosed by source.",
+      "language": "en",
+      "disclosedCategory": "brand-awareness",
+      "landingUrl": "https://launch.example/",
+      "startedAt": "2026-07-03T00:00:00Z",
+      "status": "active",
+      "impressionRange": {
+        "min": 1000,
+        "max": 9999,
+        "sourceLabel": "1K-9K"
+      },
+      "regionSummary": ["US"]
+    }
+  ]
+}

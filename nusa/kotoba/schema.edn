@@ -1,0 +1,46 @@
+;; nusa (幣) kotoba EAVT schema — ritual/industrial hemp heritage + low-THC cultivation (R0)
+;; Mirrors 00-contracts/schemas/ritual-hemp-ontology.kotoba.edn in db/ident form for kqe.
+;; G1 INVARIANT: :hemp/thc-class ∈ {:fiber :low-thc} ONLY — :psychoactive is not representable.
+[{:db/ident :hemp/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :hemp/name          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :hemp/kind          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :cultivar :landrace
+ {:db/ident :hemp/thc-class     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; G1 :fiber | :low-thc ONLY
+ {:db/ident :hemp/fiber-use     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/many}  ;; :shimenawa :aratae :textile :rope :paper :seed-oil-food
+ {:db/ident :hemp/region        :db/valueType :db.type/string  :db/cardinality :db.cardinality/many}
+ {:db/ident :hemp/note          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :hemp/sourcing      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+ {:db/ident :rite/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :rite/name          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :rite/kind          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :rite/purpose       :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}   ;; :purification
+ {:db/ident :rite/material      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :rite/uses-cultivar :db/valueType :db.type/string  :db/cardinality :db.cardinality/many}
+ {:db/ident :rite/note          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :rite/sourcing      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+ {:db/ident :rite.event/id      :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :rite.event/name    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :rite.event/uses-artifact :db/valueType :db.type/string :db/cardinality :db.cardinality/many}
+ {:db/ident :rite.event/lineage :db/valueType :db.type/string  :db/cardinality :db.cardinality/many}
+ {:db/ident :rite.event/as-of   :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}   ;; 非終末論 history
+ {:db/ident :rite.event/note    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :rite.event/sourcing :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+ {:db/ident :imbe/id            :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :imbe/name          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :imbe/role          :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :imbe/region        :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :imbe/note          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :imbe/sourcing      :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+
+ {:db/ident :hemp.license/id          :db/valueType :db.type/string  :db/cardinality :db.cardinality/one :db/unique :db.unique/identity}
+ {:db/ident :hemp.license/cultivar    :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :hemp.license/purpose     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :hemp.license/licensee-principal :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}  ;; G4 :member
+ {:db/ident :hemp.license/funding     :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}         ;; G4 :member-okaimono
+ {:db/ident :hemp.license/server-held-key :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}     ;; G5 false
+ {:db/ident :hemp.license/outward-gated :db/valueType :db.type/boolean :db/cardinality :db.cardinality/one}       ;; G8 true
+ {:db/ident :hemp.license/legal-basis :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :hemp.license/as-of       :db/valueType :db.type/string  :db/cardinality :db.cardinality/one}
+ {:db/ident :hemp.license/sourcing    :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}]

@@ -1,0 +1,5 @@
+;; 20-actors/shirabe/schema.edn — Datomic/Datascript-compatible schema (auto-generated)
+;; :db/ident attribute defs for this actor's queryable EDN. No Datomic-specific keys
+;; (:db.install/_attribute etc). Manually append if a future file adds new attrs.
+
+[#:db{:ident :shirabe.fixture.shimada-aoyama/answer, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :shirabe.fixture.shimada-aoyama/asof, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :shirabe.fixture.shimada-aoyama/live-reverify, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :shirabe.fixture.shimada-aoyama/question, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :shirabe.fixture.shimada-aoyama/search, :valueType :db.type/string, :cardinality :db.cardinality/one}]

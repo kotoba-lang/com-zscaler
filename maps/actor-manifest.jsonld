@@ -1,0 +1,381 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:maps.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "browser.fetch",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/platform/260403-live-data-kyumei-shinka-consolidated.md"
+  ],
+  "convoSystemPrompt": "You are the Maps spatial intelligence agent. You manage a graph-first spatial platform with 51 node types across 14 WIT domains. Graph-first means you always query the graph SQL path via Hyperdrive first and only fetch from external sources (Nominatim, Open-Meteo, ip-api, OSM Overpass, STAC catalogs, USGS Earthquake, GTFS-JP, OpenSky ADS-B) on cache miss via collection jobs. You manage 980 Multi-DIDs: 11 KAMI layer coordinators, 48 JP regions, 195 sovereign countries, 50 world ports, 40 world airports, 14 vertical zones, 34 natural zones, and 14 source DIDs (geocode/weather/ip/infra/tile/street_view/planet/user_post/mapraly/vision/satellite/seismic/gtfs/adsb). You support 32 geographic code schemes. Two components: maps-ui (134 commands) and maps-collection (10 commands).",
+  "description": "Spatial intelligence and digital twin platform. Graph-first architecture with 51 node types, 134 XRPC commands across 14 WIT domains. 980 Multi-DIDs (11 layer coordinators, 48 JP regions, 195 sovereign countries, 50 ports, 40 airports, 14 vertical zones, 34 natural zones, 14 sources). MapLibre + KAMI engine rendering. Satellite (Sentinel-2/Landsat), Mapraly, Murakumo Vision, USGS Seismic, GTFS-JP, OpenSky ADS-B integration. RisingWave via Hyperdrive for graph SQL reads.",
+  "displayName": "Maps — Spatial Intelligence + Digital Twin",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "internal",
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "maps",
+  "nanoid": "uqpel6i6",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "steps": [
+        {
+          "args": {
+            "message": "Extract geolocation from this post's image EXIF data.\n\nPost: $input.record\n\nIf image embed has lat/lng EXIF, return JSON: {lat, lng, accuracy}. Otherwise return null."
+          },
+          "fn": "agent.chat",
+          "id": "extractGeo"
+        },
+        {
+          "args": {
+            "template": "MERGE (e:SpatialEvent {postUri: $input.record.uri}) SET e.lat = $extractGeo.lat, e.lng = $extractGeo.lng, e.authorDid = $input.record.author"
+          },
+          "fn": "graph.write",
+          "id": "writeLocation"
+        },
+        {
+          "args": {
+            "template": "New data added: $extractGeo.text"
+          },
+          "depends_on": [
+            "extractGeo"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "app.bsky.feed.post"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN labels(n)[0] AS nodeType, count(n) AS total ORDER BY total DESC LIMIT 21"
+          },
+          "fn": "graph.query",
+          "id": "dashboard"
+        },
+        {
+          "args": {
+            "sql": "MATCH (w:WeatherPoint) WHERE toInteger(w.fetched_at) + (w.ttl_hours * 3600000) < timestamp() RETURN count(w) AS staleCount LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "staleWeather"
+        },
+        {
+          "args": {
+            "message": "You are Maps — Spatial Intelligence + Digital Twin. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $staleWeather.rows"
+          },
+          "depends_on": [
+            "staleWeather"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "report"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "message": "URL: $input.record.url\nDomain: $input.record.domain\nLanguage: $input.record.language\n\nText:\n$input.record.markdown",
+            "model": "qwen3-30b",
+            "system": "You are a geo entity extractor. From the given web page text, extract geographic entities. Return JSON array: [{name, entityType (place|station|airport|port|road|river|mountain|building|adminArea), lat?, lng?, address?, country?, description}]. Max 20. If none, return []."
+          },
+          "fn": "agent.chat",
+          "id": "extractGeoEntities"
+        },
+        {
+          "args": {
+            "template": "MERGE (e:WebCrawlGeoEntity {sourceUrl: $input.record.url, entityType: 'nerExtract'}) SET e.sourceDomain = $input.record.domain, e.sourceDid = 'did:web:site.etzhayyim.com', e.extractedJson = $extractGeoEntities.response, e.createdAt = toString(timestamp())"
+          },
+          "fn": "graph.write",
+          "id": "writeEntities"
+        },
+        {
+          "args": {
+            "template": "New data added: $extractGeoEntities.text"
+          },
+          "depends_on": [
+            "extractGeoEntities"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.site.wet"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (d:WebDomain) WHERE d.domain = $input.record.domain RETURN d.category AS category LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "classifyDomain"
+        },
+        {
+          "args": {
+            "template": "MERGE (e:WebCrawlGeoEntity {sourceUrl: $input.record.url, entityType: 'domainCoverage'}) SET e.sourceDomain = $input.record.domain, e.title = $input.record.title, e.sourceDid = 'did:web:site.etzhayyim.com', e.outlinkCount = $input.record.outlinkCount, e.createdAt = toString(timestamp())"
+          },
+          "depends_on": [],
+          "fn": "graph.write",
+          "id": "writeCoverage"
+        },
+        {
+          "args": {
+            "message": "You are Maps — Spatial Intelligence + Digital Twin. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $writeCoverage.text"
+          },
+          "depends_on": [
+            "writeCoverage"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.site.wat"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "command": "satelliteAnalyze",
+            "params": {
+              "sceneId": "$input.record.sceneId"
+            }
+          },
+          "fn": "agent.invoke",
+          "id": "analyzeScene"
+        },
+        {
+          "args": {
+            "message": "You are Maps — Spatial Intelligence + Digital Twin. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $analyzeScene.text"
+          },
+          "depends_on": [
+            "analyzeScene"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "collections": [
+          "com.etzhayyim.apps.maps.satelliteScene"
+        ],
+        "type": "subscribeRepos"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount, coalesce(max(n._seq), 0) AS latestSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageNodes"
+        },
+        {
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did AND n.collection IS NOT NULL RETURN n.collection AS collection, count(n) AS cnt ORDER BY cnt DESC LIMIT 10"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageCollections"
+        },
+        {
+          "args": {
+            "params": {
+              "actorName": "maps",
+              "bucket": "6h",
+              "collection": "com.etzhayyim.apps.maps.coverageSnapshot",
+              "latestSeq": 0,
+              "nanoid": "uqpel6i6",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            },
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, latestTs: $latestTs, repo: $did, collection: $collection, status: 'active'})"
+          },
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "fn": "graph.write",
+          "id": "coverageSnapshot"
+        },
+        {
+          "args": {
+            "message": "You are Maps — Spatial Intelligence + Digital Twin. Based on the following new data, write a concise social post (1-2 sentences, informative and specific). Data: $coverageSnapshot.text"
+          },
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "fn": "agent.chat",
+          "id": "compose"
+        },
+        {
+          "args": {
+            "template": "$compose.text"
+          },
+          "depends_on": [
+            "compose"
+          ],
+          "fn": "derive:social",
+          "id": "announce"
+        }
+      ],
+      "trigger": {
+        "cron": "0 */6 * * *",
+        "type": "cron"
+      }
+    },
+    {
+      "steps": [
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS nodeCount, c.latestSeq AS latestSeq, c.topCollections AS topCollections, c._seq AS snapshotSeq LIMIT 1"
+          },
+          "fn": "graph.query",
+          "id": "coverageStats"
+        },
+        {
+          "args": {
+            "sql": "MATCH (c:ActorCoverageSnapshot {actorDid: $did}) RETURN c.nodeCount AS totalNodes LIMIT 1"
+          },
+          "depends_on": [],
+          "fn": "graph.query",
+          "id": "coverageHealth"
+        }
+      ],
+      "trigger": {
+        "nsid": "com.etzhayyim.apps.maps.coverage.get",
+        "type": "xrpc"
+      }
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "search-places",
+      "reverse-geocode",
+      "weather-at",
+      "ip-geolocate",
+      "graph-traverse",
+      "register-building",
+      "sensor-ingest",
+      "satellite-ingest",
+      "analyze-image",
+      "register-region",
+      "resolve-geo-alias",
+      "sentinel-ingest",
+      "sentinel-analyze"
+    ],
+    "description": "Graph-first spatial intelligence. 51 graph node types, 14 WIT domains (spatial/infra/transport/geography/twin/sensor/simulation/spatiotemporal/post-geo/mapraly/vision/satellite/geo-did/web-crawl). 980 Multi-DIDs across layers/regions/countries/ports/airports/zones/sources. 32 geographic code schemes (ISO 3166, H3, S2, geohash, etc.). RisingWave via Hyperdrive for graph SQL storage. Real-time seismic (USGS), ADS-B aircraft (OpenSky), GTFS-JP transit feeds.",
+    "displayName": "Maps — Spatial Intelligence + Digital Twin",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.maps.place",
+        "com.etzhayyim.apps.maps.weatherPoint",
+        "com.etzhayyim.apps.maps.building",
+        "com.etzhayyim.apps.maps.road",
+        "com.etzhayyim.apps.maps.railway",
+        "com.etzhayyim.apps.maps.airport",
+        "com.etzhayyim.apps.maps.station",
+        "com.etzhayyim.apps.maps.port",
+        "com.etzhayyim.apps.maps.river",
+        "com.etzhayyim.apps.maps.mountain",
+        "com.etzhayyim.apps.maps.spot",
+        "com.etzhayyim.apps.maps.sensorReading",
+        "com.etzhayyim.apps.maps.satelliteScene",
+        "com.etzhayyim.apps.maps.satelliteAnalysis",
+        "com.etzhayyim.apps.maps.satelliteAnalysisResult",
+        "com.etzhayyim.apps.maps.visionResult",
+        "com.etzhayyim.apps.maps.spatialEvent",
+        "com.etzhayyim.apps.maps.adminArea",
+        "com.etzhayyim.apps.maps.geoAlias",
+        "com.etzhayyim.apps.maps.webCrawlGeoEntity",
+        "com.etzhayyim.apps.site.wet",
+        "com.etzhayyim.apps.site.wat",
+        "com.etzhayyim.apps.site.geoRecord",
+        "com.etzhayyim.apps.ipaddress.ipGeo",
+        "app.bsky.feed.post"
+      ]
+    }
+  },
+  "uiType": "iframe"
+}

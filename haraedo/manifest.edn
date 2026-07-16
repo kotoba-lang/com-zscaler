@@ -1,0 +1,40 @@
+;; haraedo 祓戸 — actor manifest
+;; Global bulky-waste (粗大ゴミ) disposal — citizen intake + operator logistics
+;; ADR-2606010200
+{:actor/id        "haraedo"
+ :actor/glyph     "祓戸"
+ :actor/tier      :tier-b
+ :actor/integrates ["chigiri" "danjo" "hodoki" "kanae" "kanayama" "toritsugi"]
+ :actor/purpose   "Global bulky-waste (粗大ゴミ) disposal — citizen intake (classify/quote/schedule/sticker) + operator logistics (受付/配車/ルート/担当者) + worldwide processing-facility registry"
+ :actor/status    :r0
+ :actor/adr       "2606010200"
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "consent-bound"     :gate/rule "member explicit consent (DID-signed) before any application/collection action"}
+  {:gate/id "G2"  :gate/name "no-illegal-dumping" :gate/rule "only verified facilities + licensed routes; never unlicensed/illegal disposal"}
+  {:gate/id "G3"  :gate/name "hazardous-boundary" :gate/rule "家電リサイクル法対象/PCB/asbestos/医療廃棄物/batteries → licensed handler, NOT bulky waste"}
+  {:gate/id "G5"  :gate/name "labor-dignity"      :gate/rule "担当者 per Labor Liberation ladder (ADR-2605261000); no extractive gig dispatch"}
+  {:gate/id "G6"  :gate/name "pii-encrypted"      :gate/rule "member address/PII → com.etzhayyim.encrypted.* envelope, DID-bound"}
+  {:gate/id "G7"  :gate/name "fee-non-fiat"       :gate/rule "手数料 via USDC/warifu SBT↔SBT or external-backend XRPC (領収書用途のみ); never Stripe/PayPal/Square"}
+  {:gate/id "G11" :gate/name "outward-gated"      :gate/rule "real receipt/dispatch/collection requires Council + operator; R0 design-only"}
+  {:gate/id "G14" :gate/name "verified-facility"  :gate/rule "destinations + fee tables only from verified facility/fleet registry"}
+  {:gate/id "G15" :gate/name "capacity-honest"    :gate/rule "facility/vehicle/crew capacity are hard constraints; violating plan rejected, never silently truncated"}]
+
+ :actor/cells
+ [{:cell/id "intake"            :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "dispatch"          :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "facility_registry" :cell/kind :datalog   :cell/runtime :kotoba}
+  {:cell/id "fleet_registry"    :cell/kind :datalog   :cell/runtime :kotoba}]
+
+ :actor/lexicons
+ ["com.etzhayyim.haraedo.application"
+  "com.etzhayyim.haraedo.facility"]
+
+ :actor/kotoba
+ {:kotoba/schema "kotoba/schema.edn"
+  :kotoba/seed   "kotoba/seed.edn"
+  :kotoba/deploy "kotoba/deploy.sh"}}

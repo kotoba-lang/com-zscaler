@@ -1,0 +1,44 @@
+;; talent — actor manifest (kotoba-native; supersedes actor-manifest.jsonld)
+;; Cohort-first talent registry (Indeed/LinkedIn-Recruiter inversion), PII Tier 3.
+;; ADR-2606072600 (remediation Phase A of ADR-2606071800)
+{:actor/id        "talent"
+ :actor/glyph     "才"
+ :actor/tier      :tier-b
+ :actor/integrates ["isco" "recruit"]
+ :actor/domain    "talent.etzhayyim.com"
+ :actor/purpose   "Recruiter-DB-inverse cohort-first talent registry (ISCO-08, PII Tier 3). Profiles are SELF-SOVEREIGN only (caller DID = subject DID; no third-party / scraped / purchased ingest). Identifying fields are Signal-E2E ciphertext (plaintext refused). Default reads are cohort aggregates suppressed below k (k-anonymity); individual reads are consent-gated. forgetSelf is a GDPR Art 17 hard cascade delete (no soft delete). kotoba-EAVT-native, Murakumo-only."
+ :actor/status    :r1
+ :actor/adr       "2606072600"
+ :actor/supersedes "actor-manifest.jsonld (legacy T1 MCP-Compose / RisingWave; deprecated, removed after 1 R-cycle)"
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "self-sovereign"        :gate/rule "a profile write requires caller.did == subject.did; third-party write + prohibited-source (LinkedIn/Indeed/scraped/purchased) ingest are refused — license notwithstanding"}
+  {:gate/id "G2"  :gate/name "cohort-first-k-anon"   :gate/rule "default read = cohort aggregate; a cohort with fewer than k members is suppressed; individual profile read is consent-gated, never a public path"}
+  {:gate/id "G3"  :gate/name "signal-e2e"            :gate/rule "identifying fields (fullName/email/phone/address/dateOfBirth/governmentId) MUST be signal:v1:{ciphertext}; a plaintext write is refused (ADR-2605181100)"}
+  {:gate/id "G4"  :gate/name "gdpr-art17-hard-delete" :gate/rule "forgetSelf is an immediate cascade HARD delete; no soft delete / :_alive flag exists"}
+  {:gate/id "G5"  :gate/name "kotoba-eavt-native"    :gate/rule "profile/cohort are kotoba Datoms (then hard-retracted on forget); no RisingWave/SQL (corrects legacy manifest)"}
+  {:gate/id "G6"  :gate/name "no-server-key"         :gate/rule "self-registration is member-signed (caller passkey); talent holds no key (ADR-2605231525)"}
+  {:gate/id "G7"  :gate/name "murakumo-only"         :gate/rule "any normalization / NL via KotobaLLM 127.0.0.1:4000; no external LLM (ADR-2605215000)"}]
+
+ :actor/cohort {:k-anonymity 5 :path "did:web:talent.etzhayyim.com:cohort:{isco}:{country}"}
+
+ :actor/allowed-enrichment ["orcid" "github-public" "public-credential-registry"]
+ :actor/prohibited-sources ["linkedin" "indeed" "glassdoor" "purchased-list" "scraped-db"]
+
+ :actor/cells
+ [{:cell/id "registry" :cell/kind :datalog   :cell/runtime :kotoba :cell/doc "self-sovereign profile + cohort Datoms (hard-deletable)"}
+  {:cell/id "register" :cell/kind :langgraph :cell/runtime :wasm   :cell/doc "self-sovereign write guard (G1) + plaintext-PII rejection (G3) → cohort assign"}
+  {:cell/id "cohort"   :cell/kind :datalog   :cell/runtime :kotoba :cell/doc "k-anonymity cohort stats (G2) for recruit delegate"}]
+
+ :actor/lexicons
+ ["com.etzhayyim.talent.talentProfile"
+  "com.etzhayyim.talent.talentCohort"]
+
+ :actor/cross-actor
+ {:upstream   "isco (occupation taxonomy)"
+  :peer       "natural-person (shared cohort-first principle, ADR-0018)"
+  :downstream "recruit (cohort stats ONLY — never individual profiles)"}}

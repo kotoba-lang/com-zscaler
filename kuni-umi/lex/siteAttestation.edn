@@ -1,0 +1,18 @@
+;; com.etzhayyim.kuniumi.siteAttestation — lexicon
+;; ADR-2605201400 · site survey output
+{:lexicon 1
+ :id "com.etzhayyim.kuniumi.siteAttestation"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["siteId" "geolocation" "landRegistryAnchor" "zoningStatus"]
+    :properties
+    {:siteId              {:type "string" :description "unique site identifier"}
+     :geolocation         {:type "string" :description "lat,lon,elevation (WGS84)"}
+     :landRegistryAnchor  {:type "string" :description "kuni-umi LandRegistry or OceanStewardship anchor DID (G10 mandatory)"}
+     :zoningStatus        {:type "string" :description "zoning classification / permit-required flag"}
+     :environmentalBaseline {:type "string" :description "soil/air/water baseline attestation (pre-deployment)"}
+     :councilGates        {:type "string" :description ":pending (awaiting Lv6+ 3-sig) | :cleared (deployment green-light)"}}}}}}

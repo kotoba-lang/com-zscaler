@@ -1,0 +1,38 @@
+;; tsumugi — :representative latent-entity EVIDENCE example (ADR-2606011000 §D7.1)
+;; Engineered to exercise resolve.py frontier classes. Public power-entities only (G1).
+;;
+;; FRONTIER ENGINEERING:
+;;   org.corp.example.alpha:  ≥2 edges, ≥2 distinct :en/evidence-kind
+;;                           weights 0.6 + 0.7 → noisy-OR = 1-(1-0.6)*(1-0.7) = 0.88 (FISSION-READY)
+;;   org.corp.example.beta:   1 edge, weight 0.5 → existence 0.5 (CANDIDATE)
+;;   org.corp.example.gamma:  1 edge, weight 0.2 → existence 0.2 (OBSERVED)
+
+[;; ───────────────────────────── SOURCE organisms (latent signal nodes) ────────────────────────────
+ {:organism/id "org.registry.jp-meti-listing" :organism/kind :institutional :organism/subkind :registry :organism/label "METI Corporate Registry (public source)" :organism/standing :latent :organism/sourcing :representative}
+ {:organism/id "org.atproto.indexer" :organism/kind :institutional :organism/subkind :service :organism/label "AT Protocol Indexer (public feed)" :organism/standing :latent :organism/sourcing :representative}
+
+ ;; ───────────────────────────── LATENT organisms (targets, no :organism/did) ─────────────────────────
+ ;; alpha: FISSION-READY (existence >= 0.7, distinct-kind-count >= 2, edge-count >= 2)
+ {:organism/id "org.corp.example.alpha" :organism/kind :institutional :organism/subkind :corp :organism/label "Example Alpha Industries" :organism/standing :latent :organism/sourcing :representative}
+
+ ;; beta: CANDIDATE (existence >= 0.4, count >= 1)
+ {:organism/id "org.corp.example.beta" :organism/kind :institutional :organism/subkind :corp :organism/label "Example Beta Manufacturing" :organism/standing :latent :organism/sourcing :representative}
+
+ ;; gamma: OBSERVED (existence < 0.4)
+ {:organism/id "org.corp.example.gamma" :organism/kind :institutional :organism/subkind :corp :organism/label "Example Gamma Trading" :organism/standing :latent :organism/sourcing :representative}
+
+ ;; ───────────────────────────── evidence edges ──────────────────────────────────────────────────────
+ ;; alpha → FISSION-READY: 2 edges, 2 distinct :en/evidence-kind (:semantic, :network)
+ ;; edge 1: semantic evidence (registry listing) — weight 0.6
+ {:en/id "en.alpha.ev1.semantic" :en/kind :evidence :en/from "org.registry.jp-meti-listing" :en/to "org.corp.example.alpha" :en/evidence-weight 0.6 :en/evidence-kind :semantic :en/source "METI corporate registration filing" :en/sourcing :representative}
+
+ ;; edge 2: network evidence (atproto follow) — weight 0.7
+ ;; noisy-OR: 1 - (1-0.6)*(1-0.7) = 1 - 0.12 = 0.88
+ {:en/id "en.alpha.ev2.network" :en/kind :evidence :en/from "org.atproto.indexer" :en/to "org.corp.example.alpha" :en/evidence-weight 0.7 :en/evidence-kind :network :en/source "atproto public follow graph" :en/sourcing :representative}
+
+ ;; beta → CANDIDATE: 1 edge, weight 0.5 → existence 0.5
+ {:en/id "en.beta.ev1.lexical" :en/kind :evidence :en/from "org.registry.jp-meti-listing" :en/to "org.corp.example.beta" :en/evidence-weight 0.5 :en/evidence-kind :lexical :en/source "business name mention in METI bulletin" :en/sourcing :representative}
+
+ ;; gamma → OBSERVED: 1 edge, weight 0.2 → existence 0.2
+ {:en/id "en.gamma.ev1.temporal" :en/kind :evidence :en/from "org.atproto.indexer" :en/to "org.corp.example.gamma" :en/evidence-weight 0.2 :en/evidence-kind :temporal :en/source "historical atproto archive timestamp" :en/sourcing :representative}
+]

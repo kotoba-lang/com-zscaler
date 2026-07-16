@@ -1,0 +1,23 @@
+;; sarutahiko 猿田彦 — cab-body-forming cell (langgraph, WASM runtime)
+;; ADR-2605252500 · Gen-3 deepen
+{:cell/id "cab-body-forming"
+ :cell/glyph "猿田彦"
+ :cell/kind :langgraph
+ :cell/runtime :wasm
+ :cell/entry "py/agent.py"
+ :cell/doc "L3 cab/body forming (hot stamping -> robotic spot weld -> leak test). EoL recyclability >=90% (G14, kanayama loop)."
+ :cell/state-graph
+ {:nodes [:intake :process :attest]
+  :entry :intake
+  :edges [[:intake :process] [:process :attest] [:attest :end]]}
+ :cell/llm
+ {:provider :murakumo
+  :endpoint "127.0.0.1:4000"
+  :model "gemma3:4b"
+  :charter-rider true}
+ :cell/gates ["G14" "G16" "G17"]
+ :cell/kotoba
+ {:reads [:vehicle-order/id :vehicle-order/buyer-did :vehicle-order/specs :vehicle-order/state]
+  :writes [:production-progress/id :production-progress/order :production-progress/stage
+           :production-progress/note :production-progress/timestamp
+           :attestation/id :attestation/order :attestation/type :attestation/cid :attestation/timestamp]}}

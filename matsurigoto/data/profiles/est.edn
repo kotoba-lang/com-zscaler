@@ -1,0 +1,19 @@
+;; Country profile — EST Estonia (principal B). ADR-2606062300. sourcing :representative.
+;; Estonia is THE digital-government exemplar and the ORIGIN of X-Road (the interop.dataexchange
+;; spec the standard cites). Near-fully-online statecraft; the reference target for maturity.
+{:country-profile/iso3 "EST" :country-profile/name "Eesti"
+ :country-profile/operated-by ":adopting-government"
+ :country-profile/authority-mode ":supplied-to-state"
+ :country-profile/sourcing ":representative"
+ :country-profile/notes "X-Road origin (RIA / NIIS) — the reference implementation of interop.dataexchange."
+ :country-profile/bindings
+ [{:bind/service "interop.dataexchange"        :bind/agency "RIA (Information System Authority) / NIIS" :bind/legal-basis "Public Information Act / X-tee regulation" :bind/national-spec "X-Road (X-tee)" :bind/atlas-did "did:web:etzhayyim.com:gov:est:ria"}
+  {:bind/service "tax.income.file"             :bind/agency "Maksu- ja Tolliamet (MTA)"        :bind/legal-basis "Income Tax Act (Tulumaksuseadus)" :bind/national-spec "e-MTA" :bind/atlas-did "did:web:etzhayyim.com:gov:est:mta"}
+  {:bind/service "residency.move-in"           :bind/agency "Population Register / local government" :bind/legal-basis "Population Register Act"     :bind/national-spec "eesti.ee residence notice" :bind/atlas-did "did:web:etzhayyim.com:gov:est:rahvastikuregister"}
+  {:bind/service "corp.incorporation.register" :bind/agency "Centre of Registers and Information Systems (RIK)" :bind/legal-basis "Commercial Code (Äriseadustik)" :bind/national-spec "e-Business Register (company in minutes)" :bind/atlas-did "did:web:etzhayyim.com:gov:est:rik"}
+  {:bind/service "id.national.issue"           :bind/agency "Police and Border Guard Board (PPA)" :bind/legal-basis "Identity Documents Act"      :bind/national-spec "ID-card / eID (eIDAS high) / Mobiil-ID / Smart-ID" :bind/atlas-did "did:web:etzhayyim.com:gov:est:ppa"}
+  {:bind/service "eid.wallet.credential"       :bind/agency "RIA"                              :bind/legal-basis "eIDAS Regulation (EU) 910/2014 + 2024/1183" :bind/national-spec "eIDAS 2.0 / EUDI Wallet" :bind/atlas-did "did:web:etzhayyim.com:gov:est:ria"}
+  {:bind/service "passport.issue"              :bind/agency "Police and Border Guard Board (PPA)" :bind/legal-basis "Identity Documents Act"   :bind/national-spec "ICAO Doc 9303" :bind/atlas-did "did:web:etzhayyim.com:gov:est:ppa"}
+  {:bind/service "civil.birth.register"        :bind/agency "Vital Statistics Office / local government" :bind/legal-basis "Vital Statistics Registration Act" :bind/national-spec "Population Register (eesti.ee)" :bind/atlas-did "did:web:etzhayyim.com:gov:est:rahvastikuregister"}
+  {:bind/service "civil.death.register"        :bind/agency "Vital Statistics Office"          :bind/legal-basis "Vital Statistics Registration Act" :bind/national-spec "Population Register (eesti.ee)" :bind/atlas-did "did:web:etzhayyim.com:gov:est:rahvastikuregister"}
+  {:bind/service "civil.marriage.register"     :bind/agency "Vital Statistics Office"          :bind/legal-basis "Family Law Act / Vital Statistics Registration Act" :bind/national-spec "Population Register (eesti.ee)" :bind/atlas-did "did:web:etzhayyim.com:gov:est:rahvastikuregister"}]}

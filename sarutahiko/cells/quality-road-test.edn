@@ -1,0 +1,24 @@
+;; sarutahiko 猿田彦 — quality-road-test cell (langgraph, WASM runtime)
+;; ADR-2605252500 · Gen-3 deepen
+{:cell/id "quality-road-test"
+ :cell/glyph "猿田彦"
+ :cell/kind :langgraph
+ :cell/runtime :wasm
+ :cell/entry "py/agent.py"
+ :cell/doc "L5c quality road test (roller dyno + 50 km public-road). Max speed <=90 km/h civilian / autonomous <= SAE Level 4 (G12)."
+ :cell/state-graph
+ {:nodes [:intake :process :attest]
+  :entry :intake
+  :edges [[:intake :process] [:process :attest] [:attest :end]]}
+ :cell/llm
+ {:provider :murakumo
+  :endpoint "127.0.0.1:4000"
+  :model "gemma3:4b"
+  :charter-rider true}
+ :cell/gates ["G12" "G16" "G17"]
+ :cell/kotoba
+ {:reads [:vehicle-order/id :vehicle-order/buyer-did :vehicle-order/specs :vehicle-order/state]
+  :writes [:production-progress/id :production-progress/order :production-progress/stage
+           :production-progress/note :production-progress/timestamp
+           :attestation/id :attestation/order :attestation/type :attestation/cid :attestation/timestamp
+           :quality/id :quality/order :quality/result :quality/defects :quality/inspector-did]}}

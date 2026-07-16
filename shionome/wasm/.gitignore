@@ -1,0 +1,11 @@
+# Build artifacts — large / reproducible from app.py + wit/ via build.sh.
+# The component (~17 MB, bundles CPython) is NOT committed; it lives on IPFS
+# (CID recorded in shionome-actor.meta.json) / the donated mesh.
+shionome-actor.wasm
+transpiled/
+_bindings/
+node_modules/
+package-lock.json
+# T1 Rust build artifacts (reproducible via build-t1.sh; CID = the durable record)
+shionome-core/target/
+shionome-core/dist/

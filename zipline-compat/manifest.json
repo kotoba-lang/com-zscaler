@@ -1,0 +1,786 @@
+{
+  "schemaVersion": "1.0",
+  "handle": "zipline-compat",
+  "did": "did:web:etzhayyim.com:actor:zipline-compat",
+  "kind": "compat",
+  "title": "zipline clean-room actor",
+  "description": "Clean-room, API-compatible drone swarm / aerial robotics actor (zipline); runs browser-local on IPFS + kotoba-WASM.",
+  "wasmCid": "bafkreicgoipbaydymrqmc4pdbqopnb7l4i7yuphnm4hvnv73flb7r4jati",
+  "wasmProvenance": "built-rust-raw",
+  "runtime": "kotoba-wasm",
+  "exec": "browser-local|donated-mesh",
+  "ipfs": "ipfs://bafkreicgoipbaydymrqmc4pdbqopnb7l4i7yuphnm4hvnv73flb7r4jati",
+  "schema": "schema/zipline.kotoba",
+  "tier": "L4",
+  "verified": null,
+  "entities": [
+    "Drone",
+    "Mission",
+    "Waypoint",
+    "Telemetry",
+    "Payload",
+    "Swarm"
+  ],
+  "adr": [
+    "260607",
+    "2606014500",
+    "2606013800",
+    "2606036000"
+  ],
+  "capabilities": {
+    "api": {
+      "type": "rest",
+      "runtime": "kotoba-wasm",
+      "endpointCount": 30,
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/v1/drones",
+          "op": "create Drone"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/drones",
+          "op": "list Drone"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/drones/{id}",
+          "op": "get Drone"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/drones/{id}",
+          "op": "update Drone"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/drones/{id}",
+          "op": "delete Drone"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/missions",
+          "op": "create Mission"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/missions",
+          "op": "list Mission"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/missions/{id}",
+          "op": "get Mission"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/missions/{id}",
+          "op": "update Mission"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/missions/{id}",
+          "op": "delete Mission"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/waypoints",
+          "op": "create Waypoint"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/waypoints",
+          "op": "list Waypoint"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/waypoints/{id}",
+          "op": "get Waypoint"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/waypoints/{id}",
+          "op": "update Waypoint"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/waypoints/{id}",
+          "op": "delete Waypoint"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/telemetries",
+          "op": "create Telemetry"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/telemetries",
+          "op": "list Telemetry"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/telemetries/{id}",
+          "op": "get Telemetry"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/telemetries/{id}",
+          "op": "update Telemetry"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/telemetries/{id}",
+          "op": "delete Telemetry"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/payloads",
+          "op": "create Payload"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/payloads",
+          "op": "list Payload"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/payloads/{id}",
+          "op": "get Payload"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/payloads/{id}",
+          "op": "update Payload"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/payloads/{id}",
+          "op": "delete Payload"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/swarms",
+          "op": "create Swarm"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/swarms",
+          "op": "list Swarm"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/swarms/{id}",
+          "op": "get Swarm"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/swarms/{id}",
+          "op": "update Swarm"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/swarms/{id}",
+          "op": "delete Swarm"
+        }
+      ],
+      "features": {
+        "pagination": true,
+        "filtering": true,
+        "relationExpansion": true,
+        "strictValidation": true,
+        "contractTest": true
+      },
+      "health": "/healthz"
+    },
+    "supplychain": {
+      "type": "cyclonedx-sbom",
+      "runtime": "kotoba-wasm",
+      "sbom": "manifest:supplychain.sbom",
+      "sbomData": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "metadata": {
+          "component": {
+            "type": "application",
+            "name": "zipline-compat",
+            "purl": "pkg:etzhayyim/zipline-compat"
+          }
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "kotoba",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotoba"
+          },
+          {
+            "type": "library",
+            "name": "kotodama-wasm",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotodama-wasm"
+          },
+          {
+            "type": "library",
+            "name": "datomic-client",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/datomic-client"
+          }
+        ]
+      },
+      "adr": [
+        "2606036000"
+      ]
+    },
+    "socialpost": {
+      "type": "datom-event-feed",
+      "runtime": "kotoba-wasm",
+      "lexicon": "app.bsky.feed.post",
+      "source": "zipline.* Datom events",
+      "mode": "dry-run",
+      "gate": "G8"
+    },
+    "mcp": {
+      "type": "model-context-protocol",
+      "runtime": "kotoba-wasm",
+      "transport": "ipfs+kotoba-wasm",
+      "toolCount": 30,
+      "tools": [
+        {
+          "name": "create_drone",
+          "description": "Create a Drone.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "serial": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "batteryPct": {
+                "type": "number"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "serial",
+              "model"
+            ]
+          }
+        },
+        {
+          "name": "list_drones",
+          "description": "List Drones.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_drone",
+          "description": "Get a Drone by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_drone",
+          "description": "Update a Drone.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "serial": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "batteryPct": {
+                "type": "number"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_drone",
+          "description": "Delete a Drone.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_mission",
+          "description": "Create a Mission.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "droneId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "status"
+            ]
+          }
+        },
+        {
+          "name": "list_missions",
+          "description": "List Missions.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_mission",
+          "description": "Get a Mission by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_mission",
+          "description": "Update a Mission.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "droneId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_mission",
+          "description": "Delete a Mission.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_waypoint",
+          "description": "Create a Waypoint.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "missionId": {
+                "type": "string"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              },
+              "altitudeM": {
+                "type": "number"
+              },
+              "seq": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "lat",
+              "lon"
+            ]
+          }
+        },
+        {
+          "name": "list_waypoints",
+          "description": "List Waypoints.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_waypoint",
+          "description": "Get a Waypoint by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_waypoint",
+          "description": "Update a Waypoint.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "missionId": {
+                "type": "string"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              },
+              "altitudeM": {
+                "type": "number"
+              },
+              "seq": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_waypoint",
+          "description": "Delete a Waypoint.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_telemetry",
+          "description": "Create a Telemetry.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "droneId": {
+                "type": "string"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              },
+              "altitudeM": {
+                "type": "number"
+              },
+              "recordedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "lat",
+              "lon"
+            ]
+          }
+        },
+        {
+          "name": "list_telemetries",
+          "description": "List Telemetries.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_telemetry",
+          "description": "Get a Telemetry by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_telemetry",
+          "description": "Update a Telemetry.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "droneId": {
+                "type": "string"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              },
+              "altitudeM": {
+                "type": "number"
+              },
+              "recordedAt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_telemetry",
+          "description": "Delete a Telemetry.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_payload",
+          "description": "Create a Payload.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "droneId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "weightKg": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "type",
+              "weightKg"
+            ]
+          }
+        },
+        {
+          "name": "list_payloads",
+          "description": "List Payloads.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_payload",
+          "description": "Get a Payload by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_payload",
+          "description": "Update a Payload.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "droneId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "weightKg": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_payload",
+          "description": "Delete a Payload.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_swarm",
+          "description": "Create a Swarm.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "droneCount": {
+                "type": "integer"
+              },
+              "leaderId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "droneCount"
+            ]
+          }
+        },
+        {
+          "name": "list_swarms",
+          "description": "List Swarms.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_swarm",
+          "description": "Get a Swarm by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_swarm",
+          "description": "Update a Swarm.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "droneCount": {
+                "type": "integer"
+              },
+              "leaderId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_swarm",
+          "description": "Delete a Swarm.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

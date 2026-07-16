@@ -1,0 +1,54 @@
+{:actor/id        "hotaru"
+ :actor/glyph     "蛍"
+ :actor/display-name "蛍 — III-V / InP Substrate Open-Commons"
+ :actor/tier      :tier-b
+ :actor/integrates ["hikari" "himawari" "silicon"]
+ :actor/domain    "hotaru.etzhayyim.com"
+ :actor/did       "did:web:etzhayyim.com:actor:hotaru"
+ :actor/purpose   "Open-publication knowledge commons for III-V compound-semiconductor SUBSTRATE generation + manufacturing — indium phosphide (InP) first, then the adjacent direct-bandgap III-V family (GaAs/GaN/InGaAs/GaSb). 蛍 (firefly) = direct-bandgap light emission: silicon's INDIRECT bandgap is WHY the III-V family exists (lasers/LEDs/photodetectors/photonic ICs/the optics that run optical fibre + the submarine cables watatsuna maps); hotaru is the light-emitting-crystal commons, sibling of the iwakura/fuigo indirect-bandgap silicon track (ADR-2605242500). Datafies the substrate chain (synthesis → single-crystal bulk-growth LEC/VGF/VB → wafering → epi-ready surface-prep) into the kotoba Datom log with as-of history. Charter-clean BY CONSTRUCTION: only practiceable-OPEN process knowledge (:source-license invariant, G1 — vendor-proprietary MOCVD recipes unrepresentable); crystals + wafers are design/spec ONLY (:fabricated false, G2). hotaru IS the construction of the 'open-source III-V wafer IP commons' that ADR-2605265500 §2's R4+ re-evaluation gate references; III-V *fabrication* remains PROHIBITED through R3 (inherited, unchanged) and hotaru is NON-ADJUDICATING on the gate (G3 — it reports, Council decides)."
+ :actor/status    :r0
+ :actor/adr       "2606051200"
+ :actor/related   ["2605265500" "2605242500" "2605261100" "2606021200" "2605192100" "2605192200" "2605215000" "2605231525" "2606012600" "2606013800" "2605181100"]
+ :actor/labor
+ {:isic   "C2611"
+  :isco   ["2149" "3119" "8131"]
+  :unspsc ["32"]
+  :lps-rank nil}
+
+ :actor/charter-rider {:rider/version "2.0" :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "open-ip-only" :gate/req "every :iiiv.proc/source-license ∈ {:academic-oa :patent-expired :textbook-public :standard-public :own-rnd}; :vendor-proprietary / :patent-active / :trade-secret are NOT representable (schema :db/allowed + lexicon enum + analyze.py/state-machine ValueError); the graph is a commons by construction — the precondition ADR-2605265500 §2's R4+ gate references"}
+  {:gate/id "G2" :gate/name "design-only-not-fabricated" :gate/req ":iiiv.crystal/fabricated and :iiiv.wafer/fabricated are :db/allowed [false]; a grown boule / manufactured wafer is unrepresentable through R3; live III-V fabrication PROHIBITED through R3 (ADR-2605265500 §2), only the R4+ gate (Council Lv7+) can open it"}
+  {:gate/id "G3" :gate/name "non-adjudicating-on-the-gate" :gate/req "hotaru REPORTS commons coverage + the R4+ gate facts; it does NOT decide the gate or advocate fabrication (Council Lv7+ decides); silenHotaruReview NEVER opens fabrication"}
+  {:gate/id "G4" :gate/name "conflict-mineral-sourcing" :gate/req "conflict-mineral In/Ga (:iiiv.precursor/conflict-mineral true) consumed by any crystal MUST carry :in-sourcing ∈ {:recycled :conflict-free-attested}; :unverified refused (inherits hikari/himawari §G2 — In/Ga barred from panel sourcing)"}
+  {:gate/id "G5" :gate/name "no-server-key" :gate/req "any future fabrication/process authorization = member/operator signature; server signature refused (ADR-2605231525); serverHeldKey=false"}
+  {:gate/id "G6" :gate/name "murakumo-only" :gate/req "all inference via LiteLLM 127.0.0.1:4000 (ADR-2605215000)"}
+  {:gate/id "G7" :gate/name "sourcing-honesty" :gate/req "all seed :representative; process figures (EPD, bandgap) flagged; require primary-source (paper DOI / expired-patent no. / SEMI std) verification before outward use"}
+  {:gate/id "G8" :gate/name "outward-gated" :gate/req "real crystal growth / wafer fab / live open-corpus ingest / atproto publish all Council Lv7+ + operator gated (Lv7+ not Lv6+ because III-V is constitutionally gated through R3); R0 = offline design + commons-readiness reporting only"}
+  {:gate/id "G9" :gate/name "export-control-honest" :gate/req "ITAR/EAR posture (:iiiv.precursor/export-control) recorded for the ADR-2605265500 §2 jurisdictional-risk attestation; Ga EAR + InP dual-use acknowledged"}
+  {:gate/id "G10" :gate/name "civilian-only" :gate/req "substrate-for device families civilian only; no fire-control / weapons / military RF-seeker designs (Charter §2(a) force-separation, N1)"}
+  {:gate/id "G11" :gate/name "process-safety" :gate/req "acute-toxic-pyrophoric precursors (PH3) acknowledged via precursor_safety refusal gate before any design clears; G3-safety membrane"}]
+
+ :actor/non-goals
+ [{:ng/id "N1" :ng/req "no military / fire-control / weapons-seeker III-V designs (civilian only; Charter §2(a))"}
+  {:ng/id "N2" :ng/req "NOT a III-V fab — design/datafication/simulation only; fabrication PROHIBITED through R3 (ADR-2605265500 §2)"}
+  {:ng/id "N3" :ng/req "no vendor-proprietary MOCVD/epitaxy recipe ingest or reverse-engineering (G1 — unrepresentable)"}
+  {:ng/id "N4" :ng/req "not the silicon iwakura/fuigo logic-ASIC track (ADR-2605242500) nor himawari solar-Si PV (ADR-2606021200) — III-V compound substrate only"}
+  {:ng/id "N5" :ng/req "no In/Ga sourced without conflict-free/recycled attestation (G4)"}
+  {:ng/id "N6" :ng/req "does NOT decide or advocate the ADR-2605265500 R4+ gate (G3 — Council Lv7+ only)"}]
+
+ :actor/cells
+ [{:cell/id "commons_ingest"      :cell/kind :langgraph :cell/runtime :wasm :cell/node "dan"}
+  {:cell/id "bulk_crystal_design" :cell/kind :langgraph :cell/runtime :wasm :cell/node "naphtali"}
+  {:cell/id "wafer_fab_design"    :cell/kind :langgraph :cell/runtime :wasm :cell/node "gad"}
+  {:cell/id "precursor_safety"    :cell/kind :langgraph :cell/runtime :wasm :cell/node "asher"}
+  {:cell/id "commons_readiness"   :cell/kind :langgraph :cell/runtime :wasm :cell/node "issachar"}]
+
+ :actor/lex
+ [{:lex/id "processKnowledge"}
+  {:lex/id "crystalGrowthDesign"}
+  {:lex/id "waferSpec"}
+  {:lex/id "precursorSafetyAttestation"}
+  {:lex/id "commonsReadinessReport"}
+  {:lex/id "silenHotaruReview"}]}

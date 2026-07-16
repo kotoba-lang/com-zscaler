@@ -1,0 +1,69 @@
+;; watatsumi 綿津見 — cable-LAYING robotics fleet (敷設・埋設・接続・復旧・監視)
+;; ADR-2606012600 §robotics · operational counterpart to watatsuna 綿津綱 (the KG actor)
+;;
+;; CONSTITUTIONAL (watatsumi N8 + Charter Rider §2(d)): every robot below acts ONLY to
+;;   LAY · BURY · SPLICE · REPAIR · MONITOR submarine cable. Cutting / interdiction /
+;;   sabotage capability is a hard non-goal (N8). The grapnel-recovery unit (Tedori) is
+;;   REPAIR-ONLY — it recovers a *faulted* cable for re-splicing under a logged repair
+;;   work-order; it is never tasked to sever a healthy cable.
+;;
+;; PLANNING LINK: fleet missions are planned OFF watatsuna's resilience output —
+;;   lay diverse routes where watatsuna shows redundancy-gap; pre-stage repair where
+;;   chokepoint-load is high. watatsuna knows; watatsumi acts.
+;;
+;; HONEST: R0 design-only. Maturity flags are deliberately conservative; nothing below
+;;   is fabricated as built hardware. All inference Murakumo-only (G10).
+
+[{:fleet/id "watatsumi.cable-laying" :fleet/actor "actor:watatsumi" :fleet/adr "2606012600"
+  :fleet/purpose "submarine cable lay / bury / splice / repair / monitor"
+  :fleet/n8-bound true :fleet/planned-from "actor:watatsuna resilience output"
+  :fleet/plan-input "20-actors/watatsuna/out/resilience-plan.kotoba.edn"
+  :fleet/plan-note "tasking comes from watatsuna methods/plan.py (:plan/* recommendations: :lay-diverse-route / :pre-stage-repair / :monitor). watatsuna knows; watatsumi acts."}
+
+ ;; ── 綱鋤 Tsuna-suki — towed sea plough / burial trencher ──
+ {:robot/id "watatsumi.tsuna-suki" :robot/glyph "綱鋤" :robot/name "Tsuna-suki — sea plough / burial trencher"
+  :robot/role :burial :robot/mode :towed
+  :robot/spec "share + water-jet trench; target burial ≤3 m in soft seabed; depth-rated ≤2000 m"
+  :robot/op-sequence ["route-confirm" "plough-engage" "simultaneous-lay-and-bury" "depth-of-burial-verify"]
+  :robot/phase "R1+" :robot/maturity :design-only :robot/sourcing :representative
+  :robot/note "civilian protection burial only; depth-of-burial governed by watatsuna chokepoint/fishing-risk output"}
+
+ ;; ── 掘抜 Horinuki — jet-trenching burial & PLIB ROV ──
+ {:robot/id "watatsumi.horinuki" :robot/glyph "掘抜" :robot/name "Horinuki — jet-trenching burial / post-lay inspection-and-burial (PLIB) ROV"
+  :robot/role :burial :robot/mode :rov-tracked
+  :robot/spec "fluidizing water-jet swords; for hard ground & post-lay remedial burial; ≤2000 m"
+  :robot/op-sequence ["survey-pass" "jet-fluidize" "cable-depress" "backfill" "as-buried-record"]
+  :robot/phase "R2+" :robot/maturity :design-only :robot/sourcing :representative}
+
+ ;; ── 接手 Tsugite — subsea splice / repeater-housing manipulation ROV ──
+ {:robot/id "watatsumi.tsugite" :robot/glyph "接手" :robot/name "Tsugite — splice / jointing / repeater-housing manipulation ROV"
+  :robot/role :splice :robot/mode :work-class-rov
+  :robot/spec "dual 7-DOF Otete-marine manipulators; optical fiber joint + universal joint housing handling"
+  :robot/op-sequence ["recover-bight-to-deck" "field-joint-splice" "housing-seal" "OTDR-verify" "re-lay"]
+  :robot/phase "R2+" :robot/maturity :design-only :robot/sourcing :representative
+  :robot/inherits "watatsumi.otete-marine"}
+
+ ;; ── 手繰 Tedori — grapnel cable-recovery ROV (REPAIR-ONLY) ──
+ {:robot/id "watatsumi.tedori" :robot/glyph "手繰" :robot/name "Tedori — grapnel cable-recovery ROV (repair-only)"
+  :robot/role :repair-recovery :robot/mode :work-class-rov
+  :robot/spec "grapnel + cut-and-hold for recovering a FAULTED cable to deck for re-splice"
+  :robot/op-sequence ["fault-localize" "logged-repair-work-order" "grapnel-recover-faulted-section" "hand-to-tsugite"]
+  :robot/phase "R2+" :robot/maturity :design-only :robot/sourcing :representative
+  :robot/n8-guard "REPAIR-ONLY — operates solely on a faulted cable under a logged, witness-quorum'd repair work-order (G4 ≥2 robots). NEVER tasked against a healthy cable. Cutting capability exists for recovery splice only; interdiction = N8 hard-prohibited."}
+
+ ;; ── 聞耳 Kikimimi — DAS (distributed acoustic sensing) passive monitor ──
+ {:robot/id "watatsumi.kikimimi" :robot/glyph "聞耳" :robot/name "Kikimimi — DAS passive cable-health monitor"
+  :robot/role :monitor :robot/mode :shore-interrogator
+  :robot/spec "uses the cable's OWN spare fiber as a distributed acoustic/strain sensor; flags strain, seismic, anchor-drag risk"
+  :robot/op-sequence ["interrogate-fiber" "anomaly-detect" "emit-fault-bulletin"]
+  :robot/feeds "actor:watatsuna com.etzhayyim.cable.flagCableFault"
+  :robot/phase "R1+" :robot/maturity :design-only :robot/sourcing :representative
+  :robot/note "monitoring only; resilience signal feeds watatsuna. No location data beyond the cable's own route is exported (watatsuna G1)."}
+
+ ;; ── inherited / shared assets ──
+ {:robot/id "watatsumi.hibiki.survey" :robot/glyph "響" :robot/name "Hibiki (route-survey profile)"
+  :robot/role :survey :robot/mode :auv :robot/spec "pre-lay bathymetry + sub-bottom profiler for route engineering"
+  :robot/phase "R1+" :robot/maturity :design-only :robot/inherits "watatsumi.hibiki" :robot/sourcing :representative}
+ {:robot/id "watatsumi.funamori.cable-ship" :robot/glyph "船守" :robot/name "Funamori (cable-lay / repair mother ship)"
+  :robot/role :surface-support :robot/mode :mother-ship :robot/spec "cable tank + linear cable engine; surface platform for lay & repair"
+  :robot/phase "R3" :robot/maturity :design-only :robot/inherits "kuni-umi.funamori" :robot/sourcing :representative}]

@@ -1,0 +1,64 @@
+;; tsumugi 紡ぎ — seed banner graph (B / 旗 hata): ideology / faction alignment.
+;; ADR-2606092000 · vocab = banner-ontology.kotoba.edn
+;;
+;; THOUGHT-POLICING GUARD (read banner-ontology header). The committed seed deliberately
+;; aligns ONLY:
+;;   - abstract doctrinal / school-of-thought banners (textbook 主義 categories — neutral),
+;;     each genealogically linked to a historical thought-stream (ADR-2606061500); and
+;;   - SELF-DECLARED public org platforms on a clearly-on-the-record axis (constitutional-
+;;     revision 改憲↔護憲), each entity's OWN published manifesto as ≥2 sources (H1/H7).
+;; It does NOT label corporations / newspapers / private persons with ideologies (highest
+;; defamation risk) — that stays G7/Council-gated live ingest. H2 forbids threat tokens;
+;; H3 keeps conviction off the node; H4 excludes private persons; H6 lets entities fly many.
+
+[;; ───────────────────────── banners (旗印) — descriptive standards ─────────────────────────
+ ;; school-of-thought banners (neutral textbook categories), each tied to a historical stream
+ {:banner/id "banner.school.liberalism" :banner/label "自由主義 (liberalism)" :banner/kind :school-of-thought :banner/thought-stream :stream/enlightenment-liberalism :banner/sourcing :representative}
+ {:banner/id "banner.school.social-democracy" :banner/label "社会民主主義 (social democracy)" :banner/kind :school-of-thought :banner/thought-stream :stream/labor-socialist :banner/sourcing :representative}
+ {:banner/id "banner.school.conservatism" :banner/label "保守主義 (conservatism)" :banner/kind :school-of-thought :banner/thought-stream :stream/burkean-conservative :banner/sourcing :representative}
+ {:banner/id "banner.school.environmentalism" :banner/label "環境主義 (environmentalism)" :banner/kind :school-of-thought :banner/thought-stream :stream/ecological :banner/sourcing :representative}
+ ;; policy-stance banners on the 改憲↔護憲 axis (a clearly-declared public axis)
+ {:banner/id "banner.jp.kenpou-kaisei" :banner/label "憲法改正 (constitutional revision)" :banner/kind :policy-stance :banner/axis "改憲↔護憲" :banner/sourcing :representative}
+ {:banner/id "banner.jp.gokenshugi" :banner/label "護憲 (constitutional preservation)" :banner/kind :policy-stance :banner/axis "改憲↔護憲" :banner/sourcing :representative}
+ ;; wave 2 (/loop): a second declared policy axis — 原発 推進↔脱原発 (self-declared party stances)
+ {:banner/id "banner.jp.genpatsu-suishin" :banner/label "原発推進 (nuclear-energy advancement)" :banner/kind :policy-stance :banner/axis "原発推進↔脱原発" :banner/sourcing :representative}
+ {:banner/id "banner.jp.datsu-genpatsu" :banner/label "脱原発 (nuclear phase-out)" :banner/kind :policy-stance :banner/axis "原発推進↔脱原発" :banner/sourcing :representative}
+ ;; wave 9 (/loop): two more declared policy axes (deepen 思想 granularity)
+ {:banner/id "banner.global.free-trade" :banner/label "自由貿易 (free trade)" :banner/kind :policy-stance :banner/axis "自由貿易↔保護主義" :banner/thought-stream :stream/enlightenment-liberalism :banner/sourcing :representative}
+ {:banner/id "banner.global.protectionism" :banner/label "保護主義 (protectionism)" :banner/kind :policy-stance :banner/axis "自由貿易↔保護主義" :banner/thought-stream :stream/mercantilist :banner/sourcing :representative}
+ {:banner/id "banner.jp.monetary-easing" :banner/label "金融緩和 (monetary easing)" :banner/kind :policy-stance :banner/axis "緩和↔引締" :banner/sourcing :representative}
+ {:banner/id "banner.jp.monetary-tightening" :banner/label "金融引締 (monetary tightening)" :banner/kind :policy-stance :banner/axis "緩和↔引締" :banner/sourcing :representative}
+ ;; the one banner etzhayyim itself flies (H5 — inbound-only, disclosed not projected)
+ {:banner/id "banner.etzhayyim.charter" :banner/label "etzhayyim Charter genealogy (Sola Scriptura/万人祭司/Tree of Life + 八百万/縁起/産霊/和)" :banner/kind :doctrinal :banner/thought-stream :stream/etzhayyim-synthesis :banner/sourcing :authoritative}
+
+ ;; ───────────────────────── entities (public orgs / seats / self) ─────────────────────────
+ ;; H4 — institutional / public-seat / self only. Representative public political parties
+ ;; (their constitutional stance is each party's OWN declared, on-the-record position).
+ {:ent/id "org.party.jp.ldp" :ent/label "(representative) 政党A" :ent/standing :institutional}
+ {:ent/id "org.party.jp.b"   :ent/label "(representative) 政党B" :ent/standing :institutional}
+ {:ent/id "org.party.jp.c"   :ent/label "(representative) 政党C — 中道 (flies both)" :ent/standing :institutional}
+ ;; wave 9 — first NON-party flier: an industry federation (still institutional, H4-clean)
+ {:ent/id "org.federation.x" :ent/label "(representative) 産業連盟X" :ent/standing :institutional}
+ {:ent/id "self.etzhayyim"   :ent/label "etzhayyim (this entity)" :ent/standing :self}
+
+ ;; ───────────────────────── :flies alignment 縁 (H1 basis, H3 weight, H7 ≥2 sources) ─────────────────────────
+ {:flies/id "flies.a.kaisei" :flies/who "org.party.jp.ldp" :flies/banner "banner.jp.kenpou-kaisei" :flies/basis :self-declared :flies/weight 0.85 :flies/sources ["政党A 公式 綱領 (公開)" "政党A 選挙公約 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.a.conserv" :flies/who "org.party.jp.ldp" :flies/banner "banner.school.conservatism" :flies/basis :self-declared :flies/weight 0.70 :flies/sources ["政党A 公式 綱領 (公開)" "政党A 立党宣言 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.b.goken" :flies/who "org.party.jp.b" :flies/banner "banner.jp.gokenshugi" :flies/basis :self-declared :flies/weight 0.80 :flies/sources ["政党B 公式 綱領 (公開)" "政党B 選挙公約 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.b.socdem" :flies/who "org.party.jp.b" :flies/banner "banner.school.social-democracy" :flies/basis :self-declared :flies/weight 0.65 :flies/sources ["政党B 公式 綱領 (公開)" "政党B 基本政策 (公開)"] :flies/sourcing :representative}
+ ;; H6 — a centrist party flies BOTH poles of an axis (plural, a bridge — not an anomaly)
+ {:flies/id "flies.c.kaisei" :flies/who "org.party.jp.c" :flies/banner "banner.jp.kenpou-kaisei" :flies/basis :public-stated :flies/weight 0.45 :flies/sources ["政党C 政策集 (公開)" "政党C 党首 記者会見 記録 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.c.liberal" :flies/who "org.party.jp.c" :flies/banner "banner.school.liberalism" :flies/basis :self-declared :flies/weight 0.55 :flies/sources ["政党C 公式 綱領 (公開)" "政党C 基本政策 (公開)"] :flies/sourcing :representative}
+ ;; wave 2 — self-declared 原発 stances (H6: parties already fly other banners → richer bridges)
+ {:flies/id "flies.a.genpatsu" :flies/who "org.party.jp.ldp" :flies/banner "banner.jp.genpatsu-suishin" :flies/basis :self-declared :flies/weight 0.60 :flies/sources ["政党A エネルギー政策 (公開)" "政党A 選挙公約 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.b.datsu" :flies/who "org.party.jp.b" :flies/banner "banner.jp.datsu-genpatsu" :flies/basis :self-declared :flies/weight 0.55 :flies/sources ["政党B エネルギー政策 (公開)" "政党B 基本政策 (公開)"] :flies/sourcing :representative}
+
+ ;; wave 9 — self-declared free-trade / protectionism + monetary stances (H1 on-the-record)
+ {:flies/id "flies.fed.freetrade" :flies/who "org.federation.x" :flies/banner "banner.global.free-trade" :flies/basis :self-declared :flies/weight 0.72 :flies/sources ["産業連盟X 政策提言 (公開)" "産業連盟X 通商方針 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.a.freetrade" :flies/who "org.party.jp.ldp" :flies/banner "banner.global.free-trade" :flies/basis :self-declared :flies/weight 0.55 :flies/sources ["政党A 通商政策 (公開)" "政党A 選挙公約 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.b.protect" :flies/who "org.party.jp.b" :flies/banner "banner.global.protectionism" :flies/basis :public-stated :flies/weight 0.45 :flies/sources ["政党B 産業・雇用政策 (公開)" "政党B 党首会見 記録 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.a.easing" :flies/who "org.party.jp.ldp" :flies/banner "banner.jp.monetary-easing" :flies/basis :self-declared :flies/weight 0.58 :flies/sources ["政党A 経済政策 (公開)" "政党A 公約 (公開)"] :flies/sourcing :representative}
+ {:flies/id "flies.c.tightening" :flies/who "org.party.jp.c" :flies/banner "banner.jp.monetary-tightening" :flies/basis :public-stated :flies/weight 0.40 :flies/sources ["政党C 経済政策集 (公開)" "政党C 党首会見 記録 (公開)"] :flies/sourcing :representative}
+
+ ;; H5 — etzhayyim discloses its OWN banner, inbound-only (never projected over others)
+ {:flies/id "flies.self.charter" :flies/who "self.etzhayyim" :flies/banner "banner.etzhayyim.charter" :flies/basis :self-declared :flies/weight 1.0 :flies/inbound-only true :flies/sources ["90-docs/adr/2605192100 (Charter)" "CHARTER-RIDER.md"] :flies/sourcing :authoritative}]

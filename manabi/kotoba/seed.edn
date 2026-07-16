@@ -1,0 +1,61 @@
+;; manabi 学び — kotoba seed data (representative, R0)
+;; ADR-2605261045 · :sourcing :representative (NOT authoritative; G10 pedagogy-integrity)
+;; A small worked example: 2 modules (literacy + numeracy starter) + 1 minor learner session
+;; (30-day rotating pseudonym) + 1 adult learner session + skill attestation. NOT live curriculum.
+;; Prices / curriculum content are worked-example placeholders.
+
+[;; ════════════ Modules (curriculum declarations) ════════════
+ {:module/id "literacy-phonemic-awareness"
+  :module/curriculum-type :literacy
+  :module/content-cid "bafyreightyg…example-cid-phonemic-awareness"
+  :module/curriculum-reviewed true
+  :module/sourcing :representative}
+
+ {:module/id "numeracy-counting"
+  :module/curriculum-type :numeracy
+  :module/content-cid "bafyreidkjxn…example-cid-counting"
+  :module/curriculum-reviewed true
+  :module/sourcing :representative}
+
+ ;; ════════════ Learners ════════════
+ ;; Minor learner (30-day rotating pseudonym per ADR-2605181200)
+ {:learner/did "did:web:pseudonym.manabi.etzhayyim.com/minor-30d-rotation-2026-06-02"
+  :learner/age-bucket :minor
+  :learner/active-sbt true
+  :learner/sourcing :representative}
+
+ ;; Adult learner
+ {:learner/did "did:web:member.example.etzhayyim.com"
+  :learner/age-bucket :adult
+  :learner/active-sbt true
+  :learner/sourcing :representative}
+
+ ;; ════════════ Learning Sessions (aggregate-only for minors per G6) ════════════
+ ;; Minor session → aggregate fields only (duration, completion, stage)
+ {:learner-session/id "sess.minor.0001"
+  :learner-session/learner-did "did:web:pseudonym.manabi.etzhayyim.com/minor-30d-rotation-2026-06-02"
+  :learner-session/module-id "literacy-phonemic-awareness"
+  :learner-session/duration-minutes 45
+  :learner-session/completion-fraction 0.65
+  :learner-session/literacy-stage :decoding}
+
+ ;; Adult session
+ {:learner-session/id "sess.adult.0001"
+  :learner-session/learner-did "did:web:member.example.etzhayyim.com"
+  :learner-session/module-id "numeracy-counting"
+  :learner-session/duration-minutes 120
+  :learner-session/completion-fraction 0.90
+  :learner-session/numeracy-stage :place-value}
+
+ ;; ════════════ Skill Attestation (anti-credentialism G7) ════════════
+ {:skill-attestation/learner-did "did:web:member.example.etzhayyim.com"
+  :skill-attestation/domain :agriculture
+  :skill-attestation/demonstration-cid "bafyreiexample-skill-artifact-cid"
+  :skill-attestation/timestamp "2026-06-02T10:00:00Z"
+  :skill-attestation/sourcing :representative}
+
+ ;; ════════════ Charter Understanding Attestation ════════════
+ {:charter-understanding-attestation/learner-did "did:web:member.example.etzhayyim.com"
+  :charter-understanding-attestation/level :foundational
+  :charter-understanding-attestation/timestamp "2026-06-02T09:30:00Z"
+  :charter-understanding-attestation/sourcing :representative}]

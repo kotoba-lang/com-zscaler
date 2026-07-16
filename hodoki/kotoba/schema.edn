@@ -1,0 +1,292 @@
+;; hodoki 解き — kotoba EAVT schema
+;; ADR-2605261215 (R0 scaffold)
+;; End-of-life vehicle (ELV) disassembly + materials recovery over kotoba Datoms:
+;; intake audit, depollution, battery handling, parts harvest, catalyst recovery,
+;; body shred, data wipe, emissions audit, and provenance binding. All state is
+;; kotoba Datoms.
+
+[;; ───────────────────────────── :elv-intake/* — ELV Intake Audit Record ─────────────────────────────
+ {:db/ident :elv-intake/vin
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Vehicle Identification Number (VIN)"}
+ {:db/ident :elv-intake/title-doc
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to title documentation (e.g., IPFS CID)"}
+ {:db/ident :elv-intake/owner-consent
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to prior-owner consent record (e.g., DID-signed attestation)"}
+ {:db/ident :elv-intake/arrival-timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of vehicle arrival"}
+ {:db/ident :elv-intake/charter-scan-status
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":passed | :failed — Charter §2(a-h) scan status (G5)"}
+ {:db/ident :elv-intake/data-wipe-request
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to initial data wipe attestation request"}
+
+ ;; ───────────────────────────── :depollution/* — Depollution Attestation ─────────────────────────────
+ {:db/ident :depollution/record-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for depollution record"}
+ {:db/ident :depollution/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :depollution/fluid-drain-status
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if fluids drained"}
+ {:db/ident :depollution/f-gas-capture-status
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if F-gas captured (G6)"}
+ {:db/ident :depollution/airbag-disarmed
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if airbags disarmed"}
+ {:db/ident :depollution/battery-disconnected
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if battery disconnected"}
+ {:db/ident :depollution/attestation-timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of depollution attestation"}
+
+ ;; ───────────────────────────── :battery-handling/* — Battery Handling Record ─────────────────────────────
+ {:db/ident :battery-handling/record-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for battery handling record"}
+ {:db/ident :battery-handling/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :battery-handling/battery-type
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":li-ion | :lead-acid | :ni-mh"}
+ {:db/ident :battery-handling/soh
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "State of Health (SoH) percentage for Li-ion batteries"}
+ {:db/ident :battery-handling/routing-decision
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":hikari-second-life | :cell-recycle | :kanayama-reclaim (G7)"}
+ {:db/ident :battery-handling/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of battery handling"}
+
+ ;; ───────────────────────────── :parts-harvest/* — Parts Harvest Catalog ─────────────────────────────
+ {:db/ident :parts-harvest/catalog-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for parts harvest catalog entry"}
+ {:db/ident :parts-harvest/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :parts-harvest/part-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "DID for the harvested part (G12)"}
+ {:db/ident :parts-harvest/ipfs-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of the catalog entry (G12)"}
+ {:db/ident :parts-harvest/part-name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :parts-harvest/condition-grade
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":a | :b | :c | :d"}
+ {:db/ident :parts-harvest/bilingual-description
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Bilingual description of the part (G4)"}
+ {:db/ident :parts-harvest/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of parts harvest"}
+
+ ;; ───────────────────────────── :catalyst-recovery/* — Catalyst Recovery Record ─────────────────────────────
+ {:db/ident :catalyst-recovery/record-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for catalyst recovery record"}
+ {:db/ident :catalyst-recovery/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :catalyst-recovery/pgm-yield-pct
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "PGM (Pt/Pd/Rh) yield percentage (G14)"}
+ {:db/ident :catalyst-recovery/smelter-receipt-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of the smelter receipt"}
+ {:db/ident :catalyst-recovery/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of catalyst recovery"}
+
+ ;; ───────────────────────────── :shred-output/* — Shred Output Attestation ─────────────────────────────
+ {:db/ident :shred-output/record-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for shred output record"}
+ {:db/ident :shred-output/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :shred-output/ferrous-mass-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :shred-output/non-ferrous-mass-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :shred-output/copper-mass-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :shred-output/asr-mass-kg
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :shred-output/material-recovery-pct
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Overall material recovery percentage (G13)"}
+ {:db/ident :shred-output/asr-landfill-pct
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "ASR percentage to landfill (G13)"}
+ {:db/ident :shred-output/cross-actor-handoffs
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/many
+  :db/doc "List of actors receiving materials (e.g., kanayama, makura, silicon)"}
+ {:db/ident :shred-output/timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of shred output"}
+
+ ;; ───────────────────────────── :data-wipe/* — Data Wipe Attestation ─────────────────────────────
+ {:db/ident :data-wipe/attestation-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for data wipe attestation"}
+ {:db/ident :data-wipe/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :data-wipe/ecu-wipe-status
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if ECU data wiped"}
+ {:db/ident :data-wipe/infotainment-wipe-status
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if infotainment data wiped"}
+ {:db/ident :data-wipe/telematics-wipe-status
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if telematics data wiped"}
+ {:db/ident :data-wipe/cryptographic-destruction-status
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if cryptographic destruction attested"}
+ {:db/ident :data-wipe/physical-chip-shred-fallback
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if physical chip shred fallback was used"}
+ {:db/ident :data-wipe/attestation-timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of data wipe attestation (G8)"}
+
+ ;; ───────────────────────────── :silen-deconstruction/* — Silen Deconstruction Review ─────────────────────────────
+ {:db/ident :silen-deconstruction/review-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for Silen Deconstruction Review"}
+ {:db/ident :silen-deconstruction/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :silen-deconstruction/council-attestation
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if Council 5-of-7 Safe attestation received"}
+ {:db/ident :silen-deconstruction/review-timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of review"}
+
+ ;; ───────────────────────────── :emissions-audit/* — ELV Emissions Audit ─────────────────────────────
+ {:db/ident :emissions-audit/record-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for emissions audit record"}
+ {:db/ident :emissions-audit/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :emissions-audit/f-gas-leakage-continuous
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if continuous F-gas leakage monitoring passed (G6)"}
+ {:db/ident :emissions-audit/asr-mass-cap-compliance
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if ASR mass cap compliance met (G13)"}
+ {:db/ident :emissions-audit/pgm-yield-audit-compliance
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "True if PGM yield audit compliance met (G14)"}
+ {:db/ident :emissions-audit/audit-timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of emissions audit"}
+
+ ;; ───────────────────────────── :provenance-binder/* — ELV Provenance Binder ─────────────────────────────
+ {:db/ident :provenance-binder/record-id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Unique ID for provenance binder record"}
+ {:db/ident :provenance-binder/vin
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "Reference to :elv-intake/vin"}
+ {:db/ident :provenance-binder/kotoba-datomic-anchor-cid
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "IPFS CID of the kotoba-datomic-anchored audit binder"}
+ {:db/ident :provenance-binder/mass-balance-closure-pct
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Mass balance closure percentage (G2)"}
+ {:db/ident :provenance-binder/binder-timestamp
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ISO-8601 timestamp of binder creation"}
+]

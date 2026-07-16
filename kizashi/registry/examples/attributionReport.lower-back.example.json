@@ -1,0 +1,21 @@
+{
+  "_comment": "Worked example of a NON-DIAGNOSTIC attributionReport (ADR-2605312700, lexicon com.etzhayyim.kizashi.attributionReport). 腰痛 (lower-back) case. Demonstrates G3 (no diagnosis/prescription field — only candidate contributing factors, never diseases), G7 (calibrated confidence + const disclaimer + consult recommendation), and weightPermille contributions summing to 1000 incl. an explicit uncertain residual. NOT real member data — illustration + R1 validation fixture. In production every PII-bearing field rides the encrypted payload; this example carries only the aggregate, non-PII shape.",
+  "$schema": "com.etzhayyim.kizashi.attributionReport",
+  "createdAt": "2026-06-01T00:00:00Z",
+  "scanSessionCid": "bafkreigh2akiscaildc-EXAMPLE-scan-session",
+  "symptomDomain": "lower-back",
+  "contributions": [
+    {"factor": "posture-derived (forward-head + anterior pelvic tilt; reduced lumbar ROM)", "weightPermille": 600},
+    {"factor": "circulation/soft-tissue (left-right thermal asymmetry, lumbar paraspinal)", "weightPermille": 150},
+    {"factor": "structural-suggestion (NOT assessed — requires licensed imaging; referral)", "weightPermille": 50},
+    {"factor": "uncertain-residual", "weightPermille": 200}
+  ],
+  "confidence": "moderate",
+  "disclaimer": "所見は確定原因ではありません。受診を推奨します (This is a sign, not a confirmed cause; please consult a clinician).",
+  "consultRecommendation": "routine-consult",
+  "modalityObservationCids": [
+    "bafkreiposture3d-EXAMPLE",
+    "bafkreithermography-EXAMPLE"
+  ],
+  "charterRiderScanPass": true
+}

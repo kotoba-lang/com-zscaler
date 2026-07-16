@@ -1,0 +1,80 @@
+;; kanayama 金 — kotoba seed data (representative, R0)
+;; ADR-2605252400 · :sourcing :representative (NOT authoritative; G10)
+;; A small worked example: one UBC intake bale flowing through the full 9-cell
+;; closed-loop recycling process (intake QA → decoating → melting → casting →
+;; rolling → QC → settlement), with mass-balance accounting, emissions audit,
+;; and a computed settlement intent (USDC minor, 10% tithe). NOT a live commercial offer.
+
+[;; ════════════ L1 intake QA ════════════
+ {:intake/id "intake.demo.0001"
+  :intake/bale-weight 500.0
+  :intake/cl-residue-pct 0.8
+  :intake/moisture-pct 2.1
+  :intake/magnetic-impurity-ppm 45
+  :intake/qa-passed true}
+
+ ;; ════════════ L2 decoating + separation ════════════
+ {:decoating/id "decoat.demo.0001"
+  :decoating/intake "intake.demo.0001"
+  :decoating/input-mass 500.0
+  :decoating/coating-mass-loss 12.5
+  :decoating/magnetic-sort 2.3
+  :decoating/output-mass 485.2
+  :decoating/ipfs-photo "QmDecoatBatch0001"}
+
+ ;; ════════════ L3 melting + alloy ════════════
+ {:melting/id "melt.demo.0001"
+  :melting/decoating "decoat.demo.0001"
+  :melting/input-mass 485.2
+  :melting/melt-temp 720.0
+  :melting/degas-method :n2
+  :melting/output-mass 482.1
+  :melting/alloy-designation "5182"
+  :melting/dross-collected 3.1
+  :melting/witness-sigs ["did:web:robot.yokin.example.etzhayyim.com" "did:web:robot.kamado.example.etzhayyim.com"]}
+
+ ;; ════════════ L4 DC casting + homogenization ════════════
+ {:casting/id "cast.demo.0001"
+  :casting/melting "melt.demo.0001"
+  :casting/slab-weight 480.0
+  :casting/cast-temp 715.0
+  :casting/homogen-start "2026-06-02T08:00:00Z"
+  :casting/homogen-end "2026-06-02T20:00:00Z"
+  :casting/ipfs-photo "QmCastSlab0001"}
+
+ ;; ════════════ L5a/L5b hot + cold rolling ════════════
+ {:rolling/id "roll.demo.0001"
+  :rolling/casting "cast.demo.0001"
+  :rolling/hot-temp 500.0
+  :rolling/hot-passes 5
+  :rolling/intermediate-thickness 3.2
+  :rolling/cold-passes 8
+  :rolling/final-thickness 0.27
+  :rolling/coil-weight 475.0
+  :rolling/ipfs-coil-photo "QmFinalCoil0001"}
+
+ ;; ════════════ L5b quality inspection ════════════
+ {:quality/id "qc.demo.0001"
+  :quality/rolling "roll.demo.0001"
+  :quality/dimensional-ok true
+  :quality/weight-ok true
+  :quality/visual-defect-pct 0.2
+  :quality/result :pass
+  :quality/inspector-did "did:web:robot.migaki.example.etzhayyim.com"}
+
+ ;; ════════════ cross-cutting emissions audit ════════════
+ {:emissions/id "emit.demo.0001"
+  :emissions/pfc-level 0.15
+  :emissions/so2-level 8.2
+  :emissions/passed-audit true}
+
+ ;; ════════════ settlement intent (computed, NOT broadcast — R0 stops here; G11) ════════════
+ {:settlement/id "settle.demo.0001"
+  :settlement/batch-id "batch.demo.0001"
+  :settlement/gross-minor 1000000000
+  :settlement/tithe-minor 100000000
+  :settlement/operator-payout-minor 900000000
+  :settlement/state :intent}
+
+ ;; ════════════ SBT eligibility (operator/member active) ════════════
+ {:sbt/holder-did "did:web:operator.example.etzhayyim.com" :sbt/active true}]

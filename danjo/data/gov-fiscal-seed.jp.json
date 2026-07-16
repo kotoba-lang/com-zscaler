@@ -1,0 +1,93 @@
+{
+  "_note": "Representative JP general-account fiscal records (gov.dataset.budgetRecord shape, com.etzhayyim.gov.dataset.budgetRecord). Grounded on the REAL Japanese general-account budget structure (文部科学省 文教及び科学振興費 → 国立大学法人運営費交付金 / 科学技術振興費) and anchored to MOF primary sources, but every figure is :representative pending G7 live-verification of the IPFS-pinned jp_yosan corpus (danjo G3 passive-only / G5 sourcing-honesty). Aggregate / program-level endpoints only — no named private recipient is asserted (danjo G10 / kanae G10 aggregate-first). NOT an authoritative budget statement.",
+  "sourceSensor": "jp_yosan",
+  "jurisdiction": "jpn",
+  "currencyIso4217": "JPY",
+  "verificationStatus": "representative",
+  "primarySources": [
+    "https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2024/",
+    "https://www.bb.mof.go.jp/"
+  ],
+  "records": [
+    {
+      "recordId": "br-jp-2024-mext-appropriation",
+      "recordKind": "appropriation",
+      "jurisdiction": "jpn",
+      "programName": "文教及び科学振興費 (Education & Science Promotion)",
+      "programCode": "JP-MEXT-EDUSCI",
+      "amountLocal": 5464300000000,
+      "currencyIso4217": "JPY",
+      "fiscalYear": 2024,
+      "recipientName": "文部科学省 (Ministry of Education, Culture, Sports, Science and Technology)",
+      "recipientLocalId": "jp-corp:7000012090001",
+      "awardDateUtc": "2024-03-28T00:00:00.000Z",
+      "sourceSensor": "jp_yosan",
+      "sourceUrl": "https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2024/",
+      "tier": "A"
+    },
+    {
+      "recordId": "br-jp-2024-mext-univ-grants",
+      "recordKind": "outlay",
+      "jurisdiction": "jpn",
+      "programName": "国立大学法人運営費交付金 (National University Corporation operating grants)",
+      "programCode": "JP-MEXT-EDUSCI",
+      "amountLocal": 1078400000000,
+      "currencyIso4217": "JPY",
+      "fiscalYear": 2024,
+      "recipientName": "国立大学法人 (National University Corporations — recipient class, aggregate)",
+      "recipientLocalId": "jp-class:national-university-corporations",
+      "awardDateUtc": "2024-04-01T00:00:00.000Z",
+      "sourceSensor": "jp_yosan",
+      "sourceUrl": "https://www.mext.go.jp/a_menu/koutou/houjin/",
+      "tier": "A"
+    },
+    {
+      "recordId": "br-jp-2024-mext-sci-tech",
+      "recordKind": "outlay",
+      "jurisdiction": "jpn",
+      "programName": "科学技術振興費 (Science & Technology promotion — incl. JST/JSPS program lines)",
+      "programCode": "JP-MEXT-EDUSCI",
+      "amountLocal": 1398900000000,
+      "currencyIso4217": "JPY",
+      "fiscalYear": 2024,
+      "recipientName": "科学技術振興 諸事業 (Science & technology programs — recipient class, aggregate)",
+      "recipientLocalId": "jp-class:science-technology-programs",
+      "awardDateUtc": "2024-04-01T00:00:00.000Z",
+      "sourceSensor": "jp_yosan",
+      "sourceUrl": "https://www.mext.go.jp/a_menu/kagaku/",
+      "tier": "A"
+    },
+    {
+      "recordId": "br-jp-2023-mext-appropriation",
+      "recordKind": "appropriation",
+      "jurisdiction": "jpn",
+      "programName": "文教及び科学振興費 (Education & Science Promotion)",
+      "programCode": "JP-MEXT-EDUSCI",
+      "amountLocal": 5294000000000,
+      "currencyIso4217": "JPY",
+      "fiscalYear": 2023,
+      "recipientName": "文部科学省 (Ministry of Education, Culture, Sports, Science and Technology)",
+      "recipientLocalId": "jp-corp:7000012090001",
+      "awardDateUtc": "2023-03-28T00:00:00.000Z",
+      "sourceSensor": "jp_yosan",
+      "sourceUrl": "https://www.mof.go.jp/policy/budget/budger_workflow/budget/fy2023/",
+      "tier": "A"
+    },
+    {
+      "recordId": "br-jp-2023-mext-univ-grants",
+      "recordKind": "outlay",
+      "jurisdiction": "jpn",
+      "programName": "国立大学法人運営費交付金 (National University Corporation operating grants)",
+      "programCode": "JP-MEXT-EDUSCI",
+      "amountLocal": 1078400000000,
+      "currencyIso4217": "JPY",
+      "fiscalYear": 2023,
+      "recipientName": "国立大学法人 (National University Corporations — recipient class, aggregate)",
+      "recipientLocalId": "jp-class:national-university-corporations",
+      "awardDateUtc": "2023-04-01T00:00:00.000Z",
+      "sourceSensor": "jp_yosan",
+      "sourceUrl": "https://www.mext.go.jp/a_menu/koutou/houjin/",
+      "tier": "A"
+    }
+  ]
+}

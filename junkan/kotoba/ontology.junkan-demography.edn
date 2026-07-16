@@ -1,0 +1,125 @@
+;; junkan 循環 — demographic-dynamics ontology (kotoba EAVT schema, ADR-2605290927)
+;;
+;; The SECOND concrete analysis junkan carries (sibling of the governance-asymmetry
+;; substrate). The ANALYSIS-ONLY societal-systems-dynamics observer applied to a
+;; population question: which concrete demographic policy LEVERS (laws / institutions
+;; / doctrines / values) push a society's fertility/age structure toward COLLAPSE
+;; (悪循環) or toward sustainable REPLACEMENT (好循環)? Each lever feeds a demographic
+;; STOCK with a polarity (:suppress = lowers fertility / pushes toward collapse,
+;; :boost = raises fertility / toward replacement, :ambiguous). junkan reads off which
+;; feedback LOOPS spin 好循環/悪循環 + Meadows leverage candidates. It may ONLY look,
+;; never touch (G4 — no outward channel; enforced by ABSENCE of any dispatch path).
+;;
+;; Reference case (seed.china-one-child.edn): China's 一人っ子政策 (1979) → 単独二孩
+;; (2013) → 全面二孩 (2015) → 三孩 + 出産奨励 (2021). The pedagogical heart of the
+;; model: the state pulled the WEAKEST Meadows lever (a parameter: the number 1→2→3)
+;; while the reinforcing loops it could not reach — population momentum, small-family
+;; norm lock-in, the 4-2-1 dependency squeeze — kept fertility at the lowest in the
+;; world. "蛇口を逆にひねっても水は戻らない" as a stock-flow + delay + hysteresis case.
+;;
+;; Discipline carried into the data model (same spine as the governance substrate):
+;;   G4  analysis-only — output is append-only findings + a local ledger; no actuation.
+;;   G5  no causal overclaim — every loop/edge is :hypothesis (`:hypothesis? true`),
+;;       lagged-sign / structural only, NEVER proven causation.
+;;   G6  aggregate-only — population-level cohorts + INSTITUTIONAL/public-historical
+;;       enactors only; NO individual reproductive modeling, NO PII. A person's
+;;       fertility is unrepresentable.
+;;   G7  non-eschatological — collapse-leaning loops stated soberly; no doom / no
+;;       "demographic time-bomb" framing. A resilience MAP, never a population target.
+;;  G11  no prescription — leverage points are CANDIDATES with uncertainty
+;;       (`:prescription? false`); junkan NEVER prescribes who should reproduce
+;;       (anti-coercion; Charter §1.13 Wellbecoming + §1.4 anti-individualism).
+;;   G9  append-only / immutable datoms.
+;;
+;; Attribute namespaces:
+;;   :junkan.demog.lever/*  — disclosed policy-lever facts (law/institution/doctrine/value)
+;;   :junkan.demog.stock/*  — DERIVED demographic-stock aggregates + regime
+;;   :junkan.demog.loop/*   — DERIVED loop regime (hypothesis only)
+;;   :junkan.demog.era/*    — DERIVED temporal trajectory (suppress/boost force per era)
+;;   :junkan/derived        — true on every derived datom
+;;   :junkan/sourcing       — ":authoritative" | ":representative" | ":synthetic"
+;;   :junkan/hypothesis     — ":true" on every loop/regime read-off (G5)
+
+{:ontology/id "junkan-demography"
+ :ontology/version "0.1.0"
+ :ontology/adr ["2605290927" "2605192100" "2605262130" "2605312345"]
+
+ :node-kinds
+ [{:kind :instrument
+   :doc "A concrete demographic policy LEVER (law / institution / doctrine / value) that shapes a society's fertility / age structure."
+   :keys [:id :name :jurisdiction :kind :year
+          :enactor :origin :stakeholders            ;; 誰が定めたか / 経緯 / 関係者
+          :stock :polarity :magnitude :reversibility :meadows
+          :basis :sourcing :confidence :note]}]
+
+ :enums
+ {;; which demographic STOCK a lever feeds
+  :stock        #{:fertility-rate        ;; 出生フローの強度 (TFR) — the central flow level
+                  :reproductive-cohort   ;; 出産適齢期コホート — the momentum-bearing stock (lag ~25y)
+                  :small-family-norm     ;; 小家族規範 — the paradigm stock (cultural hysteresis)
+                  :elderly-dependency    ;; 高齢扶養負担 (4-2-1)
+                  :childrearing-cost}    ;; 育児・教育・住宅コスト
+  ;; does the lever SUPPRESS fertility (push toward collapse), BOOST it (toward
+  ;; replacement), or is it ambiguous. :suppress is the "widening-from-replacement"
+  ;; (vicious-ward) sign; :boost is the corrective (virtuous-ward) sign.
+  :polarity     #{:suppress :boost :ambiguous}
+  ;; kind of lever
+  :kind         #{:law :institution :doctrine :value}
+  ;; how the lever could be flipped — informs which Meadows level applies
+  :reversibility #{:constitutional :statutory :institutional :cultural :entrenched}
+  ;; loop regime read-off (G5 hypothesis)
+  :regime       #{:virtuous :vicious :neutral :transitioning}
+  :loop-type    #{:reinforcing :balancing}
+  :sourcing     #{:authoritative :representative :synthetic}}
+
+ ;; canonical STRUCTURAL loops (HYPOTHESES, G5) linking the demographic stocks.
+ ;; A loop's regime is read off the JOINT pressure of its member stocks (loop drive).
+ :loops
+ [{:id "B1-birth-control" :type :balancing :dominant-stock :fertility-rate
+   :edges [[:fertility-rate :fertility-rate :neg]]
+   :doc "INTENDED control loop: the one-child mandate ↓ fertility. Did its job 1980–2010 (slowed growth), now defunct/overshot — the lever was removed but fertility did not recover (hysteresis)."}
+  {:id "R1-population-momentum" :type :reinforcing :dominant-stock :reproductive-cohort
+   :edges [[:fertility-rate :reproductive-cohort :pos]
+           [:reproductive-cohort :fertility-rate :pos]]
+   :doc "VICIOUS (lag ~25y): a generation of low fertility shrinks the next reproductive cohort → fewer mothers → fewer births even at constant per-woman fertility. The strongest reason policy reversal (2015/2021) cannot move the curve."}
+  {:id "R2-norm-lockin" :type :reinforcing :dominant-stock :small-family-norm
+   :edges [[:small-family-norm :fertility-rate :pos]
+           [:fertility-rate :small-family-norm :pos]]
+   :doc "VICIOUS (cultural hysteresis): one generation of 'one child is normal' crystallizes a small-family paradigm that keeps fertility low after the mandate is gone. Removing a rule does not reset a norm."}
+  {:id "R3-421-squeeze" :type :reinforcing :dominant-stock :elderly-dependency
+   :edges [[:elderly-dependency :childrearing-cost :pos]
+           [:childrearing-cost :fertility-rate :pos]
+           [:fertility-rate :elderly-dependency :pos]]
+   :doc "VICIOUS (4-2-1): one-child families → one worker carries 2 parents + 4 grandparents → eldercare + cost squeeze → less capacity to raise children → more one-child families."}
+  {:id "B2-pronatal-incentive" :type :balancing :dominant-stock :childrearing-cost
+   :edges [[:childrearing-cost :fertility-rate :neg]]
+   :doc "INTENDED corrective loop: subsidies / 三孩 / 双减 ↓ childrearing-cost → fertility ↑. Structurally present from 2021 but currently overwhelmed by R1+R2+R3 (weak vs the reinforcing stack)."}]
+
+ ;; Meadows' 12 leverage levels (referenced, not vendored) — higher number = deeper leverage.
+ ;; The reference case's lesson: the 1979→2021 reversals acted almost entirely at level
+ ;; 12 (the number of children allowed) — the SHALLOWEST lever — while the binding
+ ;; constraints sit at levels 2–5 (the small-family paradigm, the system's goal, the
+ ;; rules/incentives around childrearing cost, housing, and the gendered division of care).
+ :meadows-levels
+ {12 "Constants, parameters, numbers (e.g. the permitted child count 1→2→3)"
+  11 "Buffer sizes"
+  10 "Stock-and-flow structures (the age pyramid itself)"
+  9  "Delays (the ~25y cohort-maturation lag)"
+  8  "Balancing feedback loops (pronatal incentives)"
+  7  "Reinforcing feedback loops (momentum / norm-lockin / 4-2-1)"
+  6  "Information flows"
+  5  "Rules (incentives, punishments, constraints — childcare/housing/leave)"
+  4  "Self-organization"
+  3  "Goals of the system (growth-target → quality-of-life?)"
+  2  "Mindset/paradigm (small-family norm; gendered care division)"
+  1  "Power to transcend paradigms"}
+
+ ;; negative space — structurally absent (enforced by tests + by construction)
+ :unrepresentable
+ [":junkan/actuate"                  ;; G4 — junkan never touches; no outward channel
+  ":junkan/dispatch"                 ;; G4 — no post/mention/email/tx
+  ":junkan.demog.lever/person"       ;; G6 — no individual reproductive modeling; enactor/stakeholder are institutional/on-record
+  ":junkan.demog/coerce-reproduction";; G11 — never prescribes who should/shouldn't reproduce (anti-coercion, §1.13)
+  ":junkan.demog/eugenic-target"     ;; G7/G11 — no population-quality / eugenic target ever
+  ":junkan.demog.loop/proven-cause"  ;; G5 — never proven causation; loops are hypotheses
+  ":junkan.demog/prescription"]}     ;; G11 — leverage points are candidates, never directives

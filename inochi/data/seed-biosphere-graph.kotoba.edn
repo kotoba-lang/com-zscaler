@@ -1,0 +1,106 @@
+;; inochi 命 — seed biosphere graph (real, PUBLIC, living-world entities only)
+;; ADR-2606073000 · vocabulary: biosphere-ontology (00-contracts/schemas/biosphere-ontology.kotoba.edn)
+;;
+;; SCOPE GUARD (constitutional, G1 — read first):
+;;   - inochi is a RESTORATION map of the living world, NEVER a target-list. NO precise
+;;     occurrence coordinates of at-risk taxa appear here (poaching/overfishing hazard);
+;;     spatial readouts are biome/realm-aggregate only.
+;;   - The lens is ECOLOGICAL 取-concentration (extinction/degradation pressure borne by
+;;     the living world), routed to RESTORATION. The 取-holder is the PRESSURE node; the
+;;     bearer is the species/ecosystem. karma lives ONLY on edges (:en/grasping-load; N1).
+;;
+;; SOURCING: IUCN Red List categories + well-documented trophic/dependency relations are
+;;   :authoritative (publicly disclosed assessments); the SAMPLE is a bounded illustrative
+;;   seed (:representative coverage), NOT exhaustive. No fabricated coverage. Live
+;;   planet-scale ingest (IUCN/GBIF/IPCC APIs over all earth) is G7/Council-gated.
+;;   IUCN categories are DISCLOSED facts, never inochi adjudications (N3).
+
+[;; ───────────────────────────── species (nodes) ─────────────────────────────
+ {:organism/id "bio.species.loxodonta-cyclotis" :organism/kind :species :organism/label "African forest elephant" :taxon/scientific "Loxodonta cyclotis" :taxon/kingdom :animalia :taxon/iucn :CR :taxon/keystone? true :organism/sourcing :authoritative}
+ {:organism/id "bio.species.panthera-pardus-orientalis" :organism/kind :species :organism/label "Amur leopard" :taxon/scientific "Panthera pardus orientalis" :taxon/kingdom :animalia :taxon/iucn :CR :organism/sourcing :authoritative}
+ {:organism/id "bio.species.phocoena-sinus" :organism/kind :species :organism/label "Vaquita" :taxon/scientific "Phocoena sinus" :taxon/kingdom :animalia :taxon/iucn :CR :organism/sourcing :authoritative}
+ {:organism/id "bio.species.pongo-abelii" :organism/kind :species :organism/label "Sumatran orangutan" :taxon/scientific "Pongo abelii" :taxon/kingdom :animalia :taxon/iucn :CR :organism/sourcing :authoritative}
+ {:organism/id "bio.species.dicerorhinus-sumatrensis" :organism/kind :species :organism/label "Sumatran rhinoceros" :taxon/scientific "Dicerorhinus sumatrensis" :taxon/kingdom :animalia :taxon/iucn :CR :organism/sourcing :authoritative}
+ {:organism/id "bio.species.eretmochelys-imbricata" :organism/kind :species :organism/label "Hawksbill sea turtle" :taxon/scientific "Eretmochelys imbricata" :taxon/kingdom :animalia :taxon/iucn :CR :organism/sourcing :authoritative}
+ {:organism/id "bio.species.acropora-cervicornis" :organism/kind :species :organism/label "Staghorn coral" :taxon/scientific "Acropora cervicornis" :taxon/kingdom :animalia :taxon/iucn :CR :taxon/keystone? true :organism/sourcing :authoritative}
+ {:organism/id "bio.species.gorilla-beringei-beringei" :organism/kind :species :organism/label "Mountain gorilla" :taxon/scientific "Gorilla beringei beringei" :taxon/kingdom :animalia :taxon/iucn :EN :organism/sourcing :authoritative}
+ {:organism/id "bio.species.panthera-tigris-tigris" :organism/kind :species :organism/label "Bengal tiger" :taxon/scientific "Panthera tigris tigris" :taxon/kingdom :animalia :taxon/iucn :EN :organism/sourcing :authoritative}
+ {:organism/id "bio.species.thunnus-thynnus" :organism/kind :species :organism/label "Atlantic bluefin tuna" :taxon/scientific "Thunnus thynnus" :taxon/kingdom :animalia :taxon/iucn :LC :organism/sourcing :authoritative}
+ {:organism/id "bio.species.gadus-morhua" :organism/kind :species :organism/label "Atlantic cod" :taxon/scientific "Gadus morhua" :taxon/kingdom :animalia :taxon/iucn :VU :organism/sourcing :authoritative}
+ {:organism/id "bio.species.danaus-plexippus" :organism/kind :species :organism/label "Monarch butterfly" :taxon/scientific "Danaus plexippus" :taxon/kingdom :animalia :taxon/iucn :VU :taxon/keystone? true :organism/sourcing :authoritative}
+ {:organism/id "bio.species.apis-mellifera" :organism/kind :species :organism/label "Western honey bee" :taxon/scientific "Apis mellifera" :taxon/kingdom :animalia :taxon/iucn :DD :taxon/keystone? true :organism/sourcing :authoritative}
+ {:organism/id "bio.species.ailuropoda-melanoleuca" :organism/kind :species :organism/label "Giant panda" :taxon/scientific "Ailuropoda melanoleuca" :taxon/kingdom :animalia :taxon/iucn :VU :organism/sourcing :authoritative}
+ {:organism/id "bio.species.asclepias" :organism/kind :species :organism/label "Milkweed (Asclepias spp.)" :taxon/scientific "Asclepias" :taxon/kingdom :plantae :taxon/rank :genus :taxon/iucn :LC :organism/sourcing :representative}
+
+ ;; ───────────────────────────── ecosystems / biomes (nodes) ─────────────────
+ {:organism/id "bio.eco.amazon" :organism/kind :ecosystem :organism/label "Amazon rainforest" :eco/realm :terrestrial :eco/biome :tropical-forest :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.congo-basin" :organism/kind :ecosystem :organism/label "Congo Basin forest" :eco/realm :terrestrial :eco/biome :tropical-forest :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.sundaland-peat" :organism/kind :ecosystem :organism/label "Sundaland peat-swamp forest" :eco/realm :terrestrial :eco/biome :tropical-forest :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.boreal-taiga" :organism/kind :biome :organism/label "Boreal forest (taiga)" :eco/realm :terrestrial :eco/biome :boreal-forest :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.coral-triangle" :organism/kind :ecosystem :organism/label "Coral Triangle reefs" :eco/realm :marine :eco/biome :coral-reef :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.great-barrier" :organism/kind :ecosystem :organism/label "Great Barrier Reef" :eco/realm :marine :eco/biome :coral-reef :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.north-atlantic-fishery" :organism/kind :ecosystem :organism/label "North Atlantic fishery" :eco/realm :marine :eco/biome :pelagic :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.sea-of-cortez" :organism/kind :ecosystem :organism/label "Gulf of California (Sea of Cortez)" :eco/realm :marine :eco/biome :pelagic :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.arctic-sea-ice" :organism/kind :ecosystem :organism/label "Arctic sea-ice ecosystem" :eco/realm :marine :eco/biome :tundra :organism/sourcing :authoritative}
+ {:organism/id "bio.eco.na-grassland" :organism/kind :ecosystem :organism/label "North American grassland (Monarch corridor)" :eco/realm :terrestrial :eco/biome :grassland :organism/sourcing :representative}
+
+ ;; ───────────────────────────── pressures (取-holders) ──────────────────────
+ ;; pressure/links cross-references the tsumugi power-graph where a power-entity drives the
+ ;; pressure (accountability, aggregate-first); absent where diffuse.
+ {:organism/id "bio.pressure.deforestation" :organism/kind :pressure :organism/label "Deforestation / land conversion" :pressure/kind :habitat-loss :organism/sourcing :authoritative}
+ {:organism/id "bio.pressure.overfishing" :organism/kind :pressure :organism/label "Overharvest / bycatch" :pressure/kind :overharvest :organism/sourcing :authoritative}
+ {:organism/id "bio.pressure.climate-warming" :organism/kind :pressure :organism/label "Climate forcing (warming / acidification)" :pressure/kind :climate-forcing :organism/sourcing :authoritative}
+ {:organism/id "bio.pressure.pollution" :organism/kind :pressure :organism/label "Pollution (plastic / agrochemical)" :pressure/kind :pollution :organism/sourcing :authoritative}
+ {:organism/id "bio.pressure.wildlife-trade" :organism/kind :pressure :organism/label "Illegal wildlife trade / poaching" :pressure/kind :wildlife-trade :organism/sourcing :authoritative}
+
+ ;; ───────────────────────────── 縁 (edges) ──────────────────────────────────
+ ;; (A) PRESSURES → bearer (:pressures); grasping-load ≈ severity (DISCLOSED, representative)
+ {:en/from "bio.pressure.wildlife-trade" :en/to "bio.species.loxodonta-cyclotis" :en/kind :pressures :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.deforestation" :en/to "bio.species.loxodonta-cyclotis" :en/kind :pressures :en/grasping-load 0.70 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.wildlife-trade" :en/to "bio.species.panthera-tigris-tigris" :en/kind :pressures :en/grasping-load 0.80 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.deforestation" :en/to "bio.species.panthera-tigris-tigris" :en/kind :pressures :en/grasping-load 0.65 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.deforestation" :en/to "bio.species.pongo-abelii" :en/kind :pressures :en/grasping-load 0.90 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.deforestation" :en/to "bio.species.dicerorhinus-sumatrensis" :en/kind :pressures :en/grasping-load 0.80 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.wildlife-trade" :en/to "bio.species.dicerorhinus-sumatrensis" :en/kind :pressures :en/grasping-load 0.75 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.overfishing" :en/to "bio.species.phocoena-sinus" :en/kind :pressures :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.overfishing" :en/to "bio.species.thunnus-thynnus" :en/kind :pressures :en/grasping-load 0.55 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.overfishing" :en/to "bio.species.gadus-morhua" :en/kind :pressures :en/grasping-load 0.70 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.overfishing" :en/to "bio.species.eretmochelys-imbricata" :en/kind :pressures :en/grasping-load 0.60 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.pollution" :en/to "bio.species.eretmochelys-imbricata" :en/kind :pressures :en/grasping-load 0.55 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.climate-warming" :en/to "bio.species.acropora-cervicornis" :en/kind :pressures :en/grasping-load 0.90 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.pollution" :en/to "bio.species.acropora-cervicornis" :en/kind :pressures :en/grasping-load 0.50 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.climate-warming" :en/to "bio.species.danaus-plexippus" :en/kind :pressures :en/grasping-load 0.50 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.pollution" :en/to "bio.species.danaus-plexippus" :en/kind :pressures :en/grasping-load 0.55 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.deforestation" :en/to "bio.species.gorilla-beringei-beringei" :en/kind :pressures :en/grasping-load 0.60 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.wildlife-trade" :en/to "bio.species.eretmochelys-imbricata" :en/kind :pressures :en/grasping-load 0.50 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.pollution" :en/to "bio.species.apis-mellifera" :en/kind :pressures :en/grasping-load 0.55 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.climate-warming" :en/to "bio.species.ailuropoda-melanoleuca" :en/kind :pressures :en/grasping-load 0.40 :en/sourcing :authoritative}
+
+ ;; pressures → ecosystems
+ {:en/from "bio.pressure.deforestation" :en/to "bio.eco.amazon" :en/kind :pressures :en/grasping-load 0.80 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.climate-warming" :en/to "bio.eco.amazon" :en/kind :pressures :en/grasping-load 0.60 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.deforestation" :en/to "bio.eco.congo-basin" :en/kind :pressures :en/grasping-load 0.65 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.deforestation" :en/to "bio.eco.sundaland-peat" :en/kind :pressures :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.climate-warming" :en/to "bio.eco.great-barrier" :en/kind :pressures :en/grasping-load 0.90 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.climate-warming" :en/to "bio.eco.coral-triangle" :en/kind :pressures :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.overfishing" :en/to "bio.eco.coral-triangle" :en/kind :pressures :en/grasping-load 0.55 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.overfishing" :en/to "bio.eco.north-atlantic-fishery" :en/kind :pressures :en/grasping-load 0.75 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.overfishing" :en/to "bio.eco.sea-of-cortez" :en/kind :pressures :en/grasping-load 0.70 :en/sourcing :authoritative}
+ {:en/from "bio.pressure.climate-warming" :en/to "bio.eco.arctic-sea-ice" :en/kind :pressures :en/grasping-load 0.95 :en/sourcing :authoritative}
+
+ ;; (B) DEPENDENCY / HABITAT / KEYSTONE 縁 (cascade fragility; criticality as load)
+ {:en/from "bio.species.pongo-abelii" :en/to "bio.eco.sundaland-peat" :en/kind :depends-on :en/grasping-load 0.90 :en/sourcing :authoritative}
+ {:en/from "bio.species.dicerorhinus-sumatrensis" :en/to "bio.eco.sundaland-peat" :en/kind :depends-on :en/grasping-load 0.80 :en/sourcing :authoritative}
+ {:en/from "bio.species.gorilla-beringei-beringei" :en/to "bio.eco.congo-basin" :en/kind :depends-on :en/grasping-load 0.70 :en/sourcing :representative}
+ {:en/from "bio.species.phocoena-sinus" :en/to "bio.eco.sea-of-cortez" :en/kind :depends-on :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:en/from "bio.species.gadus-morhua" :en/to "bio.eco.north-atlantic-fishery" :en/kind :depends-on :en/grasping-load 0.80 :en/sourcing :authoritative}
+ {:en/from "bio.species.danaus-plexippus" :en/to "bio.eco.na-grassland" :en/kind :depends-on :en/grasping-load 0.75 :en/sourcing :authoritative}
+ {:en/from "bio.species.loxodonta-cyclotis" :en/to "bio.eco.congo-basin" :en/kind :keystone-of :en/grasping-load 0.85 :en/sourcing :authoritative}
+ {:en/from "bio.species.acropora-cervicornis" :en/to "bio.eco.coral-triangle" :en/kind :keystone-of :en/grasping-load 0.90 :en/sourcing :authoritative}
+ {:en/from "bio.species.acropora-cervicornis" :en/to "bio.eco.great-barrier" :en/kind :keystone-of :en/grasping-load 0.90 :en/sourcing :authoritative}
+ {:en/from "bio.species.apis-mellifera" :en/to "bio.eco.na-grassland" :en/kind :keystone-of :en/grasping-load 0.70 :en/sourcing :representative}
+
+ ;; (C) TROPHIC / MUTUALIST 縁 (the web of life itself)
+ {:en/from "bio.species.danaus-plexippus" :en/to "bio.species.asclepias" :en/kind :depends-on :en/grasping-load 0.95 :en/sourcing :authoritative}
+ {:en/from "bio.species.apis-mellifera" :en/to "bio.species.asclepias" :en/kind :pollinates :en/grasping-load 0.40 :en/sourcing :representative}
+ {:en/from "bio.species.panthera-tigris-tigris" :en/to "bio.eco.sundaland-peat" :en/kind :keystone-of :en/grasping-load 0.60 :en/sourcing :representative}]

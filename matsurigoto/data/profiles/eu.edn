@@ -1,0 +1,14 @@
+;; Supranational profile — EU European Union (principal B, supranational layer). ADR-2606062300.
+;; sourcing :representative. The EU operates the cross-border INTEROP + corp-interconnection +
+;; digital-identity layers the standard's specs are literally drawn from (BRIS, eIDAS, eDelivery).
+;; iso3 "EUR" is a placeholder for the supranational tier (mirrors ooyake's EU rows).
+{:country-profile/iso3 "EUR" :country-profile/name "European Union (supranational)"
+ :country-profile/operated-by ":adopting-government"
+ :country-profile/authority-mode ":supplied-to-state"
+ :country-profile/sourcing ":representative"
+ :country-profile/notes "Supranational tier — coordinates member states; does not itself run civil registration / passports (member-state competence)."
+ :country-profile/bindings
+ [{:bind/service "corp.certificate"            :bind/agency "EU Commission (DG JUST) / member registers" :bind/legal-basis "Directive (EU) 2017/1132 (company law)" :bind/national-spec "BRIS (Business Registers Interconnection System)" :bind/atlas-did "did:web:etzhayyim.com:gov:eu:commission"}
+  {:bind/service "eid.wallet.credential"       :bind/agency "EU Commission (DG CNECT)"          :bind/legal-basis "Regulation (EU) 2024/1183 (eIDAS 2.0)" :bind/national-spec "EUDI Wallet ARF / OpenID4VCI" :bind/atlas-did "did:web:etzhayyim.com:gov:eu:commission"}
+  {:bind/service "interop.dataexchange"        :bind/agency "EU Commission / member states"     :bind/legal-basis "Single Digital Gateway Reg. (EU) 2018/1724" :bind/national-spec "eDelivery (AS4) / OOTS (Once-Only Technical System)" :bind/atlas-did "did:web:etzhayyim.com:gov:eu:commission"}
+  {:bind/service "tax.vat.file"                :bind/agency "EU Commission (DG TAXUD) / member tax authorities" :bind/legal-basis "VAT Directive 2006/112/EC" :bind/national-spec "VIES / VAT in the Digital Age (ViDA)" :bind/atlas-did "did:web:etzhayyim.com:gov:eu:commission"}]}

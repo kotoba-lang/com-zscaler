@@ -1,0 +1,6 @@
+;; 20-actors/tsubasa/schema.edn — Datomic/Datascript-compatible schema for
+;; this actor's datomized .edn files (manifest/edn-datomize.cljs port).
+;; :db/ident attribute defs. No Datomic-only tx keys (:db.install/_attribute etc).
+;; Hand-editing OK for now (no automated regen script exists in this repo yet).
+
+[#:db{:ident :lex-fare/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex-fare/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex-fare/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex-search-result/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex-search-result/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex-search-result/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

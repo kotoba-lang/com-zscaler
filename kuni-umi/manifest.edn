@@ -1,0 +1,54 @@
+;; kuni-umi 国産 — actor manifest (Gen-3 kotoba-native)
+;; Tier-B planetary infrastructure producer — robotics fleet deployment, commissioning, audit
+;; ADR-2605201400 (planetary-infra producer) · migration Phase 2 scaffold
+{:actor/id        "kuni-umi"
+ :actor/glyph     "国"
+ :actor/tier      :tier-b
+ :actor/integrates ["makura"]
+ :actor/domain    "kuni-umi.etzhayyim.com"
+ :actor/purpose   "Tier-B planetary infrastructure producer — Giemon robotics fleet deployment planning, site survey, construction orchestration, commissioning, audit witness, and decommission. Manages Otete (manipulator), Mimi (metrology), Watari (textile), Awa (foam), Hitogata (humanoid), and Quad (logistics) across 30+ projects. Deployment state is kotoba Datom-native (G6). All field operations gated by Council Lv6+ 3-sign off (ADR-2605201400 §7). Murakumo-only LLM for site coordination (G5). Settlement is USDC + ERC-4337 + TitheRouter (G7). No server key — operators/robots sign own tx (G15). Compute-only R0 — no live robot dispatch (consent-gated, G1). All witness records carry ≥2 independent robot DIDs (constitutional invariant)."
+ :actor/status    :r0
+ :actor/adr       "2605201400"
+ :actor/related   ["2605192415" "2605191559" "2605181100"]
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "consent-bound"           :gate/rule "member/operator DID-signed consent before any field action or robot dispatch; compute-only R0; no live motion until R1 ADR"}
+  {:gate/id "G2"  :gate/name "value-inflow-boundary"   :gate/rule "internal SBT↔SBT settlement only (§3); no external B2B inflow"}
+  {:gate/id "G5"  :gate/name "murakumo-only"           :gate/rule "site coordination / spec parsing is KotobaLLM 127.0.0.1:4000; external LLM prohibited (ADR-2605215000)"}
+  {:gate/id "G6"  :gate/name "kotoba-eavt-native"      :gate/rule "deployment/site/construction/audit/decommission records are kotoba Datom; no SQL/RisingWave/Cypher canonical"}
+  {:gate/id "G7"  :gate/name "tithe-non-fiat"          :gate/rule "settlement is USDC Base L2 + ERC-4337 + TitheRouter 10%; no Stripe/fiat"}
+  {:gate/id "G8"  :gate/name "witness-quorum"          :gate/rule "recordConstructionProgress + recordAuditEvent carry ≥2 independent robot DIDs; N=1 rejected + Council escalation (constitutional)"}
+  {:gate/id "G9"  :gate/name "pii-encrypted-envelope"  :gate/rule "site location / project details → com.etzhayyim.encrypted.*, DID-bound (ADR-2605181100)"}
+  {:gate/id "G10" :gate/name "land-registry-anchor"    :gate/rule "deployment site must be registered in kuni-umi LandRegistry or OceanStewardship; waqf-style inalienable donation"}
+  {:gate/id "G11" :gate/name "council-6lv-checkpoint"  :gate/rule "first deployment on any new site requires Council Lv6+ 3-sig attestation; tracked per :site/council-gates"}
+  {:gate/id "G13" :gate/name "robot-did-mandatory"     :gate/rule "every field-action record signed by robot DID (did:web:etzhayyim.com:kuniumi:robot:<serial> Ed25519); platform never vouches"}
+  {:gate/id "G14" :gate/name "member-principal"        :gate/rule "kuni-umi does not own sites or robots; operators are member principals; member signs intent to deploy"}
+  {:gate/id "G15" :gate/name "no-server-key"           :gate/rule "member/robot/operator sign own attestations; platform holds no key (ADR-2605231525)"}
+  {:gate/id "G16" :gate/name "giemon-class-only"       :gate/rule "robotics fleet limited to Giemon classes (Otete/Mimi/Watari/Awa/Hitogata/Quad); no proprietary/closed firmware"}
+  {:gate/id "G17" :gate/name "deployment-lossless-log" :gate/rule "planning → site-survey → construction → commissioning → audit → decommission all recorded in kotoba Datom; silent truncation prohibited"}
+  {:gate/id "G18" :gate/name "open-source-firmware"    :gate/rule "all Giemon firmware (motion control / vision / safety PLC) open-source Apache-2.0 + Charter Rider (G1 makura sibling)"}]
+
+ :actor/cells
+ [{:cell/id "site_survey"                :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "deployment_planning"        :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "construction_orchestration" :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "commissioning"              :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "audit_witness"              :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "decommission"               :cell/kind :langgraph :cell/runtime :wasm}]
+
+ :actor/lex
+ [{:lex/id "deploymentIntent"}
+  {:lex/id "siteAttestation"}
+  {:lex/id "constructionRecord"}
+  {:lex/id "commissioningRecord"}
+  {:lex/id "auditRecord"}
+  {:lex/id "decommissionRecord"}]
+
+ ;; legacy (gen-1) artifacts pending decommission per ADR-2605201400 Phase 3/4
+ :actor/legacy
+ {:manifest "manifest.jsonld"
+  :note "BPMN/DMN docs retained for regulatory audit; phase-out synchronized with Council registration (ADR-2605214000 §3)"}}

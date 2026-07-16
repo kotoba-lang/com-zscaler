@@ -1,0 +1,19 @@
+;; com.etzhayyim.kuniumi.decommissionRecord — lexicon
+;; ADR-2605201400 · decommission output
+{:lexicon 1
+ :id "com.etzhayyim.kuniumi.decommissionRecord"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["decommissionId" "auditRecordId" "salvageInventory" "state"]
+    :properties
+    {:decommissionId     {:type "string" :description "unique decommission record ID"}
+     :auditRecordId      {:type "string" :description "ref to :auditRecord"}
+     :salvageInventory   {:type "string" :description "Giemon hardware returned to fleet pool (circular)"}
+     :restorationAttestation {:type "string" :description "site remediation: soil/water post-operation baseline"}
+     :robotWitnessSigs   {:type "string" :description ">=2 robot-DID signatures (G8)"}
+     :state              {:type "string" :description ":in-progress | :complete"}
+     :timestamp          {:type "string" :description "ISO-8601 completion time"}}}}}}

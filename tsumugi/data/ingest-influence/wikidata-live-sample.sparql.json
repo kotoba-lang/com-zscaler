@@ -1,0 +1,36 @@
+{
+  "_note": "RECORDED Wikidata Query Service (WDQS) JSON response shape for the P737 influence query, used to test parse_wikidata_sparql + normalize_wikidata_rows WITHOUT network. Real WDQS output has this exact head/results.bindings structure. Includes a BCE row and an N4-drop row (influencer missing death date).",
+  "head": { "vars": ["p", "pLabel", "pBirth", "pDeath", "inf", "infLabel", "infBirth", "infDeath"] },
+  "results": {
+    "bindings": [
+      {
+        "p": { "value": "http://www.wikidata.org/entity/Q9358" },
+        "pLabel": { "value": "Friedrich Nietzsche" },
+        "pBirth": { "value": "1844-10-15T00:00:00Z" },
+        "pDeath": { "value": "1900-08-25T00:00:00Z" },
+        "inf": { "value": "http://www.wikidata.org/entity/Q38193" },
+        "infLabel": { "value": "Arthur Schopenhauer" },
+        "infBirth": { "value": "1788-02-22T00:00:00Z" },
+        "infDeath": { "value": "1860-09-21T00:00:00Z" }
+      },
+      {
+        "p": { "value": "http://www.wikidata.org/entity/Q868" },
+        "pLabel": { "value": "Aristotle" },
+        "pBirth": { "value": "-0384-01-01T00:00:00Z" },
+        "pDeath": { "value": "-0322-01-01T00:00:00Z" },
+        "inf": { "value": "http://www.wikidata.org/entity/Q859" },
+        "infLabel": { "value": "Plato" },
+        "infBirth": { "value": "-0428-01-01T00:00:00Z" },
+        "infDeath": { "value": "-0348-01-01T00:00:00Z" }
+      },
+      {
+        "p": { "value": "http://www.wikidata.org/entity/Q1001" },
+        "pLabel": { "value": "Hannah Arendt" },
+        "pBirth": { "value": "1906-10-14T00:00:00Z" },
+        "pDeath": { "value": "1975-12-04T00:00:00Z" },
+        "inf": { "value": "http://www.wikidata.org/entity/Q-NODATE" },
+        "infLabel": { "value": "Undated Influencer Example" }
+      }
+    ]
+  }
+}

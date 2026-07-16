@@ -1,0 +1,290 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://etzhayyim.com/ns/actor-manifest"
+  ],
+  "@type": "ActorManifest",
+  "id": "did:web:chigiri.etzhayyim.com",
+  "name": "chigiri",
+  "integrates": ["bunken", "hanrei", "musubi", "shidemori"],
+  "displayName": "契 — Covenant (legal procedure substrate)",
+  "displayNameJa": "契",
+  "displayNameEn": "Chigiri",
+  "description": "Non-profit religious-corp legal procedure substrate. Procedural template + on-chain attestation + routing substrate for the 任意団体 internal procedures, external state-system interfaces, and Charter §1.12 state-function routing-around. NOT a commercial law firm and NOT an unauthorized practice of law (UPL constitutionally prohibited per G14). 13 cells / 11 Lexicons under com.etzhayyim.chigiri.* / 17 immutable gates / 12 non-goals. Adds a free legal-aid lane (legal_aid_clinic cell, ADR-2605302200, G14/G15/G16) + a Japan 認証ADR mediation lane (dispute_mediation, ADR-2605302330, G17); advice/representation is delivered by jurisdiction-licensed human counsel via the Public Fund, never by chigiri. Consumes the global legal corpus from ADR-2605262800 (statutes / cases / treaties / procedures / templates). Replaces the legacy lawfirm.etzhayyim.com reference in hanrei.",
+  "descriptionJa": "非営利 religious-corp の法的手続き substrate。任意団体 内部手続き + 国家システム interface + Charter §1.12 国家機能 routing-around を、手続きテンプレート + on-chain attestation + routing substrate として提供。商業 law firm ではなく、法律相談 (UPL) は G14 で構造的に禁止。12 cells / 9 Lexicons / 14 不変ゲート / 12 non-goals。Global legal corpus (ADR-2605262800) を消費。hanrei が参照していた lawfirm.etzhayyim.com を religious-corp ネイティブに置換。",
+  "adr": {
+    "master": "etzhayyim:adr:2605262700",
+    "parent": "etzhayyim:adr:2605192100",
+    "r0": "etzhayyim:adr:2605262700",
+    "r1": "reserved",
+    "r2": "reserved",
+    "r3": "reserved"
+  },
+  "tier": "Tier-B",
+  "parentActor": null,
+  "crossActorData": [
+    "did:web:hanrei.etzhayyim.com",
+    "did:web:bunken.etzhayyim.com"
+  ],
+  "lexiconReadAccess": {
+    "com.etzhayyim.gov.dataset.parliamentRecord": "ADR-2605263900; READ-ONLY publicly-recorded parliament procedure citations for Charter §1.12 state-function-routing-around evidence base. covenant_ceremony + inheritance + withdrawal cells cite publicly-recorded state procedure as substitution context — never as internal dependency per N2 (no state-granted legal personality). CN-sourced records carry stateAlignedFlag=true which chigiri MUST display in any derived document.",
+    "com.etzhayyim.gov.dataset.openDatasetAttestation": "ADR-2605263900; READ-ONLY per-jurisdiction open-data portal catalog. Supports multi-jurisdictional template selection for tax_receipt + data_privacy + ip_licensing cells when state-published reference data is the most current source. UPL boundary preserved per G14 — chigiri renders procedure templates, NOT legal advice on those datasets.",
+    "com.etzhayyim.corp.registryAttestation": "ADR-2605263800; READ-ONLY per-jurisdiction legal-entity registry for entity-identity verification before vendor-contract Rider scrutiny + ipLicenseClaim recipient validation. LEI cross-link via com.etzhayyim.corp.leiReference for cross-jurisdictional resolution.",
+    "com.etzhayyim.corp.leiReference": "ADR-2605263800; READ-ONLY GLEIF LEI canonical for cross-jurisdiction entity-identity verification in ip_licensing + employment_compliance cells. CC0 1.0 license. Vendor commercial-terminal imports — Bloomberg Terminal / Refinitiv / FactSet / Moody's Orbis / D&B / Pitchbook / Crunchbase Pro — CONSTITUTIONALLY PROHIBITED per Charter Rider §2(e)+§2(c)."
+  },
+  "crossActorProcedure": [
+    "did:web:musubi.etzhayyim.com (future — covenant ceremony)",
+    "did:web:shidemori.etzhayyim.com (future — memorial / cemetery)",
+    "did:web:mitate.etzhayyim.com (medical attestation interop)",
+    "did:web:yakushi.etzhayyim.com (pharmaceutical regulatory)",
+    "did:web:hagukumi.etzhayyim.com (caregiver attestation)",
+    "did:web:manabi.etzhayyim.com (anti-credentialism)",
+    "did:web:kawase-yui.etzhayyim.com (kawase_jurisdiction_compliance cell reads chigiri.ipLicenseClaim + chigiri.taxReceipt for G14 per-jurisdiction Council Lv7+ unanimity attestation; chigiri.disputeMediation handles every kawase-yui G11 dispute cooperative-first since kawase has no chargeback / no settlement reversal — ADR-2605282200)",
+    "did:web:toritsugi.etzhayyim.com (toritsugi citizen-facing government-procedure concierge PULLS chigiri procedure templates to guide a consenting member through a 自治体/政府 procedure; chigiri owns the form + legal characterization + 作成代理 + appeal procedure (UPL), toritsugi owns citizen intake + interactive guide + draft-assist + (gated) submit + status-track and renders NO advice — toritsugi G5 行政書士法/UPL boundary; ADR-2605312030)"
+  ],
+  "replaces": "Legacy lawfirm.etzhayyim.com reference in 20-actors/hanrei/CLAUDE.md (religious-corp native, Murakumo-only, SBT-gated, Charter Rider §2-compliant; no etzhayyim lineage)",
+  "form": "任意団体 internal procedure substrate (NOT 一般社団 / NPO / 公益財団 / 宗教法人 法人格 — Preamble §0.4 Lv7+ unanimity lock)",
+  "uplProhibition": {
+    "constitutional": true,
+    "rule": "chigiri MUST NOT render legal advice. Templates document procedure; advice happens via human counsel contracted through Public Fund per ADR-2605192145 (Council Lv6+ approval).",
+    "structuralEnforcement": "Lint hook 70-tools/scripts/lint/no-chigiri-legal-advice.mjs (Wave 1) scans chigiri code for advice-issuing language; CI-blocks on hit."
+  },
+  "scope": {
+    "phase": "R0 scaffold",
+    "scopeBoundary": "Procedural substrate (internal + external + routing-around + force + content + financial + steward labor)",
+    "exclusions": [
+      "legal advice rendering (UPL prohibited per G14)",
+      "commercial law firm operations",
+      "fee-for-service legal work",
+      "litigation representation (external counsel via Public Fund)",
+      "state-granted legal personality acquisition (Preamble §0.4 invariant)",
+      "tax-avoidance scheme design",
+      "member surveillance beyond procedural necessity",
+      "central enforcement authority (Council + 1 SBT = 1 vote only)",
+      "non-member representation",
+      "single-jurisdiction-recognition dependence",
+      "adversarial-first dispute handling (mediation precedes)",
+      "vendor LLM API callout (Murakumo-only)"
+    ]
+  },
+  "cells": [
+    {
+      "name": "charters_attestation",
+      "module": "kotodama.cells.chigiri_charters_attestation",
+      "murakumoNode": "reuben",
+      "phase": "continuous",
+      "io": "finding → mediation OR enforcement routing"
+    },
+    {
+      "name": "council_procedure",
+      "module": "kotodama.cells.chigiri_council_procedure",
+      "murakumoNode": "reuben",
+      "phase": "event",
+      "io": "proposal → Safe 5-of-7 multisig path"
+    },
+    {
+      "name": "member_onboarding",
+      "module": "kotodama.cells.chigiri_member_onboarding",
+      "murakumoNode": "simeon",
+      "phase": "event",
+      "io": "candidate DID + consent → Adherent SBT"
+    },
+    {
+      "name": "member_offboarding",
+      "module": "kotodama.cells.chigiri_member_offboarding",
+      "murakumoNode": "simeon",
+      "phase": "event",
+      "io": "DID → SBT revoke (voluntary OR excommunication)"
+    },
+    {
+      "name": "covenant_ceremony",
+      "module": "kotodama.cells.chigiri_covenant_ceremony",
+      "murakumoNode": "simeon+levi",
+      "phase": "event",
+      "io": "ceremony spec → covenantAttestation",
+      "crossActorPair": "musubi (future)"
+    },
+    {
+      "name": "inheritance",
+      "module": "kotodama.cells.chigiri_inheritance",
+      "murakumoNode": "simeon",
+      "phase": "event",
+      "io": "decedent DID + heir DID → inheritanceChain"
+    },
+    {
+      "name": "dispute_mediation",
+      "module": "kotodama.cells.chigiri_dispute_mediation",
+      "murakumoNode": "levi",
+      "phase": "session",
+      "io": "claim → mediation cycle (max 3 rounds before arbitration escalation)"
+    },
+    {
+      "name": "ip_licensing",
+      "module": "kotodama.cells.chigiri_ip_licensing",
+      "murakumoNode": "gad",
+      "phase": "continuous",
+      "io": "Rider scan finding → claim filing"
+    },
+    {
+      "name": "tax_receipt",
+      "module": "kotodama.cells.chigiri_tax_receipt",
+      "murakumoNode": "gad",
+      "phase": "event",
+      "io": "donation event → per-jurisdiction receipt routing"
+    },
+    {
+      "name": "employment_compliance",
+      "module": "kotodama.cells.chigiri_employment_compliance",
+      "murakumoNode": "gad",
+      "phase": "continuous",
+      "io": "steward registry → L-level classification (volunteer ≠ employee)"
+    },
+    {
+      "name": "data_privacy",
+      "module": "kotodama.cells.chigiri_data_privacy",
+      "murakumoNode": "gad",
+      "phase": "event",
+      "io": "DSAR / breach → procedure routing (GDPR / CCPA / APPI / LGPD)"
+    },
+    {
+      "name": "transparent_force_authorization",
+      "module": "kotodama.cells.chigiri_transparent_force_authorization",
+      "murakumoNode": "naphtali",
+      "phase": "event",
+      "io": "force request → 1 SBT = 1 vote attestation chain + IHL checklist (defensive only per G7)"
+    },
+    {
+      "name": "legal_aid_clinic",
+      "module": "kotodama.cells.chigiri_legal_aid_clinic",
+      "murakumoNode": "judah",
+      "phase": "session",
+      "io": "adherent intake → conflict check → NON-advice triage (Murakumo) → jurisdiction-enabled check → Public-Fund counsel assignment → legalAidMatter (ADR-2605302200 G14/G15/G16)"
+    }
+  ],
+  "lexiconNamespaces": [
+    "com.etzhayyim.chigiri.covenantAttestation",
+    "com.etzhayyim.chigiri.excommunicationProcedure",
+    "com.etzhayyim.chigiri.withdrawalAttestation",
+    "com.etzhayyim.chigiri.inheritanceChain",
+    "com.etzhayyim.chigiri.disputeMediation",
+    "com.etzhayyim.chigiri.ipLicenseClaim",
+    "com.etzhayyim.chigiri.taxReceipt",
+    "com.etzhayyim.chigiri.stewardLaborAttestation",
+    "com.etzhayyim.chigiri.forceAuthorizationRecord",
+    "com.etzhayyim.chigiri.legalAidMatter",
+    "com.etzhayyim.chigiri.jurisdictionPolicy"
+  ],
+  "dataSubstrate": {
+    "ingestion": "ADR-2605262800 — global legal corpus (statutes / cases / treaties / procedures / templates) via IPFS-pinned DataLad subdatasets",
+    "buckets": [
+      "90-docs/baien/datasets/law/statutes/",
+      "90-docs/baien/datasets/law/cases/",
+      "90-docs/baien/datasets/law/treaties/",
+      "90-docs/baien/datasets/law/procedures/",
+      "90-docs/baien/datasets/law/templates/",
+      "90-docs/baien/datasets/law/commentary/"
+    ],
+    "sensors": "kotodama.organism.sensors.legal.{statute,case,treaty,procedure,template}_sensor",
+    "judicialPartyRedaction": "kotodama.organism.sensors.legal.judicial_party_redactor (per-jurisdiction publication-redaction policy)",
+    "inferencePath": "Murakumo only (ADR-2605215000) — judah LiteLLM 127.0.0.1:4000 → gemma4:e4b; NO vendor LLM API callout"
+  },
+  "constitutionalGates": {
+    "description": "17 immutable gates: G1-G14 per ADR-2605262700; G15-G16 per ADR-2605302200 (free legal-aid lane); G17 per ADR-2605302330 (Japan 認証ADR mediation lane). Council Lv6+ supermajority + new ADR to amend (Lv7+ if constitutional invariant per Preamble §0.4).",
+    "gates": {
+      "G1": "Every legal document MUST pass Charter Rider §2(a)-(h) scan (etzhayyim_organism.sensors.charter_rider.scan); fail = block",
+      "G2": "Every procedure MUST emit com.etzhayyim.chigiri.* Lexicon record with kotoba-datomic attestation lineage; missing = invisible",
+      "G3": "Internal procedure MUST NOT require state-issued personal ID (DID + SBT only); state ID at external interface only",
+      "G4": "Charter Rider amendment = Council Lv6+ ≥4/7",
+      "G5": "Constitutional invariant amendment = Council Lv7+ unanimity (Preamble §0.4)",
+      "G6": "Community governance decision = 1 SBT = 1 vote; plutocratic vote weighting prohibited",
+      "G7": "Defensive Just War only — refuse to attest offensive force authorization; structural enforcement on posture ∈ {defensive, deterrent}",
+      "G8": "Open-source legal templates only (Apache 2.0 + Charter Rider); no proprietary clauses; no NDAs",
+      "G9": "Multi-jurisdictional fallback — procedures MUST NOT depend on a single state's religious-freedom protection",
+      "G10": "Cooperative mediation precedes adversarial arbitration; disputeMediation schema enforces ≥1 mediation round before arbitration",
+      "G11": "Murakumo-only inference (ADR-2605215000); no vendor LLM API callout",
+      "G12": "Excommunication = Council Lv6+ ≥4/7 + 30-day cure period; schema enforces curePeriodEndsAt > createdAt + 30d",
+      "G13": "Volunteer ≠ employee per ADR-2605261000; stewardLaborAttestation schema enforces L0..L6 classification; constructive-employment drift detection continuous",
+      "G14": "UPL strictly prohibited; chigiri MUST NOT render legal advice; lint hook 70-tools/scripts/lint/no-chigiri-legal-advice.mjs scans code",
+      "G15": "Zero compensation (ADR-2605302200): the legal-aid lane charges the adherent nothing — no fee / tithe / SBT-purchase / indirect benefit; lint hook no-legal-aid-consideration.mjs + legalAidMatter.zeroCompensation const true",
+      "G16": "Jurisdiction-licensed-lawyer supervision (ADR-2605302200): a matter MUST NOT pass intake without an in-jurisdiction (license == matter) lawyer retained via Public Fund; verify-required jurisdictions (US-state / AT) refused",
+      "G17": "Certify-before-mediation (ADR-2605302330): the dispute_mediation cell claims §72-exemption only as a 認証紛争解決事業者 (Japan ADR法); pre-certification it degrades to non-binding facilitation"
+    }
+  },
+  "nonGoals": {
+    "description": "12 explicitly excluded scopes",
+    "goals": {
+      "N1": "NOT a commercial law firm; no fee-for-service",
+      "N2": "NOT a state-granted legal personality (一般社団 / NPO / 公益財団 / 宗教法人 法人格 NEVER per Preamble §0.4)",
+      "N3": "NOT offensive force legal cover",
+      "N4": "NOT a tax-avoidance scheme designer",
+      "N5": "NOT a member surveillance system",
+      "N6": "NOT commercial litigation representation (external counsel via Public Fund)",
+      "N7": "NOT a closed-source template repository",
+      "N8": "NOT a centralized enforcement authority (Council + 1 SBT = 1 vote only)",
+      "N9": "NOT representation of non-members",
+      "N10": "NOT fee-for-service",
+      "N11": "NOT adversarial-first (mediation MANDATORY before arbitration)",
+      "N12": "NOT dependent on a single jurisdiction's recognition"
+    }
+  },
+  "roadmap": [
+    {
+      "phase": "R0",
+      "date": "2026-05-26",
+      "scope": "Scaffold only. 12 cells path-reserved (under 40-engine/kotoba/crates/kotoba-kotodama/cells/chigiri_*/, created in R1). 9 Lexicon schema skeletons under 00-contracts/lexicons/com/etzhayyim/chigiri/. manifest + README + CLAUDE.md.",
+      "murakumoFleet": "No deployment",
+      "gate": "ADR-2605262700 (PROPOSED)"
+    },
+    {
+      "phase": "R1",
+      "date": "post-Bootstrap-Council (≥2026-06-19 RFP close + ≥1 Council Lv6+ ratify)",
+      "scope": "Activate 3 core cells (charters_attestation / council_procedure / member_onboarding). Full schemas for covenantAttestation / inheritanceChain / stewardLaborAttestation. Internal mediation MVP.",
+      "murakumoFleet": "reuben + simeon (2 nodes)",
+      "gate": "Future ADR + Council Lv6+ ≥3 attestation per cell (same pattern as ADR-2605215000)"
+    },
+    {
+      "phase": "R2",
+      "date": "post-R1 + ≥30-day public objection",
+      "scope": "Activate 5 more cells (covenant_ceremony, member_offboarding, inheritance, dispute_mediation full 3-round cycle, ip_licensing). Lexicons L2/L3/L5/L6 full schemas. Multi-jurisdiction tax-receipt routing (US 501(c)(3) eq-determination / UK Gift Aid / DE Spendenquittung / JP unavailable).",
+      "murakumoFleet": "reuben + simeon + levi + gad (4 nodes)",
+      "gate": "Future ADR + Council Lv6+ ≥4 attestations"
+    },
+    {
+      "phase": "R3",
+      "date": "post-R2 + Council Lv7+ unanimity",
+      "scope": "All 12 cells live. Transparent Force authorization full wiring + IHL checklist. Data privacy DSAR routing (GDPR / CCPA / APPI / LGPD). Cross-actor musubi / shidemori integration. Annual independent volunteer-attorney audit + Council attestation.",
+      "murakumoFleet": "Full 10-node fleet",
+      "gate": "Future ADR + Council Lv7+ unanimity"
+    }
+  ],
+  "references": {
+    "adr": {
+      "master": "/90-docs/adr/2605262700-chigiri-legal-procedure-tier-b-actor-r0.md",
+      "corpus": "/90-docs/adr/2605262800-public-data-legal-corpus-ipfs-ingestion.md",
+      "missionCharter": "/90-docs/adr/2605192100-etzhayyim-mission-charter.md",
+      "charterRider": "/90-docs/adr/2605192200-etzhayyim-ip-free-release-charter-rider.md",
+      "publicFund": "/90-docs/adr/2605192145-etzhayyim-public-fund-architecture.md",
+      "council": "/90-docs/adr/2605192300-etzhayyim-council-5-of-7-safe.md",
+      "force": "/90-docs/adr/2605192315-etzhayyim-transparent-force-authorization.md",
+      "land": "/90-docs/adr/2605192245-etzhayyim-global-land-sovereignty.md",
+      "liberation": "/90-docs/adr/2605261000-labor-liberation-transition-mechanism.md",
+      "kotoba": "/90-docs/adr/2605262130-kotoba-storage-substrate-unification.md",
+      "publicData": "/90-docs/adr/2605262400-public-data-organism-ipfs-ingestion.md"
+    },
+    "crossActor": {
+      "hanrei": "/20-actors/hanrei/CLAUDE.md (case-law data source — read-only)",
+      "bunken": "/20-actors/bunken/CLAUDE.md (literature data source — read-only)",
+      "hagukumi": "/20-actors/hagukumi/ (R0 scaffold pattern reference)"
+    }
+  },
+  "yirah": {
+    "adr": "2606112200",
+    "note": "yir'ah invariant-bundle declarations (ADR-2606112200 D4) — adopted only where meaningful for this actor's scope; each declaration is grounded in the cited existing gates.",
+    "declared": {
+      "non-adjudicating": "procedural template + routing only — renders no legal judgment or characterization (UPL prohibited G14; appeal strategy deferred to external counsel per ADR-2605302200)",
+      "no-score-of-soul": "no member is scored or profiled by procedural history; procedures attest acts, never worth",
+      "append-only": "every procedure emits kotoba attestation lineage (G2); corrections append, nothing is erased (永久記憶 Tier-0)",
+      "never-a-throne": "DID + SBT only, no state-ID central registry (G3); no platform-held key; no central view over members' procedures"
+    }
+  }
+}

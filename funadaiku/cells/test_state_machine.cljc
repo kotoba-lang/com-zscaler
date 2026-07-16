@@ -1,0 +1,64 @@
+(ns funadaiku.cells.test-state-machine
+  "funadaiku 船大工 cell state machines — R0 transition coverage (ADR-2606013400). 1:1 port of
+  cells/test_state_machines.py: a GENERIC structural check over all 9 cells (never calls .solve()).
+  Each transition_to_* returns a well-formed {cell_state, next_node} whose completionPct is an int in
+  (0,100], the pcts are distinct + reach 100, and exactly one transition routes to `end` at 100%."
+  (:require [clojure.test :refer [deftest is]]
+            [clojure.string :as str]
+            funadaiku.cells.steel-block-fabrication.state-machine
+            funadaiku.cells.grand-block-assembly.state-machine
+            funadaiku.cells.weld-ndt-inspection.state-machine
+            funadaiku.cells.outfitting.state-machine
+            funadaiku.cells.powertrain-integration.state-machine
+            funadaiku.cells.class-certification-binder.state-machine
+            funadaiku.cells.launch-commissioning.state-machine
+            funadaiku.cells.sea-trial.state-machine
+            funadaiku.cells.decarbonization-audit.state-machine))
+
+(def cell-nses
+  '[funadaiku.cells.steel-block-fabrication.state-machine
+    funadaiku.cells.grand-block-assembly.state-machine
+    funadaiku.cells.weld-ndt-inspection.state-machine
+    funadaiku.cells.outfitting.state-machine
+    funadaiku.cells.powertrain-integration.state-machine
+    funadaiku.cells.class-certification-binder.state-machine
+    funadaiku.cells.launch-commissioning.state-machine
+    funadaiku.cells.sea-trial.state-machine
+    funadaiku.cells.decarbonization-audit.state-machine])
+
+(defn- transitions [nsym]
+  (->> (ns-publics nsym)
+       (filter (fn [[k _]] (str/starts-with? (name k) "transition-to-")))
+       (map (fn [[_ v]] v))))
+
+(deftest test-nine-cells-present
+  (is (= 9 (count cell-nses))))
+
+(deftest test-all-state-machines-transition-to-completion
+  (doseq [nsym cell-nses]
+    (let [defaults @(ns-resolve nsym 'cell-state-defaults)]
+      (is (= 0 (get defaults "completionPct")) (str nsym ": CellState should default to 0%"))
+      (is (string? (get defaults "phase"))))
+    (let [fns (transitions nsym)
+          outs (map #(% {"cell_state" {}}) fns)
+          pcts (map #(get-in % ["cell_state" "completionPct"]) outs)]
+      (is (seq fns) (str nsym ": no transition-to-* functions"))
+      (doseq [out outs]
+        (is (map? out)) (is (contains? out "cell_state")) (is (contains? out "next_node"))
+        (let [ph (get-in out ["cell_state" "phase"]) pct (get-in out ["cell_state" "completionPct"])]
+          (is (and (string? ph) (seq ph)) (str nsym ": phase not a non-empty string"))
+          (is (and (integer? pct) (< 0 pct) (<= pct 100)) (str nsym ": pct " pct " out of range"))))
+      (is (= (count (set pcts)) (count pcts)) (str nsym ": duplicate completionPct " (vec pcts)))
+      (is (= 100 (apply max pcts)) (str nsym ": transitions never reach 100%")))))
+
+(deftest test-exactly-one-transition-routes-to-end
+  (doseq [nsym cell-nses]
+    (let [ends (->> (transitions nsym)
+                    (map #(% {"cell_state" {}}))
+                    (filter #(= (get % "next_node") "end")))]
+      (is (= 1 (count ends)) (str nsym ": expected exactly one terminal transition"))
+      (is (= 100 (get-in (first ends) ["cell_state" "completionPct"])) (str nsym ": terminal not 100%")))))
+
+(deftest test-all-cells-solve-raises
+  (doseq [nsym cell-nses]
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"R0 scaffold" (@(ns-resolve nsym 'solve) {})))))

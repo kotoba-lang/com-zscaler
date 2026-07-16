@@ -1,0 +1,15 @@
+{
+  "_comment": "watari sample public-broadcast batch (:representative). AIS = AISStream PositionReport shape; ADS-B = OpenSky /states/all state-vector shape. Illustrative, NOT a live capture. Live fetch is G7-gated.",
+  "observedAt": "2026-06-04T12:00:00Z",
+  "ais": [
+    { "MMSI": 353136000, "ShipName": "EVER GIVEN", "Latitude": 27.4, "Longitude": 33.9, "Sog": 12.0, "Cog": 156.0, "observedAt": "2026-06-04T12:00:00Z" },
+    { "MMSI": 374912000, "ShipName": "MSC GULSUN", "Latitude": 3.3, "Longitude": 100.6, "Sog": 13.4, "Cog": 309.0, "observedAt": "2026-06-04T12:00:00Z" }
+  ],
+  "adsb": {
+    "observedAt": "2026-06-04T12:00:00Z",
+    "states": [
+      ["86d100", "ANA12   ", "Japan", 1717502400, 1717502400, 140.0, 35.6, 800.0, false, 160.0, 230.0, -5.0, null, 850.0, null, false, 0],
+      ["3c6700", "DLH715  ", "Germany", 1717502400, 1717502400, -50.0, 50.5, 12200.0, false, 250.0, 279.0, 0.0, null, 12500.0, null, false, 0]
+    ]
+  }
+}

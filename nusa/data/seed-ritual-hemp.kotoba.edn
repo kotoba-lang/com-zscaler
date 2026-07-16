@@ -1,0 +1,91 @@
+;; nusa 幣 — seed ritual/industrial hemp heritage graph (Japan)
+;; ADR-2606039800 · vocabulary: ritual-hemp-ontology.kotoba.edn (00-contracts/schemas/)
+;;
+;; SCOPE: the ritual + industrial HEMP (麻) heritage of Japan — Shinto purification
+;;   artifacts, the imperial-accession 麁服 (aratae), the 阿波忌部 lineage, and LOW-THC
+;;   fibre cultivars whose licensed cultivation the 2023 reform reopened.
+;;
+;; INVARIANT (G1): every :hemp/* record is :thc-class :fiber or :low-thc. No record
+;;   represents a psychoactive/recreational strain — the data model cannot (see schema).
+;;
+;; SOURCING (G7): every node carries :*/sourcing. BOUNDED illustrative seed. Heritage
+;;   facts (aratae/Daijōsai, Awa Imbe / Miki house, 神宮大麻, とちぎしろ low-THC variety)
+;;   are matters of public/scholarly record; precise figures flagged :representative or
+;;   :synthesized. Legal references require primary-source verification (G8). Absence of a
+;;   cultivar/rite = "not yet ingested", NOT "does not exist".
+
+[;; ───────────────────────────── :hemp/* — LOW-THC cultivars / landraces ─────
+ {:hemp/id "hemp.tochigishiro" :hemp/name "とちぎしろ (Tochigi-shiro)" :hemp/kind :cultivar
+  :hemp/thc-class :low-thc :hemp/fiber-use [:textile :rope :shimenawa] :hemp/region ["栃木"]
+  :hemp/note "栃木県で育成された低THC 産業用品種。繊維用; 嗜好用ではない。"
+  :hemp/sourcing :representative}
+ {:hemp/id "hemp.awa-landrace" :hemp/name "阿波在来 (Awa landrace, ritual fibre)" :hemp/kind :landrace
+  :hemp/thc-class :fiber :hemp/fiber-use [:aratae :shimenawa :textile] :hemp/region ["阿波(徳島)"]
+  :hemp/note "大嘗祭 麁服の繊維源系譜として伝承される在来の繊維型麻。"
+  :hemp/sourcing :representative}
+ {:hemp/id "hemp.shimane-fiber" :hemp/name "島根 繊維型麻 (ritual rope)" :hemp/kind :landrace
+  :hemp/thc-class :fiber :hemp/fiber-use [:shimenawa :rope] :hemp/region ["島根"]
+  :hemp/note "出雲大社系の大注連縄に連なる繊維用途の representative 系譜。"
+  :hemp/sourcing :synthesized}
+
+ ;; ───────────────────────────── :rite/* — ritual artifacts (purification) ───
+ {:rite/id "rite.shimenawa" :rite/name "注連縄 (shimenawa)" :rite/kind :shimenawa
+  :rite/purpose :purification :rite/material :hemp-fiber
+  :rite/uses-cultivar ["hemp.shimane-fiber" "hemp.tochigishiro"]
+  :rite/note "結界・浄域の標示。麻苧の縄。" :rite/sourcing :representative}
+ {:rite/id "rite.haraegushi" :rite/name "祓串 (haraegushi)" :rite/kind :haraegushi
+  :rite/purpose :purification :rite/material :hemp-fiber
+  :rite/uses-cultivar ["hemp.awa-landrace"]
+  :rite/note "祓の所作に用いる串。麻と紙垂。" :rite/sourcing :representative}
+ {:rite/id "rite.oonusa" :rite/name "大幣 (ōnusa)" :rite/kind :oonusa
+  :rite/purpose :purification :rite/material :hemp-fiber
+  :rite/uses-cultivar ["hemp.awa-landrace"]
+  :rite/note "麻苧を垂らした祓具 — actor 名 幣 の由来。穢れを祓う繊維。" :rite/sourcing :representative}
+ {:rite/id "rite.aratae" :rite/name "麁服 (aratae, 大嘗祭の麻布神御衣)" :rite/kind :aratae
+  :rite/purpose :purification :rite/material :hemp-fiber
+  :rite/uses-cultivar ["hemp.awa-landrace"]
+  :rite/note "大嘗祭で神に供える二種の神御衣のうち麻布の方。繒服(絹)と対。" :rite/sourcing :representative}
+ {:rite/id "rite.nigitae" :rite/name "繒服 (nigitae, 絹の神御衣)" :rite/kind :nigitae
+  :rite/purpose :purification :rite/material :silk
+  :rite/note "麁服(麻)と対をなす絹の神御衣。麻ではないが対照として記録。" :rite/sourcing :representative}
+ {:rite/id "rite.jingu-taima" :rite/name "神宮大麻 (Jingū-taima, 伊勢の御札)" :rite/kind :jingu-taima
+  :rite/purpose :purification :rite/material :hemp-fiber
+  :rite/note "伊勢神宮が頒布する御札。語源的に「大麻(たいま)」=麻に連なる。" :rite/sourcing :representative}
+
+ ;; ───────────────────────────── :imbe/* — provisioning lineage ──────────────
+ {:imbe/id "imbe.awa" :imbe/name "阿波忌部 (Awa Imbe)" :imbe/role :aratae-provision :imbe/region "阿波(徳島)"
+  :imbe/note "古代より朝廷の祭祀用麻(麁服)を調進した氏族系譜。" :imbe/sourcing :representative}
+ {:imbe/id "imbe.miki" :imbe/name "三木家 (Miki house, 木屋平)" :imbe/role :aratae-provision :imbe/region "徳島県美馬市木屋平"
+  :imbe/note "阿波忌部の系譜として大嘗祭の麁服調進を担うと伝えられる家。" :imbe/sourcing :representative}
+ {:imbe/id "imbe.shrine" :imbe/name "忌部神社" :imbe/role :shrine :imbe/region "徳島"
+  :imbe/note "忌部氏ゆかりの神社。" :imbe/sourcing :representative}
+
+ ;; ───────────────────────────── :rite.event/* — ceremonies (as-of history) ──
+ {:rite.event/id "event.daijosai" :rite.event/name "大嘗祭 (Daijōsai, 即位の祭祀)"
+  :rite.event/uses-artifact ["rite.aratae" "rite.nigitae"]
+  :rite.event/lineage ["imbe.awa" "imbe.miki"]
+  :rite.event/as-of "tradition"
+  :rite.event/note "天皇即位に伴う一代一度の祭祀。神御衣として麁服(麻)・繒服(絹)を供える。"
+  :rite.event/sourcing :representative}
+ {:rite.event/id "event.oharae" :rite.event/name "大祓 (Ōharae)"
+  :rite.event/uses-artifact ["rite.oonusa" "rite.haraegushi"]
+  :rite.event/as-of "recurring"
+  :rite.event/note "半年ごとの罪穢れを祓う神事。麻の祓具を用いる。"
+  :rite.event/sourcing :representative}
+
+ ;; ───────────────────────────── :hemp.license/* — cultivation-revival design ─
+ ;; member-principal (G4) · funding member-okaimono · serverHeldKey=false (G5) · outward-gated (G8)
+ {:hemp.license/id "license.ritual-aratae-revival"
+  :hemp.license/cultivar "hemp.awa-landrace" :hemp.license/purpose :ritual-fiber
+  :hemp.license/licensee-principal :member :hemp.license/funding :member-okaimono
+  :hemp.license/server-held-key false :hemp.license/outward-gated true
+  :hemp.license/legal-basis "大麻草の栽培の規制に関する法律 (栽培者免許; 令和5年法律第84号; 要 primary-source 引用)"
+  :hemp.license/as-of "design"
+  :hemp.license/sourcing :representative}
+ {:hemp.license/id "license.industrial-tochigishiro"
+  :hemp.license/cultivar "hemp.tochigishiro" :hemp.license/purpose :industrial-fiber
+  :hemp.license/licensee-principal :member :hemp.license/funding :member-okaimono
+  :hemp.license/server-held-key false :hemp.license/outward-gated true
+  :hemp.license/legal-basis "大麻草の栽培の規制に関する法律 (栽培者免許; 要 primary-source 引用)"
+  :hemp.license/as-of "design"
+  :hemp.license/sourcing :representative}]

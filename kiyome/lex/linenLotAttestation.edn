@@ -1,0 +1,14 @@
+{:lexicon 1
+ :id "com.etzhayyim.kiyome.linenLotAttestation"
+ :defs
+ {:main
+  {:type "record" :key "tid"
+   :record
+   {:type "object"
+    :required ["lotId" "itemCount" "createdAt"]
+    :properties
+    {:lotId {:type "string"}
+     :itemCount {:type "integer" :minimum 0}
+     :washTempC {:type "integer"}
+     :waterUseLiters {:type "integer" :description "resource ethics (mizuho/hikari coupling)"}
+     :createdAt {:type "string" :format "datetime"}}}}}}

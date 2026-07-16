@@ -1,0 +1,14 @@
+{:lexicon 1
+ :id "com.etzhayyim.watatsumi.weldInspectionRecord"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["tid" "ndtMethod" "resultsPass" "ipfsCid"]
+    :properties
+    {:tid {:type "string" :description "Transaction ID"}
+     :ndtMethod {:type "string" :description "NDT method (RT/UT/PT)"}
+     :resultsPass {:type "string" :description "100% pass (ASME BPVC §VIII Div 3)"}
+     :ipfsCid {:type "string" :description "IPFS CID for photo+video evidence"}}}}}}

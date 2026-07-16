@@ -1,0 +1,24 @@
+;; sarutahiko 猿田彦 — emissions-audit cell (langgraph, WASM runtime)
+;; ADR-2605252500 · Gen-3 deepen
+{:cell/id "emissions-audit"
+ :cell/glyph "猿田彦"
+ :cell/kind :langgraph
+ :cell/runtime :wasm
+ :cell/entry "py/agent.py"
+ :cell/doc "Cross-cutting emissions audit (Euro 7 / 大気汚染防止法 / Bharat Stage VI continuous compliance; R2+ zero tailpipe) (G8)."
+ :cell/state-graph
+ {:nodes [:intake :process :attest]
+  :entry :intake
+  :edges [[:intake :process] [:process :attest] [:attest :end]]}
+ :cell/llm
+ {:provider :murakumo
+  :endpoint "127.0.0.1:4000"
+  :model "gemma3:4b"
+  :charter-rider true}
+ :cell/gates ["G8" "G16" "G17"]
+ :cell/kotoba
+ {:reads [:vehicle-order/id :vehicle-order/buyer-did :vehicle-order/specs :vehicle-order/state]
+  :writes [:production-progress/id :production-progress/order :production-progress/stage
+           :production-progress/note :production-progress/timestamp
+           :attestation/id :attestation/order :attestation/type :attestation/cid :attestation/timestamp
+           :vehicle/emissions-audit]}}

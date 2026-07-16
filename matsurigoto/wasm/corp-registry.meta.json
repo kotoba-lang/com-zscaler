@@ -1,0 +1,18 @@
+{
+  "actor": "matsurigoto",
+  "module": "corp-registry",
+  "artifact": "corp-registry.wasm",
+  "built_with": "componentize-py 0.24.0",
+  "wit_world": "corp-registry",
+  "wit_package": "matsurigoto:egov@0.1.0",
+  "format": "wasm-component (WASI Preview 2)",
+  "cid_v1": "bafybeido2sqxlrvqtfm2vgivaq7nqor2n5ngnlf4qka7pjadjpyzv35y7i",
+  "cid_codec": "dag-pb (multi-block UnixFS)",
+  "size_bytes": 18341763,
+  "exec_tier": "T2 donated-mesh",
+  "browser_local": false,
+  "note": "Python component bundles CPython -> dag-pb CID, same watatsuna-precedent boundary (ADR-2606014600).",
+  "spec_basis": "ISO 17442 (LEI) + ISO 7064 MOD 97-10 checksum + GLEIF LEI-CDF + W3C VC 2.0",
+  "verified_output": "register-incorporation self-issues a 20-char LEI that validate-lei accepts, and rejects a tampered check digit",
+  "signing": "none — SERVER_HELD_AUTHORITY=false; certificate returned unsigned (G1)"
+}

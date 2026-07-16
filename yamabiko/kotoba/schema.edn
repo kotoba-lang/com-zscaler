@@ -1,0 +1,258 @@
+;; yamabiko 山彦 — kotoba EAVT schema
+;; ADR-2605252600 · R0 scaffold
+;; High-speed rail trainset manufacturing: 9-cell 5-layer assembly workflow + 2 cross-cutting cells
+;; All state kotoba Datoms (no RisingWave/Cypher canonical; G16)
+
+[;; ───────────────────────────── :trainset/* — per-trainset registry entry ─────────────────────────────
+ {:db/ident :trainset/did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Per-trainset DID (did:web:etzhayyim.com:yamabiko:trainset:<serial>; G13)"}
+ {:db/ident :trainset/serial-number
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "Trainset serial number (manufacturer identifier)"}
+ {:db/ident :trainset/car-count
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Car count (8-16 per Wave 1)"}
+ {:db/ident :trainset/max-speed-kmh
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Max certified speed (≤320 km/h per G12)"}
+
+ ;; ───────────────────────────── :carbody/* — L1 carbody fabrication ─────────────────────────────
+ {:db/ident :carbody/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :carbody/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :carbody/fsw-welds-count
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "FSW (friction stir weld) count with witness quorum log (G4)"}
+ {:db/ident :carbody/structural-test-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :carbody/material
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Aluminum/composite material grades"}
+
+ ;; ───────────────────────────── :bogie/* — L2 bogie assembly ─────────────────────────────
+ {:db/ident :bogie/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :bogie/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :bogie/position
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Bogie position in trainset (front/rear/center)"}
+ {:db/ident :bogie/traction-motor-type
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":bemu | :h2 | :electric (G7)"}
+ {:db/ident :bogie/witness-quorum-ok
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "≥2 robot witness attestation (Wadasa + heavy manipulator; G4)"}
+
+ ;; ───────────────────────────── :interior/* — L3 interior + HVAC ─────────────────────────────
+ {:db/ident :interior/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :interior/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :interior/car-number
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Car number (1-16)"}
+ {:db/ident :interior/seating-count
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :interior/hvac-functional-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :interior/pis-versions
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Passenger information system versions"}
+
+ ;; ───────────────────────────── :traction/* — L4 traction electrical ─────────────────────────────
+ {:db/ident :traction/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :traction/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :traction/hv-system-type
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "25 kV AC / 1500 V DC or hybrid"}
+ {:db/ident :traction/atp-ato-firmware-sha
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "ATP/ATO firmware Git SHA (open-source Apache 2.0, G1)"}
+ {:db/ident :traction/firmware-license-verified
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :assembly/* — L5a final assembly ─────────────────────────────
+ {:db/ident :assembly/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :assembly/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :assembly/integration-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Carbody-bogie integration + electrical continuity"}
+ {:db/ident :assembly/system-checks-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+
+ ;; ───────────────────────────── :dynamic-test/* — L5b speed/brake/power testing ─────────────────────────────
+ {:db/ident :dynamic-test/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :dynamic-test/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :dynamic-test/max-speed-achieved-kmh
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Speed achieved (≤320 km/h per G12)"}
+ {:db/ident :dynamic-test/braking-distance-m
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Emergency braking distance (meters)"}
+ {:db/ident :dynamic-test/power-draw-kw
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :dynamic-test/result
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":pass | :fail"}
+
+ ;; ───────────────────────────── :acoustic/* — cross-cutting ISO 3095 + IEC 62236 ─────────────────────────────
+ {:db/ident :acoustic/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :acoustic/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :acoustic/iso3095-dba
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Wayside noise dB(A) @ 25 m line"}
+ {:db/ident :acoustic/iec62236-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "IEC 62236 EMC compliance"}
+ {:db/ident :acoustic/kyoukusei-pass
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "騒音規制法 (Noise Regulation Act) compliance"}
+
+ ;; ───────────────────────────── :homologation/* — L5c final approval ─────────────────────────────
+ {:db/ident :homologation/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :homologation/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :homologation/trainset-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Minted per-trainset DID (G13)"}
+ {:db/ident :homologation/all-gates-passed
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "All gates G1..G22 passed (G1, G4, G7, G8, G12, G13, G14, G15, G16, G17, G18, G19, G20, G21, G22)"}
+ {:db/ident :homologation/eol-recyclability-pct
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "EoL recyclability percentage (≥90%; G14)"}
+ {:db/ident :homologation/result
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":approved | :rejected"}
+
+ ;; ───────────────────────────── :council-review/* — governance cross-cutting ─────────────────────────────
+ {:db/ident :council-review/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :council-review/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :council-review/member-sigs-count
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Council member signature count (≥5 of 7)"}
+ {:db/ident :council-review/all-gates-checked
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :council-review/firmware-audit-passed
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Open-source firmware license audit (G1)"}
+ {:db/ident :council-review/result
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":approved | :rejected"}
+
+ ;; ───────────────────────────── :settlement/* — USDC + TitheRouter intent ─────────────────────────────
+ {:db/ident :settlement/id
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity}
+ {:db/ident :settlement/trainset
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ {:db/ident :settlement/gross-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "USDC minor (6-dp) gross order value"}
+ {:db/ident :settlement/tithe-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "10% TitheRouter auto-split → Public Fund (G17)"}
+ {:db/ident :settlement/manufacturer-payout-minor
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "Net to manufacturer (gross − tithe), USDC minor"}
+ {:db/ident :settlement/state
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc ":intent (computed, NOT broadcast) | :executed (member-signed + operator-broadcast). R0 stops at :intent"}
+ {:db/ident :settlement/buyer-sig-ref
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Member passkey/smart-account signature ref; platform holds no key (G21). absent ⇒ stays :intent"}
+
+ ;; ───────────────────────────── :sbt/* — Adherent SBT eligibility ─────────────────────────────
+ {:db/ident :sbt/holder-did
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/unique :db.unique/identity
+  :db/doc "DID of an Adherent SBT holder"}
+ {:db/ident :sbt/active
+  :db/valueType :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc "Active Adherent SBT? required for ordering and governance"}]

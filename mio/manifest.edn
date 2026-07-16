@@ -1,0 +1,72 @@
+;; 澪 mio — actor manifest (clj-native, kotoba-Datom-native)
+;; Proof-of-Useful-Flow verification ledger — BACKBONE of the Energy Order
+;; Protocol suite (撓 tawami / 燠 okibi / 樋 toi / 委 yudane submit; mio verifies).
+;; OBSERVATION + VERIFICATION ONLY — never trades, never actuates.
+{:actor/id        "mio"
+ :actor/glyph     "澪"
+ :actor/tier      :tier-b
+ :actor/integrates ["hikari" "mitooshi" "okibi" "shionome" "tawami" "toi" "yudane"]
+ :actor/domain    "mio.etzhayyim.com"
+ :actor/kind      :verification-ledger
+ :actor/purpose   "Proof-of-Useful-Flow verification ledger — the backbone of the Energy Order Protocol suite. Ingests flow-improvement CLAIMS submitted by the suite actors (撓 tawami flexibility / 燠 okibi waste-heat / 樋 toi compute-routing / 委 yudane intention) and hikari, applies the §9 verification gates (baseline / additionality / measurement / double-count / leakage), and accounts the org-wide verified useful-flow total — the 'Flowrate', the Proof-of-Useful-Flow analogue of Bitcoin's hashrate. The pivot is PoW → PoUF: the basis of scarcity/reward is ORDERED energy-flow, NOT CONSUMED energy. OBSERVATION + VERIFICATION ONLY — mio never trades (取引しない), never actuates; a resilience/reward map, NEVER a market/price signal. Physical-flow sibling of shionome (capital flow); realized-effect counterpart of mitooshi (forecasts); accounting backbone for hikari (the energy body)."
+ :actor/status    :r0
+ :actor/adr       "2606211200"
+ :actor/related   ["2606071500" "2605261100" "2606051800" "2606072201" "2606111400" "2605262130" "2605312345"]
+
+ :actor/charter-rider
+ {:rider/version "3.5"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1" :gate/name "order-not-consumption" :gate/rule "Reward NEVER derives from CONSUMED energy — only from VERIFIED ORDERED flow. No :consumed-reward attribute exists; useful-flow-score is 0 unless :verified; only :verified routes to :reward (test-enforced). The PoW → PoUF pivot."}
+  {:gate/id "G2" :gate/name "verification-is-the-gate" :gate/rule "A claim reaches :verified only with all five §9 facts (baseline / additionality≥min / trusted measurement / unique double-count-key / leakage≤max) AND confidence≥threshold. self-report ALONE cannot verify."}
+  {:gate/id "G3" :gate/name "map-not-market-signal" :gate/rule "An order-delta is a disclosed FACT, never a verdict/forecast/trade. No :trade / :signal / price-forecast-point attribute exists (shionome pattern)."}
+  {:gate/id "G4" :gate/name "kotoba-eavt-native" :gate/rule "State is kotoba EAVT Datoms on an append-only content-addressed commit-DAG (no SQL/RisingWave); every derived datom :mio/derived + :mio/sourcing."}
+  {:gate/id "G5" :gate/name "content-free-intention" :gate/rule "Intention (委 yudane) claims carry only an AGGREGATE flex offer; no per-person intent text is read or emitted. No :mio.person/* attribute exists."}
+  {:gate/id "G6" :gate/name "murakumo-only-narration" :gate/rule "Any narration via the Murakumo no-VKE mesh, DEFAULT-PREFERRED (Rider v3.3 §2(i) / ADR-2606172359)"}
+  {:gate/id "G7" :gate/name "no-server-key" :gate/rule "Platform holds no key; mio emits reward proposals as advisory/drafted-unsent. Actual reward issuance = 1 SBT=1 vote + TitheRouter; actuation = hikari + Council gate. Live measurement ingest is an operator step (R0 seed = :representative + folded :authoritative)."}]
+
+ :actor/non-goals
+ [{:n/id "N1" :n/rule "NOT a trading desk / no market signal (shionome echo)"}
+  {:n/id "N2" :n/rule "NOT an actuator — mio verifies + accounts; hikari actuates under Council gate"}
+  {:n/id "N3" :n/rule "NOT a forecaster (mitooshi owns distributions; mio accounts realized verified flow)"}
+  {:n/id "N4" :n/rule "NOT a consumption meter / energy retailer — consumption never earns"}
+  {:n/id "N5" :n/rule "No person/individual data — intention claims are content-free aggregates"}]
+
+ :actor/methods
+ [{:method/id "mio_edn" :method/file "methods/mio_edn.cljc" :method/role "seed loader + classify (claims)"}
+  {:method/id "analyze"  :method/file "methods/analyze.cljc"  :method/role "verify (§9 gates) → datoms → render-datoms → coverage → render-report (+ bb CLI)"}
+  {:method/id "kotoba"   :method/file "methods/kotoba.cljc"   :method/role "content-addressed append-only VERIFICATION LEDGER (tx-cid/append-tx/read-log/verify-chain)"}
+  {:method/id "autorun"  :method/file "methods/autorun.cljc"  :method/role "deterministic idempotent-by-content heartbeat — verify → append verdicts on change (+ bb CLI)"}
+  {:method/id "reward"   :method/file "methods/reward.cljc"   :method/role "R1: verified claims → advisory moyai reciprocity-credit reward proposals (drafted-unsent; 1 SBT=1 vote disposes; cash≡0)"}
+  {:method/id "lexicon"  :method/file "methods/lexicon.cljc"  :method/role "R1: write-surface contract — validate a flow-improvement claim against com.etzhayyim.mio.flowClaim (kotoba/lexicon.flowClaim.edn)"}]
+
+ :actor/lex
+ [{:lex/id "flowClaim" :lex/file "kotoba/lexicon.flowClaim.edn"
+   :lex/note "the typed write-surface contract for the suite's central interface (撓/燠/樋/委 → mio); validated by methods/lexicon.cljc"}
+  {:lex/id "usefulFlowLedger"}]
+
+ :actor/seed
+ {:seed/file "kotoba/seed.edn"
+  :seed/ontology "kotoba/ontology.mio.edn"
+  :seed/sourcing :representative
+  :seed/classes [:waste-heat :flexibility :compute-routing :renewable-absorb :peak-shave :intention]}
+
+ :actor/ledger
+ {:ledger/file "data/persisted/mio.verifications.kotoba.edn"
+  :ledger/kind :append-only-content-addressed-commit-dag
+  :ledger/gitignored true
+  :ledger/idempotent-by-content true
+  :ledger/note "Generated verification ledger of Proof-of-Useful-Flow verdicts; tamper-evident (verify-chain); no-server-key; appends only on change. A record of VERIFIED ORDERED FLOW, never a market signal."}
+
+ :actor/suite
+ {:suite/name "Energy Order Protocol"
+  :suite/role :backbone
+  :suite/siblings ["tawami" "okibi" "toi" "yudane"]
+  :suite/note "撓/燠/樋/委 submit flow-improvement claims; mio is the shared verification + accounting SSoT; hikari actuates verified outcomes under Council gate."}
+
+ :actor/tests
+ {:runner "babashka"
+  :cmd "./20-actors/mio/run_tests.sh"
+  :suites ["methods/test_mio_edn.cljc" "methods/test_analyze.cljc"
+           "methods/test_kotoba.cljc" "methods/test_autorun.cljc"]}}

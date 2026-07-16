@@ -1,0 +1,21 @@
+{
+  "fixtureId": "akashi-closure-negative-malak-imported",
+  "records": {
+    "malakEvidenceCandidate": [
+      {
+        "createdAt": "2026-06-02T00:00:00Z",
+        "candidateType": "public-ioc-domain-match",
+        "sourceCids": [
+          "cid:akashi:landing:domain-match",
+          "cid:public-ioc:domain:example"
+        ],
+        "publicIndicatorCid": "cid:public-ioc:domain:example",
+        "methodNoteCid": "cid:akashi:method-note:closure",
+        "reviewStatus": "malak-imported",
+        "malakImportCid": "cid:malak:import:should-not-exist-in-akashi-r0",
+        "nonAdjudicatingNotice": true,
+        "attestingDid": "did:web:akashi.etzhayyim.com"
+      }
+    ]
+  }
+}

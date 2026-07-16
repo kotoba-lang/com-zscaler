@@ -1,0 +1,202 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://etzhayyim.com/ns/actor-manifest"
+  ],
+  "@type": "ActorManifest",
+  "id": "did:web:wakai.etzhayyim.com",
+  "name": "wakai",
+  "integrates": ["hagukumi", "iyashi", "kawase-yui", "kazaori", "toritate", "yakushi"],
+  "displayName": "和会 — Mutual Aid",
+  "displayNameJa": "和会",
+  "displayNameEn": "Wakai",
+  "description": "Non-profit religious-corp mutual aid substrate. NOT insurance (no premium-as-contract; no actuarial pricing; no claim adjudication; no policy denial). Member-to-member solidarity pooling per Charter §1.7 反個人主義 + 多世代. Pool in USDC on Base L2 stable-asset only. NO commercial insurance software (G4: Guidewire/Duck Creek/Insurity/Sapiens/Majesco/SAP Insurance/Oracle Insurance/Lemonade/Hippo PROHIBITED per Charter Rider §2(e)+§2(c)). NO commercial re-insurance (G5: Munich Re/Swiss Re/SCOR/Hannover Re PROHIBITED). NO investment return promise (G6: Charter Rider §2(b) speculative finance). NO pre-existing condition discrimination (G7). Voluntary ability-scaled contribution (G8). Community discernment distribution (G9: Council Lv6+ ≥3 + ≥3 community attestation). Public Fund backstop (G10). NO payroll (G11). 6 cells / 5 Lexicons / 12 gates / 12 non-goals.",
+  "descriptionJa": "非営利 religious-corp の相互扶助 substrate。保険ではない (保険料契約なし; 数理的価格設定なし; 給付査定なし; 拒絶不能)。会員相互の連帯プール per Charter §1.7 反個人主義 + 多世代。プールは USDC on Base L2 安定資産のみ。商業保険ソフト禁止 (G4: Guidewire/Duck Creek/Insurity/Sapiens/Majesco/SAP Insurance/Oracle Insurance/Lemonade/Hippo PROHIBITED per Charter Rider §2(e)+§2(c))。商業再保険禁止 (G5: Munich Re/Swiss Re/SCOR/Hannover Re PROHIBITED)。投資リターン約束なし (G6: Charter Rider §2(b) 投機金融禁止)。既往症差別禁止 (G7)。任意かつ能力に応じた拠出 (G8)。コミュニティ識別分配 (G9: Council Lv6+ ≥3 + 地域証人 ≥3)。公的資金バックストップ (G10)。給与なし (G11)。",
+  "adr": {
+    "master": "etzhayyim:adr:2605263500",
+    "parent": "etzhayyim:adr:2605192145",
+    "r0": "etzhayyim:adr:2605263500",
+    "r1": "reserved",
+    "r2": "reserved",
+    "r3": "reserved"
+  },
+  "tier": "Tier-B",
+  "parentActor": null,
+  "form": "任意団体 internal mutual aid substrate (NOT 一般社団 / NPO / 公益財団 / 宗教法人 法人格; NOT a state-licensed insurance entity — Preamble §0.4 Lv7+ unanimity lock)",
+  "notInsuranceInvariant": "G3 STRUCTURAL: no premium-as-contract / no actuarial pricing / no claim adjudication / no policy denial / no underwriting / no investment return; member-to-member solidarity only",
+  "crossActor": {
+    "kazaori": "Emergency pool activation during declared emergency (kazaori path-reserved wakai cross-actor at ADR-2605263200)",
+    "iyashi": "Chronic care continuity gap funding; clinical event support",
+    "hagukumi": "Daily-living gap funding; multi-gen support",
+    "yakushi": "Medication supply gap funding",
+    "toritate": "Mutual aid pool transparency + Public Fund backstop accounting",
+    "chigiri.member_onboarding": "(read) Adherent SBT verification",
+    "chigiri.stewardLaborAttestation": "(read) Administrator L5 vocation-flow (G11)",
+    "publicFundSafe": "(← backstop disbursement) Council Lv6+ ≥4/7 when pool insufficient",
+    "titheRouter": "(read; aggregate solidarity capacity) Informs pool-balance forecasting",
+    "kawase-yui": "Sibling mutual-aid actor — wakai covers in-jurisdiction health/disability/unemployment/disaster mutual aid; kawase-yui covers cross-border adherent-to-adherent multi-stable remittance (ADR-2605282200). R3 cross-actor integration enables composite flows (e.g. medical-evacuation = wakai medical event + kawase international transfer composed). Both inherit Charter §2(b) speculative-finance discipline + §1.7 反個人主義 mutual-aid framing."
+  },
+  "constitutionalDiscipline": {
+    "notInsurance": "G3 — no premium-as-contract; no actuarial pricing; no claim adjudication; no policy denial; no underwriting",
+    "noCommercialInsuranceSoftware": "G4 — Guidewire / Duck Creek / Insurity / Sapiens / Majesco / SAP Insurance / Oracle Insurance / Lemonade-as-vendor / Hippo-as-vendor PROHIBITED per Charter Rider §2(e)+§2(c)",
+    "noCommercialReInsurance": "G5 — Munich Re / Swiss Re / SCOR / Hannover Re / Berkshire Hathaway Re PROHIBITED; risk stays in community + Public Fund backstop",
+    "noInvestmentReturnPromise": "G6 — Charter Rider §2(b) speculative finance prohibition; pool held in stable-asset form (USDC on Base L2); NO DeFi yield farming; NO token speculation",
+    "noPreExistingConditionDiscrimination": "G7 — no underwriting; no exclusion; no risk-based rejection",
+    "voluntaryAbilityScaledContribution": "G8 — Charter §1.7 反個人主義; no minimum contribution; member self-attests",
+    "communityDiscernmentDistribution": "G9 — Council Lv6+ ≥3 + ≥3 community attestation chain; NOT claim adjudication",
+    "publicFundBackstop": "G10 — when pool insufficient; Council Lv6+ ≥4/7 (cross-actor toritate)",
+    "noPayrollForAdministrators": "G11 — vocation-flow L5 stewards",
+    "muragumoOnlyInference": "G12 — commercial insurance-AI (Lemonade NLP / Tractable / Carpe Data) PROHIBITED"
+  },
+  "scope": {
+    "phase": "R0 scaffold",
+    "scopeBoundary": "Member-to-member solidarity pool + community discernment distribution + emergency pool activation + Public Fund backstop coordination",
+    "exclusions": [
+      "insurance product (premium-based)",
+      "investment fund (Charter Rider §2(b))",
+      "pension / retirement product",
+      "medical insurance (iyashi + Public Fund handles)",
+      "speculative finance (Charter Rider §2(b))",
+      "re-insurance / commercial risk transfer",
+      "cryptocurrency speculation",
+      "commercial insurance software integration",
+      "state-licensed insurance entity status",
+      "closed-source",
+      "payroll-based administrators",
+      "actuarial discrimination"
+    ]
+  },
+  "cells": [
+    {
+      "name": "mutual_aid_pool_contribution",
+      "module": "kotodama.cells.wakai_mutual_aid_pool_contribution",
+      "murakumoNode": "asher",
+      "phase": "continuous",
+      "io": "member voluntary contribution → mutualAidContributionAttestation"
+    },
+    {
+      "name": "mutual_aid_distribution",
+      "module": "kotodama.cells.wakai_mutual_aid_distribution",
+      "murakumoNode": "asher",
+      "phase": "event",
+      "io": "need attestation + Council ≥3 discernment + ≥3 community witnesses → mutualAidDistributionAttestation"
+    },
+    {
+      "name": "emergency_pool_activation",
+      "module": "kotodama.cells.wakai_emergency_pool_activation",
+      "murakumoNode": "asher",
+      "phase": "event",
+      "io": "kazaori emergencyDeclaration active → emergency dispatch coordination",
+      "crossActorPair": "kazaori"
+    },
+    {
+      "name": "health_event_support",
+      "module": "kotodama.cells.wakai_health_event_support",
+      "murakumoNode": "asher",
+      "phase": "event",
+      "io": "iyashi/hagukumi/yakushi event cross-link → distribution routing",
+      "crossActorPair": "iyashi + hagukumi + yakushi triad"
+    },
+    {
+      "name": "public_fund_backstop_request",
+      "module": "kotodama.cells.wakai_public_fund_backstop_request",
+      "murakumoNode": "asher",
+      "phase": "event",
+      "io": "pool insufficient → Council Lv6+ ≥4/7 backstop request",
+      "crossActorPair": "toritate + Public Fund Safe"
+    },
+    {
+      "name": "pool_state_reporting",
+      "module": "kotodama.cells.wakai_pool_state_reporting",
+      "murakumoNode": "asher",
+      "phase": "continuous (monthly summary)",
+      "io": "aggregate pool state → mutualAidPoolStateReport (NO individual member-contribution amounts public)"
+    }
+  ],
+  "lexiconNamespaces": [
+    "com.etzhayyim.wakai.mutualAidContributionAttestation",
+    "com.etzhayyim.wakai.mutualAidDistributionAttestation",
+    "com.etzhayyim.wakai.mutualAidPoolStateReport",
+    "com.etzhayyim.wakai.publicFundBackstopRequest",
+    "com.etzhayyim.wakai.silenWakaiReview"
+  ],
+  "constitutionalGates": {
+    "description": "12 immutable gates per ADR-2605263500. Council Lv6+ supermajority + new ADR to amend.",
+    "gates": {
+      "G1": "Charter Rider §2(a)-(h) scan",
+      "G2": "kotoba-datomic attestation lineage",
+      "G3": "NOT insurance (no premium / no actuarial / no claim denial / no underwriting)",
+      "G4": "NO commercial insurance software (Guidewire/Duck Creek/Insurity/Sapiens/Majesco/SAP Insurance/Oracle Insurance/Lemonade/Hippo PROHIBITED)",
+      "G5": "NO commercial re-insurance (Munich Re/Swiss Re/SCOR/Hannover Re PROHIBITED)",
+      "G6": "NO investment return promise (Charter Rider §2(b) speculative finance)",
+      "G7": "NO discrimination on pre-existing condition / no underwriting",
+      "G8": "Contribution voluntary + ability-scaled (Charter §1.7 反個人主義)",
+      "G9": "Distribution by Council Lv6+ ≥3 + community discernment ≥3 (NOT claim adjudication)",
+      "G10": "Public Fund backstop via Council Lv6+ ≥4/7",
+      "G11": "NO payroll for administrators (vocation-flow L5)",
+      "G12": "Murakumo-only inference (commercial insurance-AI PROHIBITED)"
+    }
+  },
+  "nonGoals": {
+    "description": "12 explicitly excluded scopes",
+    "goals": {
+      "N1": "NOT insurance (premium-based)",
+      "N2": "NOT investment fund / no ROI",
+      "N3": "NOT pension / retirement product",
+      "N4": "NOT medical insurance",
+      "N5": "NOT speculative finance",
+      "N6": "NOT re-insurance / commercial risk transfer",
+      "N7": "NOT cryptocurrency speculation",
+      "N8": "NOT commercial insurance software integrator",
+      "N9": "NOT state-licensed insurance entity",
+      "N10": "NOT closed-source",
+      "N11": "NOT payroll-based administrators",
+      "N12": "NOT actuarial discrimination"
+    }
+  },
+  "roadmap": [
+    {
+      "phase": "R0",
+      "date": "2026-05-26",
+      "scope": "Scaffold only. 6 cells path-reserved. 5 Lexicons schema skeleton.",
+      "murakumoFleet": "No deployment",
+      "gate": "ADR-2605263500 (PROPOSED)"
+    },
+    {
+      "phase": "R1",
+      "date": "post-Bootstrap-Council + initial pool seed Public Fund Council Lv6+ ≥4/7 + ≥3 community discernment witness candidates",
+      "scope": "3 core cells (mutual_aid_pool_contribution + mutual_aid_distribution + pool_state_reporting); ≤50 members; ≤$50k USDC pool",
+      "murakumoFleet": "asher (single node)",
+      "gate": "Future ADR + Council Lv6+ ≥3 + pool seed + ≥3 witness candidates"
+    },
+    {
+      "phase": "R2",
+      "date": "post-R1 + 30-day public objection + 3 community-site attestations",
+      "scope": "+2 cells (health_event_support iyashi+hagukumi+yakushi triad + public_fund_backstop_request toritate cross-actor); ≤500 members; ≤$500k pool",
+      "murakumoFleet": "asher + gad (2 nodes)",
+      "gate": "Council Lv6+ ≥4 + 30-day public + 3 site attestations"
+    },
+    {
+      "phase": "R3",
+      "date": "post-R2 + Council Lv7+ unanimity + ≥1 real distribution cycle completed + silenWakaiReview cycle established",
+      "scope": "+1 cell (emergency_pool_activation kazaori cross-actor); community-scale ≤25,000 members; ≤$5M pool",
+      "murakumoFleet": "asher + gad + zebulun (3 nodes)",
+      "gate": "Council Lv7+ unanimity + distribution cycle completed"
+    }
+  ],
+  "references": {
+    "adr": {
+      "master": "/90-docs/adr/2605263500-wakai-mutual-aid-tier-b-actor-r0.md",
+      "publicFund": "/90-docs/adr/2605192145-etzhayyim-public-fund-architecture.md",
+      "tithe": "/90-docs/adr/2605192130-etzhayyim-tithe-redistribution.md",
+      "missionCharter": "/90-docs/adr/2605192100-etzhayyim-mission-charter.md",
+      "charterRider": "/90-docs/adr/2605192200-etzhayyim-ip-free-release-charter-rider.md",
+      "muragumoOnly": "/90-docs/adr/2605215000-etzhayyim-inference-murakumo-only-no-runpod.md",
+      "liberation": "/90-docs/adr/2605261000-labor-liberation-transition-mechanism.md",
+      "crossActorKazaori": "/90-docs/adr/2605263200-kazaori-disaster-response-tier-b-actor-r0.md",
+      "crossActorIyashi": "/90-docs/adr/2605263000-iyashi-clinical-care-provider-tier-b-actor-r0.md",
+      "crossActorToritate": "/90-docs/adr/2605262900-toritate-accounting-audit-tier-b-actor-r0.md",
+      "crossActorChigiri": "/90-docs/adr/2605262700-chigiri-legal-procedure-tier-b-actor-r0.md"
+    }
+  }
+}

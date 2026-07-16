@@ -1,0 +1,14 @@
+[package]
+name = "todoke-route"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "todoke 届け — last-mile (one-mile) stop sequencing + SAE-L4 sidewalk ODD safety envelope. Pure Rust, zero-dependency, deterministic. R0 reference (ADR-2606042300)."
+publish = false
+
+# Standalone leaf crate — intentionally NOT a member of any Cargo workspace
+# (the repo has no root workspace; this compiles + tests in isolation via `cargo test`).
+[lib]
+path = "src/lib.rs"
+
+[dependencies]

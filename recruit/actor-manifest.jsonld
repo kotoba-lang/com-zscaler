@@ -1,0 +1,408 @@
+{
+  "@context": "https://etzhayyim.com/ns/actor/v1",
+  "@id": "did:web:recruit.etzhayyim.com",
+  "capabilities": [
+    "graph.query",
+    "graph.write",
+    "agent.chat",
+    "agent.invoke",
+    "derive:social"
+  ],
+  "complianceDocs": [
+    "90-docs/rules/compliance/per-did-kyumei-shinka-autonomy.md",
+    "90-docs/adr/0018-pii-tier3-cohort-first.md"
+  ],
+  "convoSystemPrompt": "You are the Recruit agent — a global corporate-linked job-posting aggregator. Data sources are PUBLIC FEEDS ONLY (ILO ESCO, US DOL O*NET, EU EURES, JP HelloWork open data, US USAJOBS, CA Job Bank). Commercial aggregators (LinkedIn/Indeed/etc.) are OUT OF SCOPE until a licensed partnership is in place. Every posting MUST be anchored to a legal-entity DID (via LEI / JP 法人番号 / CH number / SIREN / etc.) for authenticity. You surface postings by ISCO-08 occupation, country, and employer identity. You DO NOT store applicant PII — candidate matching is delegated to talent.etzhayyim.com (Tier 3 cohort-first).",
+  "description": "Global corporate-linked job-posting aggregator. Public feed sources only (ESCO + O*NET + EURES + HelloWork + USAJOBS + Job Bank). ISCO-08 occupation mapping, legal-entity-anchored authenticity.",
+  "displayName": "Recruit",
+  "domainKnowledgeRequired": true,
+  "runtime": "k8s-langserver",
+  "edge": "sveltekit-proxy",
+  "legacyExecutionTier": "T1",
+  "governance": {
+    "classification": "public",
+    "complianceFrameworks": [
+      "ilo-isco-08",
+      "eu-esco",
+      "us-onet",
+      "gdpr-public-source"
+    ],
+    "dataSources": {
+      "allowed": [
+        "ilo.org/public/english/bureau/stat/isco/isco08",
+        "esco.ec.europa.eu",
+        "onetcenter.org",
+        "ec.europa.eu/eures",
+        "api.usajobs.gov",
+        "jobbank.gc.ca",
+        "api.jobs.go.jp",
+        "boards-api.greenhouse.io",
+        "api.lever.co",
+        "api.ashbyhq.com"
+      ],
+      "prohibited": [
+        "linkedin.com",
+        "indeed.com",
+        "glassdoor.com",
+        "ziprecruiter.com",
+        "wantedly.com",
+        "bizreach.jp"
+      ],
+      "prohibitedReason": "ToS / commercial-license required — gate behind explicit partnership before ingest"
+    },
+    "raci": "responsible"
+  },
+  "heartbeatRequired": true,
+  "name": "recruit",
+  "nanoid": "rc8k2m4j",
+  "performerType": "service",
+  "pipelines": [
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.ingestTaxonomy"
+      },
+      "steps": [
+        {
+          "id": "validateSource",
+          "fn": "agent.invoke",
+          "args": {
+            "command": "validateTaxonomySource",
+            "params": {
+              "source": "$input.params.source"
+            }
+          }
+        },
+        {
+          "id": "ingest",
+          "fn": "agent.invoke",
+          "depends_on": [
+            "validateSource"
+          ],
+          "args": {
+            "command": "ingestTaxonomyBatch",
+            "params": {
+              "source": "$input.params.source",
+              "batch": "$input.params.batch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.ingestJobPostings"
+      },
+      "steps": [
+        {
+          "id": "ingest",
+          "fn": "agent.invoke",
+          "args": {
+            "command": "recruitIngestJobPostings",
+            "endpoint": "http://recruit-job-ingester.recruit-actors.svc.cluster.local:8080/xrpc/com.etzhayyim.apps.recruit.ingestJobPostings",
+            "params": {
+              "platform": "$input.platform",
+              "limit": "$input.limit",
+              "batchSize": "$input.batchSize",
+              "allowUnanchored": "$input.allowUnanchored",
+              "ignoreCheckpoint": "$input.ignoreCheckpoint",
+              "dryRun": "$input.dryRun"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.listPostings"
+      },
+      "steps": [
+        {
+          "id": "postings",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:JobPosting) WHERE ($iscoCode IS NULL OR p.iscoCode = $iscoCode) AND ($country IS NULL OR p.country = $country) AND ($employerDid IS NULL OR p.employerDid = $employerDid) AND ($source IS NULL OR p.source = $source) RETURN p.vertexId AS id, p.source AS source, p.sourceId AS sourceId, p.sourceLicense AS sourceLicense, p.employerDid AS employerDid, p.employerName AS employerName, p.iscoCode AS iscoCode, p.title AS title, p.country AS country, p.location AS location, p.postedAt AS postedAt, p.expiresAt AS expiresAt, p.sourceUrl AS url ORDER BY p.postedAt DESC SKIP $offset LIMIT $limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.listJobIngestRuns"
+      },
+      "steps": [
+        {
+          "id": "runs",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (r:RecruitJobIngestRun) WHERE ($platform IS NULL OR r.platform = $platform) AND ($status IS NULL OR r.status = $status) RETURN r.runId AS runId, r.platform AS platform, r.status AS status, r.fetched AS fetched, r.inserted AS inserted, r.skipped AS skipped, r.limitCount AS limit, r.batchSize AS batchSize, r.startedAt AS startedAt, r.finishedAt AS finishedAt, r.durationMs AS durationMs, r.error AS error ORDER BY r.startedAt DESC SKIP $offset LIMIT $limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.getPosting"
+      },
+      "steps": [
+        {
+          "id": "posting",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:JobPosting {vertexId: $id})-[:POSTED_BY]->(e:LegalEntity) RETURN p.vertexId AS id, p.source AS source, p.sourceId AS sourceId, p.sourceLicense AS sourceLicense, p.employerDid AS employerDid, p.employerName AS employerName, p.iscoCode AS iscoCode, p.title AS title, p.country AS country, p.location AS location, p.postedAt AS postedAt, p.expiresAt AS expiresAt, p.sourceUrl AS url, e.vertexId AS employerDid, e.name AS employerName, e.lei AS employerLei, e.jurisdiction AS employerJurisdiction, e.sourceRecordId AS employerRegistryId LIMIT 1"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.stats"
+      },
+      "steps": [
+        {
+          "id": "stats",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:JobPosting) RETURN count(p) AS total, count(DISTINCT p.employerDid) AS employers, count(DISTINCT p.country) AS countries LIMIT 1"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.recommendCohorts"
+      },
+      "steps": [
+        {
+          "id": "recommendations",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (m:RecruitCohortMatchCandidate) WHERE ($postingId IS NULL OR m.postingId = $postingId) AND ($iscoCode IS NULL OR m.iscoCode = $iscoCode) AND ($country IS NULL OR m.country = $country) AND m.matchScore >= coalesce($minScore, 50) RETURN m.postingId AS postingId, m.postingVid AS postingVid, m.title AS title, m.employerDid AS employerDid, m.employerName AS employerName, m.source AS source, m.sourceUrl AS sourceUrl, m.iscoCode AS iscoCode, m.country AS country, m.location AS location, m.cohortVid AS cohortVid, m.supplySizeThousands AS supplySizeThousands, m.demandScore AS demandScore, m.pressSignalCount AS pressSignalCount, m.demandPostingCount AS demandPostingCount, m.typicalSalary AS typicalSalary, m.salaryCurrency AS salaryCurrency, m.topSkills AS topSkills, m.matchScore AS matchScore ORDER BY m.matchScore DESC SKIP $offset LIMIT $limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.matchStats"
+      },
+      "steps": [
+        {
+          "id": "candidateCount",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (m:RecruitCohortMatchCandidate) WHERE ($iscoCode IS NULL OR m.iscoCode = $iscoCode) AND ($country IS NULL OR m.country = $country) AND m.matchScore >= coalesce($minScore, 50) RETURN count(m) AS candidateCount LIMIT 1"
+          }
+        },
+        {
+          "id": "proposalsByState",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:RecruitMatchProposal) WHERE ($iscoCode IS NULL OR p.iscoCode = $iscoCode) AND ($country IS NULL OR p.country = $country) RETURN p.proposalState AS proposalState, count(p) AS count ORDER BY count DESC"
+          }
+        },
+        {
+          "id": "decisionEventCount",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (e:RecruitMatchDecisionEvent) RETURN count(e) AS decisionEventCount LIMIT 1"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.proposeCohortMatch"
+      },
+      "steps": [
+        {
+          "id": "writeProposal",
+          "fn": "graph.write",
+          "args": {
+            "template": "MERGE (p:RecruitMatchProposal {proposalId: coalesce($proposalId, $postingId + ':' + $iscoCode + ':' + $country), actorDid: $did}) SET p.postingId = $postingId, p.postingVid = $postingVid, p.cohortVid = $cohortVid, p.iscoCode = $iscoCode, p.country = $country, p.matchScore = $matchScore, p.rationale = $rationale, p.proposalState = 'proposed', p.createdAt = timestamp(), p.props = $props MERGE (jp:JobPosting {vertexId: $postingVid}) MERGE (tc:TalentCohort {vertexId: $cohortVid}) MERGE (p)-[:FOR_POSTING]->(jp) MERGE (p)-[:FOR_COHORT]->(tc)",
+            "params": {
+              "proposalId": "$input.params.proposalId",
+              "postingId": "$input.params.postingId",
+              "postingVid": "$input.params.postingVid",
+              "cohortVid": "$input.params.cohortVid",
+              "iscoCode": "$input.params.iscoCode",
+              "country": "$input.params.country",
+              "matchScore": "$input.params.matchScore",
+              "rationale": "$input.params.rationale",
+              "props": "$input.params.props"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.listMatchProposals"
+      },
+      "steps": [
+        {
+          "id": "proposals",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:RecruitMatchProposal) WHERE ($postingId IS NULL OR p.postingId = $postingId) AND ($iscoCode IS NULL OR p.iscoCode = $iscoCode) AND ($country IS NULL OR p.country = $country) AND ($proposalState IS NULL OR p.proposalState = $proposalState) RETURN p.proposalId AS proposalId, p.postingId AS postingId, p.postingVid AS postingVid, p.cohortVid AS cohortVid, p.iscoCode AS iscoCode, p.country AS country, p.matchScore AS matchScore, p.rationale AS rationale, p.proposalState AS proposalState, p.decisionReason AS decisionReason, p.createdAt AS createdAt, p.decidedAt AS decidedAt, p.props AS props ORDER BY p.createdAt DESC SKIP $offset LIMIT $limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.getMatchProposal"
+      },
+      "steps": [
+        {
+          "id": "proposal",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (p:RecruitMatchProposal {proposalId: $proposalId}) RETURN p.proposalId AS proposalId, p.postingId AS postingId, p.postingVid AS postingVid, p.cohortVid AS cohortVid, p.iscoCode AS iscoCode, p.country AS country, p.matchScore AS matchScore, p.rationale AS rationale, p.proposalState AS proposalState, p.decisionReason AS decisionReason, p.createdAt AS createdAt, p.decidedAt AS decidedAt, p.props AS props LIMIT 1"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.decideMatchProposal"
+      },
+      "steps": [
+        {
+          "id": "decideProposal",
+          "fn": "graph.write",
+          "args": {
+            "template": "MATCH (p:RecruitMatchProposal {proposalId: $proposalId}) SET p.proposalState = $proposalState, p.decisionReason = $decisionReason, p.decidedAt = coalesce($decidedAt, timestamp()) MERGE (e:RecruitMatchDecisionEvent {eventId: $proposalId + ':' + $proposalState + ':' + toString(coalesce($decidedAt, timestamp()))}) SET e.proposalId = $proposalId, e.proposalState = $proposalState, e.decisionReason = $decisionReason, e.decidedAt = coalesce($decidedAt, timestamp()), e.decidedBy = $did, e.privacyMode = 'cohort-first'",
+            "params": {
+              "proposalId": "$input.params.proposalId",
+              "proposalState": "$input.params.proposalState",
+              "decisionReason": "$input.params.decisionReason",
+              "decidedAt": "$input.params.decidedAt"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "xrpc",
+        "nsid": "com.etzhayyim.apps.recruit.listMatchDecisionEvents"
+      },
+      "steps": [
+        {
+          "id": "decisionEvents",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (e:RecruitMatchDecisionEvent) WHERE e.proposalId = $proposalId RETURN e.eventId AS eventId, e.proposalId AS proposalId, e.proposalState AS proposalState, e.decisionReason AS decisionReason, e.decidedAt AS decidedAt, e.decidedBy AS decidedBy, e.privacyMode AS privacyMode ORDER BY e.decidedAt DESC SKIP $offset LIMIT $limit"
+          }
+        }
+      ]
+    },
+    {
+      "trigger": {
+        "type": "cron",
+        "cron": "0 */6 * * *"
+      },
+      "steps": [
+        {
+          "id": "coverageNodes",
+          "fn": "graph.query",
+          "args": {
+            "sql": "MATCH (n) WHERE n.repo = $did RETURN count(n) AS nodeCount LIMIT 1"
+          }
+        },
+        {
+          "id": "coverageSnapshot",
+          "fn": "graph.write",
+          "depends_on": [
+            "coverageNodes"
+          ],
+          "args": {
+            "template": "MERGE (c:ActorCoverageSnapshot {actorDid: $did, bucket: $bucket, actorName: $actorName, nanoid: $nanoid, nodeCount: $nodeCount, status: 'active'})",
+            "params": {
+              "actorName": "recruit",
+              "bucket": "6h",
+              "nanoid": "rc8k2m4j",
+              "nodeCount": "$coverageNodes.rows[0].nodeCount"
+            }
+          }
+        },
+        {
+          "id": "compose",
+          "fn": "agent.chat",
+          "depends_on": [
+            "coverageSnapshot"
+          ],
+          "args": {
+            "message": "You are Recruit. Write a 1-2 sentence social post summarising job-posting coverage growth. Data: $coverageSnapshot.text"
+          }
+        },
+        {
+          "id": "announce",
+          "fn": "derive:social",
+          "depends_on": [
+            "compose"
+          ],
+          "args": {
+            "template": "$compose.text"
+          }
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "listPostings",
+      "getPosting",
+      "ingestTaxonomy",
+      "ingestJobPostings",
+      "listJobIngestRuns",
+      "recommendCohorts",
+      "matchStats",
+      "proposeCohortMatch",
+      "listMatchProposals",
+      "getMatchProposal",
+      "decideMatchProposal",
+      "listMatchDecisionEvents",
+      "stats"
+    ],
+    "description": "Global job-posting aggregator (public feeds only, legal-entity anchored).",
+    "displayName": "Recruit",
+    "isBot": true,
+    "operator": "etzhayyim.co.jp"
+  },
+  "requiredCollections": [
+    "com.etzhayyim.apps.standard.shinkaEvolution",
+    "com.etzhayyim.apps.standard.shinkaKnowledge"
+  ],
+  "requiredLoops": [
+    "shinka",
+    "koji",
+    "kyumei",
+    "domain-knowledge"
+  ],
+  "standardRule": "per-did-kyumei-shinka-autonomy@2026-04-13",
+  "standardStatus": "required",
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.recruit.jobPosting",
+        "com.etzhayyim.apps.recruit.occupation",
+        "com.etzhayyim.legalEntity.entity"
+      ]
+    }
+  },
+  "uiType": "yoro"
+}

@@ -1,0 +1,20 @@
+;; com.etzhayyim.kuniumi.deploymentIntent — lexicon
+;; ADR-2605201400 · deployment planning output
+{:lexicon 1
+ :id "com.etzhayyim.kuniumi.deploymentIntent"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :record
+   {:type "object"
+    :required ["intentId" "siteId" "robotRoster" "sequencePlan" "state"]
+    :properties
+    {:intentId       {:type "string" :description "unique deployment intent ID"}
+     :siteId         {:type "string" :description "site attestation ref (land-registry anchored)"}
+     :robotRoster    {:type "string" :description "Giemon class composition: Otete/Mimi/Watari/Awa/Hitogata/Quad"}
+     :sequencePlan   {:type "string" :description "Murakumo motion-sequence (LLM-generated, simulation-based)"}
+     :memberDid      {:type "string" :description "member principal signing (G14)"}
+     :state          {:type "string" :description ":planned (unsigned, intent) | :signed (member + >=2 robot witness) | :dispatched (R1+, Council gated)"}
+     :memberSigRef   {:type "string" :description "member passkey/smart-account signature (if signed)"}
+     :robotWitnessSigs {:type "string" :description "CSV of robot DID signatures (>=2 mandatory, G8)"}}}}}}

@@ -1,0 +1,136 @@
+;; seed-capital-flow-graph.kotoba.edn — 潮目 (shionome) :representative seed (ADR-2606072200)
+;;
+;; HONESTY (G11): every record is :representative — illustrative public capital buckets and
+;; bounded, rounded figures, NOT a live authoritative capture. Nodes are PUBLIC CAPITAL
+;; BUCKETS (G1) — asset classes / sectors / regions / themes — never persons / accounts /
+;; portfolios / individual investors. Edges are FACTUAL capital-flow OBSERVATIONS (G2, no
+;; trade/advisory token), each :no-trade-notice true. Live full-universe ingest (exchange
+;; data / fund-flow reports / central-bank releases / index providers) is G8-gated.
+;;
+;; THE DEFINING INVARIANT — トレードはしない: nothing here is a buy/sell signal, a price
+;; target, or a portfolio call. The seed is shaped to exercise the analyzer: net flow per
+;; bucket (where money goes/leaves), rotation pairs (どこからどこへ), inflow HHI, by-asset-
+;; class + by-region slices, a risk-on/risk-off regime descriptor, and a correlation cluster.
+
+{:graph {:name "shionome-capital-flow-v1" :visibility :public}
+
+ ;; ── buckets: public capital buckets (G1: never a person/account) ─────────────
+ :buckets
+ [{:bucket/id "us-equities" :bucket/scope :asset-class :bucket/label "US equities" :bucket/asset-class "equities" :bucket/region "us" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.sec.gov/" "https://fred.stlouisfed.org/"]}
+  {:bucket/id "jp-equities" :bucket/scope :asset-class :bucket/label "Japan equities" :bucket/asset-class "equities" :bucket/region "jp" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.jpx.co.jp/" "https://www.boj.or.jp/"]}
+  {:bucket/id "em-equities" :bucket/scope :asset-class :bucket/label "Emerging-market equities" :bucket/asset-class "equities" :bucket/region "em" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.imf.org/" "https://data.worldbank.org/"]}
+  {:bucket/id "us-govt-bonds" :bucket/scope :asset-class :bucket/label "US Treasuries" :bucket/asset-class "govt-bonds" :bucket/region "us" :bucket/risk :safe
+   :bucket/sourcing :representative :bucket/sources ["https://home.treasury.gov/" "https://fred.stlouisfed.org/"]}
+  {:bucket/id "credit-ig" :bucket/scope :asset-class :bucket/label "US investment-grade credit" :bucket/asset-class "credit" :bucket/region "us" :bucket/risk :neutral
+   :bucket/sourcing :representative :bucket/sources ["https://fred.stlouisfed.org/" "https://www.federalreserve.gov/"]}
+  {:bucket/id "gold" :bucket/scope :asset-class :bucket/label "Gold" :bucket/asset-class "commodities" :bucket/region "global" :bucket/risk :safe
+   :bucket/sourcing :representative :bucket/sources ["https://www.lbma.org.uk/" "https://www.gold.org/"]}
+  {:bucket/id "oil" :bucket/scope :asset-class :bucket/label "Crude oil" :bucket/asset-class "commodities" :bucket/region "global" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.eia.gov/" "https://www.opec.org/"]}
+  {:bucket/id "crypto-btc" :bucket/scope :asset-class :bucket/label "Bitcoin / crypto" :bucket/asset-class "crypto" :bucket/region "global" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.blockchain.com/explorer" "https://etherscan.io/"]}
+  {:bucket/id "us-real-estate" :bucket/scope :asset-class :bucket/label "US real estate (REITs)" :bucket/asset-class "real-estate" :bucket/region "us" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.census.gov/construction/" "https://fred.stlouisfed.org/"]}
+  {:bucket/id "cash-usd" :bucket/scope :asset-class :bucket/label "USD cash / money-market" :bucket/asset-class "cash" :bucket/region "us" :bucket/risk :safe
+   :bucket/sourcing :representative :bucket/sources ["https://www.federalreserve.gov/" "https://fred.stlouisfed.org/"]}
+  ;; sectors + theme
+  {:bucket/id "sector-tech" :bucket/scope :sector :bucket/label "Technology sector" :bucket/asset-class "equities" :bucket/region "us" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.sec.gov/" "https://www.bls.gov/"]}
+  {:bucket/id "sector-energy" :bucket/scope :sector :bucket/label "Energy sector" :bucket/asset-class "equities" :bucket/region "us" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.eia.gov/" "https://www.sec.gov/"]}
+  {:bucket/id "theme-ai" :bucket/scope :theme :bucket/label "AI theme" :bucket/asset-class "equities" :bucket/region "global" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.sec.gov/" "https://www.bls.gov/"]}
+  ;; global money-pyramid layers (each carries an :outstanding-usd stock snapshot below) —
+  ;; the "how big is everything" view (Visual Capitalist money & markets). Distinct asset-class
+  ;; per layer so stock_pyramid sizes each one against the grand total; these are STOCK buckets
+  ;; (sizes), not flow nodes — no flows reference them. :representative rounded public figures.
+  {:bucket/id "global-coins-banknotes" :bucket/scope :asset-class :bucket/label "Physical currency (coins & banknotes)" :bucket/asset-class "cash" :bucket/region "global" :bucket/risk :safe
+   :bucket/sourcing :representative :bucket/sources ["https://www.bis.org/statistics/" "https://www.imf.org/en/Data"]}
+  {:bucket/id "global-broad-money" :bucket/scope :asset-class :bucket/label "Broad money (M2-equivalent)" :bucket/asset-class "broad-money" :bucket/region "global" :bucket/risk :safe
+   :bucket/sourcing :representative :bucket/sources ["https://data.worldbank.org/indicator/FM.LBL.BMNY.CN" "https://www.imf.org/en/Data"]}
+  {:bucket/id "global-equities" :bucket/scope :asset-class :bucket/label "Global stock markets" :bucket/asset-class "equities" :bucket/region "global" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.world-exchanges.org/" "https://www.sifma.org/resources/research/"]}
+  {:bucket/id "global-debt" :bucket/scope :asset-class :bucket/label "Global debt securities (bond markets)" :bucket/asset-class "debt" :bucket/region "global" :bucket/risk :neutral
+   :bucket/sourcing :representative :bucket/sources ["https://www.bis.org/statistics/secstats.htm" "https://www.sifma.org/resources/research/"]}
+  {:bucket/id "global-real-estate" :bucket/scope :asset-class :bucket/label "Global real estate" :bucket/asset-class "real-estate" :bucket/region "global" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.savills.com/research/" "https://data.worldbank.org/"]}
+  {:bucket/id "global-gold" :bucket/scope :asset-class :bucket/label "Gold (above-ground stock)" :bucket/asset-class "gold" :bucket/region "global" :bucket/risk :safe
+   :bucket/sourcing :representative :bucket/sources ["https://www.gold.org/goldhub/data" "https://www.lbma.org.uk/"]}
+  {:bucket/id "global-crypto" :bucket/scope :asset-class :bucket/label "Cryptocurrency" :bucket/asset-class "crypto" :bucket/region "global" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.blockchain.com/explorer" "https://www.sec.gov/"]}
+  {:bucket/id "global-derivatives" :bucket/scope :asset-class :bucket/label "Derivatives (OTC gross notional)" :bucket/asset-class "derivatives" :bucket/region "global" :bucket/risk :risk
+   :bucket/sourcing :representative :bucket/sources ["https://www.bis.org/statistics/derstats.htm" "https://www.isda.org/"]}]
+
+ ;; ── flows: OBSERVED capital movements (G2 factual, ≥2 sources, no-trade-notice) ──
+ ;; story: capital rotating OUT of Treasuries + cash INTO equities, crypto, and the AI
+ ;; theme (risk-on lean), with a partial hedge bid into gold.
+ :flows
+ [{:flow/id "f-bonds-to-eq" :flow/source "us-govt-bonds" :flow/target "us-equities" :flow/kind :rotation
+   :flow/magnitude 12.4 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260601
+   :flow/sourcing :representative :flow/sources ["https://fred.stlouisfed.org/" "https://www.ici.org/research"]}
+  {:flow/id "f-cash-to-eq" :flow/source "cash-usd" :flow/target "us-equities" :flow/kind :rotation
+   :flow/magnitude 8.1 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260601
+   :flow/sourcing :representative :flow/sources ["https://www.ici.org/research" "https://www.federalreserve.gov/"]}
+  {:flow/id "f-in-crypto" :flow/source "external" :flow/target "crypto-btc" :flow/kind :fund-inflow
+   :flow/magnitude 5.6 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260602
+   :flow/sourcing :representative :flow/sources ["https://www.blockchain.com/explorer" "https://www.sec.gov/"]}
+  {:flow/id "f-eq-to-ai" :flow/source "us-equities" :flow/target "theme-ai" :flow/kind :rotation
+   :flow/magnitude 6.9 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260602
+   :flow/sourcing :representative :flow/sources ["https://www.sec.gov/" "https://www.bls.gov/"]}
+  {:flow/id "f-out-bonds" :flow/source "us-govt-bonds" :flow/target "external" :flow/kind :fund-outflow
+   :flow/magnitude 9.3 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260601
+   :flow/sourcing :representative :flow/sources ["https://www.ici.org/research" "https://home.treasury.gov/"]}
+  {:flow/id "f-hedge-gold" :flow/source "us-equities" :flow/target "gold" :flow/kind :rotation
+   :flow/magnitude 3.2 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260603
+   :flow/sourcing :representative :flow/sources ["https://www.gold.org/" "https://www.lbma.org.uk/"]}
+  {:flow/id "f-in-jp" :flow/source "external" :flow/target "jp-equities" :flow/kind :fund-inflow
+   :flow/magnitude 4.4 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260603
+   :flow/sourcing :representative :flow/sources ["https://www.jpx.co.jp/" "https://www.boj.or.jp/"]}
+  {:flow/id "f-em-out" :flow/source "em-equities" :flow/target "us-equities" :flow/kind :rotation
+   :flow/magnitude 2.7 :flow/unit "usd-bn" :flow/no-trade-notice true :flow/as-of 20260604
+   :flow/sourcing :representative :flow/sources ["https://www.imf.org/" "https://www.iif.com/"]}
+  {:flow/id "f-tech-ai-corr" :flow/source "sector-tech" :flow/target "theme-ai" :flow/kind :cross-correlation
+   :flow/magnitude 0.86 :flow/unit "zscore" :flow/no-trade-notice true :flow/as-of 20260604
+   :flow/sourcing :representative :flow/sources ["https://www.sec.gov/" "https://fred.stlouisfed.org/"]}
+  {:flow/id "f-eq-ai-corr" :flow/source "us-equities" :flow/target "sector-tech" :flow/kind :cross-correlation
+   :flow/magnitude 0.79 :flow/unit "zscore" :flow/no-trade-notice true :flow/as-of 20260604
+   :flow/sourcing :representative :flow/sources ["https://www.sec.gov/" "https://www.bls.gov/"]}
+  {:flow/id "f-oil-yield" :flow/source "oil" :flow/target "sector-energy" :flow/kind :price-move
+   :flow/magnitude 4.1 :flow/unit "pct" :flow/no-trade-notice true :flow/as-of 20260605
+   :flow/sourcing :representative :flow/sources ["https://www.eia.gov/" "https://www.opec.org/"]}]
+
+ ;; ── snapshots: observed as-of bucket metrics (G10 append-only) ───────────────
+ :snapshots
+ [{:snap/id "s-eq-ret" :snap/bucket "us-equities" :snap/metric :return-pct :snap/value 2.3 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://fred.stlouisfed.org/"]}
+  {:snap/id "s-bond-yld" :snap/bucket "us-govt-bonds" :snap/metric :yield-pct :snap/value 4.18 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://home.treasury.gov/"]}
+  {:snap/id "s-gold-ret" :snap/bucket "gold" :snap/metric :return-pct :snap/value 1.1 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.gold.org/"]}
+  {:snap/id "s-btc-flow" :snap/bucket "crypto-btc" :snap/metric :net-fund-flow :snap/value 5.6 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.blockchain.com/explorer"]}
+  {:snap/id "s-credit-spread" :snap/bucket "credit-ig" :snap/metric :spread-bps :snap/value 92.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://fred.stlouisfed.org/"]}
+  ;; ── stock layer: :outstanding-usd = total SIZE per money-pyramid layer, in USD TRILLIONS ──
+  ;; FACTUAL sizes (G2 — a size, never a signal/target); :representative rounded public figures,
+  ;; NOT a live capture. stock_pyramid sizes these against the grand total. Derivatives is GROSS
+  ;; NOTIONAL (not market value) — by far the largest layer, exactly as the source basis reports.
+  {:snap/id "s-stock-coins" :snap/bucket "global-coins-banknotes" :snap/metric :outstanding-usd :snap/value 8.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.bis.org/statistics/"]}
+  {:snap/id "s-stock-broad-money" :snap/bucket "global-broad-money" :snap/metric :outstanding-usd :snap/value 121.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://data.worldbank.org/indicator/FM.LBL.BMNY.CN"]}
+  {:snap/id "s-stock-equities" :snap/bucket "global-equities" :snap/metric :outstanding-usd :snap/value 115.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.world-exchanges.org/"]}
+  {:snap/id "s-stock-debt" :snap/bucket "global-debt" :snap/metric :outstanding-usd :snap/value 140.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.bis.org/statistics/secstats.htm"]}
+  {:snap/id "s-stock-real-estate" :snap/bucket "global-real-estate" :snap/metric :outstanding-usd :snap/value 380.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.savills.com/research/"]}
+  {:snap/id "s-stock-gold" :snap/bucket "global-gold" :snap/metric :outstanding-usd :snap/value 16.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.gold.org/goldhub/data"]}
+  {:snap/id "s-stock-crypto" :snap/bucket "global-crypto" :snap/metric :outstanding-usd :snap/value 3.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.blockchain.com/explorer"]}
+  {:snap/id "s-stock-derivatives" :snap/bucket "global-derivatives" :snap/metric :outstanding-usd :snap/value 600.0 :snap/as-of 20260605
+   :snap/sourcing :representative :snap/sources ["https://www.bis.org/statistics/derstats.htm"]}]}

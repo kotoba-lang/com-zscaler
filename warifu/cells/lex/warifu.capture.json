@@ -1,0 +1,41 @@
+{
+  "lexicon": 1,
+  "id": "warifu.capture",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Capture (full or partial) an approved auth_hold into a capture entity. Zero fee.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["authId"],
+          "properties": {
+            "authId": { "type": "string" },
+            "amountUsdc": { "type": "integer", "description": "omit for full remaining", "minimum": 1 },
+            "idempotencyKey": { "type": "string" }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["captured", "feeUsdc"],
+          "properties": {
+            "captured": { "type": "boolean" },
+            "captureId": { "type": "string" },
+            "amountUsdc": { "type": "integer" },
+            "remainingUsdc": { "type": "integer" },
+            "feeUsdc": { "type": "integer", "const": 0 }
+          }
+        }
+      },
+      "errors": [
+        { "name": "HoldNotFound" },
+        { "name": "AlreadyCaptured" },
+        { "name": "ExceedsRemaining" }
+      ]
+    }
+  }
+}

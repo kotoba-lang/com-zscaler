@@ -1,0 +1,12 @@
+[{:db/id -1
+  :cell/method "plant"
+  :cell/node "asher"
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "power_characterization"
+  :cell/glyph "出力"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G5" "G6"]
+  :cell/state-graph "{:nodes [:measure :r3-gate :capacity-factor :characterized], :entry :measure, :edges [[:measure :r3-gate] [:r3-gate :capacity-factor] [:capacity-factor :characterized] [:characterized :end]]}"
+  :cell/doc "Characterize membrane/stack power density against the ≥1 W/m² R3 quality gate (§1.6); below floor = re-design or DEFER. Then fold the tidal generation series into a capacity factor and the smoothed hikari-microgrid delivery (ADR §4). Backed by salinity_gradient/assert-r3-power-density + plant/generation-series + grid-tie."
+  :cell/kotoba "{:reads [:funamori.measure/power-density-w-m2 :funamori.measure/membrane-area-m2], :writes [:funamori.measure/meets-r3-gate :funamori.plant/capacity-factor :funamori.plant/delivered-kw]}"}]

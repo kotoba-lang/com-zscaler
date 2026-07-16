@@ -1,0 +1,25 @@
+{
+  "lexicon": 1,
+  "id": "com.etzhayyim.meisai.statement",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A member's own card statement (利用明細) header on the LOCAL kotoba Datom log (:meisai.stmt/*). PERSONAL financial data — held on the member's machine only, NEVER committed/pinned/published or emitted to any PDS or AT Proto firehose (G3). This lexicon documents the on-log shape; it carries NO credential and NO card number (G2 — credential-shaped keys and PAN-shaped values are unrepresentable, raised at ingest).",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["source", "month", "rowCount", "intakeCid"],
+        "properties": {
+          "source": { "type": "string", "description": "issuer id (:meisai.source/id), e.g. ':sumitclub'" },
+          "sourceUrl": { "type": "string", "format": "uri" },
+          "month": { "type": "string", "description": "statement month, 'YYYY-MM'" },
+          "rowCount": { "type": "integer", "minimum": 0 },
+          "totalJpy": { "type": "integer", "description": "JPY statement total (minor unit == yen)" },
+          "total": { "type": "integer", "description": "non-JPY statement total, integer minor units" },
+          "currency": { "type": "string", "description": "ISO-ish currency keyword, e.g. ':usd' (omitted for JPY)" },
+          "intakeCid": { "type": "string", "description": "content CID of the intake file (provenance + dedup, G5)" }
+        }
+      }
+    }
+  }
+}

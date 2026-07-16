@@ -1,0 +1,798 @@
+{
+  "schemaVersion": "1.0",
+  "handle": "zozo-compat",
+  "did": "did:web:etzhayyim.com:actor:zozo-compat",
+  "kind": "compat",
+  "title": "zozo clean-room actor",
+  "description": "Clean-room, API-compatible e-commerce storefront actor (zozo); runs browser-local on IPFS + kotoba-WASM.",
+  "wasmCid": "bafkreih6tojshyhcpyq7lkhqpjofvvljah4xwl42r3odezqumcr2n2ry2i",
+  "wasmProvenance": "built-rust-raw",
+  "runtime": "kotoba-wasm",
+  "exec": "browser-local|donated-mesh",
+  "ipfs": "ipfs://bafkreih6tojshyhcpyq7lkhqpjofvvljah4xwl42r3odezqumcr2n2ry2i",
+  "schema": "schema/zozo.kotoba",
+  "tier": "L4",
+  "verified": null,
+  "entities": [
+    "Product",
+    "Variant",
+    "Order",
+    "LineItem",
+    "Customer",
+    "Collection"
+  ],
+  "adr": [
+    "260607",
+    "2606014500",
+    "2606013800",
+    "2606036000"
+  ],
+  "capabilities": {
+    "api": {
+      "type": "rest",
+      "runtime": "kotoba-wasm",
+      "endpointCount": 30,
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/v1/products",
+          "op": "create Product"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/products",
+          "op": "list Product"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/products/{id}",
+          "op": "get Product"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/products/{id}",
+          "op": "update Product"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/products/{id}",
+          "op": "delete Product"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/variants",
+          "op": "create Variant"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/variants",
+          "op": "list Variant"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/variants/{id}",
+          "op": "get Variant"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/variants/{id}",
+          "op": "update Variant"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/variants/{id}",
+          "op": "delete Variant"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/orders",
+          "op": "create Order"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/orders",
+          "op": "list Order"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/orders/{id}",
+          "op": "get Order"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/orders/{id}",
+          "op": "update Order"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/orders/{id}",
+          "op": "delete Order"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/lineitems",
+          "op": "create LineItem"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/lineitems",
+          "op": "list LineItem"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/lineitems/{id}",
+          "op": "get LineItem"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/lineitems/{id}",
+          "op": "update LineItem"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/lineitems/{id}",
+          "op": "delete LineItem"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/customers",
+          "op": "create Customer"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/customers",
+          "op": "list Customer"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/customers/{id}",
+          "op": "get Customer"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/customers/{id}",
+          "op": "update Customer"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/customers/{id}",
+          "op": "delete Customer"
+        },
+        {
+          "method": "POST",
+          "path": "/v1/collections",
+          "op": "create Collection"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/collections",
+          "op": "list Collection"
+        },
+        {
+          "method": "GET",
+          "path": "/v1/collections/{id}",
+          "op": "get Collection"
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/collections/{id}",
+          "op": "update Collection"
+        },
+        {
+          "method": "DELETE",
+          "path": "/v1/collections/{id}",
+          "op": "delete Collection"
+        }
+      ],
+      "features": {
+        "pagination": true,
+        "filtering": true,
+        "relationExpansion": true,
+        "strictValidation": true,
+        "contractTest": true
+      },
+      "health": "/healthz"
+    },
+    "supplychain": {
+      "type": "cyclonedx-sbom",
+      "runtime": "kotoba-wasm",
+      "sbom": "manifest:supplychain.sbom",
+      "sbomData": {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "metadata": {
+          "component": {
+            "type": "application",
+            "name": "zozo-compat",
+            "purl": "pkg:etzhayyim/zozo-compat"
+          }
+        },
+        "components": [
+          {
+            "type": "library",
+            "name": "kotoba",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotoba"
+          },
+          {
+            "type": "library",
+            "name": "kotodama-wasm",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/kotodama-wasm"
+          },
+          {
+            "type": "library",
+            "name": "datomic-client",
+            "scope": "required",
+            "purl": "pkg:etzhayyim/datomic-client"
+          }
+        ]
+      },
+      "adr": [
+        "2606036000"
+      ]
+    },
+    "socialpost": {
+      "type": "datom-event-feed",
+      "runtime": "kotoba-wasm",
+      "lexicon": "app.bsky.feed.post",
+      "source": "zozo.* Datom events",
+      "mode": "dry-run",
+      "gate": "G8"
+    },
+    "mcp": {
+      "type": "model-context-protocol",
+      "runtime": "kotoba-wasm",
+      "transport": "ipfs+kotoba-wasm",
+      "toolCount": 30,
+      "tools": [
+        {
+          "name": "create_product",
+          "description": "Create a Product.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "sku": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "inventory": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "sku",
+              "title"
+            ]
+          }
+        },
+        {
+          "name": "list_products",
+          "description": "List Products.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_product",
+          "description": "Get a Product by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_product",
+          "description": "Update a Product.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "sku": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "inventory": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_product",
+          "description": "Delete a Product.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_variant",
+          "description": "Create a Variant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "productId": {
+                "type": "string"
+              },
+              "sku": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "optionValues": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "sku",
+              "price"
+            ]
+          }
+        },
+        {
+          "name": "list_variants",
+          "description": "List Variants.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_variant",
+          "description": "Get a Variant by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_variant",
+          "description": "Update a Variant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "productId": {
+                "type": "string"
+              },
+              "sku": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "optionValues": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_variant",
+          "description": "Delete a Variant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_order",
+          "description": "Create a Order.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "customerId": {
+                "type": "string"
+              },
+              "number": {
+                "type": "string"
+              },
+              "total": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "number",
+              "total"
+            ]
+          }
+        },
+        {
+          "name": "list_orders",
+          "description": "List Orders.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_order",
+          "description": "Get a Order by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_order",
+          "description": "Update a Order.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "customerId": {
+                "type": "string"
+              },
+              "number": {
+                "type": "string"
+              },
+              "total": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_order",
+          "description": "Delete a Order.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_line_item",
+          "description": "Create a LineItem.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "orderId": {
+                "type": "string"
+              },
+              "productId": {
+                "type": "string"
+              },
+              "quantity": {
+                "type": "integer"
+              },
+              "unitPrice": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "quantity",
+              "unitPrice"
+            ]
+          }
+        },
+        {
+          "name": "list_line_items",
+          "description": "List LineItems.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_line_item",
+          "description": "Get a LineItem by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_line_item",
+          "description": "Update a LineItem.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "orderId": {
+                "type": "string"
+              },
+              "productId": {
+                "type": "string"
+              },
+              "quantity": {
+                "type": "integer"
+              },
+              "unitPrice": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_line_item",
+          "description": "Delete a LineItem.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_customer",
+          "description": "Create a Customer.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "email",
+              "firstName"
+            ]
+          }
+        },
+        {
+          "name": "list_customers",
+          "description": "List Customers.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_customer",
+          "description": "Get a Customer by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_customer",
+          "description": "Update a Customer.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_customer",
+          "description": "Delete a Customer.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "create_collection",
+          "description": "Create a Collection.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "handle": {
+                "type": "string"
+              },
+              "published": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "title",
+              "handle"
+            ]
+          }
+        },
+        {
+          "name": "list_collections",
+          "description": "List Collections.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        {
+          "name": "get_collection",
+          "description": "Get a Collection by id.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "update_collection",
+          "description": "Update a Collection.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "handle": {
+                "type": "string"
+              },
+              "published": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "delete_collection",
+          "description": "Delete a Collection.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

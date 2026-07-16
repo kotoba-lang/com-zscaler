@@ -1,0 +1,8 @@
+;; kaname 要 — web-ingest source manifest (ADR-2606172100 R1; G7 founder-approved).
+;; ingest-live! fetches each PUBLIC page in clj (babashka.http-client) → Murakumo gemma extraction.
+;; DISCLOSED public announcement pages (公開投稿) only; person-excluded; every edge basis'd by URL.
+;; datomic/datascript tx-data (edn-datomize, 2026-07-10): bare :url/:domain/:source keys promoted
+;; to :ingest-source/*, :db/id added per entity. Consumer methods/ingest.cljc's `ingest-live!`
+;; reconstitutes the bare keys before use — see reconstitute-entity there.
+[{:db/id -1 :ingest-source/url "https://www.anthropic.com/news/anthropic-amazon-compute" :ingest-source/domain :economy :ingest-source/source :web}
+ {:db/id -2 :ingest-source/url "https://nvidianews.nvidia.com/news/openai-and-nvidia-announce-strategic-partnership-to-deploy-10gw-of-nvidia-systems" :ingest-source/domain :economy :ingest-source/source :web}]

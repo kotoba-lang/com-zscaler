@@ -1,0 +1,12 @@
+[{:db/id -1
+  :cell/method "stack_robotics"
+  :cell/node "asher"
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "stack_service"
+  :cell/glyph "舫"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G11" "G13" "G14" "G15"]
+  :cell/state-graph "{:nodes [:plan :coverage-sweep :module-swap :serviced], :entry :plan, :edges [[:plan :coverage-sweep] [:coverage-sweep :module-swap] [:module-swap :serviced] [:serviced :end]]}"
+  :cell/doc "Robotics service of the membrane stack: boustrophedon anti-fouling coverage sweep (§5) + EOL membrane-module swap, over the shared kuni-umi substrate. Civilian-use allowlist (G13) + member-signature/no-server-key (G11) + ≥2-robot witness quorum (G14) + motion-safety-envelope (G15); all R0 dry-run. Backed by stack_robotics/plan-clean-pass + plan-module-swap."
+  :cell/kotoba "{:reads [:funamori.site/id :funamori.membrane/id], :writes [:funamori.robotics/coverage :funamori.robotics/witness-ok :funamori.robotics/server-held-key :funamori.robotics/dry-run]}"}]

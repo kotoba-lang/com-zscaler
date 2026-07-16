@@ -1,0 +1,42 @@
+;; yadori (宿り) :representative seed (R0). Offline classifier results; no live RDAP fetch (G7/G8).
+[;; availability checks (as-of history — non-eschatological, no final state)
+ {:domain/fqdn "etzhayyim.com"
+  :domain/ascii-fqdn "etzhayyim.com"
+  :domain/tld "com"
+  :domain/availability :registered            ;; the operating entity's domain (CF Registrar, 2026-05-15)
+  :domain/rdap-url "https://rdap.verisign.com/com/v1/domain/etzhayyim.com"
+  :domain/source :fixture
+  :domain/checked-at "2026-06-03"}
+
+ {:domain/fqdn "example-newproject.org"
+  :domain/ascii-fqdn "example-newproject.org"
+  :domain/tld "org"
+  :domain/availability :available             ;; a representative free name (RDAP 404)
+  :domain/rdap-url "https://rdap.publicinterestregistry.org/rdap/domain/example-newproject.org"
+  :domain/source :fixture
+  :domain/checked-at "2026-06-03"}
+
+ ;; name candidates (G6: every candidate is charter-clean + squat-clear before surfacing)
+ {:candidate/fqdn "example-newproject.org" :candidate/charter-clean true :candidate/squat-clear true}
+ {:candidate/fqdn "example-newproject.dev" :candidate/charter-clean true :candidate/squat-clear true}
+
+ ;; registrar policy (G3: cloudflare default at-cost; godaddy Council-gated)
+ {:registrar/id "cloudflare" :registrar/pricing :at-cost :registrar/council-gated false
+  :registrar/policy "default registrar; at-cost wholesale, no markup, no upsell, WHOIS-privacy included"}
+ {:registrar/id "godaddy"    :registrar/pricing :markup  :registrar/council-gated true
+  :registrar/policy "external fiat-markup registrar; not recommended; external use Council-gated (G3)"}
+
+ ;; reservation intent (G2 member-principal + G5 no-server-key) — unsigned at R0
+ {:reservation/registrant-principal :member
+  :reservation/payer :member
+  :reservation/funding-source :member-okaimono
+  :reservation/server-held-key false}
+
+ ;; authorization (G5 member-signed; G7 live mutate still operator+Council gated)
+ {:authorization/authorized-by :member
+  :authorization/server-signed false
+  :authorization/outward-gated true}
+
+ ;; zone provision plan (post-acquisition; did:web wiring per ADR-2606013800) — plan only at R0
+ {:zone/record-type "AAAA" :zone/record-value "100::" :zone/didweb-target "did:web:example-newproject.org"}
+ {:zone/record-type "TXT"  :zone/record-value "did:web wiring placeholder" :zone/didweb-target "did:web:example-newproject.org"}]

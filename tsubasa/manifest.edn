@@ -1,0 +1,51 @@
+;; tsubasa 翼 — actor manifest
+;; Flight-route/fare discovery commons (Skyscanner inversion) — data-only, affiliate-stripped,
+;; member self-books, emissions-honest. ADR-2606072800
+{:actor/id        "tsubasa"
+ :actor/glyph     "翼"
+ :actor/tier      :tier-b
+ :actor/integrates ["okaimono" "shukubo" "watari"]
+ :actor/domain    "tsubasa.etzhayyim.com"
+ :actor/purpose   "Skyscanner-inverse flight discovery commons — honest fare/route meta-search whose every onward link is AFFILIATE-STRIPPED and where the member SELF-BOOKS on the airline's own site (no commission inflow). Ranks by true total cost (fare + baggage) with CO₂ emissions surfaced, never hidden; no ads, no urgency ('price will rise'), no person fare-tracking. The R2 maturity layer additionally derives per-O–D-route carrier CONCENTRATION (named-HHI + competition reading) and flags concentrated/monopoly routes :opening — a COMPETITION + FARE map routed to OPENING, never a paid ranking and never a target-list — persisted to a content-addressed append-only kotoba Datom commit-DAG via an idempotent-by-content heartbeat. Live GDS/airline ingest is Council Lv7+ gated; R0/R1 ship :representative data. Sibling of watari (live position). kotoba-EAVT-native, Murakumo-only."
+ :actor/status    :r3
+ :actor/adr       "2606072800"
+ :actor/primary-schema "00-contracts/schemas/flight-fare-ontology.kotoba.edn"
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "no-affiliate-no-inflow"   :gate/rule "onward links AFFILIATE-STRIPPED; member books on the airline's OWN site; tsubasa is never merchant-of-record and takes no commission/inflow (§1.3); no commission field representable"}
+  {:gate/id "G2"  :gate/name "no-ads"                   :gate/rule "data-only; no sponsored ranking / paid placement (Charter Rider §2)"}
+  {:gate/id "G3"  :gate/name "wellbecoming-anti-dark"   :gate/rule "honest fares only; no urgency/scarcity ('price will rise') / fare-watch pressure; no predictive-pressure field"}
+  {:gate/id "G4"  :gate/name "emissions-honest"         :gate/rule "rank by true total cost (fare + baggage); CO₂ emissions SURFACED on every option, never hidden or de-ranked away"}
+  {:gate/id "G5"  :gate/name "no-person-tracking"       :gate/rule "no per-searcher fare-watch / pattern-of-life; a search is stateless w.r.t. the searcher"}
+  {:gate/id "G6"  :gate/name "murakumo-only"            :gate/rule "NL query / narration via KotobaLLM 127.0.0.1:4000; no external LLM (ADR-2605215000)"}
+  {:gate/id "G7"  :gate/name "kotoba-eavt-native"       :gate/rule "fares/routes are kotoba Datoms; no RisingWave/SQL as canonical"}
+  {:gate/id "G8"  :gate/name "outward-UNLOCKED-charter-bounded" :gate/unlocked true :gate/attestation "founder Lv7+ PR review (Bootstrap Council attestation premise, CLAUDE.md 2026-06-11); see ADR R3 §gate-unlock 2026-06-21" :gate/rule "live GDS/airline fare ingest UNLOCKED (R3) — CHARTER-BOUNDED, bounds STRUCTURAL: (a) source ∈ {:public free/disclosed, :member-principal member's OWN airline-account creds} ONLY — :paid-terminal (Amadeus/Sabre/Travelport) refused by ingest/assert-clean-source (Rider §2(e)/§2(i)); (b) NO-SERVER-KEY means no custodial UNILATERAL SIGNING key on an etzhayyim automated process — it does NOT mean no automation, and READ-ONLY is exempt (ADR-2605231525 marker). So PUBLIC sources are fetched AUTONOMOUSLY by the actor itself (methods/fetch.cljc, read-only, no key — like kaname/watari/tsumugi); :member-principal needs the member's runtime/creds (consent); the actor's OWN write-signing uses a self-generated did:key (sealed seed, present-only) + member CACAO leash (ibuki/kaname pattern) — appending to the LOCAL log needs no key; (c) G1/G3/G4/G5 unchanged + ENFORCED on ingest — a fare bearing a commission/affiliate/searcher key, or missing positive CO₂, is REJECTED; (d) tsubasa transacts no booking (member self-books). Was: Council Lv7+ + operator gated, :representative-only."}]
+
+ :actor/cells
+ [{:cell/id "fares"     :cell/kind :datalog   :cell/runtime :kotoba :cell/doc "route/fare/airport/carrier Datoms (:representative seed)"}
+  {:cell/id "search"    :cell/kind :langgraph :cell/runtime :wasm   :cell/doc "query → honest ranked options (total cost + emissions surfaced, G4)"}
+  {:cell/id "handoff"   :cell/kind :langgraph :cell/runtime :wasm   :cell/doc "affiliate-stripped self-book handoff to airline's own site (G1)"}
+  {:cell/id "analyze"   :cell/kind :clj       :cell/runtime :bb     :cell/doc "per-route carrier-HHI concentration → competition reading → :opening; coverage gap; EAVT datom-emit (methods/analyze.cljc)"}
+  {:cell/id "ledger"    :cell/kind :clj       :cell/runtime :bb     :cell/doc "content-addressed append-only commit-DAG; tx-cid/verify-chain, tamper-evident, no-server-key (methods/kotoba.cljc)"}
+  {:cell/id "heartbeat" :cell/kind :clj       :cell/runtime :bb     :cell/doc "deterministic idempotent-by-content heartbeat: analyze → append on change (methods/autorun.cljc)"}
+  {:cell/id "fetch"     :cell/kind :clj       :cell/runtime :bb     :cell/doc "R3 AUTONOMOUS read-only PUBLIC-source fetch → ingest; no operator, no key (no-server-key: read-only) — :member-principal refused here, runs in member runtime (methods/fetch.cljc)"}
+  {:cell/id "ingest"    :cell/kind :clj       :cell/runtime :bb     :cell/doc "R3 live fare ingest: parsed payload → :authoritative :fare rows; charter-bounded source (no paid terminal), G1/G4/G5 enforced, no-server-key (methods/ingest.cljc)"}
+  {:cell/id "digest"    :cell/kind :clj       :cell/runtime :bb     :cell/doc "R3 Murakumo-narrated fare digest, loopback-only + fail-open template (G6) (methods/digest.cljc)"}
+  {:cell/id "wasm"      :cell/kind :wasm      :cell/runtime :wasm   :cell/doc "R3 compute-only WASM component scaffold (wasm/world.wit + build.clj/bb); no wasi:sockets/clocks/random — absence = G1/G5/G6 guarantee; artifact build = operator step"}
+  {:cell/id "identity"  :cell/kind :clj       :cell/runtime :bb     :cell/doc "R3+ actor self-certifying did:key — Ed25519 keygen + did:key encode + present-only sign/verify; sealed seed (Keychain/1Password), never exposed (methods/identity.cljc)"}
+  {:cell/id "bridge"    :cell/kind :clj       :cell/runtime :bb     :cell/doc "R3+ push local commit-DAG → LIVE kotoba engine; host allowlist, exactly-once :bridge cursor, expected_parent, dry-run default, operator-bearer + member CACAO leash present-only, fail-open (methods/kotoba_bridge.cljc)"}
+  {:cell/id "openflights" :cell/kind :clj     :cell/runtime :bb     :cell/doc "R3+ OpenFlights ODbL public-domain airports/airlines → :authoritative :airport/:carrier coverage rows (read-only; no fares fabricated) (methods/openflights.cljc)"}
+  {:cell/id "fleet"     :cell/kind :clj       :cell/runtime :bb     :cell/doc "R3+ TsubasaHeartbeatCell — registered in cell-runner cells.edn (node asher, cron 27 * * * *, healthz 13090); fire = one local heartbeat, no I/O (cell.cljc)"}]
+
+ :actor/lexicons
+ ["com.etzhayyim.tsubasa.fare"
+  "com.etzhayyim.tsubasa.searchResult"]
+
+ :actor/siblings
+ {:watari   "live aircraft POSITION (ADS-B) — tsubasa plans, watari tracks; both observational"
+  :okaimono "affiliate-strip + external-mirror pattern reused"
+  :shukubo  "Ring-2 self-book-handoff pattern reused"}}

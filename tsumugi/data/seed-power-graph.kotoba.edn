@@ -1,0 +1,114 @@
+;; tsumugi 紡ぎ — seed power-graph (real, PUBLIC, power-holding entities only)
+;; ADR-2606011800 · §D7.1 of ADR-2606011000 (Engi Knowledge Graph / 産霊の網)
+;;
+;; Vocabulary: :organism/* + :en/* (engi-organism-ontology, ADR-2606011000) overlaid
+;; with spirit-in-physics edge physics (spirit-ontology, ADR-2606011500).
+;;
+;; SCOPE GUARD (constitutional, §D8/§D9):
+;;   - ONLY power-holding entities: 法人 (corporations), institutions, and persons
+;;     STRICTLY in a public-power ROLE (chair/exec/regulator) — never a private dossier.
+;;   - The lens is 取-concentration (who accumulates custody-debt over others), routed
+;;     to release — NOT a target-list. The powerless are absent BY CONSTRUCTION.
+;;   - :en/grasping-load = the しがらみ/呪い the dependency/ownership binds (lock-in,
+;;     reach, obligation). karma lives ONLY on edges (:spirit.bond/signed-weight; N1).
+;;
+;; SOURCING: :representative — every relationship below is PUBLICLY DOCUMENTED (corporate
+;; filings, keiretsu cross-holdings, supply-chain disclosures, ISA-license facts), but the
+;; sample is a bounded illustrative seed, NOT exhaustive coverage. No fabricated coverage.
+;; Live planet-scale ingest (atproto follow/deps over all earth) is G11/Council-gated.
+
+[;; ───────────────────────────── organisms (nodes) ─────────────────────────────
+ ;; sector keyword drives the representative 10-dim emotion/role vector in analyze.py
+ {:organism/id "org.corp.jp.7203" :organism/kind :institutional :organism/subkind :corp :organism/label "Toyota Motor" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :automaker}
+ {:organism/id "org.corp.jp.6902" :organism/kind :institutional :organism/subkind :corp :organism/label "DENSO" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :auto-supplier}
+ {:organism/id "org.corp.jp.7259" :organism/kind :institutional :organism/subkind :corp :organism/label "Aisin" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :auto-supplier}
+ {:organism/id "org.corp.jp.6201" :organism/kind :institutional :organism/subkind :corp :organism/label "Toyota Industries" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :auto-supplier}
+ {:organism/id "org.corp.jp.7267" :organism/kind :institutional :organism/subkind :corp :organism/label "Honda" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :automaker}
+ {:organism/id "org.corp.jp.9984" :organism/kind :institutional :organism/subkind :corp :organism/label "SoftBank Group" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :holding}
+ {:organism/id "org.corp.uk.arm" :organism/kind :institutional :organism/subkind :corp :organism/label "Arm Holdings" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :semiconductor-ip}
+ {:organism/id "org.corp.tw.tsmc" :organism/kind :institutional :organism/subkind :corp :organism/label "TSMC" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :foundry}
+ {:organism/id "org.corp.us.nvidia" :organism/kind :institutional :organism/subkind :corp :organism/label "NVIDIA" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :semiconductor}
+ {:organism/id "org.corp.us.alphabet" :organism/kind :institutional :organism/subkind :corp :organism/label "Alphabet" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :holding}
+ {:organism/id "org.corp.us.google" :organism/kind :institutional :organism/subkind :corp :organism/label "Google" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :platform :organism/nests-in "org.corp.us.alphabet"}
+ {:organism/id "org.corp.us.apple" :organism/kind :institutional :organism/subkind :corp :organism/label "Apple" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :platform}
+ {:organism/id "org.corp.us.microsoft" :organism/kind :institutional :organism/subkind :corp :organism/label "Microsoft" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :platform}
+ {:organism/id "org.corp.us.openai" :organism/kind :institutional :organism/subkind :corp :organism/label "OpenAI" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :ai-lab}
+ {:organism/id "org.corp.jp.6758" :organism/kind :institutional :organism/subkind :corp :organism/label "Sony Group" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :platform}
+ {:organism/id "org.corp.jp.8306" :organism/kind :institutional :organism/subkind :corp :organism/label "MUFG" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :bank}
+ {:organism/id "org.state.jp.meti" :organism/kind :institutional :organism/subkind :agency :organism/label "METI (経済産業省)" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :regulator}
+ {:organism/id "org.state.jp.fsa" :organism/kind :institutional :organism/subkind :agency :organism/label "FSA (金融庁)" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :regulator}
+ {:organism/id "org.state.jp.boj" :organism/kind :institutional :organism/subkind :agency :organism/label "Bank of Japan (日本銀行)" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :central-bank}
+ {:organism/id "org.state.us.sec" :organism/kind :institutional :organism/subkind :agency :organism/label "US SEC" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :regulator}
+ {:organism/id "org.state.us.fed" :organism/kind :institutional :organism/subkind :agency :organism/label "US Federal Reserve" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :central-bank}
+ {:organism/id "org.state.eu" :organism/kind :institutional :organism/subkind :state :organism/label "European Union" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :regulator}
+ {:organism/id "org.state.uk.cma" :organism/kind :institutional :organism/subkind :agency :organism/label "UK Competition and Markets Authority" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :regulator}
+ {:organism/id "org.state.us.doj-antitrust" :organism/kind :institutional :organism/subkind :agency :organism/label "US DOJ Antitrust Division" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :regulator}
+ {:organism/id "org.state.jp.jftc" :organism/kind :institutional :organism/subkind :agency :organism/label "JFTC (公正取引委員会)" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :regulator}
+ {:organism/id "org.river.aichi-yahagi" :organism/kind :ecological :organism/subkind :river :organism/label "Yahagi River watershed" :organism/standing :rights-of-nature :organism/sourcing :representative :tsumugi/sector :ecological}
+ ;; person ONLY in public-power role (institutional role node; NOT a private profile)
+ {:organism/id "org.role.toyota.chair" :organism/kind :institutional :organism/subkind :role :organism/label "Toyota Motor — Chair (public role)" :organism/standing :institutional :organism/sourcing :representative :tsumugi/sector :exec-role}
+
+ ;; ───────────────────────────── 縁 edges (first-class) ─────────────────────────
+ ;; :en/grasping-load ∈ [0,1] — higher = more しがらみ/lock-in the tie binds.
+ ;; :custodies = ownership/control custody · :depends-on = supply/compute/IP dependency
+ ;; :nests-in = sub-part · :tends = stewardship · :follows = attention/social
+ {:en/id "en.7203.cust.6902" :en/kind :custodies   :en/from "org.corp.jp.7203" :en/to "org.corp.jp.6902"     :en/grasping-load 0.62 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.6902.dep.7203"  :en/kind :depends-on  :en/from "org.corp.jp.6902" :en/to "org.corp.jp.7203"     :en/grasping-load 0.78 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.7203.cust.7259" :en/kind :custodies   :en/from "org.corp.jp.7203" :en/to "org.corp.jp.7259"     :en/grasping-load 0.55 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.7259.dep.7203"  :en/kind :depends-on  :en/from "org.corp.jp.7259" :en/to "org.corp.jp.7203"     :en/grasping-load 0.74 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.6201.cust.7203" :en/kind :custodies   :en/from "org.corp.jp.6201" :en/to "org.corp.jp.7203"     :en/grasping-load 0.40 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.7203.cust.6201" :en/kind :custodies   :en/from "org.corp.jp.7203" :en/to "org.corp.jp.6201"     :en/grasping-load 0.40 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.chair.cust.7203" :en/kind :custodies  :en/from "org.role.toyota.chair" :en/to "org.corp.jp.7203" :en/grasping-load 0.35 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.7203.dep.river" :en/kind :depends-on  :en/from "org.corp.jp.7203" :en/to "org.river.aichi-yahagi" :en/grasping-load 0.30 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.9984.cust.arm"  :en/kind :custodies   :en/from "org.corp.jp.9984" :en/to "org.corp.uk.arm"      :en/grasping-load 0.88 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.apple.dep.arm"  :en/kind :depends-on  :en/from "org.corp.us.apple" :en/to "org.corp.uk.arm"     :en/grasping-load 0.70 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.nvidia.dep.arm" :en/kind :depends-on  :en/from "org.corp.us.nvidia" :en/to "org.corp.uk.arm"    :en/grasping-load 0.45 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.apple.dep.tsmc" :en/kind :depends-on  :en/from "org.corp.us.apple" :en/to "org.corp.tw.tsmc"    :en/grasping-load 0.85 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.nvidia.dep.tsmc" :en/kind :depends-on :en/from "org.corp.us.nvidia" :en/to "org.corp.tw.tsmc"   :en/grasping-load 0.90 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.openai.dep.nvidia" :en/kind :depends-on :en/from "org.corp.us.openai" :en/to "org.corp.us.nvidia" :en/grasping-load 0.82 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.openai.dep.msft" :en/kind :depends-on :en/from "org.corp.us.openai" :en/to "org.corp.us.microsoft" :en/grasping-load 0.80 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.msft.cust.openai" :en/kind :custodies :en/from "org.corp.us.microsoft" :en/to "org.corp.us.openai" :en/grasping-load 0.66 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.google.nest.alphabet" :en/kind :nests-in :en/from "org.corp.us.google" :en/to "org.corp.us.alphabet" :en/grasping-load 0.95 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.google.dep.tsmc" :en/kind :depends-on :en/from "org.corp.us.google" :en/to "org.corp.tw.tsmc"   :en/grasping-load 0.55 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.msft.dep.nvidia" :en/kind :depends-on :en/from "org.corp.us.microsoft" :en/to "org.corp.us.nvidia" :en/grasping-load 0.60 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.google.dep.nvidia" :en/kind :depends-on :en/from "org.corp.us.google" :en/to "org.corp.us.nvidia" :en/grasping-load 0.50 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.sony.dep.tsmc"  :en/kind :depends-on  :en/from "org.corp.jp.6758" :en/to "org.corp.tw.tsmc"     :en/grasping-load 0.58 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.8306.cust.7203" :en/kind :custodies   :en/from "org.corp.jp.8306" :en/to "org.corp.jp.7203"     :en/grasping-load 0.28 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.8306.cust.6758" :en/kind :custodies   :en/from "org.corp.jp.8306" :en/to "org.corp.jp.6758"     :en/grasping-load 0.26 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.meti.tend.7203" :en/kind :tends       :en/from "org.state.jp.meti" :en/to "org.corp.jp.7203"    :en/grasping-load 0.33 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.meti.tend.6758" :en/kind :tends       :en/from "org.state.jp.meti" :en/to "org.corp.jp.6758"    :en/grasping-load 0.20 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.honda.dep.tsmc" :en/kind :depends-on  :en/from "org.corp.jp.7267" :en/to "org.corp.tw.tsmc"     :en/grasping-load 0.40 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.honda.dep.river" :en/kind :depends-on :en/from "org.corp.jp.7267" :en/to "org.river.aichi-yahagi" :en/grasping-load 0.18 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.apple.follow.openai" :en/kind :follows :en/from "org.corp.us.apple" :en/to "org.corp.us.openai" :en/grasping-load 0.22 :en/source :atproto-follow :en/sourcing :representative}
+
+ ;; ── regulator → regulated stewardship (:tends) — publicly documented supervision,
+ ;; low grasping-load (oversight, not ownership/lock-in). FSA/BOJ supervise the
+ ;; Japanese megabanks; the SEC is the primary US securities regulator over its
+ ;; registrants (the very 10-K filers kanjo ingests from EDGAR). All :representative.
+ {:en/id "en.fsa.tend.8306"  :en/kind :tends :en/from "org.state.jp.fsa" :en/to "org.corp.jp.8306"     :en/grasping-load 0.30 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.boj.tend.8306"  :en/kind :tends :en/from "org.state.jp.boj" :en/to "org.corp.jp.8306"     :en/grasping-load 0.25 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.sec.tend.apple" :en/kind :tends :en/from "org.state.us.sec" :en/to "org.corp.us.apple"    :en/grasping-load 0.28 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.sec.tend.msft"  :en/kind :tends :en/from "org.state.us.sec" :en/to "org.corp.us.microsoft" :en/grasping-load 0.28 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.sec.tend.nvidia" :en/kind :tends :en/from "org.state.us.sec" :en/to "org.corp.us.nvidia"  :en/grasping-load 0.26 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.sec.tend.alphabet" :en/kind :tends :en/from "org.state.us.sec" :en/to "org.corp.us.alphabet" :en/grasping-load 0.26 :en/source :registry :en/sourcing :representative}
+ ;; US Fed supervises MUFG's US banking operations (foreign banking organization);
+ ;; the EU (Commission) is the antitrust + DMA gatekeeper authority over Apple /
+ ;; Alphabet-Google / Microsoft — all heavily documented. :tends, :representative.
+ {:en/id "en.fed.tend.8306"   :en/kind :tends :en/from "org.state.us.fed" :en/to "org.corp.jp.8306"     :en/grasping-load 0.30 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.eu.tend.apple"   :en/kind :tends :en/from "org.state.eu" :en/to "org.corp.us.apple"        :en/grasping-load 0.32 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.eu.tend.google"  :en/kind :tends :en/from "org.state.eu" :en/to "org.corp.us.google"       :en/grasping-load 0.32 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.eu.tend.msft"    :en/kind :tends :en/from "org.state.eu" :en/to "org.corp.us.microsoft"    :en/grasping-load 0.30 :en/source :registry :en/sourcing :representative}
+ ;; competition / antitrust authorities (:tends) — landmark documented matters: the UK
+ ;; CMA's review that blocked NVIDIA's acquisition of Arm; US DOJ Antitrust's US v.
+ ;; Google search-monopoly case; JFTC subcontracting/competition oversight of Toyota.
+ {:en/id "en.cma.tend.nvidia" :en/kind :tends :en/from "org.state.uk.cma" :en/to "org.corp.us.nvidia"   :en/grasping-load 0.30 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.cma.tend.arm"    :en/kind :tends :en/from "org.state.uk.cma" :en/to "org.corp.uk.arm"       :en/grasping-load 0.28 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.doj.tend.google" :en/kind :tends :en/from "org.state.us.doj-antitrust" :en/to "org.corp.us.google" :en/grasping-load 0.34 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.jftc.tend.7203"  :en/kind :tends :en/from "org.state.jp.jftc" :en/to "org.corp.jp.7203"     :en/grasping-load 0.22 :en/source :registry :en/sourcing :representative}
+ ;; sector-breadth enrichment (no new gov organisms — these regulators are already
+ ;; reconciled): METI's industrial-policy purview over the JP auto sector; the EU's
+ ;; open antitrust interest in NVIDIA; JFTC competition oversight of Sony.
+ {:en/id "en.meti.tend.7267" :en/kind :tends :en/from "org.state.jp.meti" :en/to "org.corp.jp.7267"     :en/grasping-load 0.20 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.meti.tend.6902" :en/kind :tends :en/from "org.state.jp.meti" :en/to "org.corp.jp.6902"     :en/grasping-load 0.18 :en/source :registry :en/sourcing :representative}
+ {:en/id "en.eu.tend.nvidia" :en/kind :tends :en/from "org.state.eu" :en/to "org.corp.us.nvidia"        :en/grasping-load 0.24 :en/source :declared :en/sourcing :representative}
+ {:en/id "en.jftc.tend.6758" :en/kind :tends :en/from "org.state.jp.jftc" :en/to "org.corp.jp.6758"     :en/grasping-load 0.20 :en/source :registry :en/sourcing :representative}]

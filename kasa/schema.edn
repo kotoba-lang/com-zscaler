@@ -1,0 +1,5 @@
+;; 20-actors/kasa/schema.edn — Datomic/Datascript-compatible schema for this
+;; actor's transformed .edn files (auto-generated, port of
+;; manifest/edn-datomize.cljs merge-schema!). Hand-edit prohibited — regenerate.
+
+[#:db{:ident :kotoba.app/components, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :kotoba.app/name, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :kotoba.app/placement, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :kotoba.app/version, :valueType :db.type/string, :cardinality :db.cardinality/one}]

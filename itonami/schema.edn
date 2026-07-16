@@ -1,0 +1,34 @@
+;; 20-actors/itonami/schema.edn — Datomic/Datascript compatible schema for
+;; 20-actors/itonami/data/*.kotoba.edn tx-data (per repo-wide edn-datomize pass,
+;; port of manifest/edn-datomize.cljs classify/schema-attrs; manual accumulation
+;; since this actor's data files are multi-entity vectors, not single wrapped
+;; maps, so wrap-map! wasn't applicable as-is).
+;; :db/ident attribute definitions. No Datomic-specific keys (no
+;; :db.install/_attribute etc). Hand-maintained — extend when a new attribute
+;; namespace/key is added to 20-actors/itonami/data/*.kotoba.edn.
+[
+ {:db/ident :detect/class :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :detect/conf :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :detect/station :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :detect/unit :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :detect/verdict :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :opsday/day :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :opsday/energy-per-good :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :opsday/oee :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :opsday/scope :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :opsday/scrap-rate :db/valueType :db.type/double :db/cardinality :db.cardinality/one}
+ {:db/ident :station/id :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :station/label :db/valueType :db.type/string :db/cardinality :db.cardinality/one}
+ {:db/ident :station/line :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :station/rated-kw :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :station/sourcing :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :station/takt-s :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/cycles :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/good :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/interval-s :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/kwh :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/scrap :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/state :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/station :db/valueType :db.type/keyword :db/cardinality :db.cardinality/one}
+ {:db/ident :tick/t :db/valueType :db.type/long :db/cardinality :db.cardinality/one}
+]

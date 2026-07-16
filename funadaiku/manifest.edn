@@ -1,0 +1,57 @@
+;; funadaiku 船大工 — actor manifest (Gen-3 kotoba-native)
+;; Zero-emission autonomous cargo shipbuilding — wind-assist + solar + hydrogen FC + LFP battery
+;; ADR-2606013400 (R0 scaffold) · 2026-06-01
+{:actor/id        "funadaiku"
+ :actor/glyph     "船大工"
+ :actor/display-name "船大工 — Zero-Emission Autonomous Cargo Shipbuilding"
+ :actor/tier      :tier-b
+ :actor/integrates ["hikari" "watatsumi"]
+ :actor/domain    "funadaiku.etzhayyim.com"
+ :actor/purpose   "Zero-emission autonomous cargo shipbuilding — 9 Pregel cells implementing hull block fabrication, assembly, NDT inspection, powertrain integration (wind-assist + solar + H₂ fuel cell + LFP battery + electric pods), outfitting, launch commissioning, sea trial, decarbonization audit, and class certification (Nagi class reference, 3,000 DWT, ~90m × 15m, 10 kn service speed, IMO MASS Degree 3)."
+ :actor/status    :r0
+ :actor/adr       "2606013400"
+ :actor/related   ["2605252200" "2606010600" "2606010030"]
+
+ :actor/charter-rider
+ {:rider/version "2.0"
+  :rider/applied true}
+
+ :actor/gates
+ [{:gate/id "G1"  :gate/name "open-source-firmware-recipes" :gate/rule "All block fabrication + NDT + powertrain integration firmware open-source (Apache 2.0 + Charter Rider)"}
+  {:gate/id "G2"  :gate/name "vendor-free-cad-only"        :gate/rule "FreeCAD / OpenSCAD / Open CASCADE only; no proprietary CAD (G9)"}
+  {:gate/id "G3"  :gate/name "witness-quorum-robots"       :gate/rule "Witness quorum ≥2 distinct robots per major stage (Oshidashi erection + Tsutsuki NDT canonical)"}
+  {:gate/id "G4"  :gate/name "cetacean-protection-sonar"   :gate/rule "Navigation/obstacle sonar ≤180 dB re 1µPa @1m (marine mammal protection; G8)"}
+  {:gate/id "G5"  :gate/name "murakumo-only"               :gate/rule "Inference is Murakumo-only (KotobaLLM 127.0.0.1:4000); external LLM prohibited (ADR-2605215000)"}
+  {:gate/id "G6"  :gate/name "kotoba-eavt-native"          :gate/rule "State is kotoba EAVT Datoms (no SQL/RisingWave/Cypher)"}
+  {:gate/id "G7"  :gate/name "tithe-non-fiat"              :gate/rule "Payments are USDC Base L2 + ERC-4337 + TitheRouter 10% (no Stripe/fiat)"}
+  {:gate/id "G8"  :gate/name "zero-emission-propulsion"    :gate/rule "NO fossil main or auxiliary engine (G13 defining): wind-assist + solar + H₂/NH₃/methanol fuel-cell + LFP battery + electric pods ONLY"}
+  {:gate/id "G9"  :gate/name "imomarpol-ghg-well-to-wake"  :gate/rule "MARPOL Annex VI + EEXI + CII + IMO GHG well-to-wake; H₂/NH₃/methanol carry green production chain-of-custody (no fossil power)"}
+  {:gate/id "G10" :gate/name "mass-autonomy-ceiling"       :gate/rule "IMO MASS Degree 3 ceiling (SAE L4 equiv); Degree 4 = N10 (Council-gated only)"}
+  {:gate/id "G11" :gate/name "kpi-caps"                    :gate/rule "≤5,000 DWT / ≤14 kn service speed / MASS ≤ Degree 3 (G12)"}
+  {:gate/id "G12" :gate/name "no-server-key"               :gate/rule "Platform holds no key (operator/builder sign)"}
+  {:gate/id "G13" :gate/name "consent-bound"               :gate/rule "Real outward actions stay gated (compute-only R0; settlement stops at 'intent')"}
+  {:gate/id "G14" :gate/name "pii-encrypted"               :gate/rule "PII is encrypted"}
+  ]
+
+ :actor/cells
+ [{:cell/id "steel_block_fabrication"  :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "grand_block_assembly"     :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "weld_ndt_inspection"      :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "powertrain_integration"   :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "outfitting"               :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "launch_commissioning"     :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "sea_trial"                :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "decarbonization_audit"    :cell/kind :langgraph :cell/runtime :wasm}
+  {:cell/id "class_certification_binder" :cell/kind :langgraph :cell/runtime :wasm}]
+
+ :actor/lex
+ [{:lex/id "blockFabricationAttestation"}
+  {:lex/id "grandBlockAssemblyAttestation"}
+  {:lex/id "weldInspectionRecord"}
+  {:lex/id "powertrainIntegrationAttestation"}
+  {:lex/id "outfittingAttestation"}
+  {:lex/id "launchCommissioningRecord"}
+  {:lex/id "seaTrialRecord"}
+  {:lex/id "decarbonizationAudit"}
+  {:lex/id "silenCargoShipReview"}]
+}

@@ -1,0 +1,11 @@
+;; hodoki 解き — elv_catalyst_recovery cell (L3b)
+[{:db/id -1
+  :cell/llm "{:provider :murakumo, :endpoint \"127.0.0.1:4000\", :model \"gemma3:4b\", :charter-rider true}"
+  :cell/id "elv_catalyst_recovery"
+  :cell/glyph "♻️"
+  :cell/kind :langgraph
+  :cell/runtime :wasm
+  :cell/gates ["G1" "G9" "G14"]
+  :cell/state-graph "{:nodes [{:id \"extract-catalyst\", :type \"llm-prompt\", :prompt \"Extract and isolate catalyst converter blocks.\"} {:id \"measure-pgm\", :type \"function\", :func \"measure_pgm\"} {:id \"audit-yield\", :type \"function\", :func \"audit_pgm_yield\"} {:id \"smelter-handoff\", :type \"function\", :func \"record_smelter_receipt\"} {:id \"end\", :type \"return\"}], :entry \"extract-catalyst\", :edges [{:from \"extract-catalyst\", :to \"measure-pgm\"} {:from \"measure-pgm\", :to \"audit-yield\"} {:from \"audit-yield\", :to \"smelter-handoff\"} {:from \"smelter-handoff\", :to \"end\"}]}"
+  :cell/doc "L3b: Catalyst recovery — PGM yield audit ≥95% (G14)."
+  :cell/kotoba "{:reads [:catalyst-recovery/vin :catalyst-recovery/pgm-yield-pct :catalyst-recovery/smelter-receipt-cid], :writes [:catalyst-recovery/record-id :catalyst-recovery/vin :catalyst-recovery/pgm-yield-pct :catalyst-recovery/smelter-receipt-cid :catalyst-recovery/timestamp]}"}]

@@ -1,0 +1,23 @@
+;; kumi — actor manifest (Gen-3 kotoba-native EDN; mirrors kizuna/manifest.edn shape)
+{:actor/id "kumi"
+ :actor/glyph "組"
+ :actor/tier :tier-b
+ :actor/integrates ["junkan" "kaname" "keizu" "kizuna" "moyoshi"]
+ :actor/status :r0
+ :actor/did-web "did:web:etzhayyim.com:actor:kumi"
+ :actor/adr ["2607101830"]
+ :actor/primary-lexicon "com.etzhayyim.kumi.communityTie"
+ :actor/gates
+ [#:gate{:id "G1", :rule "person-excluded — a :person/*/:sev/human node is refused at parse; a community is a public-role entity, never a private individual (mirrors kizuna G3, keizu G1, kaname G1)"}
+  #:gate{:id "G2", :rule "public-declaration-only sourcing — :kumi/depends-on ties require >=2 :sources (public charter/registry citations); under-sourced ties are refused at parse (mirrors keizu G3)"}
+  #:gate{:id "G3", :rule "non-adjudicating / no-belief-content — no doctrinal/ideological/verdict field is representable; communities are structural nodes only (mirrors kaname G5, danjo G4)"}
+  #:gate{:id "G4", :rule "no-causal-overclaim on :kumi/influences — every influences tie must carry :co-occurrence-observed true; no :causal-claim field is representable (mirrors junkan G5)"}
+  #:gate{:id "G5", :rule "PROPOSE-not-act / no actuator — no dispatch/post/execute path anywhere; kumi emits append-only findings only, stronger than kizuna/kaname (mirrors junkan \"分析するだけ\")"}
+  #:gate{:id "G6", :rule "edge-primary, no stored per-community power score — leverage is computed on read only; no :kumi/power-score attribute exists (mirrors keizu G4)"}
+  #:gate{:id "G7", :rule "resilience-routing only, never a target-list — no priority/target/rank field is representable (mirrors kabuto/busshi/abaki)"}
+  #:gate{:id "G8", :rule "Murakumo-only inference, no-server-key — standard cross-actor convention"}]
+ :actor/non-goals
+ ["no membership roster is ever ingested or representable"
+  "no belief-verdict / doctrinal-content assertion"
+  "no stored per-community power/influence score (computed on read only)"
+  "no actuation of any kind — analysis-only, no actuator cell exists"]}

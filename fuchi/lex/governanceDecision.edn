@@ -1,0 +1,20 @@
+{:lexicon 1
+ :id "com.etzhayyim.fuchi.governanceDecision"
+ :defs
+ {:main
+  {:type "record"
+   :key "tid"
+   :description "The governance outcome for an allocation. 扶持 ROUTES (a pure function of imputed-total + invariant-touch + Charter-Rider hit) but NEVER decides accept/reject — the 1 SBT = 1 vote or Council decides (G7, 非裁定, the ake pattern). A Charter-Rider §2 hit is :refused (no vote can promote it)."
+   :record
+   {:type "object"
+    :required ["allocId" "route" "mechanism" "outcome"]
+    :properties
+    {:allocId    {:type "string"}
+     :route      {:type "string"
+                  :enum ["auto" "sbt-vote" "council-lv7" "refused"]
+                  :description "G7 INVARIANT — a PURE FUNCTION of (imputed-total, invariant-touch, rider). No model / operator decides this; :decision does not exist."}
+     :mechanism  {:type "string" :enum ["optimistic" "sbt-vote" "council-lv7"]}
+     :yes        {:type "integer" :minimum 0}
+     :no         {:type "integer" :minimum 0}
+     :timelockH  {:type "integer" :description "vote window (h); 48 is standard"}
+     :outcome    {:type "string" :enum ["accepted" "rejected" "pending" "refused"]}}}}}}

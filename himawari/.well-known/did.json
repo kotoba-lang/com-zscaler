@@ -1,0 +1,14 @@
+{
+  "@context" : [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1" ],
+  "id" : "did:web:etzhayyim.com:actor:himawari",
+  "alsoKnownAs" : [ "at://himawari.etzhayyim.com", "https://github.com/etzhayyim/com-etzhayyim-himawari", "rad:bafkreicgs5i4koeubxfbfteimm3ixelo5dajbo4aiyjqnzxxlzkojdgh2i", "did:web:etzhayyim.github.io:com-etzhayyim-himawari" ],
+  "service" : [ {
+    "id" : "did:web:etzhayyim.com:actor:himawari#atproto_pds",
+    "type" : "AtprotoPersonalDataServer",
+    "serviceEndpoint" : "https://pds.etzhayyim.com"
+  }, {
+    "id" : "did:web:etzhayyim.com:actor:himawari#aozora",
+    "type" : "AozoraAppView",
+    "serviceEndpoint" : "https://aozora.app"
+  } ]
+}

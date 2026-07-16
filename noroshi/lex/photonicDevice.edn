@@ -1,0 +1,19 @@
+{:lexicon 1
+ :id "com.etzhayyim.noroshi.photonicDevice"
+ :defs
+ {:main
+  {:type "record"
+   :key "pdevId"
+   :record
+   {:type "object"
+    :required ["pdevId" "kind" "platform" "forceClass" "process" "eda" "representative"]
+    :properties
+    {:pdevId {:type "string" :description "stable device id (shared org/chip id space)"}
+     :kind {:type "string" :enum ["modulator" "grating-coupler" "photodetector" "laser" "waveguide" "pic-link" "cpo-module"] :description "光電融合 device class"}
+     :platform {:type "string" :const "silicon-photonics" :description "the only platform represented at R0"}
+     :forceClass {:type "string" :const "civilian-comms" :description "G3/N1 — civilian communications only; weaponizable is unrepresentable"}
+     :lineRateGbps {:type "number" :description "per-lane line rate including FEC overhead"}
+     :energyPjPerBit {:type "number" :description "energy-per-bit figure of merit (the CPO advantage)"}
+     :process {:type "string" :const "open-pdk" :description "G1 — open PDK only; an NDA foundry PDK is never committed"}
+     :eda {:type "string" :enum ["gdsfactory" "meep" "klayout" "openlane"] :description "G1 — open-source EPDA the device was designed in"}
+     :representative {:type "boolean" :const true :description "G10 — :representative parameters; no measured silicon exists at R0"}}}}}}
