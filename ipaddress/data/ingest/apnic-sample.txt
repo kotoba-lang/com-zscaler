@@ -1,8 +1,0 @@
-2|apnic|20260603|3|19850701|20260603|+1000|e-stats
-apnic|*|asn|*|2|0|summary
-apnic|*|ipv4|*|3|0|summary
-apnic|JP|asn|2497|1|19970304|allocated
-apnic|JP|asn|2914|1|19970801|allocated
-apnic|JP|ipv4|210.130.0.0|65536|19970301|allocated
-apnic|AU|ipv4|1.1.1.0|256|20110811|assigned
-apnic|JP|ipv6|2001:240::|32|20000601|allocated

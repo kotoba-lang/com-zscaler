@@ -1,1 +1,0 @@
-[{:db/id -1, :kotoba.app/name "chie", :kotoba.app/version "0.1.0", :kotoba.app/components "[{:name \"chie\", :src \"methods/mesh.clj\", :scale 1, :triggers [{:type :kse, :topic \"etzhayyim/actor/chie\"}], :requires #{:cap/kqe}}]", :kotoba.app/placement "{:spread :zone, :require {:tier \"edge\"}}"}]

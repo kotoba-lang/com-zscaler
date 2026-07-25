@@ -1,6 +1,0 @@
-;; kiyome (清め) cleaning-robotics fleet — :representative (R0, no hardware)
-[{:fleet/robot "houki"     :fleet/glyph "箒"   :fleet/class :rover     :fleet/role "sweep / vacuum / mop"          :fleet/maturity :design :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "nugui"     :fleet/glyph "拭"   :fleet/class :manipulator :fleet/role "surface-wipe + sanitize arm"  :fleet/maturity :design :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "kuriya"    :fleet/glyph "厨"   :fleet/class :cell      :fleet/role "kitchen / dish"                :fleet/maturity :research :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "chiritori" :fleet/glyph "塵取" :fleet/class :collector :fleet/role "in-building waste pickup"      :fleet/maturity :design :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "susugi"    :fleet/glyph "濯"   :fleet/class :laundry   :fleet/role "wash / dry / fold linen"       :fleet/maturity :design :fleet/open-source true :fleet/sourcing :representative}]

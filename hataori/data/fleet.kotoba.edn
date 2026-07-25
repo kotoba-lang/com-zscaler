@@ -1,6 +1,0 @@
-;; hataori (機織) garment-robotics fleet — :representative (R0, no hardware)
-[{:fleet/robot "tachi"    :fleet/glyph "裁"   :fleet/class :cutter   :fleet/role "CAD-nest fabric cutting (laser/blade)"    :fleet/maturity :design   :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "takuhata" :fleet/glyph "栲幡" :fleet/class :loom     :fleet/role "weave + knit cell"                       :fleet/maturity :design   :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "nuidono"  :fleet/glyph "縫殿" :fleet/class :sewer    :fleet/role "seam manipulation (hard long-tail problem)" :fleet/maturity :research :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "kenshin"  :fleet/glyph "検針" :fleet/class :inspector :fleet/role "needle-detect + seam QC"                 :fleet/maturity :design   :fleet/open-source true :fleet/sourcing :representative}
- {:fleet/robot "tatami"   :fleet/glyph "畳"   :fleet/class :packer   :fleet/role "fold + pack"                             :fleet/maturity :design   :fleet/open-source true :fleet/sourcing :representative}]

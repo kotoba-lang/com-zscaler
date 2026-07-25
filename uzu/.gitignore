@@ -1,6 +1,0 @@
-# uzu 渦 — generated state
-# The append-only INFORMATION log is content-addressed + regenerable from the seed;
-# it is per-run/per-machine and must not be committed.
-data/
-data/persisted/
-*.log

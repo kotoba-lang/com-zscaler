@@ -1,8 +1,0 @@
-[[cell]]
-name = "shionome_social_post"
-module = "shionome_social_post.cell"
-entry = "compiled"
-node = "naphtali"
-trigger = { kind = "cron", expression = "0 9 * * *" }
-healthz_port = 14014
-adr = ["2606072200"]

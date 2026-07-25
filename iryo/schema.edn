@@ -1,9 +1,0 @@
-;; 20-actors/iryo/schema.edn — Datomic/Datascript compatible schema for the
-;; tx-data attrs introduced by wrapping this actor's cells/*.edn + lex/*.edn
-;; into tx-data (Phase 4 edn-datomize fan-out). Domain business-data schema
-;; (:iryo.rezept/* :iryo.line/* :iryo.shobyo/*) lives separately at
-;; 20-actors/iryo/kotoba/schema.edn (already valid Datomic schema tx-data,
-;; untouched by this pass). Hand-editing here is fine (no generator owns this
-;; file yet); if re-run, merge rather than overwrite.
-
-[#:db{:ident :cell/doc, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/entry, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/gates, :valueType :db.type/string, :cardinality :db.cardinality/many} #:db{:ident :cell/glyph, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/handler, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/kind, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :cell/kotoba, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/runtime, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :lex/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

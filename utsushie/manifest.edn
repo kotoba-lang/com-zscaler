@@ -1,8 +1,0 @@
-;; utsushie — actor manifest (converted from manifest.jsonld, jsonld-retirement wave)
-{:actor/id "utsushie"
- :actor/glyph "写し絵"
- :actor/display-name "写し絵 — News→Video Medium (kawaraban's projected-image sibling)"
- :actor/tier :tier-b
- :actor/integrates ["i18n" "kawaraban"]
- :actor/purpose "A NEWS→VIDEO MEDIUM. Turns a kawaraban :article/面 into a short narrated, multilingual video that LINKS OUT — the 映像 (moving-image) sibling of 瓦版's printed sheet (写し絵 = Edo-period magic-lantern moving-picture show, Japan's pre-cinema projected image). Like kawaraban it is a MEDIUM, never a source (G11): it narrates a :mirror/:actor-event, never an :original. At R0 it is an OFFLINE render-PLAN builder (methods/render_plan.cljc): it does NOT render and does NOT call a model; live render is G8-gated (Council Lv6+ + operator) and Murakumo-fleet only (U5 = G6, ADR-2605215000). The 6 gates U1–U6 (= kawaraban's, concretized for video) are structural in lex/video.edn AND methods/render_plan.cljc: U1=G1 no verdict (attributive narration only), U2=G4 narration ≤ the article's ≤280-char fair-use excerpt (full body never narrated), U3=G9 ANTI-DEEPFAKE (no photoreal likeness / voice clone of a named real person; neutral synthetic narrator), U4=G2 no engagement/dwell-driven edit, U5=G6 Murakumo-only (external-GPU render unrepresentable), U6=G7 member-signed publish (no server-held key). Per ADR-2606161536 §D2."
- :actor/adr ["2606161536" "2606061900" "2605231902" "2605140740" "2605215000" "2605231525"]}

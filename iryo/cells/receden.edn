@@ -1,3 +1,0 @@
-;; iryo 医療 — receden cell (langgraph, wasm runtime)
-;; maps to py/agent.py handle_receden
-[{:cell/entry "py/agent.py", :cell/id "receden", :cell/glyph "医療", :cell/kind :langgraph, :cell/runtime :wasm, :db/id -1, :cell/gates ["G2" "G3"], :cell/doc "karte + encounter → レセプト電算処理システム(レセ電) record stream: IR(医療機関情報)/RE(レセプト共通)/HO(保険者)/KO(公費)/SY(傷病名)/SI(診療行為)/IY(医薬品)/TO(特定器材) + 件数 reconciliation. 和暦(GYYMMDD)変換. PHI(氏名/生年月日)は operator decrypt callback 経由でのみ注入され, default 出力は PHI-free (G2). online 請求(送信)は operator-gated, default :draft (G3 no-server-key).", :cell/handler "handle_receden", :cell/kotoba "{:reads [:iryo.rezept/total-ten :iryo.rezept/patient-pay-yen :iryo.shobyo/code :iryo.shobyo/onset :iryo.line/shikibetsu], :writes [:iryo.rezept/state]}"}]

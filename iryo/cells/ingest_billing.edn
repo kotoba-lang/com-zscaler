@@ -1,6 +1,0 @@
-;; iryo 医療 — ingest-billing cell (langgraph, wasm runtime)
-;; maps to methods/handoff.cljc handle-ingest — the karute -> iryo hand-off boundary.
-;; XRPC method name: com.etzhayyim.apps.iryo.ingestKaruteEncounterForBilling
-;; (this is the target karute/actor-manifest.jsonld's requestIryoBilling forwardToIryo
-;; step invokes via agent.invoke; ADR-2605231401 Pattern 2).
-[{:cell/entry "methods/handoff.cljc", :cell/id "ingest-billing", :cell/glyph "医療", :cell/kind :langgraph, :cell/runtime :wasm, :db/id -1, :cell/gates ["G1" "G2" "G3" "G5"], :cell/doc "karute の requestIryoBilling が転送する billing hand-off intake を受理する境界. 受信フィールドは patientDid/encounterDid/facilityDid/serviceRequestUris/medicationRequestUris/consentCapabilityUri のみ (PHI-free allow-list; G2). 解決済み consent.capability (purpose=insurance-billing / granteeDid=iryo自身 / granterDid=patientDid / 未失効 / 未期限切れ / scope充足) を検証し (G1/G7), 受理時は draft キューへ iryoStatus=\"pending\" で積む (G3 no-server-key). ゲート不合格時は iryoStatus=\"needs-info\" のみを返す — \"accepted\"/\"rejected\" は審査支払機関の査定語彙であり iryo は使わない (G5 non-adjudicating)。Ed25519 署名検証 / consentCapabilityUri の PDS 解決は範囲外 (karute/MATURITY.md #8、別トラック)。", :cell/handler "handle-ingest", :cell/kotoba "{:reads [], :writes []}"}]

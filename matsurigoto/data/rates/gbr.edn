@@ -1,2 +1,0 @@
-{"GBR.income" {:currency "GBP" :source "HMRC 2023/24 England rates + personal allowance (:representative)"
-  :brackets [[0 0.0] [12570 0.20] [50270 0.40] [125140 0.45]]}}

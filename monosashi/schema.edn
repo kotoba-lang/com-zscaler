@@ -1,8 +1,0 @@
-;; 20-actors/monosashi/schema.edn — Datomic/Datascript-compatible schema for
-;; monosashi's datomized .edn files (ported manifest/edn-datomize.cljs semantics,
-;; hand-run for this actor per the Phase 4 fan-out). :db/ident attr defs list.
-;; No Datomic-specific keys (:db.install/_attribute etc). Do not hand-edit —
-;; regenerate if seed-scores.kotoba.edn / skillBand.edn's shape changes.
-;; manifest.edn is EXCLUDED (known cross-cutting blocker, not datomized here).
-
-[#:db{:ident :seed-scores/residuals, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :skillBand/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :skillBand/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :skillBand/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

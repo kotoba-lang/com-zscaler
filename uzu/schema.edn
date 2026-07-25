@@ -1,5 +1,0 @@
-;; 20-actors/uzu/schema.edn — Datomic/Datascript compatible schema definitions
-;; (auto-generated). :db/ident attribute list. No Datomic-specific keys
-;; (:db.install/_attribute etc). Do not hand-edit — regenerate instead.
-
-[#:db{:ident :ontology/adr, :valueType :db.type/string, :cardinality :db.cardinality/many} #:db{:ident :ontology/attributes, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ontology/enums, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ontology/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ontology/invariants, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ontology/node-kinds, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ontology/unit-classes, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :ontology/version, :valueType :db.type/string, :cardinality :db.cardinality/one}]

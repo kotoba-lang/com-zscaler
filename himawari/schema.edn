@@ -1,5 +1,0 @@
-;; 20-actors/himawari/schema.edn — Datomic/Datascript compatible schema
-;; for himawari actor's transformed .edn files (auto-generated,
-;; adapted from manifest/edn-datomize.cljs). Do not hand-edit.
-
-[#:db{:ident :deploy/activated?, :valueType :db.type/boolean, :cardinality :db.cardinality/one} #:db{:ident :deploy/activation-gate, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :deploy/actor, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :deploy/adr, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :deploy/build, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :deploy/cells, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :deploy/component, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :deploy/did, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :deploy/phase, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :deploy/tier, :valueType :db.type/keyword, :cardinality :db.cardinality/one}]

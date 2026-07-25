@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# tasuke — clj/bb test suite (ADR-2606160842 py->clj port wave; Python pruned).
-set -euo pipefail
-cd "$(dirname "$0")/../.."
-exec bb -e '(require (quote clojure.test) (quote tasuke.methods.test-analyze) (quote tasuke.methods.test-app-parity) (quote tasuke.methods.test-charter-invariants) (quote tasuke.methods.test-consistency) (quote tasuke.methods.test-evidence) (quote tasuke.methods.test-intake) (quote tasuke.methods.test-lexicons) (quote tasuke.methods.test-packet) (quote tasuke.methods.test-report-gen) (quote tasuke.methods.test-triage) (quote tasuke.cells.test-state-machines))(let [r (apply clojure.test/run-tests (quote [tasuke.methods.test-analyze tasuke.methods.test-app-parity tasuke.methods.test-charter-invariants tasuke.methods.test-consistency tasuke.methods.test-evidence tasuke.methods.test-intake tasuke.methods.test-lexicons tasuke.methods.test-packet tasuke.methods.test-report-gen tasuke.methods.test-triage tasuke.cells.test-state-machines]))](System/exit (if (zero? (+ (:fail r) (:error r))) 0 1)))'

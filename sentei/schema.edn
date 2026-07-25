@@ -1,5 +1,0 @@
-;; 20-actors/sentei/schema.edn — Datomic/Datascript-compatible schema (auto-generated,
-;; ported from manifest/edn-datomize.cljs). :db/ident attribute definitions.
-;; Hand-edit prohibited — regenerating overwrites.
-
-[#:db{:ident :pruning-ontology/branch, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :pruning-ontology/graph, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :pruning-ontology/sentei.prune, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :pruning-ontology/sentei.regraft, :valueType :db.type/string, :cardinality :db.cardinality/one}]

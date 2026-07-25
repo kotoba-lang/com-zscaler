@@ -1,3 +1,0 @@
-;; iryo 医療 — validate cell (langgraph, wasm runtime)
-;; maps to py/agent.py handle_validate
-[{:cell/entry "py/agent.py", :cell/id "validate", :cell/glyph "医療", :cell/kind :langgraph, :cell/runtime :wasm, :db/id -1, :cell/gates ["G5"], :cell/doc "算定整合性チェック → discrepancy observations (G5 non-adjudicating). 病名なし投薬(RX_WITHOUT_DX)/傷病名なし(NO_DIAGNOSIS)/主傷病なし(NO_MAIN_DIAGNOSIS)/空レセプト(EMPTY_REZEPT)/高額療養費上限超過(KOGAKU_CAPPED) を SURFACE するのみ. 査定/返戻の判断は審査支払機関(基金/国保連)と医療機関が行い, iryo は approve/deny しない.", :cell/handler "handle_validate", :cell/kotoba "{:reads [:iryo.shobyo/code :iryo.shobyo/is-main :iryo.rezept/total-ten :iryo.rezept/kogaku-applied], :writes []}"}]

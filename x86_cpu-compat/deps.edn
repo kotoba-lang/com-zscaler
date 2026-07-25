@@ -1,3 +1,0 @@
-{:paths ["src" "tests"]
- :deps {org.clojure/clojure {:mvn/version "1.11.1"}
-        etzhayyim/kotoba {:local/root "../../40-engine/kotoba"}}}

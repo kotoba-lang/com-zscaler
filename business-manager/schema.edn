@@ -1,8 +1,0 @@
-;; 20-actors/business-manager/schema.edn — Datomic/Datascript compatible schema
-;; definitions for this actor's lex/*.edn files (auto-accumulated by the Phase 4
-;; edn-datomize fan-out, adapted from manifest/edn-datomize.cljs wrap-map!).
-;; :db/ident attribute list. Datomic-specific keys (:db.install/_attribute etc.) unused.
-;; manifest.edn is EXCLUDED from this pass (5 shared cross-cutting consumer tools
-;; under 70-tools/src/etzhayyim/ need a tolerant-read patch first; see commit msg).
-
-[#:db{:ident :lex.budgetAllocation/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.budgetAllocation/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.budgetAllocation/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex.invoice/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.invoice/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.invoice/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex.journalEntry/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.journalEntry/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.journalEntry/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:ident :lex.purchaseOrder/defs, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.purchaseOrder/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :lex.purchaseOrder/lexicon, :valueType :db.type/long, :cardinality :db.cardinality/one}]

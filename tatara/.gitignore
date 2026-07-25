@@ -1,5 +1,0 @@
-# generated analysis + heartbeat artifacts (regenerable from the seed)
-out/
-data/tatara.datoms.kotoba.edn
-data/plant-graph.merged.kotoba.edn
-methods/__pycache__/

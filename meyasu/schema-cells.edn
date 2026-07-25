@@ -1,6 +1,0 @@
-;; 20-actors/meyasu/schema-cells.edn — Datomic/Datascript compatible schema
-;; definitions for the meyasu cells/*.edn tx-data wrap (edn-datomize Phase 4).
-;; :db/ident attribute defs only; no Datomic-specific :db.install/_attribute keys.
-;; Handwritten-adjacent: regenerate by rerunning the wrap step if cells/*.edn changes.
-
-[#:db{:ident :cell/doc, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/entry, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/gates, :valueType :db.type/string, :cardinality :db.cardinality/many} #:db{:ident :cell/glyph, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/handler, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/kind, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :cell/kotoba, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/lexicon, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/runtime, :valueType :db.type/keyword, :cardinality :db.cardinality/one}]

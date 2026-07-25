@@ -1,1 +1,0 @@
-[{:db/id -1, :kotoba.app/name "kurashimori", :kotoba.app/version "0.1.0", :kotoba.app/components "[{:name \"kurashimori\", :src \"methods/mesh.clj\", :scale 1, :triggers [{:type :http, :route \"/kurashimori\"}], :requires #{:cap/kqe}}]", :kotoba.app/placement "{:spread :zone, :require {:tier \"edge\"}}"}]

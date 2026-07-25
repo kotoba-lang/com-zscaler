@@ -1,8 +1,0 @@
-;; danjo-observations.kotoba.edn — danjo.discrepancyObservation records.
-;; G4 nonAdjudicatingNotice=true (FACT, never a verdict) · G5 ≥2 sourceRecordCids
-;; · G6 methodNoteCid. The censor's EYE, never the SWORD. Named-party publication
-;; G10 + 1 SBT=1 vote gated. DERIVED :representative. ADR-2605301600.
-
-[
- {:danjo.obs/category :single-bidder-streak :danjo.obs/non-adjudicating true :danjo.obs/pattern "6 consecutive single-bid awards from auth:jp:mlit to lei:5493ACME000000000001 within the method window" :danjo.obs/source-record-cids ["bafy-proc-001" "bafy-proc-002" "bafy-proc-003" "bafy-proc-004" "bafy-proc-005" "bafy-proc-006"] :danjo.obs/method-note-cid "method:single-bidder-streak:955ade7944f2" :danjo.obs/sourcing :representative}
-]

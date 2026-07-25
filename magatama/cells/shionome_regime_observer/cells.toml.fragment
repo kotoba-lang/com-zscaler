@@ -1,8 +1,0 @@
-[[cell]]
-name = "shionome_regime_observer"
-module = "shionome_regime_observer.cell"
-entry = "compiled"
-node = "dan"
-trigger = { kind = "cron", expression = "20 * * * *" }
-healthz_port = 14013
-adr = ["2606072200"]

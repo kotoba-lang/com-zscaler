@@ -1,8 +1,0 @@
-[[cell]]
-name = "shionome_flow_graph"
-module = "shionome_flow_graph.cell"
-entry = "compiled"
-node = "issachar"
-trigger = { kind = "cron", expression = "10 * * * *" }
-healthz_port = 14011
-adr = ["2606072200"]

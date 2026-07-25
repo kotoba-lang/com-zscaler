@@ -1,5 +1,0 @@
-;; 20-actors/ossekai/schema.edn — Datomic/Datascript compatible schema
-;; (auto-generated). :db/ident attribute defs, no Datomic-specific keys.
-;; Do not hand-edit — regenerate.
-
-[#:db{:ident :cell/doc, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/entry, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/gates, :valueType :db.type/string, :cardinality :db.cardinality/many} #:db{:ident :cell/glyph, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/handler, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/id, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/kind, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :cell/kotoba, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/lexicon, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/llm, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :cell/runtime, :valueType :db.type/keyword, :cardinality :db.cardinality/one}]

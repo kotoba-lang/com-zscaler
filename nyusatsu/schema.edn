@@ -1,5 +1,0 @@
-;; 20-actors/nyusatsu/schema.edn -- Datomic/Datascript compatible schema
-;; (auto-generated). :db/ident attribute defs; no Datomic-specific keys.
-;; Hand-edit forbidden -- regenerate to update.
-
-[#:db{:ident :registry/sources, :valueType :db.type/string, :cardinality :db.cardinality/one} #:db{:ident :registry/sourcing, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:ident :registry/version, :valueType :db.type/string, :cardinality :db.cardinality/one}]
